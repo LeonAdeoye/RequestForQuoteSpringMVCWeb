@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration Scan="Time" ScanPeriod="5 minutes">
+	
+	<property name="LOG_DIR" value="c:\development\git\RequestForQuoteSpringMVCWeb" />
+ 
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{HH:mm:ss}[%-5level]:%msg%n</Pattern>      
+		</layout>
+	</appender>
+	
+	 <appender name="CONTROLLERS_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+		<file>c:\development\git\RequestForQuoteSpringMVCWeb\logs\controllers.log</file>      
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">    
+			<Pattern>%d{HH:mm:ss.SSS} %-5level %thread  %logger - %msg%n</Pattern>    
+		</encoder>
+	</appender>
+			
+	<logger name="com.leon.rfq.user.UserImpl" level="TRACE">
+		<appender-ref ref="CONTROLLERS_LOG_FILE" />           
+	</logger>		
+	
+	<logger name="com.leon.rfq.user.UserControllerImpl" level="TRACE">
+		<appender-ref ref="CONTROLLERS_LOG_FILE" />           
+	</logger>
+	   
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+	</root>
+	
+</configuration>
