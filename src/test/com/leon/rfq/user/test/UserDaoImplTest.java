@@ -20,7 +20,8 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.leon.rfq.user.UserDaoImpl;
 
-@ContextConfiguration(locations = { "classpath:/applicationContext.xml" })
+
+@ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired

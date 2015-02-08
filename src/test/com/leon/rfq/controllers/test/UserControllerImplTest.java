@@ -19,7 +19,7 @@ import com.leon.rfq.controllers.UserControllerImpl;
 import com.leon.rfq.user.UserDao;
 import com.leon.rfq.user.UserDaoImpl;
 
-@ContextConfiguration(locations = { "classpath:/applicationContext.xml" })
+@ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class UserControllerImplTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired

@@ -90,7 +90,12 @@
 		</dependency>		  
 	</dependencies>
 	<build>
-		<testSourceDirectory>C:\development\git\RequestForQuoteSpringMVCWeb\src\test</testSourceDirectory>
+		<testSourceDirectory>src\test</testSourceDirectory>
+		<testResources>
+			<testResource>
+				<directory>src/main/webapp/WEB-INF</directory>
+			</testResource>
+		</testResources>		
 		<finalName>rfqMVC</finalName>
 		 <plugins>
 			  <plugin>	 

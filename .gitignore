@@ -1,4 +1,6 @@
 /logs
 /logs/*.log
 /bin
+/target
+/target/*
 /bin/*
