@@ -6,23 +6,21 @@
 
     <servlet>
         <servlet-name>requestForQuote</servlet-name>
-        <display-name>RFQ Spring MVC</display-name>
-        <description>RFQ Spring MVC Web Application</description>
-        <servlet-class>org.springframeowrk.web.servlet.DispatcherServlet</servlet-class>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
+        <init-param>
+		    <param-name>contextConfigLocation</param-name>
+		    <param-value>/WEB-INF/applicationContext.xml</param-value>        
+        </init-param>
     </servlet>
 
     <servlet-mapping>
         <servlet-name>requestForQuote</servlet-name>
-        <url-pattern>*.html</url-pattern>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
 
     <session-config>
         <session-timeout>60</session-timeout>
     </session-config>
     
-    <listener>
-    	<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
-
 </web-app>

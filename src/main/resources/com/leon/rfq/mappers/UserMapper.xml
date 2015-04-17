@@ -10,17 +10,17 @@
 		<result property="emailAddress" column="emailAddress"/>
 		<result property="firstName" column="firstName"/>
 		<result property="lastName" column="lastName"/>
-		<result property="groupId" column="groupId"/>
+		<result property="groupName" column="groupName"/>
 		<result property="locationName" column="locationName"/>
 		<result property="isValid" column="isValid"/>
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="UserImpl">
-		SELECT userId, emailAddress, firstName, lastName, groupId, locationName, isValid FROM users WHERE userId=#{userId}
+		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users WHERE userId=#{userId}
 	</select>
 	
 	<select id="getAll" resultMap="UserResultSet">
-		SELECT userId, emailAddress, firstName, lastName, groupId, locationName, isValid FROM users
+		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users
 	</select>
 	
 	<update id="updateValidity" parameterType="UserImpl">
@@ -28,8 +28,8 @@
 	</update>
 	
 	<insert id="save" parameterType="UserImpl">
-		INSERT INTO users (userId, emailAddress, firstName, lastName, groupId, locationName, isValid, lastUpdatedBy, lastUpdated)
-		VALUES(#{userId}, #{emailAddress}, #{firstName}, #{lastName}, #{groupId}, #{locationName}, #{isValid}, #{lastUpdatedBy}, now() )
+		INSERT INTO users (userId, emailAddress, firstName, lastName, groupName, locationName, isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{userId}, #{emailAddress}, #{firstName}, #{lastName}, #{groupName}, #{locationName}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.String">

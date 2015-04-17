@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>RequestForQuoteSpringMVCWeb</groupId>
-  <artifactId>RequestForQuoteSpringMVCWeb</artifactId>
+  <groupId>com.leon</groupId>
+  <artifactId>RequestForQuote</artifactId>
   <version>1.0</version>
   <packaging>war</packaging>
   <properties>
@@ -14,6 +14,8 @@
   	<mybatis.spring.version>1.2.2</mybatis.spring.version>
   	<mybatis.version>3.2.7</mybatis.version>
   	<catch-exception.version>1.3.2</catch-exception.version>
+  	<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
+  	<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
   </properties>  
 	<dependencies>	
 		<dependency>
@@ -62,6 +64,17 @@
 		    <artifactId>spring-web</artifactId>
 		    <version>${spring.version}</version>            
 		</dependency>
+	  	<dependency>
+	  		<groupId>javax.servlet</groupId>
+	  		<artifactId>jstl</artifactId>
+	  		<version>${javax.servlet.jstl.version}</version>
+	  	</dependency>
+	  	<dependency>
+	  		<groupId>javax.servlet</groupId>
+	  		<artifactId>javax.servlet-api</artifactId>
+	  		<version>${javax.servlet-api.version}</version>
+	  		<scope>provided</scope>
+	  	</dependency>		
 		<dependency>
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
@@ -87,7 +100,12 @@
 		    <groupId>ch.qos.logback</groupId>
 		    <artifactId>logback-classic</artifactId>
 		    <version>${logback.version}</version>
-		</dependency>		  
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>${spring.version}</version>
+		</dependency>				  
 	</dependencies>
 	<build>
 		<testSourceDirectory>src\test</testSourceDirectory>
@@ -96,7 +114,7 @@
 				<directory>src/main/webapp/WEB-INF</directory>
 			</testResource>
 		</testResources>		
-		<finalName>rfqMVC</finalName>
+		<finalName>requestForQuote</finalName>
 		 <plugins>
 			  <plugin>	 
 			    <groupId>org.apache.maven.plugins</groupId>

@@ -61,7 +61,7 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
     public void getAll_ValidScenario_ReturnsValidListOfAllUsers()
 	{
 		int beforeCount = this.userDaoImpl.getAll().size();
-		this.userDaoImpl.save("userIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", 1, true, "me");
+		this.userDaoImpl.save("userIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
 		assertNotNull("getAll method should return a non-null list of users", this.userDaoImpl.getAll());
 		assertEquals("count of user should have been incremented ", beforeCount + 1, this.userDaoImpl.getAll().size());
 	}
@@ -81,7 +81,7 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void updateValidity_ValidUserId_UpdatesValidityReturnsTrue()
 	{
-		this.userDaoImpl.save("userIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", 1, true, "me");
+		this.userDaoImpl.save("userIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
 		assertTrue("previously saved user should exist", this.userDaoImpl.get("userIdToBeUpdated").getUserId().equals("userIdToBeUpdated"));
 		assertTrue("updateValidity method should update validity to the provided value for the saved user", this.userDaoImpl.updateValidity("userIdToBeUpdated", false, "leon.adeoye"));
 		assertTrue("updated user validity should have changed", !this.userDaoImpl.get("userIdToBeUpdated").getIsValid());
@@ -96,21 +96,21 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void save_ValidParameters_SavedUserAndReturnsTrue()
 	{
-		assertTrue("save method should save a valid user and returns true", this.userDaoImpl.save("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", 1, true, "me"));
+		assertTrue("save method should save a valid user and returns true", this.userDaoImpl.save("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
 		assertTrue("previously saved user should exist", this.userDaoImpl.get("testUserId").getUserId().equals("testUserId"));
 	}
 	
 	@Test
     public void save_duplicatedUserId_SaveFailsAndReturnsFalse()
 	{
-		this.userDaoImpl.save("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", 1, true, "me");
-		assertFalse("second save method should return false because userId already exists", this.userDaoImpl.save("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", 1, true, "me"));
+		this.userDaoImpl.save("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
+		assertFalse("second save method should return false because userId already exists", this.userDaoImpl.save("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
 	}
 	
 	@Test
     public void delete_ValidUserId_DeleteSucceedsAndReturnsTrue()
 	{
-		this.userDaoImpl.save("userIdToBeDeleted", "ethan", "adeoye", "horatio.adeoye", "hong kong", 1, true, "me");
+		this.userDaoImpl.save("userIdToBeDeleted", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
 		assertTrue("previously saved user should exist", this.userDaoImpl.get("userIdToBeDeleted").getUserId().equals("userIdToBeDeleted"));
 		assertTrue("delete method should return true", this.userDaoImpl.delete("userIdToBeDeleted"));
 		assertNull("deleted user should not longer exist", this.userDaoImpl.get("userIdToBeDeleted"));

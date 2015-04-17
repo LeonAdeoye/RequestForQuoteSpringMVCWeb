@@ -4,19 +4,18 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.leon.rfq.mappers.UserMapper;
 
+@Repository
 public class UserDaoImpl implements UserDao
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 	
+	@Autowired
 	private UserMapper userMapper;
-	
-	public void setUserMapper(UserMapper userMapper)
-	{
-		this.userMapper = userMapper;
-	}
 
 	@Override
 	public boolean delete(String userId)
@@ -31,16 +30,14 @@ public class UserDaoImpl implements UserDao
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("Failed to delete the user with userId " + userId + " because of exception " + e);
-			
-			e.printStackTrace();
+				logger.error("Failed to delete the user with userId " + userId + " because of exception: " + e);
 			return false;
 		}
 	}
 
 	@Override
 	public boolean save(String userId, String firstName, String lastName,
-			String emailAddress, String locationName, int groupId, boolean isValid,
+			String emailAddress, String locationName, String groupName, boolean isValid,
 			String savedByUser)
 	{
 		if(logger.isDebugEnabled())
@@ -48,14 +45,13 @@ public class UserDaoImpl implements UserDao
 		
 		try
 		{
-			return this.userMapper.save(new UserImpl(userId, firstName, lastName, emailAddress, locationName, groupId, isValid, savedByUser)) == 1;
+			return this.userMapper.save(new UserImpl(userId, firstName, lastName, emailAddress, locationName, groupName, isValid, savedByUser)) == 1;
 		}
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("Failed to save the user with userId " + userId + " because of exception " + e);
+				logger.error("Failed to save the user with userId " + userId + " because of exception: " + e);
 			
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -68,14 +64,13 @@ public class UserDaoImpl implements UserDao
 
 		try
 		{
-			return this.userMapper.updateValidity(new UserImpl(userId, "", "", "", "", 0, isValid, updatedByUser)) == 1;
+			return this.userMapper.updateValidity(new UserImpl(userId, "", "", "", "", "", isValid, updatedByUser)) == 1;
 		}
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("Failed to update the validity of user with userId " + userId + " to " + isValid + " because of exception " + e);
+				logger.error("Failed to update the validity of user with userId " + userId + " to " + isValid + " because of exception: " + e);
 			
-			e.printStackTrace();
 			return false;
 		}
 	}
@@ -85,6 +80,8 @@ public class UserDaoImpl implements UserDao
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all users");
+		
+		logger.debug(String.format("Size of users to be returned: %d", this.userMapper.getAll().size()));
 
 		return this.userMapper.getAll();
 	}

@@ -11,7 +11,7 @@ public interface UserDao
 			String lastName,
 			String emailAddress,
 			String locationName,
-			int groupId,
+			String groupName,
 			boolean isValid,
 			String savedByUser);
 

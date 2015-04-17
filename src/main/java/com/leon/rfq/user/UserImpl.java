@@ -13,7 +13,7 @@ public class UserImpl
 	private String firstName;
 	private String lastName;
 	private String locationName;
-	private int groupId;
+	private String groupName;
 	private boolean isValid;
 	private String lastUpdatedBy;
 	
@@ -23,14 +23,14 @@ public class UserImpl
 	}
 	
 	public UserImpl(String userId, String emailAddress, String firstName,
-			String lastName, String locationName, int groupId, boolean isValid, String lastUpdatedBy)
+			String lastName, String locationName, String groupName, boolean isValid, String lastUpdatedBy)
 	{
 		this.userId = userId;
 		this.emailAddress = emailAddress;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.locationName = locationName;
-		this.groupId = groupId;
+		this.groupName = groupName;
 		this.isValid = isValid;
 		this.lastUpdatedBy = lastUpdatedBy;
 		
@@ -90,14 +90,14 @@ public class UserImpl
 		this.locationName = locationName;
 	}
 	
-	public int getGroupId()
+	public String getGroupName()
 	{
-		return this.groupId;
+		return this.groupName;
 	}
 
-	public void setGroupId(int groupId)
+	public void setGroupName(String groupName)
 	{
-		this.groupId = groupId;
+		this.groupName = groupName;
 	}
 
 	public boolean getIsValid()
@@ -134,8 +134,8 @@ public class UserImpl
 		builder.append(this.lastName);
 		builder.append(", locationName=");
 		builder.append(this.locationName);
-		builder.append(", groupId=");
-		builder.append(this.groupId);
+		builder.append(", groupName=");
+		builder.append(this.groupName);
 		builder.append(", isValid=");
 		builder.append(this.isValid);
 		builder.append(", lastUpdatedBy=");
@@ -153,7 +153,8 @@ public class UserImpl
 				+ ((this.emailAddress == null) ? 0 : this.emailAddress.hashCode());
 		result = (prime * result)
 				+ ((this.firstName == null) ? 0 : this.firstName.hashCode());
-		result = (prime * result) + this.groupId;
+		result = (prime * result)
+				+ ((this.groupName == null) ? 0 : this.groupName.hashCode());
 		result = (prime * result) + (this.isValid ? 1231 : 1237);
 		result = (prime * result)
 				+ ((this.lastName == null) ? 0 : this.lastName.hashCode());
@@ -202,7 +203,7 @@ public class UserImpl
 		{
 			return false;
 		}
-		if (this.groupId != other.groupId)
+		if (!this.groupName.equals(other.groupName))
 		{
 			return false;
 		}
