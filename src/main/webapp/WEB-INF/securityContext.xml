@@ -10,20 +10,20 @@
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-3.0.xsd
         http://www.springframework.org/schema/security 
-        http://www.springframework.org/schema/security/spring-security-3.1.xsd        
+        http://www.springframework.org/schema/security/spring-security-3.0.xsd        
 		http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
         
 	<security:http auto-config="true">
-		<security:intercept-url pattern="/users" access="VALID_USER" />  <!-- TODO change to root-->
+		<security:intercept-url pattern="/users" access="ROLE_ADMIN" />  <!-- TODO change to root-->
 		<security:form-login login-page="/login" default-target-url="/users" authentication-failure-url="/loginfailed" />
-		<security:logout logout-success-url = "\logout"/>				
+		<security:logout logout-success-url = "/logout"/>				
 	</security:http>
 	
 	<security:authentication-manager>
 		<security:authentication-provider>
 			<security:user-service>
-				<security:user name="l" password="a" authorities="VALID_USER"/> <!-- TODO  get from the database-->
+				<security:user name="l" password="a" authorities="ROLE_ADMIN"/> <!-- TODO  get from the database-->
 			</security:user-service>
 		</security:authentication-provider>
 	</security:authentication-manager>
