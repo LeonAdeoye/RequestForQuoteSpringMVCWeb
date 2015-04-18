@@ -15,17 +15,27 @@
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
         
 	<security:http auto-config="true">
-		<security:intercept-url pattern="/users" access="ROLE_ADMIN" />  <!-- TODO change to root-->
+		<security:intercept-url pattern="/users" access="ROLE_USER, ROLE_ADMIN" />
+		<security:intercept-url pattern="/users/add" access="ROLE_ADMIN" />
 		<security:form-login login-page="/login" default-target-url="/users" authentication-failure-url="/loginfailed" />
 		<security:logout logout-success-url = "/logout"/>				
 	</security:http>
 	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    	<property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    	<property name="url" value="jdbc:mysql://localhost/rfq_development"/>
+    	<property name="username" value="root"/>
+    	<property name="password" value="liverpool"/>
+	</bean>
+	
+	<bean id="daoUserDetailsService" class="org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl">
+    	<property name="dataSource" ref="dataSource"/>
+        <property name="usersByUsernameQuery" value="select username, password, enabled from authentication_users where username = ?"/>
+        <property name="authoritiesByUsernameQuery" value="select username, role from authentication_user_roles where username = ? "/>
+    </bean>   	
+	
 	<security:authentication-manager>
-		<security:authentication-provider>
-			<security:user-service>
-				<security:user name="l" password="a" authorities="ROLE_ADMIN"/> <!-- TODO  get from the database-->
-			</security:user-service>
-		</security:authentication-provider>
+		<security:authentication-provider user-service-ref="daoUserDetailsService"/>
 	</security:authentication-manager>
         
 </beans>	

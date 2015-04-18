@@ -12,7 +12,7 @@
 			<div class="jumbotron">
 				<div class="container">
 					<h1>Users</h1>
-					<p>All users with access to RequestForQuote</p>
+					<p><spring:message code="user.allUsers.label"/></p>
 				</div>
 			</div>
 		</section>

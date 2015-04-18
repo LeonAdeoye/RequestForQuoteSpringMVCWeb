@@ -18,6 +18,31 @@
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
       	<property name="prefix" value="/WEB-INF/views/" />
       	<property name="suffix" value=".jsp" />
+	</bean>
+	
+	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+		<property name="defaultViews">
+			<list>
+				<ref bean="jsonView"/>
+				<ref bean="xmlView"/>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+		<property name="prettyPrint" value="true"/>
+	</bean>
+	
+	<bean id="xmlView" class="org.springframework.web.servlet.view.xml.MarshallingView">
+		<constructor-arg>
+			<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+				<property name="classesToBeBound">
+					<list>
+						<value>com.leon.rfq.user.UserImpl</value>
+					</list>
+				</property>
+			</bean>
+		</constructor-arg>
 	</bean>    
 												
 	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">

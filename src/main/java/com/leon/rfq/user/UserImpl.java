@@ -1,9 +1,12 @@
 package com.leon.rfq.user;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.ibatis.type.Alias;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@XmlRootElement
 @Alias("UserImpl")
 public class UserImpl
 {
