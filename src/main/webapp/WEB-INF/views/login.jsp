@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags/tags" %>
 
 <html>
 	<head>
@@ -11,23 +12,35 @@
 		<section>
 			<div class="jumbotron">
 				<div class="container">
-					<form action=<c:url value="/j_spring_security_check"></c:url> method="post">
-						<fieldSet>
-							<div class="form-group">								
-								<input name='j_username' placeholder="user name" type="text" class="form-control"/>
-							</div>
-							<div class="form-group">																
-								<input name='j_password' placeholder="password" type="password" class="form-control"/>								
-							</div>
-							<div class="form-group">
-								<div class="col-lg-offset-2 col-lg-10">
-									<input type="submit" id="buttonAdd" class="btn btn-primary" value="Login"/>
-								</div>
-							</div>															
-						</fieldSet>
-					</form>
+					<h1><spring:message code="login.plsSignIn.label"/></h1>
 				</div>
 			</div>
 		</section>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4 col-md-offset-4">
+					<div class="panel panel-body">
+						<c:if test="${not empty error}">
+							<div class="alert alert-danger">
+								<spring:message code="login.badCredentials.label"/>
+							</div>
+						</c:if>
+				
+						<form action=<c:url value="/j_spring_security_check"></c:url> method="post">
+							<fieldSet>
+								<div class="form-group">								
+									<input name='j_username' placeholder="Enter userName" type="text" class="form-control"/>
+								</div>
+								<div class="form-group">																
+									<input name='j_password' placeholder="Enter password" type="password" value="" class="form-control"/>								
+								</div>
+								<input type="submit" class="btn btn-lg btn-success btn-block" value="Login"/>
+							</fieldSet>
+						</form>
+						
+					</div>
+				</div>
+			</div>
+		</div>
 	</body>
 </html>

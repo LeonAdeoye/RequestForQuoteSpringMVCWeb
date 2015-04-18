@@ -5,6 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,7 +24,13 @@ public class UserControllerImpl
 	private static final Logger logger = LoggerFactory.getLogger(UserControllerImpl.class);
 	
 	@Autowired
-	private UserService userService;
+	UserService userService;
+	
+	@InitBinder
+	public void initialiseBinder(WebDataBinder binder)
+	{
+		binder.setAllowedFields("userId, lastName, firstName, emailAddress, locationName, groupName, isValid");
+	}
 		
 	@RequestMapping()
 	public String getAll(Model model)
@@ -46,8 +56,15 @@ public class UserControllerImpl
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String processNewUserForm(@ModelAttribute("newUser") UserImpl newUser)
+	public String processNewUserForm(@ModelAttribute("newUser") UserImpl newUser, BindingResult result)
 	{
+		String[] suppressedFields = result.getSuppressedFields();
+		if(suppressedFields.length > 0)
+		{
+			throw new RuntimeException("Attempting to bind dsiallowed fields: " +
+					StringUtils.arrayToCommaDelimitedString(suppressedFields));
+		}
+		
 		this.userService.save(newUser.getUserId(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmailAddress(),
 				newUser.getLocationName(), newUser.getGroupName(), newUser.getIsValid(), "ladeoye"); //TODO
 		
