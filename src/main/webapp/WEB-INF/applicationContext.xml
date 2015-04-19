@@ -30,7 +30,7 @@
 	</bean>
 	
 	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-		<property name="prettyPrint" value="true"/>
+		<!-- <property name="prettyPrint" value="true"/> -->
 	</bean>
 	
 	<bean id="xmlView" class="org.springframework.web.servlet.view.xml.MarshallingView">

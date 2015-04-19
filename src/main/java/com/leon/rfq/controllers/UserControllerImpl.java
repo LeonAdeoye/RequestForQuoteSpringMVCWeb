@@ -70,7 +70,7 @@ public class UserControllerImpl
 		
 		return "redirect:/users";
 	}
-
+	
 	@RequestMapping("/delete")
 	public String delete(@RequestParam String userId, Model model)
 	{
