@@ -11,6 +11,9 @@
 	<body>
 		<section>
 			<div class="jumbotron">
+				<div class="pull-right" style="padding-right:50px">
+					<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
+				</div>			
 				<div class="container">								
 					<h1><spring:message code="user.user.label"/></h1>
 				</div>

@@ -122,6 +122,11 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson-mapper-asl.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.3.1.Final</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<testSourceDirectory>src\test</testSourceDirectory>

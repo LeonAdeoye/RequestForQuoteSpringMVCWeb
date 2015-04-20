@@ -1,5 +1,7 @@
 package com.leon.rfq.controllers;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +31,7 @@ public class UserControllerImpl
 	@InitBinder
 	public void initialiseBinder(WebDataBinder binder)
 	{
-		binder.setAllowedFields("userId, lastName, firstName, emailAddress, locationName, groupName, isValid");
+		binder.setAllowedFields("userId", "lastName", "firstName", "emailAddress", "locationName", "groupName", "isValid", "language");
 	}
 		
 	@RequestMapping()
@@ -56,7 +58,7 @@ public class UserControllerImpl
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String processNewUserForm(@ModelAttribute("newUser") UserImpl newUser, BindingResult result)
+	public String processNewUserForm(@Valid @ModelAttribute("newUser") UserImpl newUser, BindingResult result)
 	{
 		String[] suppressedFields = result.getSuppressedFields();
 		if(suppressedFields.length > 0)
@@ -64,6 +66,9 @@ public class UserControllerImpl
 			throw new RuntimeException("Attempting to bind dsiallowed fields: " +
 					StringUtils.arrayToCommaDelimitedString(suppressedFields));
 		}
+		
+		if(result.hasErrors())
+			return "addUser";
 		
 		this.userService.save(newUser.getUserId(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmailAddress(),
 				newUser.getLocationName(), newUser.getGroupName(), newUser.getIsValid(), "ladeoye"); //TODO

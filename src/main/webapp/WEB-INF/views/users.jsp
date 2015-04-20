@@ -12,6 +12,9 @@
 			<div class="jumbotron">
 				<div class="container">
 					<h1>Users</h1>
+					<div class="pull-right" style="padding-right:50px">
+						<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
+					</div>
 					<p><spring:message code="user.allUsers.label"/></p>
 				</div>
 			</div>

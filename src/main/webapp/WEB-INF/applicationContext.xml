@@ -11,9 +11,19 @@
 		http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
         
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven validator="validator"/>
+    
+    <mvc:interceptors>
+    	<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+    		<property name="paramName" value="language"/>
+    	</bean>
+    </mvc:interceptors>
     
     <context:component-scan base-package="com.leon.rfq" />
+    
+    <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+    	<property name="validationMessageSource" ref="messageSource"/>
+    </bean>
     
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
       	<property name="prefix" value="/WEB-INF/views/" />
@@ -27,6 +37,10 @@
 				<ref bean="xmlView"/>
 			</list>
 		</property>
+	</bean>
+	
+	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+		<property name="defaultLocale" value="en" />
 	</bean>
 	
 	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">

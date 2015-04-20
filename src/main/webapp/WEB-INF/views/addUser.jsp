@@ -11,13 +11,18 @@
 	<body>
 		<section>
 			<div class="jumbotron">
-				<div class="container">								
+				<div class="container">
+					<div class="pull-right" style="padding-right:50px">
+						<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
+					</div>												
 					<h1><spring:message code="user.addNewUser.label"/></h1>
 				</div>
 			</div>
 		</section>
 		<section class="container">
 			<form:form modelAttribute="newUser" class="form-horizontal">
+				<form:errors path="*" cssClass="alert alert-danger" element="div"/>
+			
 				<fieldSet>
 					<legend><spring:message code="user.addNewUser.label"/></legend>
 					<div class="form-group">
