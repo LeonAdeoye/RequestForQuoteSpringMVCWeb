@@ -13,13 +13,13 @@ import org.slf4j.LoggerFactory;
 public class UserImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserImpl.class);
-	@NotNull(message="{pattern.user.userId.validation}")
+	@NotNull(message="{user.validation.userId.notNull}")
 	private String userId;
-	@Pattern(regexp="^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$", message="{pattern.user.emailAddress.validation}")
+	@Pattern(regexp="^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$", message="{user.validation.emailAddress.pattern}")
 	private String emailAddress;
-	@NotNull(message="{pattern.user.firstName.validation}")
+	@NotNull(message="{user.validation.firstName.notNull}")
 	private String firstName;
-	@NotNull(message="{pattern.user.lastName.validation}")
+	@NotNull(message="{user.validation.lastName.notNull}")
 	private String lastName;
 	private String locationName;
 	private String groupName;

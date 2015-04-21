@@ -39,6 +39,8 @@
 		</property>
 	</bean>
 	
+	<bean id="userValidator" class="com.leon.rfq.validators.UserValidator"/>
+	
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
 	</bean>
