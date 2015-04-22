@@ -1,5 +1,6 @@
 package com.leon.rfq.controllers;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -63,12 +64,13 @@ public class UserControllerImpl
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String processNewUserForm(@Valid @ModelAttribute("newUser") UserImpl newUser, BindingResult result)
+	public String processNewUserForm(@ModelAttribute("newUser") @Valid UserImpl newUser,
+			BindingResult result, HttpServletRequest request)
 	{
 		String[] suppressedFields = result.getSuppressedFields();
 		if(suppressedFields.length > 0)
 		{
-			throw new RuntimeException("Attempting to bind dsiallowed fields: " +
+			throw new RuntimeException("Attempting to bind disallowed fields: " +
 					StringUtils.arrayToCommaDelimitedString(suppressedFields));
 		}
 		
