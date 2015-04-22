@@ -17,6 +17,7 @@
   	<javax.servlet.jstl.version>1.2</javax.servlet.jstl.version>
   	<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
   	<jackson-mapper-asl.version>1.9.10</jackson-mapper-asl.version>
+  	<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
   </properties>  
 	<dependencies>	
 		<dependency>
@@ -125,7 +126,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
-			<version>4.3.1.Final</version>
+			<version>${hibernate-validator.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
