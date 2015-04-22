@@ -1,6 +1,7 @@
 package com.leon.rfq.user;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.validation.constraints.Pattern;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,17 +14,31 @@ import org.slf4j.LoggerFactory;
 public class UserImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserImpl.class);
+	
 	@NotNull(message="{user.validation.userId.notNull}")
+	@Size(min=1, max=20, message="{user.validation.userId.size}")
 	private String userId;
+	
 	@Pattern(regexp="^\\w+@[a-zA-Z_]+?\\.[a-zA-Z]{2,3}$", message="{user.validation.emailAddress.pattern}")
+	@Size(min=1, max=100, message="{user.validation.emailAddress.size}")
 	private String emailAddress;
+	
 	@NotNull(message="{user.validation.firstName.notNull}")
+	@Size(min=1, max=20, message="{user.validation.firstName.size}")
 	private String firstName;
+	
 	@NotNull(message="{user.validation.lastName.notNull}")
+	@Size(min=1, max=20, message="{user.validation.lastName.size}")
 	private String lastName;
+
+	//TODO - add validation
 	private String locationName;
+	//TODO - add validation
 	private String groupName;
+	
 	private boolean isValid;
+	
+	//TODO - add validation
 	private String lastUpdatedBy;
 	
 	public UserImpl()
