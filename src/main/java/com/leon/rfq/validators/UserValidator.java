@@ -1,9 +1,7 @@
 package com.leon.rfq.validators;
 
 import java.util.Set;
-
 import javax.validation.ConstraintViolation;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
