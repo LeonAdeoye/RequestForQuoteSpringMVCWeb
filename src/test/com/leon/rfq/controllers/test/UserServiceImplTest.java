@@ -20,7 +20,7 @@ import com.leon.rfq.user.UserService;
 import com.leon.rfq.user.UserServiceImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
-public class UserControllerImplTest extends AbstractJUnit4SpringContextTests
+public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired
 	private UserService userService;

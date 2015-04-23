@@ -122,7 +122,13 @@ public class UserServiceImpl implements UserService
 		List<UserImpl> result = this.userDao.getAll();
 		
 		if(result!= null)
+		{
+			this.users.clear();
+			for(UserImpl user : result)
+				this.users.put(user.getUserId(), user);
+			
 			return result;
+		}
 		else
 			return new LinkedList<UserImpl>();
 	}
