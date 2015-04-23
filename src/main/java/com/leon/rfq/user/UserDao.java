@@ -20,4 +20,8 @@ public interface UserDao
 	List<UserImpl> getAll();
 	 
 	UserImpl get(String userId);
+
+	boolean userExistsWithEmailAddress(String emailAddress);
+	
+	boolean userExistsWithUserId(String userId);
 }

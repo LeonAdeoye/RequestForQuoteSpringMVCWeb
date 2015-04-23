@@ -19,6 +19,14 @@
 		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users WHERE userId=#{userId}
 	</select>
 	
+	<select id="userExistsWithEmailAddress" parameterType="java.lang.String" resultType="UserImpl">
+		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users WHERE emailAddress=#{emailAddress}
+	</select>
+	
+	<select id="userExistsWithUserId" parameterType="java.lang.String" resultType="UserImpl">
+		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users WHERE userId=#{userId}
+	</select>
+	
 	<select id="getAll" resultMap="UserResultSet">
 		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users
 	</select>

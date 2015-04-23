@@ -121,4 +121,32 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	{
 		assertFalse("delete method should return false because the user does not exist", this.userDaoImpl.delete("nonExistantUserId"));
 	}
+	
+	@Test
+    public void userExistsWithEmailAddress_ExistingEmailAddress_ReturnsTrue()
+	{
+		this.userDaoImpl.save("userId", "ethan", "adeoye", "horatio.adeoye@test.com", "hong kong", "myGroup", true, "me");
+		
+		assertTrue("userExistsWithEmailAddress should return true because email address exists", this.userDaoImpl.userExistsWithEmailAddress("horatio.adeoye@test.com"));
+	}
+	
+	@Test
+    public void userExistsWithEmailAddress_NonexistentEmailAddress_ReturnsFalse()
+	{
+		assertFalse("userExistsWithEmailAddress should return false because email address does not exists", this.userDaoImpl.userExistsWithEmailAddress("peppa@test.com"));
+	}
+	
+	@Test
+    public void userExistsWithUserId_ExistingUserId_ReturnsTrue()
+	{
+		this.userDaoImpl.save("peppa_pig", "ethan", "adeoye", "horatio.adeoye@home.com", "hong kong", "myGroup", true, "me");
+		
+		assertTrue("userExistsWithUserId should return true because userId exists", this.userDaoImpl.userExistsWithUserId("peppa_pig"));
+	}
+	
+	@Test
+    public void userExistsWithUserId_NonexistentUserId_ReturnsFalse()
+	{
+		assertFalse("userExistsWithUserId should return false because userId does not exists", this.userDaoImpl.userExistsWithUserId("papa_pig"));
+	}
 }

@@ -63,6 +63,60 @@ public class UserServiceImpl implements UserService
 	}
 	
 	@Override
+	public boolean userExistsWithUserId(String userId)
+	{
+		if(userId == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("userId parameter cannot be null");
+			
+			throw new NullPointerException("userId parameter cannot be null");
+		}
+		
+		if(userId.equals(""))
+		{
+			if(logger.isErrorEnabled())
+				logger.error("userId parameter cannot be an empty string");
+			
+			throw new IllegalArgumentException("userId parameter cannot be an empty string");
+		}
+		
+		if(this.users.containsKey(userId))
+			return true;
+		else
+			return this.userDao.userExistsWithUserId(userId);
+	}
+	
+	@Override
+	public boolean userExistsWithEmailAddress(String emailAddress)
+	{
+		if(emailAddress == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("emailAddress parameter cannot be null");
+			
+			throw new NullPointerException("emailAddress parameter cannot be null");
+		}
+		
+		if(emailAddress.equals(""))
+		{
+			if(logger.isErrorEnabled())
+				logger.error("emailAddress parameter cannot be an empty string");
+			
+			throw new IllegalArgumentException("emailAddress parameter cannot be an empty string");
+		}
+		
+		for (Map.Entry<String, UserImpl> entry : this.users.entrySet())
+		{
+			UserImpl user = entry.getValue();
+		    if(emailAddress.equals(user.getEmailAddress()))
+		    	return true;
+		}
+				
+		return this.userDao.userExistsWithEmailAddress(emailAddress);
+	}
+	
+	@Override
 	public List<UserImpl> getAll()
 	{
 		List<UserImpl> result = this.userDao.getAll();
@@ -190,6 +244,12 @@ public class UserServiceImpl implements UserService
 			throw new IllegalArgumentException("groupName parameter cannot be an empty string");
 		}
 		
+		if(!this.users.containsKey(userId))
+		{
+			this.users.put(userId, new UserImpl(userId, emailAddress, firstName, lastName, locationName,
+					groupName, isValid, savedByUser));
+		}
+		
 		return this.userDao.save(userId, firstName, lastName, emailAddress, locationName, groupName, isValid, savedByUser);
 	}
 
@@ -211,6 +271,9 @@ public class UserServiceImpl implements UserService
 			
 			throw new IllegalArgumentException("userId parameter cannot be an empty string");
 		}
+		
+		if(this.users.containsKey(userId))
+			this.users.remove(userId);
 		
 		return this.userDao.delete(userId);
 	}
@@ -248,6 +311,12 @@ public class UserServiceImpl implements UserService
 				logger.error("updatedByUser parameter cannot be an empty string");
 			
 			throw new IllegalArgumentException("updatedByUser parameter cannot be an empty string");
+		}
+		
+		if(this.users.containsKey(userId))
+		{
+			UserImpl user = this.users.get(userId);
+			user.setIsValid(isValid);
 		}
 		
 		return this.userDao.updateValidity(userId, isValid, updatedByUser);

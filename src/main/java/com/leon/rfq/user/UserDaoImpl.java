@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao
 		
 		try
 		{
-			return this.userMapper.save(new UserImpl(userId, firstName, lastName, emailAddress, locationName, groupName, isValid, savedByUser)) == 1;
+			return this.userMapper.save(new UserImpl(userId, emailAddress, firstName, lastName, locationName, groupName, isValid, savedByUser)) == 1;
 		}
 		catch(Exception e)
 		{
@@ -93,6 +93,24 @@ public class UserDaoImpl implements UserDao
 			logger.debug("Request to get user with userId: " + userId);
 		
 		return this.userMapper.get(userId);
+	}
+
+	@Override
+	public boolean userExistsWithEmailAddress(String emailAddress)
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Request to check if user exists with emailAddress: " + emailAddress);
+		
+		return this.userMapper.userExistsWithEmailAddress(emailAddress) != null;
+	}
+	
+	@Override
+	public boolean userExistsWithUserId(String userId)
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Request to check if user exists with userId: " + userId);
+		
+		return this.userMapper.userExistsWithUserId(userId) != null;
 	}
 }
 

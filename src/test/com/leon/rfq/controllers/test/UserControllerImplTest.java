@@ -281,4 +281,66 @@ public class UserControllerImplTest extends AbstractJUnit4SpringContextTests
 		assertTrue(caughtException() instanceof IllegalArgumentException);
 		assertEquals(caughtException().getMessage(), "updatedByUser parameter cannot be an empty string");
 	}
+	
+	@Test
+    public void userExistsWithUserId_EmptyUserId_ThrowsInvalidArgumentException()
+	{
+		catchException(this.userService).userExistsWithUserId("");
+		
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
+	}
+	
+	@Test
+    public void userExistsWithUserId_NullUserId_ThrowsNullPointerException()
+	{
+		catchException(this.userService).userExistsWithUserId(null);
+		
+		assertTrue(caughtException() instanceof NullPointerException);
+		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
+	}
+	
+	@Test
+    public void userExistsWithEmailAddress_EmptyEmailAddress_ThrowsInvalidArgumentException()
+	{
+		catchException(this.userService).userExistsWithEmailAddress("");
+		
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be an empty string");
+	}
+	
+	@Test
+    public void userExistsWithEmailAddress_NullEmailAddress_ThrowsNullPointerException()
+	{
+		catchException(this.userService).userExistsWithEmailAddress(null);
+		
+		assertTrue(caughtException() instanceof NullPointerException);
+		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be null");
+	}
+	
+	@Test
+    public void userExistsWithEmailAddress_existingEmailAddress_ReturnsTrue()
+	{
+		// Arrange
+		UserService userService = new UserServiceImpl();
+		UserDao userDaoMock = mock(UserDaoImpl.class);
+		userService.setUserDao(userDaoMock);
+		// Act
+		userService.userExistsWithEmailAddress("emailAddress");
+		// Assert
+		verify(userDaoMock).userExistsWithEmailAddress("emailAddress");
+	}
+	
+	@Test
+    public void userExistsWithUserId_existingUserId_ReturnsTrue()
+	{
+		// Arrange
+		UserService userService = new UserServiceImpl();
+		UserDao userDaoMock = mock(UserDaoImpl.class);
+		userService.setUserDao(userDaoMock);
+		// Act
+		userService.userExistsWithUserId("userId");
+		// Assert
+		verify(userDaoMock).userExistsWithUserId("userId");
+	}
 }

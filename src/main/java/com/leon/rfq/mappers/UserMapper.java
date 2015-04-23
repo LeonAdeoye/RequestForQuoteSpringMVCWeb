@@ -15,4 +15,8 @@ public interface UserMapper
 	int save(UserImpl userImpl);
 
 	int updateValidity(UserImpl userImpl);
+	
+	UserImpl userExistsWithEmailAddress(String emailAddress);
+	
+	UserImpl userExistsWithUserId(String userId);
 }

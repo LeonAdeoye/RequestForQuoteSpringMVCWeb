@@ -16,4 +16,9 @@ public interface UserService
 	boolean updateValidity(String userId, boolean isValid, String updatedByUser);
 
 	void setUserDao(UserDao userDao);
+	
+	boolean userExistsWithUserId(String userId);
+	
+	boolean userExistsWithEmailAddress(String emailAddress);
+	
 }
