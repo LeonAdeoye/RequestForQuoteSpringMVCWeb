@@ -1,7 +1,9 @@
 package com.leon.rfq.validators;
 
 import java.util.Set;
+
 import javax.validation.ConstraintViolation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -39,17 +41,11 @@ public class UserValidator implements Validator
 		
 		UserImpl user = (UserImpl) target;
 		
-		if(this.userService.get(user.getUserId()) != null)
-		{
+		if(this.userService.userExistsWithUserId(user.getUserId()))
 			errors.rejectValue("userId", "user.validation.userId.unique");
-		}
 		
-		//TODO
-/*		if(userService.get(user.getEmailAddress()) == null)
-		{
-			errors.rejectValue("emailAddress", "validator.emailAddressUniqueness.message");
-		}*/
-		
+		if(this.userService.userExistsWithEmailAddress(user.getEmailAddress()))
+			errors.rejectValue("emailAddress", "user.validation.emailAddress.unique");
 	}
 
 }

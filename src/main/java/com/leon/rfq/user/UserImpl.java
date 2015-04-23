@@ -1,8 +1,8 @@
 package com.leon.rfq.user;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.ibatis.type.Alias;
@@ -33,6 +33,7 @@ public class UserImpl
 
 	//TODO - add validation
 	private String locationName;
+	
 	//TODO - add validation
 	private String groupName;
 	
