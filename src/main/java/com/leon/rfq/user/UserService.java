@@ -8,7 +8,7 @@ public interface UserService
 
 	List<UserImpl> getAll();
 	
-	boolean save(String userId, String firstName, String lastName, String emailAddress,
+	boolean insert(String userId, String firstName, String lastName, String emailAddress,
 			String locationName, String groupName, boolean isValid, String savedByUser);
 	
 	boolean delete(String userId);
@@ -17,8 +17,12 @@ public interface UserService
 
 	void setUserDao(UserDao userDao);
 	
+	boolean isUserCached(String userId);
+	
 	boolean userExistsWithUserId(String userId);
 	
 	boolean userExistsWithEmailAddress(String emailAddress);
 	
+	boolean update(String userId, String firstName, String lastName, String emailAddress,
+			String locationName, String groupName, boolean isValid, String savedByUser);
 }

@@ -32,8 +32,8 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 		ValidationUtils.invokeValidator(this.userValidator, user, bindException);
 		
 		// Assert
-		assertEquals(1, bindException.getErrorCount());
-		assertTrue(bindException.getLocalizedMessage().contains("Last name must be 1 to 20 characters in length"));
+		assertEquals("Error count should be one if the lastName is empty", 1, bindException.getErrorCount());
+		assertTrue("Error message should match if the lastName is empty", bindException.getLocalizedMessage().contains("Last name must be 1 to 20 characters in length"));
 	}
 	
 	@Test
@@ -49,7 +49,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 		ValidationUtils.invokeValidator(this.userValidator, user, bindException);
 		
 		// Assert
-		assertEquals(0, bindException.getErrorCount());
+		assertEquals("Error count should be zero if all parameters are valid", 0, bindException.getErrorCount());
 	}
 	
 	@Test
@@ -65,12 +65,12 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 		ValidationUtils.invokeValidator(this.userValidator, user, bindException);
 		
 		// Assert
-		assertEquals(1, bindException.getErrorCount());
-		assertTrue(bindException.getLocalizedMessage().contains("First name must be 1 to 20 characters in length"));
+		assertEquals("Error count should be one if the firstName is empty", 1, bindException.getErrorCount());
+		assertTrue("Error message should match if the firstName is empty", bindException.getLocalizedMessage().contains("First name must be 1 to 20 characters in length"));
 	}
 	
 	@Test
-	public void User_InvalidUserId_ShouldBeInvalidated()
+	public void User_UserIdTooLong_ShouldBeInvalidated()
 	{
 		// Arrange
 		UserImpl user = new UserImpl("123456789012345678901234567890", "emailAddress@test.com", "firstName",
@@ -82,8 +82,42 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 		ValidationUtils.invokeValidator(this.userValidator, user, bindException);
 		
 		// Assert
-		assertEquals(1, bindException.getErrorCount());
-		assertTrue(bindException.getLocalizedMessage().contains("User ID must be 1 to 20 characters in length"));
+		assertEquals("Error count should be one if the userId is too long", 1, bindException.getErrorCount());
+		assertTrue("Error message should match if the userId is too long", bindException.getLocalizedMessage().contains("User ID must be 1 to 20 characters in length"));
+	}
+	
+	@Test
+	public void User_FirstNameTooLong_ShouldBeInvalidated()
+	{
+		// Arrange
+		UserImpl user = new UserImpl("testUser", "emailAddress@test.com", "123456789012345678901234567890",
+			"lastName", "locationName", "groupName", true, "testUser");
+		
+		BindException bindException = new BindException(user, "user");
+		
+		// Act
+		ValidationUtils.invokeValidator(this.userValidator, user, bindException);
+		
+		// Assert
+		assertEquals("Error count should be one if the first name is too long", 1, bindException.getErrorCount());
+		assertTrue("Error message should match if the first name is too long", bindException.getLocalizedMessage().contains("First name must be 1 to 20 characters in length"));
+	}
+	
+	@Test
+	public void User_LastNameTooLong_ShouldBeInvalidated()
+	{
+		// Arrange
+		UserImpl user = new UserImpl("testuser", "emailAddress@test.com", "firstName",
+			"123456789012345678901234567890", "locationName", "groupName", true, "testUser");
+		
+		BindException bindException = new BindException(user, "user");
+		
+		// Act
+		ValidationUtils.invokeValidator(this.userValidator, user, bindException);
+		
+		// Assert
+		assertEquals("Error count should be one if the last name is too long", 1, bindException.getErrorCount());
+		assertTrue("Error message should match if the last name is too long", bindException.getLocalizedMessage().contains("Last name must be 1 to 20 characters in length"));
 	}
 	
 	@Test
@@ -99,12 +133,12 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 		ValidationUtils.invokeValidator(this.userValidator, user, bindException);
 		
 		// Assert
-		assertEquals(1, bindException.getErrorCount());
-		assertTrue(bindException.getLocalizedMessage().contains("Email address must contain both a . and an @ character"));
+		assertEquals("Error count should be one if the email address is missing an @ character", 1, bindException.getErrorCount());
+		assertTrue("Error message should match if the email address is missing an @ character", bindException.getLocalizedMessage().contains("Email address must contain both a . and an @ character"));
 	}
 	
 	@Test
-	public void User_EmailAddressMissingDOT_ShouldBeInvalidated()
+	public void User_EmailAddressMissingPeriod_ShouldBeInvalidated()
 	{
 		// Arrange
 		UserImpl user = new UserImpl("testUser", "test@com", "firstName",
@@ -116,8 +150,8 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 		ValidationUtils.invokeValidator(this.userValidator, user, bindException);
 		
 		// Assert
-		assertEquals(1, bindException.getErrorCount());
-		assertTrue(bindException.getLocalizedMessage().contains("Email address must contain both a . and an @ character"));
+		assertEquals("Error count should be one if the email address is missing a period", 1, bindException.getErrorCount());
+		assertTrue("Error message should match if the email address is missing a period", bindException.getLocalizedMessage().contains("Email address must contain both a . and an @ character"));
 	}
 	
 }

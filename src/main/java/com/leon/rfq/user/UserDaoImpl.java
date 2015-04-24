@@ -36,21 +36,42 @@ public class UserDaoImpl implements UserDao
 	}
 
 	@Override
-	public boolean save(String userId, String firstName, String lastName,
+	public boolean insert(String userId, String firstName, String lastName,
 			String emailAddress, String locationName, String groupName, boolean isValid,
 			String savedByUser)
 	{
 		if(logger.isDebugEnabled())
-			logger.debug("Save the user with userId " + userId);
+			logger.debug("Insert the user with userId " + userId);
 		
 		try
 		{
-			return this.userMapper.save(new UserImpl(userId, emailAddress, firstName, lastName, locationName, groupName, isValid, savedByUser)) == 1;
+			return this.userMapper.insert(new UserImpl(userId, emailAddress, firstName, lastName, locationName, groupName, isValid, savedByUser)) == 1;
 		}
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("Failed to save the user with userId " + userId + " because of exception: " + e);
+				logger.error("Failed to insert the user with userId " + userId + " because of exception: " + e);
+			
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean update(String userId, String firstName, String lastName,
+			String emailAddress, String locationName, String groupName, boolean isValid,
+			String savedByUser)
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Update the user with userId " + userId);
+		
+		try
+		{
+			return this.userMapper.update(new UserImpl(userId, emailAddress, firstName, lastName, locationName, groupName, isValid, savedByUser)) == 1;
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to update the user with userId " + userId + " because of exception: " + e);
 			
 			return false;
 		}

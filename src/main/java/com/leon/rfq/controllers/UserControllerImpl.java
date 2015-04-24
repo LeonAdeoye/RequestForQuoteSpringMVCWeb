@@ -77,7 +77,7 @@ public class UserControllerImpl
 		if(result.hasErrors())
 			return "addUser";
 		
-		this.userService.save(newUser.getUserId(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmailAddress(),
+		this.userService.insert(newUser.getUserId(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmailAddress(),
 				newUser.getLocationName(), newUser.getGroupName(), newUser.getIsValid(), "ladeoye"); //TODO
 		
 		return "redirect:/users";

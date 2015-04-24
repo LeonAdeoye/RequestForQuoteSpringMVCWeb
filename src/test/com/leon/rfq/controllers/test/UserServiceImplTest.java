@@ -3,9 +3,11 @@ package com.leon.rfq.controllers.test;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
@@ -91,7 +93,31 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act
 		userService.delete("userToBeDeleted");
 		// Assert
-		verify(userDaoMock).delete("userToBeDeleted");
+		verify(userDaoMock, never()).delete("userToBeDeleted");
+	}
+	
+	@Test
+    public void updateValidity_NonExistentUserId_DoesNotCallDaoUpdateValidityMethod()
+	{
+		// Arrange
+		UserService userService = new UserServiceImpl();
+		UserDao userDaoMock = mock(UserDaoImpl.class);
+		userService.setUserDao(userDaoMock);
+		// Act
+		userService.updateValidity("userToBeUpdated", true, "tester");
+		// Assert
+		verify(userDaoMock, never()).updateValidity("userToBeUpdated", true, "tester");
+	}
+	
+	@Test
+    public void updateValidity_NonExistentUserId_ReturnFalse()
+	{
+		// Arrange
+		UserService userService = new UserServiceImpl();
+		UserDao userDaoMock = mock(UserDaoImpl.class);
+		userService.setUserDao(userDaoMock);
+		// Act and Assert
+		assertFalse(userService.updateValidity("userToBeUpdated", true, "tester"));
 	}
 	
 	@Test
@@ -104,125 +130,125 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act
 		userService.updateValidity("userToBeUpdated", true, "tester");
 		// Assert
-		verify(userDaoMock).updateValidity("userToBeUpdated", true, "tester");
+		verify(userDaoMock, never()).updateValidity("userToBeUpdated", true, "tester");
 	}
 	
 	@Test
-    public void save_validParameters_CallsDaoSaveMethod()
+    public void insert_validParameters_CallsDaoSaveMethod()
 	{
 		// Arrange
 		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
 		userService.setUserDao(userDaoMock);
 		// Act
-		userService.save("userToBeSaved", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
+		userService.insert("userToBeSaved", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		// Assert
-		verify(userDaoMock).save("userToBeSaved", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
+		verify(userDaoMock).insert("userToBeSaved", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 	}
 	
 	@Test
-    public void save_NullUserId_ThrowsNullPointerException()
+    public void insert_NullUserId_ThrowsNullPointerException()
 	{
-		catchException(this.userService).save(null, "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
+		catchException(this.userService).insert(null, "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof NullPointerException);
 		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
 	}
 	
 	@Test
-    public void save_EmptyStringUserId_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringUserId_ThrowsInvalidArgumentException()
 	{
-		catchException(this.userService).save("", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
+		catchException(this.userService).insert("", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
 		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
 	}
 	
 	@Test
-    public void save_NullFirstName_ThrowsNullPointerException()
+    public void insert_NullFirstName_ThrowsNullPointerException()
 	{
-		catchException(this.userService).save("userId", null, "lastName", "emailAddress", "location", "group", true, "tester");
+		catchException(this.userService).insert("userId", null, "lastName", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof NullPointerException);
 		assertEquals(caughtException().getMessage(), "firstName parameter cannot be null");
 	}
 	
 	@Test
-    public void save_EmptyStringFirstName_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringFirstName_ThrowsInvalidArgumentException()
 	{
-		catchException(this.userService).save("userId", "", "lastName", "emailAddress", "location", "group", true, "tester");
+		catchException(this.userService).insert("userId", "", "lastName", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
 		assertEquals(caughtException().getMessage(), "firstName parameter cannot be an empty string");
 	}
 	
 	@Test
-    public void save_NullLastName_ThrowsNullPointerException()
+    public void insert_NullLastName_ThrowsNullPointerException()
 	{
-		catchException(this.userService).save("userId", "firstName", null, "emailAddress", "location", "group", true, "tester");
+		catchException(this.userService).insert("userId", "firstName", null, "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof NullPointerException);
 		assertEquals(caughtException().getMessage(), "lastName parameter cannot be null");
 	}
 	
 	@Test
-    public void save_EmptyStringLastName_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringLastName_ThrowsInvalidArgumentException()
 	{
-		catchException(this.userService).save("userId", "firstName", "", "emailAddress", "location", "group", true, "tester");
+		catchException(this.userService).insert("userId", "firstName", "", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
 		assertEquals(caughtException().getMessage(), "lastName parameter cannot be an empty string");
 	}
 	
 	@Test
-    public void save_NullEmailAddress_ThrowsNullPointerException()
+    public void insert_NullEmailAddress_ThrowsNullPointerException()
 	{
-		catchException(this.userService).save("userId", "firstName", "lastName", null, "location", "group", true, "tester");
+		catchException(this.userService).insert("userId", "firstName", "lastName", null, "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof NullPointerException);
 		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be null");
 	}
 	
 	@Test
-    public void save_EmptyStringEmailAddress_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringEmailAddress_ThrowsInvalidArgumentException()
 	{
-		catchException(this.userService).save("userId", "firstName", "lastName", "", "location", "group", true, "tester");
+		catchException(this.userService).insert("userId", "firstName", "lastName", "", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
 		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be an empty string");
 	}
 	
 	@Test
-    public void save_NullLocation_ThrowsNullPointerException()
+    public void insert_NullLocation_ThrowsNullPointerException()
 	{
-		catchException(this.userService).save("userId", "firstName", "lastName", "emailAddress", null, "group", true, "tester");
+		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", null, "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof NullPointerException);
 		assertEquals(caughtException().getMessage(), "locationName parameter cannot be null");
 	}
 	
 	@Test
-    public void save_EmptyStringLocation_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringLocation_ThrowsInvalidArgumentException()
 	{
-		catchException(this.userService).save("userId", "firstName", "lastName", "emailAddress", "", "group", true, "tester");
+		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
 		assertEquals(caughtException().getMessage(), "locationName parameter cannot be an empty string");
 	}
 	
 	@Test
-    public void save_NullSavedByUser_ThrowsNullPointerException()
+    public void insert_NullSavedByUser_ThrowsNullPointerException()
 	{
-		catchException(this.userService).save("userId", "firstName", "lastName", "emailAddress", "location", "group", true, null);
+		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "location", "group", true, null);
 		
 		assertTrue(caughtException() instanceof NullPointerException);
 		assertEquals(caughtException().getMessage(), "savedByUser parameter cannot be null");
 	}
 	
 	@Test
-    public void save_EmptyStringSavedByUser_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringSavedByUser_ThrowsInvalidArgumentException()
 	{
-		catchException(this.userService).save("userId", "firstName", "lastName", "emailAddress", "location", "group", true, "");
+		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "location", "group", true, "");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
 		assertEquals(caughtException().getMessage(), "savedByUser parameter cannot be an empty string");

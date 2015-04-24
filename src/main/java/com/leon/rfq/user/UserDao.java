@@ -6,7 +6,16 @@ public interface UserDao
 {
 	boolean delete(String userId);
 
-	boolean save(String userId,
+	boolean insert(String userId,
+			String firstName,
+			String lastName,
+			String emailAddress,
+			String locationName,
+			String groupName,
+			boolean isValid,
+			String savedByUser);
+	
+	boolean update(String userId,
 			String firstName,
 			String lastName,
 			String emailAddress,

@@ -12,7 +12,9 @@ public interface UserMapper
 	
 	int delete(String userId);
 	
-	int save(UserImpl userImpl);
+	int insert(UserImpl userImpl);
+	
+	int update(UserImpl userImpl);
 
 	int updateValidity(UserImpl userImpl);
 	

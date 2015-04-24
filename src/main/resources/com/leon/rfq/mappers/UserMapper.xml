@@ -32,10 +32,16 @@
 	</select>
 	
 	<update id="updateValidity" parameterType="UserImpl">
-		UPDATE users SET isValid = 'N', lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() WHERE userId = #{userId}
+		UPDATE users SET isValid = 'N', lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() WHERE userId = #{userId} <!-- TODO use IF statement-->
 	</update>
 	
-	<insert id="save" parameterType="UserImpl">
+	<update id="update" parameterType="UserImpl">
+		UPDATE users SET emailAddress = #{emailAddress}, firstName = #{firstName}, lastName= #{lastName}, 
+		groupName = #{groupName}, locationName = #{locationName}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, 
+		lastUpdated = now() WHERE userId = #{userId}
+	</update>	
+	
+	<insert id="insert" parameterType="UserImpl">
 		INSERT INTO users (userId, emailAddress, firstName, lastName, groupName, locationName, isValid, lastUpdatedBy, lastUpdated)
 		VALUES(#{userId}, #{emailAddress}, #{firstName}, #{lastName}, #{groupName}, #{locationName}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert>
