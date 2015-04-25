@@ -19,6 +19,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.leon.rfq.user.UserDaoImpl;
+import com.leon.rfq.user.UserImpl;
 
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
@@ -105,6 +106,15 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	{
 		this.userDaoImpl.insert("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
 		assertFalse("second save method should return false because userId already exists", this.userDaoImpl.insert("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
+	}
+	
+	@Test
+    public void update_updatewithValidEmailAddress_EmailAddressUpdated()
+	{
+		this.userDaoImpl.insert("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
+		assertTrue("Update should return true", this.userDaoImpl.update("testUserId", "ethan", "adeoye", "horatio@adeoye.com", "hong kong", "myGroup", true, "me"));
+		UserImpl updatedUser = this.userDaoImpl.get("testUserId");
+		assertEquals("Updated user's email address should be updated to new value", updatedUser.getEmailAddress(), "horatio@adeoye.com");
 	}
 	
 	@Test

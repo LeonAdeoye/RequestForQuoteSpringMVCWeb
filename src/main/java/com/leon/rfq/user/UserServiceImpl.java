@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService
 	
 	public void UserService()
 	{
-		this.userDao.getAll();
+		this.getAll();
 	}
 	
 	@Override

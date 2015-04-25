@@ -1,4 +1,4 @@
-package com.leon.rfq.controllers.test;
+package com.leon.rfq.service.test;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -117,7 +117,7 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		UserDao userDaoMock = mock(UserDaoImpl.class);
 		userService.setUserDao(userDaoMock);
 		// Act and Assert
-		assertFalse(userService.updateValidity("userToBeUpdated", true, "tester"));
+		assertFalse("updateValidity should return false if user does not exist.", userService.updateValidity("userToBeUpdated", true, "tester"));
 	}
 	
 	@Test
