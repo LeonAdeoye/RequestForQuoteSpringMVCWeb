@@ -369,4 +369,113 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Assert
 		verify(userDaoMock).userExistsWithUserId("userId");
 	}
+	
+	@Test
+    public void update_NullUserId_ThrowsNullPointerException()
+	{
+		catchException(this.userService).update(null, "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof NullPointerException);
+		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
+	}
+	
+	@Test
+    public void update_EmptyStringUserId_ThrowsInvalidArgumentException()
+	{
+		catchException(this.userService).update("", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
+	}
+	
+	@Test
+    public void update_NullFirstName_ThrowsNullPointerException()
+	{
+		catchException(this.userService).update("userId", null, "lastName", "emailAddress", "location", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof NullPointerException);
+		assertEquals(caughtException().getMessage(), "firstName parameter cannot be null");
+	}
+	
+	@Test
+    public void update_EmptyStringFirstName_ThrowsInvalidArgumentException()
+	{
+		catchException(this.userService).update("userId", "", "lastName", "emailAddress", "location", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "firstName parameter cannot be an empty string");
+	}
+	
+	@Test
+    public void update_NullLastName_ThrowsNullPointerException()
+	{
+		catchException(this.userService).update("userId", "firstName", null, "emailAddress", "location", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof NullPointerException);
+		assertEquals(caughtException().getMessage(), "lastName parameter cannot be null");
+	}
+	
+	@Test
+    public void update_EmptyStringLastName_ThrowsInvalidArgumentException()
+	{
+		catchException(this.userService).update("userId", "firstName", "", "emailAddress", "location", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "lastName parameter cannot be an empty string");
+	}
+	
+	@Test
+    public void update_NullEmailAddress_ThrowsNullPointerException()
+	{
+		catchException(this.userService).update("userId", "firstName", "lastName", null, "location", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof NullPointerException);
+		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be null");
+	}
+	
+	@Test
+    public void update_EmptyStringEmailAddress_ThrowsInvalidArgumentException()
+	{
+		catchException(this.userService).update("userId", "firstName", "lastName", "", "location", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be an empty string");
+	}
+	
+	@Test
+    public void update_NullLocation_ThrowsNullPointerException()
+	{
+		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", null, "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof NullPointerException);
+		assertEquals(caughtException().getMessage(), "locationName parameter cannot be null");
+	}
+	
+	@Test
+    public void update_EmptyStringLocation_ThrowsInvalidArgumentException()
+	{
+		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "", "group", true, "tester");
+		
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "locationName parameter cannot be an empty string");
+	}
+	
+	@Test
+    public void update_NullSavedByUser_ThrowsNullPointerException()
+	{
+		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "location", "group", true, null);
+		
+		assertTrue(caughtException() instanceof NullPointerException);
+		assertEquals(caughtException().getMessage(), "savedByUser parameter cannot be null");
+	}
+	
+	@Test
+    public void update_EmptyStringSavedByUser_ThrowsInvalidArgumentException()
+	{
+		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "location", "group", true, "");
+		
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "savedByUser parameter cannot be an empty string");
+	}
+	
 }
