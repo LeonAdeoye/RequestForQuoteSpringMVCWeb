@@ -5,12 +5,20 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
 		<link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+		<script src="/resources/javascript/jquery-1.11.2.min.js"></script>
+		<script type="text/javascript">
+			jQuery(document).ready(function($) 
+			{			 
+				$('#mbu').html("This is updated by jQuery")
+			 
+			});
+		</script>		
 		<title>User Maintenance</title>
 	</head>
 	<body>
 		<section>
 			<div class="jumbotron">
-				<div class="container">
+				<div class="container" id="title-header">
 					<h1>Users</h1>
 					<div class="pull-right" style="padding-right:50px">
 						<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
@@ -40,6 +48,9 @@
 					</c:forEach>
 				</div>
 			</table>
+			<div id="mbu">
+				Help
+			</div>			
 		</section>
 	</body>
 </html>
