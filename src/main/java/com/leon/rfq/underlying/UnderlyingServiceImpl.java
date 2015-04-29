@@ -17,7 +17,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 {
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	private UnderlyingManagerDao dao;
+	private UnderlyingDao dao;
 
 	/**
 	 * Sets the Underlying Manager DAO object reference property.
@@ -27,7 +27,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	 */
 	@Override
 	@WebMethod(exclude = true)
-	public void setUnderlyingManagerDao(UnderlyingManagerDao dao)
+	public void setUnderlyingManagerDao(UnderlyingDao dao)
 	{
 		if(dao == null)
 			throw new NullPointerException("dao");

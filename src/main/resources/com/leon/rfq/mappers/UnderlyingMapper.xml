@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.leon.rfq.mappers.UnderlyingMapper">
+	
+	<resultMap type="Underlying" id="UnderlyingResultSet">
+		<id 	property="ric" column="ric"/>
+		<result property="description" column="description"/>
+		<result property="isValid" column="isValid"/>
+	</resultMap>
+	
+	<select id="get" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
+		SELECT ric, description, isValid FROM underlyings WHERE ric=#{ric}
+	</select>
+	
+	<select id="getAll" resultMap="UnderlyingResultSet">
+		SELECT ric, description, isValid FROM underlyings
+	</select>
+	
+	<update id="updateValidity" parameterType="UnderlyingDetailImpl">
+		UPDATE underlyings SET isValid = 'N', lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() WHERE ric = #{ric} <!-- TODO use IF statement-->
+	</update>
+	
+	<update id="update" parameterType="UnderlyingDetailImpl">
+		UPDATE underlyings SET description = #{description}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, 
+		lastUpdated = now() WHERE ric = #{ric}
+	</update>	
+	
+	<insert id="insert" parameterType="UnderlyingDetailImpl">
+		INSERT INTO users (ric, description, isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{ric}, #{description}, #{isValid}, #{lastUpdatedBy}, now() )
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM underlyings
+		WHERE ric = #{ric}
+	</delete>		
+			
+</mapper>
