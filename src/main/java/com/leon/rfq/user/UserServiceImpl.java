@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("userId parameter cannot be null");
 		}
 		
-		if(userId.equals(""))
+		if(userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("userId parameter cannot be an empty string");
@@ -84,7 +84,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("userId parameter cannot be null");
 		}
 		
-		if(userId.equals(""))
+		if(userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("userId parameter cannot be an empty string");
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("emailAddress parameter cannot be null");
 		}
 		
-		if(emailAddress.equals(""))
+		if(emailAddress.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("emailAddress parameter cannot be an empty string");
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("userId parameter cannot be null");
 		}
 		
-		if(userId.equals(""))
+		if(userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("userId parameter cannot be an empty string");
@@ -174,7 +174,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("savedByUser parameter cannot be null");
 		}
 		
-		if(savedByUser.equals(""))
+		if(savedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("savedByUser parameter cannot be an empty string");
@@ -190,7 +190,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("firstName parameter cannot be null");
 		}
 		
-		if(firstName.equals(""))
+		if(firstName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("firstName parameter cannot be an empty string");
@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("lastName parameter cannot be null");
 		}
 		
-		if(lastName.equals(""))
+		if(lastName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("lastName parameter cannot be an empty string");
@@ -222,7 +222,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("emailAddress parameter cannot be null");
 		}
 		
-		if(emailAddress.equals(""))
+		if(emailAddress.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("emailAddress parameter cannot be an empty string");
@@ -238,7 +238,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("locationName parameter cannot be null");
 		}
 		
-		if(locationName.equals(""))
+		if(locationName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("locationName parameter cannot be an empty string");
@@ -254,7 +254,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("groupName parameter cannot be null");
 		}
 		
-		if(groupName.equals(""))
+		if(groupName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("groupName parameter cannot be an empty string");
@@ -284,7 +284,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("userId parameter cannot be null");
 		}
 		
-		if(userId.equals(""))
+		if(userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("userId parameter cannot be an empty string");
@@ -313,7 +313,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("userId parameter cannot be null");
 		}
 		
-		if(userId.equals(""))
+		if(userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("userId parameter cannot be an empty string");
@@ -329,7 +329,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("updatedByUser parameter cannot be null");
 		}
 		
-		if(updatedByUser.equals(""))
+		if(updatedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("updatedByUser parameter cannot be an empty string");
@@ -362,7 +362,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("userId parameter cannot be null");
 		}
 		
-		if(userId.equals(""))
+		if(userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("userId parameter cannot be an empty string");
@@ -378,7 +378,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("savedByUser parameter cannot be null");
 		}
 		
-		if(savedByUser.equals(""))
+		if(savedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("savedByUser parameter cannot be an empty string");
@@ -394,7 +394,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("firstName parameter cannot be null");
 		}
 		
-		if(firstName.equals(""))
+		if(firstName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("firstName parameter cannot be an empty string");
@@ -410,7 +410,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("lastName parameter cannot be null");
 		}
 		
-		if(lastName.equals(""))
+		if(lastName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("lastName parameter cannot be an empty string");
@@ -426,7 +426,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("emailAddress parameter cannot be null");
 		}
 		
-		if(emailAddress.equals(""))
+		if(emailAddress.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("emailAddress parameter cannot be an empty string");
@@ -442,7 +442,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("locationName parameter cannot be null");
 		}
 		
-		if(locationName.equals(""))
+		if(locationName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("locationName parameter cannot be an empty string");
@@ -458,7 +458,7 @@ public class UserServiceImpl implements UserService
 			throw new NullPointerException("groupName parameter cannot be null");
 		}
 		
-		if(groupName.equals(""))
+		if(groupName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("groupName parameter cannot be an empty string");
