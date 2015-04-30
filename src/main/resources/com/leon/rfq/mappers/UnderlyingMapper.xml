@@ -5,7 +5,7 @@
   
 <mapper namespace="com.leon.rfq.mappers.UnderlyingMapper">
 	
-	<resultMap type="Underlying" id="UnderlyingResultSet">
+	<resultMap type="UnderlyingDetailImpl" id="UnderlyingResultSet">
 		<id 	property="ric" column="ric"/>
 		<result property="description" column="description"/>
 		<result property="isValid" column="isValid"/>
@@ -18,10 +18,6 @@
 	<select id="getAll" resultMap="UnderlyingResultSet">
 		SELECT ric, description, isValid FROM underlyings
 	</select>
-	
-	<update id="updateValidity" parameterType="UnderlyingDetailImpl">
-		UPDATE underlyings SET isValid = 'N', lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() WHERE ric = #{ric} <!-- TODO use IF statement-->
-	</update>
 	
 	<update id="update" parameterType="UnderlyingDetailImpl">
 		UPDATE underlyings SET description = #{description}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, 

@@ -78,7 +78,7 @@
 		
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
   		<property name="dataSource" ref="dataSource" />
-  		<property name="typeAliasesPackage" value="com.leon.rfq.user"/> 		  		  		
+  		<property name="typeAliasesPackage" value="com.leon.rfq"/> 		  		  		
 	</bean>
 	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
