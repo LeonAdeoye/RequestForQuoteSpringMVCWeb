@@ -30,7 +30,12 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	public void setUnderlyingManagerDao(UnderlyingDao dao)
 	{
 		if(dao == null)
-			throw new NullPointerException("dao");
+		{
+			if(logger.isErrorEnabled())
+				logger.error("dao argument cannot be null");
+			
+			throw new NullPointerException("dao argument cannot be null");
+		}
 
 		this.dao = dao;
 	}
@@ -44,40 +49,32 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	 * @param savedByUser					the user who is saving the underlying.
 	 * @returns	true if the save was successful; false otherwise.
 	 * @throws IllegalArgumentException 	if the RIC or description or savedByUser parameter is an empty string.
-	 * @throws NullPointerException 		if the RIC or description or savedByUser parameter is an empty null.
 	 */
 	@Override
-	@WebMethod
 	public boolean insert(String ric, String description, boolean isValid, String savedByUser)
 	{
-		if(ric.isEmpty())
+		if(ric.isEmpty() || (ric == null))
 		{
-			throw new IllegalArgumentException("ric cannot be empty");
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
 		}
 
-		if(description.isEmpty())
+		if(description.isEmpty() || (description == null))
 		{
-			throw new IllegalArgumentException("description cannot be empty");
+			if(logger.isErrorEnabled())
+				logger.error("description argument is invalid");
+			
+			throw new IllegalArgumentException("description argument is invalid");
 		}
 
-		if(savedByUser.isEmpty())
+		if(savedByUser.isEmpty() || (savedByUser == null))
 		{
-			throw new IllegalArgumentException("savedByUser cannot be empty");
-		}
-		
-		if(ric == null)
-		{
-			throw new NullPointerException("ric cannot be null");
-		}
-
-		if(description == null)
-		{
-			throw new NullPointerException("description cannot be null");
-		}
-
-		if(savedByUser == null)
-		{
-			throw new NullPointerException("savedByUser cannot be null");
+			if(logger.isErrorEnabled())
+				logger.error("savedByUser argument is invalid");
+			
+			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
 
 		if(logger.isDebugEnabled())
@@ -99,42 +96,34 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	 * @param savedBy						the user who is saving the underlying.
 	 * @returns	true if the save was successful; false otherwise.
 	 * @throws IllegalArgumentException 	if the RIC or description or savedBy parameter is an empty string.
-	 * @throws NullPointerException 		if the RIC or description or savedByUser parameter is an empty null.
 	 */
 	@Override
-	@WebMethod
 	public boolean update(String ric, String description, boolean isValid, String updatedByUser)
 	{
-		if(ric.isEmpty())
+		if(ric.isEmpty() || (ric == null))
 		{
-			throw new IllegalArgumentException("ric cannot be empty");
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
 		}
 
-		if(description.isEmpty())
+		if(description.isEmpty() || (description == null))
 		{
-			throw new IllegalArgumentException("description cannot be empty");
+			if(logger.isErrorEnabled())
+				logger.error("description argument is invalid");
+			
+			throw new IllegalArgumentException("description argument is invalid");
 		}
 
-		if(updatedByUser.isEmpty())
+		if(updatedByUser.isEmpty() || (updatedByUser == null))
 		{
-			throw new IllegalArgumentException("savedByUser cannot be empty");
+			if(logger.isErrorEnabled())
+				logger.error("updatedByUser argument is invalid");
+			
+			throw new IllegalArgumentException("updatedByUser argument is invalid");
 		}
 		
-		if(ric == null)
-		{
-			throw new NullPointerException("ric cannot be null");
-		}
-
-		if(description == null)
-		{
-			throw new NullPointerException("description cannot be null");
-		}
-
-		if(updatedByUser == null)
-		{
-			throw new NullPointerException("savedByUser cannot be null");
-		}
-
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user [" + updatedByUser + "] to update underlying with RIC [" + ric + "].");
 
@@ -158,26 +147,22 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	@WebMethod
 	public boolean updateValidity(String ric, boolean isValid, String updatedByUser)
 	{
-		if(ric.isEmpty())
+		if(ric.isEmpty() || (ric == null))
 		{
-			throw new IllegalArgumentException("ric cannot be empty");
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
 		}
 
-		if(updatedByUser.isEmpty())
+		if(updatedByUser.isEmpty() || (updatedByUser == null))
 		{
-			throw new IllegalArgumentException("savedByUser cannot be empty");
+			if(logger.isErrorEnabled())
+				logger.error("updatedByUser argument is invalid");
+			
+			throw new IllegalArgumentException("updatedByUser argument is invalid");
 		}
 		
-		if(ric == null)
-		{
-			throw new NullPointerException("ric cannot be null");
-		}
-
-		if(updatedByUser == null)
-		{
-			throw new NullPointerException("updatedByUser cannot be null");
-		}
-
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user [" + updatedByUser + "] to update the validity of the underlying with RIC [" + ric + "].");
 
