@@ -2,8 +2,6 @@ package com.leon.rfq.underlying;
 
 import java.util.List;
 
-import javax.jws.WebMethod;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
@@ -17,27 +15,26 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 {
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	private UnderlyingDao dao;
+	private UnderlyingDao underlyingdDao;
 
 	/**
-	 * Sets the Underlying Manager DAO object reference property.
+	 * Sets the Underlying DAO object reference property.
 	 * 
-	 * @param dao 						the underlying manager dao for saving to the database.
-	 * @throws NullPointerException 	if the dao parameter is null.
+	 * @param underlyingDao				the underlying DAO for saving to the database.
+	 * @throws NullPointerException 	if the underlyingDao parameter is null.
 	 */
 	@Override
-	@WebMethod(exclude = true)
-	public void setUnderlyingManagerDao(UnderlyingDao dao)
+	public void setUnderlyingDao(UnderlyingDao underlyingDao)
 	{
-		if(dao == null)
+		if(underlyingDao == null)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("dao argument cannot be null");
+				logger.error("underlyingDao argument cannot be null");
 			
-			throw new NullPointerException("dao argument cannot be null");
+			throw new NullPointerException("underlyingDao argument cannot be null");
 		}
 
-		this.dao = dao;
+		this.underlyingdDao = underlyingDao;
 	}
 
 	/**
@@ -80,7 +77,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user [" + savedByUser + "] to save underlying with RIC [" + ric + "].");
 
-		UnderlyingDetailImpl newUnderlying = this.dao.insert(ric, description, isValid, savedByUser);
+		UnderlyingDetailImpl newUnderlying = this.underlyingdDao.insert(ric, description, isValid, savedByUser);
 
 		if(newUnderlying != null)
 			this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
@@ -127,46 +124,12 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user [" + updatedByUser + "] to update underlying with RIC [" + ric + "].");
 
-		UnderlyingDetailImpl newUnderlying = this.dao.update(ric, description, isValid, updatedByUser);
+		UnderlyingDetailImpl newUnderlying = this.underlyingdDao.update(ric, description, isValid, updatedByUser);
 
 		if(newUnderlying != null)
 			this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
 
 		return newUnderlying != null;
-	}
-
-	/**
-	 * Updates the validity of the underlying in the database.
-	 * 
-	 * @param ric 							the RIC of the underlying to be updated.
-	 * @param isValid						the validity of the underlying to be updated.
-	 * @returns	true if the update was successful; false otherwise.
-	 * @throws IllegalArgumentException 	if the underlying's RIC parameter is an empty string.
-	 */
-	@Override
-	@WebMethod
-	public boolean updateValidity(String ric, boolean isValid, String updatedByUser)
-	{
-		if(ric.isEmpty() || (ric == null))
-		{
-			if(logger.isErrorEnabled())
-				logger.error("ric argument is invalid");
-			
-			throw new IllegalArgumentException("ric argument is invalid");
-		}
-
-		if(updatedByUser.isEmpty() || (updatedByUser == null))
-		{
-			if(logger.isErrorEnabled())
-				logger.error("updatedByUser argument is invalid");
-			
-			throw new IllegalArgumentException("updatedByUser argument is invalid");
-		}
-		
-		if(logger.isDebugEnabled())
-			logger.debug("Received request from user [" + updatedByUser + "] to update the validity of the underlying with RIC [" + ric + "].");
-
-		return this.dao.updateValidity(ric, isValid, updatedByUser);
 	}
 
 	/**
@@ -176,11 +139,15 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	 * @throws NullPointerException 		if the applicationEventPublisher parameter is null.
 	 */
 	@Override
-	@WebMethod
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
 	{
 		if(applicationEventPublisher == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("applicationEventPublisher argument cannot be null");
+			
 			throw new NullPointerException("applicationEventPublisher");
+		}
 
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
@@ -190,12 +157,11 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	 * @returns a list of underlyings that were previously saved in the database.
 	 */
 	@Override
-	@WebMethod
 	public List<UnderlyingDetailImpl> getAll()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Received request to get all previously saved underlyings.");
 
-		return this.dao.getAll();
+		return this.underlyingdDao.getAll();
 	}
 }

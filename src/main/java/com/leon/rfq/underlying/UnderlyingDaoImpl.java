@@ -1,5 +1,6 @@
 package com.leon.rfq.underlying;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,24 +21,31 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 	public UnderlyingDaoImpl() {}
 
 	@Override
-	public UnderlyingDetailImpl insert(String ric, String description, boolean isValid, String savedBy)
+	public UnderlyingDetailImpl insert(String ric, String description, boolean isValid, String savedByUser)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(logger.isDebugEnabled())
+			logger.debug("Inserting underlying with ric " + ric);
+		
+		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description, isValid);
+		
+		if(this.underlyingMapper.insert(underlying) == 1)
+			return underlying;
+		else
+			return null;
 	}
 
 	@Override
-	public UnderlyingDetailImpl update(String ric, String description, boolean isValid, String savedBy)
+	public UnderlyingDetailImpl update(String ric, String description, boolean isValid, String updatedByUser)
 	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean updateValidity(String ric, boolean isValid, String updatedBy)
-	{
-		// TODO Auto-generated method stub
-		return false;
+		if(logger.isDebugEnabled())
+			logger.debug("Updating underlying with ric " + ric);
+		
+		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description, isValid);
+		
+		if(this.underlyingMapper.update(underlying) == 1)
+			return underlying;
+		else
+			return null;
 	}
 
 	@Override
@@ -46,14 +54,36 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all underlyings");
 
-		return this.underlyingMapper.getAll();
+		try
+		{
+			return this.underlyingMapper.getAll();
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to get all underlyings because of exception: " + e);
+			
+			return new LinkedList<UnderlyingDetailImpl>();
+		}
 	}
 
 	@Override
 	public UnderlyingDetailImpl get(String ric)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if(logger.isDebugEnabled())
+			logger.debug("Get the underlying with ric " + ric);
+		
+		try
+		{
+			return this.underlyingMapper.get(ric);
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to get the underlying with ric " + ric + " because of exception: " + e);
+			
+			return null;
+		}
 	}
 
 	@Override
