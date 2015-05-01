@@ -10,6 +10,15 @@ public class UnderlyingDetailImpl
 	private String description;
 	private boolean isValid;
 
+	public UnderlyingDetailImpl()
+	{
+		this.ric = "";
+		this.description = "";
+		this.isValid = true;
+
+		logger.debug("underlying instantiated = > " +  this);
+	}
+	
 	public UnderlyingDetailImpl(String ric, String description, Boolean isValid)
 	{
 		this.ric = ric;

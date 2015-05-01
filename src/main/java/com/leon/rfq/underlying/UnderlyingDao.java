@@ -13,4 +13,6 @@ public interface UnderlyingDao
 	List<UnderlyingDetailImpl> getAll();
 
 	UnderlyingDetailImpl get(String ric);
+	
+	boolean underlyingExistsWithRic(String ric);
 }

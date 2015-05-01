@@ -105,4 +105,23 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 		}
 	}
 
+	@Override
+	public boolean underlyingExistsWithRic(String ric)
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("check if the underlying exists with ric " + ric);
+		
+		try
+		{
+			return this.underlyingMapper.underlyingExistsWithRic(ric);
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to check if the underlying exists with ric " + ric + " because of exception: " + e);
+			
+			return false;
+		}
+	}
+
 }

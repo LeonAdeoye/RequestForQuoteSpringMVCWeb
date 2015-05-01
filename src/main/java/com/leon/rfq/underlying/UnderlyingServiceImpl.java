@@ -164,4 +164,33 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 
 		return this.underlyingdDao.getAll();
 	}
+
+	@Override
+	public UnderlyingDetailImpl get(String ric)
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Get underlying with RIC" + ric);
+		
+		return this.underlyingdDao.get(ric);
+	}
+
+	@Override
+	public boolean delete(String ric)
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Delete underlying with RIC" + ric);
+		
+		return this.underlyingdDao.delete(ric);
+	}
+
+	@Override
+	public boolean underlyingExistsWithRic(String ric)
+	{
+
+		if(logger.isDebugEnabled())
+			logger.debug("Check if underlying exists with RIC " + ric);
+		
+		return this.underlyingdDao.underlyingExistsWithRic(ric);
+	}
+	
 }

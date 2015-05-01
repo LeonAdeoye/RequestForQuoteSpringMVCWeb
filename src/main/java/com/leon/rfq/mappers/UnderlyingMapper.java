@@ -17,4 +17,6 @@ public interface UnderlyingMapper
 	int update(UnderlyingDetailImpl underlying);
 
 	int updateValidity(UnderlyingDetailImpl underlying);
+	
+	boolean underlyingExistsWithRic(String ric);
 }

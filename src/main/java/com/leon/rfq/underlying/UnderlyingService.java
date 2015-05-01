@@ -10,4 +10,10 @@ public interface UnderlyingService
 	boolean update(String RIC, String description, boolean isValid,	String savedBy);
 
 	List<UnderlyingDetailImpl> getAll();
+	
+	UnderlyingDetailImpl get(String ric);
+	
+	boolean delete(String ric);
+	
+	boolean underlyingExistsWithRic(String ric);
 }
