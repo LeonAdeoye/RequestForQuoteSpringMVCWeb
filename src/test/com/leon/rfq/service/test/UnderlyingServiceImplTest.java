@@ -3,7 +3,6 @@ package com.leon.rfq.service.test;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -95,45 +94,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Assert
 		verify(underlyingDaoMock, never()).delete("testRIC");
 	}
-	
-	@Test
-    public void updateValidity_NonExistentRic_DoesNotCallDaoUpdateValidityMethod()
-	{
-		// Arrange
-		UnderlyingService underlyingService = new UnderlyingServiceImpl();
-		UnderlyingDao underlyingDaoMock = mock(UnderlyingDaoImpl.class);
-		underlyingService.setUnderlyingDao(underlyingDaoMock);
-		// Act
-		underlyingService.update("testRIC", "test description", true, "tester");
-		// Assert
-		verify(underlyingDaoMock, never()).update("testRIC", "test description", true, "tester");
-	}
-	
-	@Test
-    public void updateValidity_NonExistentRic_ReturnFalse()
-	{
-		// Arrange
-		UnderlyingService underlyingService = new UnderlyingServiceImpl();
-		UnderlyingDao underlyingDaoMock = mock(UnderlyingDaoImpl.class);
-		underlyingService.setUnderlyingDao(underlyingDaoMock);
-		// Act and Assert
-		assertFalse("updateValidity should return false if underlying does not exist.",
-				underlyingService.update("testRIC", "test descriptin", true, "tester"));
-	}
-	
-	@Test
-    public void updateValidity_validRic_CallsDaoUpdateValidityMethod()
-	{
-		// Arrange
-		UnderlyingService underlyingService = new UnderlyingServiceImpl();
-		UnderlyingDao underlyingDaoMock = mock(UnderlyingDaoImpl.class);
-		underlyingService.setUnderlyingDao(underlyingDaoMock);
-		// Act
-		underlyingService.update("testRIC", "test description", true, "tester");
-		// Assert
-		verify(underlyingDaoMock, never()).update("testRIC", "test description", true, "tester");
-	}
-	
+		
 	@Test
     public void insert_validParameters_CallsDaoSaveMethod()
 	{
