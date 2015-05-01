@@ -165,28 +165,69 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		return this.underlyingdDao.getAll();
 	}
 
+	/**
+	 * Gets the underlying with the RIC passed as a parameter
+	 * 
+	 * @param 	ric 						the RIC of the underlying that needs to be retrieved.
+	 * @throws 	IllegalArgumentException 	if RIC parameter is null or empty.
+	 */
 	@Override
 	public UnderlyingDetailImpl get(String ric)
 	{
+		if(ric.isEmpty() || (ric == null))
+		{
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
+		}
+		
 		if(logger.isDebugEnabled())
 			logger.debug("Get underlying with RIC" + ric);
 		
 		return this.underlyingdDao.get(ric);
 	}
 
+	/**
+	 * Delete the underlying with the RIC passed as a parameter
+	 * 
+	 * @param 	ric 						the RIC of the underlying that needs to be deleted.
+	 * @throws 	IllegalArgumentException 	if RIC parameter is null or empty.
+	 */
 	@Override
 	public boolean delete(String ric)
 	{
+		if(ric.isEmpty() || (ric == null))
+		{
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
+		}
+		
 		if(logger.isDebugEnabled())
 			logger.debug("Delete underlying with RIC" + ric);
 		
 		return this.underlyingdDao.delete(ric);
 	}
 
+	/**
+	 * Check if the underlying exists with the RIC passed as a parameter
+	 * 
+	 * @param 	ric 						the RIC of the underlying that needs to be checked.
+	 * @throws 	IllegalArgumentException 	if RIC parameter is null or empty.
+	 */
 	@Override
 	public boolean underlyingExistsWithRic(String ric)
 	{
-
+		if(ric.isEmpty() || (ric == null))
+		{
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
+		}
+		
 		if(logger.isDebugEnabled())
 			logger.debug("Check if underlying exists with RIC " + ric);
 		

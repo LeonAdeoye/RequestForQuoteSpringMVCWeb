@@ -40,6 +40,7 @@
 	</bean>
 	
 	<bean id="userValidator" class="com.leon.rfq.validators.UserValidator"/>
+	<bean id="underlyingValidator" class="com.leon.rfq.validators.UnderlyingValidator"/>
 	
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
@@ -55,6 +56,7 @@
 				<property name="classesToBeBound">
 					<list>
 						<value>com.leon.rfq.user.UserImpl</value>
+						<value>com.leon.rfq.underlying.UnderlyingDetailImpl</value>
 					</list>
 				</property>
 			</bean>

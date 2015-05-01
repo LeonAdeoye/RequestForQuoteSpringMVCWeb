@@ -12,26 +12,37 @@
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
-		SELECT ric, description, isValid FROM underlyings WHERE ric=#{ric}
+		SELECT ric, description, isValid 
+		FROM underlyings WHERE ric=#{ric}
 	</select>
 	
 	<select id="getAll" resultMap="UnderlyingResultSet">
-		SELECT ric, description, isValid FROM underlyings
+		SELECT ric, description, isValid 
+		FROM underlyings
 	</select>
 	
 	<update id="update" parameterType="UnderlyingDetailImpl">
-		UPDATE underlyings SET description = #{description}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, 
-		lastUpdated = now() WHERE ric = #{ric}
+		UPDATE underlyings 
+		SET description = #{description}, 
+		isValid = #{isValid}, 
+		lastUpdatedBy = #{lastUpdatedBy}, 
+		lastUpdated = now() 
+		WHERE ric = #{ric}
 	</update>	
 	
 	<insert id="insert" parameterType="UnderlyingDetailImpl">
-		INSERT INTO users (ric, description, isValid, lastUpdatedBy, lastUpdated)
+		INSERT INTO underlyings (ric, description, isValid, lastUpdatedBy, lastUpdated)
 		VALUES(#{ric}, #{description}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.String">
 		DELETE FROM underlyings
 		WHERE ric = #{ric}
-	</delete>		
+	</delete>
+	
+	<select id="underlyingExistsWithRIC" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
+		SELECT ric, description, isValid 
+		FROM underlyings WHERE ric=#{ric}
+	</select>
 			
 </mapper>

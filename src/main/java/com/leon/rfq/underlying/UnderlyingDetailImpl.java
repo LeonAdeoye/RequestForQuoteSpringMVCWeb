@@ -1,13 +1,27 @@
 package com.leon.rfq.underlying;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.apache.ibatis.type.Alias;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@XmlRootElement
+@Alias("UnderlyingDetailImpl")
 public class UnderlyingDetailImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(UnderlyingDetailImpl.class);
+	
+	@NotNull(message="{underlying.validation.ric.notNull}")
+	@Size(min=1, max=10, message="{underlying.validation.ric.size}")
 	private String ric;
+	
+	@NotNull(message="{underlying.validation.description.notNull}")
+	@Size(min=1, max=45, message="{underlying.validation.description.size}")
 	private String description;
+	
 	private boolean isValid;
 
 	public UnderlyingDetailImpl()
