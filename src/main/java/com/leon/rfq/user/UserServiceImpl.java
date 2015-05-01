@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.controllers.UserControllerImpl;
@@ -16,7 +17,7 @@ import com.leon.rfq.controllers.UserControllerImpl;
 public class UserServiceImpl implements UserService
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserControllerImpl.class);
-	
+	private ApplicationEventPublisher applicationEventPublisher;
 	private final Map<String, UserImpl> users = new HashMap<>();
 	
 	@Autowired
@@ -43,20 +44,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public UserImpl get(String userId)
 	{
-		if(userId == null)
+		if(userId.isEmpty() || (userId == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be null");
+				logger.error("userId parameter cannot be an empty string or null");
 			
-			throw new NullPointerException("userId parameter cannot be null");
-		}
-		
-		if(userId.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string");
+			throw new IllegalArgumentException("userId parameter cannot be an empty string or null");
 		}
 		
 		UserImpl user;
@@ -76,20 +69,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean userExistsWithUserId(String userId)
 	{
-		if(userId == null)
+		if(userId.isEmpty() || (userId == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be null");
+				logger.error("userId parameter cannot be an empty string or null");
 			
-			throw new NullPointerException("userId parameter cannot be null");
-		}
-		
-		if(userId.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string");
+			throw new IllegalArgumentException("userId parameter cannot be an empty string or null");
 		}
 		
 		if(isUserCached(userId))
@@ -101,20 +86,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean userExistsWithEmailAddress(String emailAddress)
 	{
-		if(emailAddress == null)
+		if(emailAddress.isEmpty() || (emailAddress == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("emailAddress parameter cannot be null");
+				logger.error("emailAddress parameter cannot be an empty string or null");
 			
-			throw new NullPointerException("emailAddress parameter cannot be null");
-		}
-		
-		if(emailAddress.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("emailAddress parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("emailAddress parameter cannot be an empty string");
+			throw new IllegalArgumentException("emailAddress parameter cannot be an empty string or null");
 		}
 		
 		for (Map.Entry<String, UserImpl> entry : this.users.entrySet())
@@ -150,116 +127,60 @@ public class UserServiceImpl implements UserService
 			String emailAddress, String locationName, String groupName,
 			boolean isValid, String savedByUser)
 	{
-		if(userId == null)
+		if(userId.isEmpty() || (userId == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be null");
+				logger.error("userId parameter cannot be an empty string or null");
 			
-			throw new NullPointerException("userId parameter cannot be null");
+			throw new IllegalArgumentException("userId parameter cannot be an empty string or null");
 		}
 		
-		if(userId.isEmpty())
+		if(savedByUser.isEmpty() || (savedByUser == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string");
+				logger.error("savedByUser parameter cannot be an empty string or null");
 			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string");
+			throw new IllegalArgumentException("savedByUser parameter cannot be an empty stringor null");
 		}
 		
-		if(savedByUser == null)
+		if(firstName.isEmpty() || (firstName == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("savedByUser parameter cannot be null");
+				logger.error("firstName parameter cannot be an empty string or null");
 			
-			throw new NullPointerException("savedByUser parameter cannot be null");
+			throw new IllegalArgumentException("firstName parameter cannot be an empty string or null");
 		}
 		
-		if(savedByUser.isEmpty())
+		if(lastName.isEmpty() || (lastName == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("savedByUser parameter cannot be an empty string");
+				logger.error("lastName parameter cannot be an empty string or null");
 			
-			throw new IllegalArgumentException("savedByUser parameter cannot be an empty string");
-		}
-		
-		if(firstName == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("firstName parameter cannot be null");
-			
-			throw new NullPointerException("firstName parameter cannot be null");
-		}
-		
-		if(firstName.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("firstName parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("firstName parameter cannot be an empty string");
+			throw new IllegalArgumentException("lastName parameter cannot be an empty string or null");
 		}
 
-		if(lastName == null)
+		if(emailAddress.isEmpty() || (emailAddress == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("lastName parameter cannot be null");
+				logger.error("emailAddress parameter cannot be an empty string or null");
 			
-			throw new NullPointerException("lastName parameter cannot be null");
+			throw new IllegalArgumentException("emailAddress parameter cannot be an empty string or null");
 		}
 		
-		if(lastName.isEmpty())
+		if(locationName.isEmpty() || (locationName == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("lastName parameter cannot be an empty string");
+				logger.error("locationName parameter cannot be an empty string or null");
 			
-			throw new IllegalArgumentException("lastName parameter cannot be an empty string");
-		}
-
-		if(emailAddress == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("emailAddress parameter cannot be null");
-			
-			throw new NullPointerException("emailAddress parameter cannot be null");
+			throw new IllegalArgumentException("locationName parameter cannot be an empty string or null");
 		}
 		
-		if(emailAddress.isEmpty())
+		if(groupName.isEmpty() || (groupName == null))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("emailAddress parameter cannot be an empty string");
+				logger.error("groupName parameter cannot be an empty string or null");
 			
-			throw new IllegalArgumentException("emailAddress parameter cannot be an empty string");
-		}
-		
-		if(locationName == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("locationName parameter cannot be null");
-			
-			throw new NullPointerException("locationName parameter cannot be null");
-		}
-		
-		if(locationName.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("locationName parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("locationName parameter cannot be an empty string");
-		}
-		
-		if(groupName == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("groupName parameter cannot be null");
-			
-			throw new NullPointerException("groupName parameter cannot be null");
-		}
-		
-		if(groupName.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("groupName parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("groupName parameter cannot be an empty string");
+			throw new IllegalArgumentException("groupName parameter cannot be an empty string or null");
 		}
 		
 		if(!isUserCached(userId))

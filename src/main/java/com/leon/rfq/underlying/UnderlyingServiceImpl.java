@@ -1,6 +1,8 @@
 package com.leon.rfq.underlying;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
 	private UnderlyingDao underlyingdDao;
+	private final Map<String, UnderlyingDetailImpl> underlyings = new HashMap<>();
 
 	/**
 	 * Sets the Underlying DAO object reference property.
