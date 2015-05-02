@@ -40,21 +40,21 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void get_NullParameter_ThrowsNullPointerException()
+    public void get_NullUserId_ThrowsInvalidArgumentException()
 	{
 		catchException(this.userService).get(null);
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
-    public void get_EmptyStringParameter_ThrowsInvalidArgumentException()
+    public void get_EmptyStringUserId_ThrowsInvalidArgumentException()
 	{
 		catchException(this.userService).get("");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -147,48 +147,48 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void insert_NullUserId_ThrowsNullPointerException()
+    public void insert_NullUserId_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).insert(null, "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
-    public void insert_EmptyStringUserId_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringUserId_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).insert("", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
-    public void insert_NullFirstName_ThrowsNullPointerException()
+    public void insert_NullFirstName_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).insert("userId", null, "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "firstName parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "firstName argument is invalid");
 	}
 	
 	@Test
-    public void insert_EmptyStringFirstName_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringFirstName_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).insert("userId", "", "lastName", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "firstName parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "firstName argument is invalid");
 	}
 	
 	@Test
-    public void insert_NullLastName_ThrowsNullPointerException()
+    public void insert_NullLastName_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).insert("userId", "firstName", null, "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "lastName parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "lastName argument is invalid");
 	}
 	
 	@Test
@@ -197,16 +197,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).insert("userId", "firstName", "", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "lastName parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "lastName argument is invalid");
 	}
 	
 	@Test
-    public void insert_NullEmailAddress_ThrowsNullPointerException()
+    public void insert_NullEmailAddress_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", null, "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -215,16 +215,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).insert("userId", "firstName", "lastName", "", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
-    public void insert_NullLocation_ThrowsNullPointerException()
+    public void insert_NullLocation_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", null, "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "locationName parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "locationName argument is invalid");
 	}
 	
 	@Test
@@ -233,16 +233,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "locationName parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "locationName argument is invalid");
 	}
 	
 	@Test
-    public void insert_NullSavedByUser_ThrowsNullPointerException()
+    public void insert_NullSavedByUser_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "location", "group", true, null);
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "savedByUser parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "savedByUser argument is invalid");
 	}
 	
 	@Test
@@ -251,16 +251,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "location", "group", true, "");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "savedByUser parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "savedByUser argument is invalid");
 	}
 	
 	@Test
-    public void delete_NullParameter_ThrowsNullPointerException()
+    public void delete_NullParameter_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).delete(null);
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -269,16 +269,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).delete("");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
-    public void updateValidity_NullUserId_ThrowsNullPointerException()
+    public void updateValidity_NullUserId_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).updateValidity(null, true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -287,16 +287,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).updateValidity("", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
-    public void updateValidity_NullUpdatedByUser_ThrowsNullPointerException()
+    public void updateValidity_NullUpdatedByUser_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).updateValidity("userId", true, null);
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "updatedByUser parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
 	}
 	
 	@Test
@@ -305,7 +305,7 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).updateValidity("userId", true, "");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "updatedByUser parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
 	}
 	
 	@Test
@@ -314,16 +314,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).userExistsWithUserId("");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
-    public void userExistsWithUserId_NullUserId_ThrowsNullPointerException()
+    public void userExistsWithUserId_NullUserId_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).userExistsWithUserId(null);
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -332,16 +332,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).userExistsWithEmailAddress("");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
-    public void userExistsWithEmailAddress_NullEmailAddress_ThrowsNullPointerException()
+    public void userExistsWithEmailAddress_NullEmailAddress_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).userExistsWithEmailAddress(null);
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -371,12 +371,12 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void update_NullUserId_ThrowsNullPointerException()
+    public void update_NullUserId_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).update(null, "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -385,16 +385,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).update("", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
-    public void update_NullFirstName_ThrowsNullPointerException()
+    public void update_NullFirstName_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).update("userId", null, "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "firstName parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "firstName argument is invalid");
 	}
 	
 	@Test
@@ -403,16 +403,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).update("userId", "", "lastName", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "firstName parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "firstName argument is invalid");
 	}
 	
 	@Test
-    public void update_NullLastName_ThrowsNullPointerException()
+    public void update_NullLastName_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).update("userId", "firstName", null, "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "lastName parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "lastName argument is invalid");
 	}
 	
 	@Test
@@ -421,16 +421,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).update("userId", "firstName", "", "emailAddress", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "lastName parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "lastName argument is invalid");
 	}
 	
 	@Test
-    public void update_NullEmailAddress_ThrowsNullPointerException()
+    public void update_NullEmailAddress_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", null, "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -439,16 +439,16 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).update("userId", "firstName", "lastName", "", "location", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
-    public void update_NullLocation_ThrowsNullPointerException()
+    public void update_NullLocation_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", null, "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "locationName parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "locationName argument is invalid");
 	}
 	
 	@Test
@@ -457,25 +457,25 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "", "group", true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "locationName parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "locationName argument is invalid");
 	}
 	
 	@Test
-    public void update_NullSavedByUser_ThrowsNullPointerException()
+    public void update_NullUpdatedByUser_ThrowsIllegalArgumentException()
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "location", "group", true, null);
 		
-		assertTrue(caughtException() instanceof NullPointerException);
-		assertEquals(caughtException().getMessage(), "savedByUser parameter cannot be null");
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
 	}
 	
 	@Test
-    public void update_EmptyStringSavedByUser_ThrowsInvalidArgumentException()
+    public void update_EmptyStringUpdatedByUser_ThrowsInvalidArgumentException()
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "location", "group", true, "");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "savedByUser parameter cannot be an empty string");
+		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
 	}
 	
 }

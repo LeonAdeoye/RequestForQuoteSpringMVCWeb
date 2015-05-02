@@ -1,4 +1,4 @@
-package com.leon.rfq.domain.test;
+package com.leon.rfq.dao.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -23,7 +23,7 @@ import com.leon.rfq.user.UserImpl;
 
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
-public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
+public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired
 	private DataSourceTransactionManager transactionManager;

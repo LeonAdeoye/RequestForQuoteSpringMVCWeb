@@ -53,7 +53,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	@Override
 	public boolean insert(String ric, String description, boolean isValid, String savedByUser)
 	{
-		if(ric.isEmpty() || (ric == null))
+		if((ric == null) || ric.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("ric argument is invalid");
@@ -61,7 +61,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 			throw new IllegalArgumentException("ric argument is invalid");
 		}
 
-		if(description.isEmpty() || (description == null))
+		if((description == null) || description.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("description argument is invalid");
@@ -69,7 +69,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 			throw new IllegalArgumentException("description argument is invalid");
 		}
 
-		if(savedByUser.isEmpty() || (savedByUser == null))
+		if((savedByUser == null) || savedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("savedByUser argument is invalid");
@@ -100,7 +100,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	@Override
 	public boolean update(String ric, String description, boolean isValid, String updatedByUser)
 	{
-		if(ric.isEmpty() || (ric == null))
+		if((ric == null) || ric.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("ric argument is invalid");
@@ -108,7 +108,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 			throw new IllegalArgumentException("ric argument is invalid");
 		}
 
-		if(description.isEmpty() || (description == null))
+		if((description == null) || description.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("description argument is invalid");
@@ -116,7 +116,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 			throw new IllegalArgumentException("description argument is invalid");
 		}
 
-		if(updatedByUser.isEmpty() || (updatedByUser == null))
+		if((updatedByUser == null) || updatedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("updatedByUser argument is invalid");
@@ -177,7 +177,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	@Override
 	public UnderlyingDetailImpl get(String ric)
 	{
-		if(ric.isEmpty() || (ric == null))
+		if((ric == null) || ric.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("ric argument is invalid");
@@ -200,7 +200,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	@Override
 	public boolean delete(String ric)
 	{
-		if(ric.isEmpty() || (ric == null))
+		if((ric == null) || ric.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("ric argument is invalid");
@@ -223,7 +223,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	@Override
 	public boolean underlyingExistsWithRic(String ric)
 	{
-		if(ric.isEmpty() || (ric == null))
+		if((ric == null) || ric.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("ric argument is invalid");

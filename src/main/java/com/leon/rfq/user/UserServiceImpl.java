@@ -44,12 +44,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public UserImpl get(String userId)
 	{
-		if(userId.isEmpty() || (userId == null))
+		if((userId == null) || userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string or null");
+				logger.error("userId argument is invalid");
 			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string or null");
+			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
 		UserImpl user;
@@ -69,12 +69,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean userExistsWithUserId(String userId)
 	{
-		if(userId.isEmpty() || (userId == null))
+		if((userId == null) || userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string or null");
+				logger.error("userId argument is invalid");
 			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string or null");
+			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
 		if(isUserCached(userId))
@@ -86,12 +86,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean userExistsWithEmailAddress(String emailAddress)
 	{
-		if(emailAddress.isEmpty() || (emailAddress == null))
+		if((emailAddress == null) || emailAddress.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("emailAddress parameter cannot be an empty string or null");
+				logger.error("emailAddress argument is invalid");
 			
-			throw new IllegalArgumentException("emailAddress parameter cannot be an empty string or null");
+			throw new IllegalArgumentException("emailAddress argument is invalid");
 		}
 		
 		for (Map.Entry<String, UserImpl> entry : this.users.entrySet())
@@ -127,60 +127,60 @@ public class UserServiceImpl implements UserService
 			String emailAddress, String locationName, String groupName,
 			boolean isValid, String savedByUser)
 	{
-		if(userId.isEmpty() || (userId == null))
+		if((userId == null) || userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string or null");
+				logger.error("userId argument is invalid");
 			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string or null");
+			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
-		if(savedByUser.isEmpty() || (savedByUser == null))
+		if((savedByUser == null) || savedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("savedByUser parameter cannot be an empty string or null");
+				logger.error("savedByUser argument is invalid");
 			
-			throw new IllegalArgumentException("savedByUser parameter cannot be an empty stringor null");
+			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
 		
-		if(firstName.isEmpty() || (firstName == null))
+		if((firstName == null) || firstName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("firstName parameter cannot be an empty string or null");
+				logger.error("firstName argument is invalid");
 			
-			throw new IllegalArgumentException("firstName parameter cannot be an empty string or null");
+			throw new IllegalArgumentException("firstName argument is invalid");
 		}
 		
-		if(lastName.isEmpty() || (lastName == null))
+		if((lastName == null) || lastName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("lastName parameter cannot be an empty string or null");
+				logger.error("lastName argument is invalid");
 			
-			throw new IllegalArgumentException("lastName parameter cannot be an empty string or null");
-		}
-
-		if(emailAddress.isEmpty() || (emailAddress == null))
-		{
-			if(logger.isErrorEnabled())
-				logger.error("emailAddress parameter cannot be an empty string or null");
-			
-			throw new IllegalArgumentException("emailAddress parameter cannot be an empty string or null");
+			throw new IllegalArgumentException("lastName argument is invalid");
 		}
 		
-		if(locationName.isEmpty() || (locationName == null))
+		if((emailAddress == null) ||emailAddress.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("locationName parameter cannot be an empty string or null");
+				logger.error("emailAddress argument is invalid");
 			
-			throw new IllegalArgumentException("locationName parameter cannot be an empty string or null");
+			throw new IllegalArgumentException("emailAddress argument is invalid");
 		}
 		
-		if(groupName.isEmpty() || (groupName == null))
+		if((locationName == null) || locationName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("groupName parameter cannot be an empty string or null");
+				logger.error("locationName argument is invalid");
 			
-			throw new IllegalArgumentException("groupName parameter cannot be an empty string or null");
+			throw new IllegalArgumentException("locationName argument is invalid");
+		}
+		
+		if((groupName == null)|| groupName.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("groupName argument is invalid");
+			
+			throw new IllegalArgumentException("groupName argument is invalid");
 		}
 		
 		if(!isUserCached(userId))
@@ -197,20 +197,12 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean delete(String userId)
 	{
-		if(userId == null)
+		if((userId == null) || userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be null");
+				logger.error("userId argument is invalid");
 			
-			throw new NullPointerException("userId parameter cannot be null");
-		}
-		
-		if(userId.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string");
+			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
 		if(isUserCached(userId))
@@ -226,36 +218,20 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean updateValidity(String userId, boolean isValid, String updatedByUser)
 	{
-		if(userId == null)
+		if((userId == null) || userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be null");
+				logger.error("userId argument is invalid");
 			
-			throw new NullPointerException("userId parameter cannot be null");
+			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
-		if(userId.isEmpty())
+		if((updatedByUser == null) || updatedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string");
+				logger.error("updatedByUser argument is invalid");
 			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string");
-		}
-		
-		if(updatedByUser == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("updatedByUser parameter cannot be null");
-			
-			throw new NullPointerException("updatedByUser parameter cannot be null");
-		}
-		
-		if(updatedByUser.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("updatedByUser parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("updatedByUser parameter cannot be an empty string");
+			throw new IllegalArgumentException("updatedByUser argument is invalid");
 		}
 		
 		if(isUserCached(userId))
@@ -273,118 +249,62 @@ public class UserServiceImpl implements UserService
 	@Override
 	public boolean update(String userId, String firstName, String lastName,
 			String emailAddress, String locationName, String groupName,
-			boolean isValid, String savedByUser)
+			boolean isValid, String updatedByUser)
 	{
-		if(userId == null)
+		if((userId == null) || userId.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be null");
+				logger.error("userId argument is invalid");
 			
-			throw new NullPointerException("userId parameter cannot be null");
+			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
-		if(userId.isEmpty())
+		if((updatedByUser == null) || updatedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("userId parameter cannot be an empty string");
+				logger.error("updatedByuser argument is invalid");
 			
-			throw new IllegalArgumentException("userId parameter cannot be an empty string");
+			throw new IllegalArgumentException("updatedByUser argument is invalid");
 		}
 		
-		if(savedByUser == null)
+		if((firstName == null) || firstName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("savedByUser parameter cannot be null");
+				logger.error("firstName argument is invalid");
 			
-			throw new NullPointerException("savedByUser parameter cannot be null");
+			throw new IllegalArgumentException("firstName argument is invalid");
 		}
 		
-		if(savedByUser.isEmpty())
+		if((lastName == null) || lastName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("savedByUser parameter cannot be an empty string");
+				logger.error("lastName argument is invalid");
 			
-			throw new IllegalArgumentException("savedByUser parameter cannot be an empty string");
+			throw new IllegalArgumentException("lastName argument is invalid");
 		}
 		
-		if(firstName == null)
+		if((emailAddress == null) || emailAddress.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("firstName parameter cannot be null");
+				logger.error("emailAddress argument is invalid");
 			
-			throw new NullPointerException("firstName parameter cannot be null");
+			throw new IllegalArgumentException("emailAddress argument is invalid");
 		}
 		
-		if(firstName.isEmpty())
+		if((locationName == null) || locationName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("firstName parameter cannot be an empty string");
+				logger.error("locationName argument is invalid");
 			
-			throw new IllegalArgumentException("firstName parameter cannot be an empty string");
-		}
-
-		if(lastName == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("lastName parameter cannot be null");
-			
-			throw new NullPointerException("lastName parameter cannot be null");
+			throw new IllegalArgumentException("locationName argument is invalid");
 		}
 		
-		if(lastName.isEmpty())
+		if((groupName == null)|| groupName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("lastName parameter cannot be an empty string");
+				logger.error("groupName argument is invalid");
 			
-			throw new IllegalArgumentException("lastName parameter cannot be an empty string");
-		}
-
-		if(emailAddress == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("emailAddress parameter cannot be null");
-			
-			throw new NullPointerException("emailAddress parameter cannot be null");
-		}
-		
-		if(emailAddress.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("emailAddress parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("emailAddress parameter cannot be an empty string");
-		}
-		
-		if(locationName == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("locationName parameter cannot be null");
-			
-			throw new NullPointerException("locationName parameter cannot be null");
-		}
-		
-		if(locationName.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("locationName parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("locationName parameter cannot be an empty string");
-		}
-		
-		if(groupName == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("groupName parameter cannot be null");
-			
-			throw new NullPointerException("groupName parameter cannot be null");
-		}
-		
-		if(groupName.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("groupName parameter cannot be an empty string");
-			
-			throw new IllegalArgumentException("groupName parameter cannot be an empty string");
+			throw new IllegalArgumentException("groupName argument is invalid");
 		}
 		
 		if(isUserCached(userId))
@@ -392,9 +312,9 @@ public class UserServiceImpl implements UserService
 			this.users.remove(userId);
 		
 			this.users.put(userId, new UserImpl(userId, emailAddress, firstName, lastName, locationName,
-				groupName, isValid, savedByUser));
+				groupName, isValid, updatedByUser));
 			
-			return this.userDao.update(userId, firstName, lastName, emailAddress, locationName, groupName, isValid, savedByUser);
+			return this.userDao.update(userId, firstName, lastName, emailAddress, locationName, groupName, isValid, updatedByUser);
 		}
 		
 		return false;

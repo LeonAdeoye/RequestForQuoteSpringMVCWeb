@@ -39,7 +39,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void get_NullParameter_ThrowsInvalidArgumentException()
+    public void get_NullRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).get(null);
 		
@@ -48,7 +48,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void get_EmptyStringParameter_ThrowsInvalidArgumentException()
+    public void get_EmptyStringRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).get("");
 		
@@ -57,7 +57,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void get_ValidParameter_CallsDaoGetMethod()
+    public void get_ValidRic_CallsDaoGetMethod()
 	{
 		// Arrange
 		UnderlyingService underlyingService = new UnderlyingServiceImpl();
@@ -109,7 +109,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void insert_NullRic_ThrowsInvalidArgumentException()
+    public void insert_NullRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).insert(null, "description", true, "tester");
 		
@@ -118,7 +118,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void insert_EmptyStringRic_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).insert("", "description", true, "tester");
 		
@@ -127,7 +127,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void insert_NullDescription_ThrowsInvalidArgumentExceptionn()
+    public void insert_NullDescription_ThrowsIllegalArgumentExceptionn()
 	{
 		catchException(this.underlyingService).insert("ric", null, true, "tester");
 		
@@ -136,7 +136,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void insert_EmptyStringDescription_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringDescription_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).insert("ric", "", true, "tester");
 		
@@ -145,7 +145,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 		
 	@Test
-    public void insert_NullSavedByUser_ThrowsInvalidArgumentException()
+    public void insert_NullSavedByUser_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).insert("ric", "description", true, null);
 		
@@ -154,7 +154,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void insert_EmptyStringSavedByUser_ThrowsInvalidArgumentException()
+    public void insert_EmptyStringSavedByUser_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).insert("ric", "description", true, "");
 		
@@ -163,7 +163,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void delete_NullRic_ThrowsInvalidArgumentException()
+    public void delete_NullRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).delete(null);
 		
@@ -172,7 +172,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void delete_EmptyStringRic_ThrowsInvalidArgumentException()
+    public void delete_EmptyStringRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).delete("");
 		
@@ -181,7 +181,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void underlyingExistsWithRic_EmptyRic_ThrowsInvalidArgumentException()
+    public void underlyingExistsWithRic_EmptyRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).underlyingExistsWithRic("");
 		
@@ -190,7 +190,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void underlyingExistsWithRic_NullRic_ThrowsInvalidArgumentException()
+    public void underlyingExistsWithRic_NullRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).underlyingExistsWithRic(null);
 		
@@ -212,7 +212,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void update_NullRic_ThrowsInvalidArgumentException()
+    public void update_NullRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).update(null, "description", true, "tester");
 		
@@ -221,7 +221,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void update_EmptyStringRic_ThrowsInvalidArgumentException()
+    public void update_EmptyStringRic_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).update("", "description", true, "tester");
 		
@@ -230,7 +230,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void update_NullDescription_ThrowsInvalidArgumentException()
+    public void update_NullDescription_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).update("ric", null, true, "tester");
 		
@@ -239,7 +239,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void update_EmptyStringDescription_ThrowsInvalidArgumentException()
+    public void update_EmptyStringDescription_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).update("ric", "", true, "tester");
 		
@@ -248,7 +248,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 		
 	@Test
-    public void update_NullUpdatedByUser_ThrowsInvalidArgumentException()
+    public void update_NullUpdatedByUser_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).update("ric", "description", true, null);
 		
@@ -257,7 +257,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void update_EmptyStringUpdatedByUser_ThrowsInvalidArgumentException()
+    public void update_EmptyStringUpdatedByUser_ThrowsIllegalArgumentException()
 	{
 		catchException(this.underlyingService).update("ric", "description", true, "");
 		
