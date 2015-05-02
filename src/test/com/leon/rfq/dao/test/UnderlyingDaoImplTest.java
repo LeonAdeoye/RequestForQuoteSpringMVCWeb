@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import com.leon.rfq.user.UserDaoImpl;
-import com.leon.rfq.user.UserImpl;
+import com.leon.rfq.underlying.UnderlyingDao;
+import com.leon.rfq.underlying.UnderlyingDetailImpl;
 
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
@@ -31,7 +31,7 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	private TransactionStatus status;
 	
 	@Autowired
-	private UserDaoImpl userDaoImpl;
+	private UnderlyingDao underlyingDao;
 	
 	@BeforeClass
 	public static void setup()
@@ -46,7 +46,7 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Before
 	public void setUp()
 	{
-		assertNotNull("autowired userDaoImpl should not be null", this.userDaoImpl);
+		assertNotNull("autowired underlyingDao should not be null", this.underlyingDao);
 		assertNotNull("autowired transaction manager should not be null", this.transactionManager);
 		
 		this.status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
@@ -59,104 +59,76 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void getAll_ValidScenario_ReturnsValidListOfAllUsers()
+    public void getAll_ValidScenario_ReturnsValidListOfAllUnderlyings()
 	{
-		int beforeCount = this.userDaoImpl.getAll().size();
-		this.userDaoImpl.insert("userIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertNotNull("getAll method should return a non-null list of users", this.userDaoImpl.getAll());
-		assertEquals("count of user should have been incremented ", beforeCount + 1, this.userDaoImpl.getAll().size());
+		int beforeCount = this.underlyingDao.getAll().size();
+		this.underlyingDao.insert("testRic", "description", true, "me");
+		assertNotNull("getAll method should return a non-null list of underlyings", this.underlyingDao.getAll());
+		assertEquals("count of underlyings should have been incremented ", beforeCount + 1, this.underlyingDao.getAll().size());
 	}
 	
 	@Test
-    public void get_ValidUserId_ReturnsValidUserMatchingUserId()
+    public void get_ValidRic_ReturnsValidUnderlyingMatchingRic()
 	{
-		assertEquals("get method should return the user when a valid userId is provided", "leon.adeoye", this.userDaoImpl.get("leon.adeoye").getUserId());
+		this.underlyingDao.insert("testRic", "description", true, "me");
+		assertEquals("get method should return the underlying when a valid ric is provided", "testRic", this.underlyingDao.get("testRic").getRic());
 	}
 	
 	@Test
-    public void get_NonExistantUserId_ReturnsValidUserMatchingUserId()
+    public void get_NonExistanRic_ReturnsNull()
 	{
-		assertNull("get method should return null when a non-existant userId is provided", this.userDaoImpl.get("nonExistantUserId"));
+		assertNull("get method should return null when a non-existant ric is provided", this.underlyingDao.get("nonExistantRic"));
 	}
 	
 	@Test
-    public void updateValidity_ValidUserId_UpdatesValidityReturnsTrue()
+    public void insert_ValidParameters_InsertsUnderlyingAndReturnsIt()
 	{
-		this.userDaoImpl.insert("userIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertTrue("previously saved user should exist", this.userDaoImpl.get("userIdToBeUpdated").getUserId().equals("userIdToBeUpdated"));
-		assertTrue("updateValidity method should update validity to the provided value for the saved user", this.userDaoImpl.updateValidity("userIdToBeUpdated", false, "leon.adeoye"));
-		assertTrue("updated user validity should have changed", !this.userDaoImpl.get("userIdToBeUpdated").getIsValid());
+		assertNotNull("insert method should insert a valid underlying and return it", this.underlyingDao.insert("testRic", "description", true, "me"));
+		assertTrue("previously saved underlying should exist", this.underlyingDao.get("testRic").getRic().equals("testRic"));
 	}
 	
 	@Test
-    public void updateValidity_NonExistantUserId_ReturnsFalse()
+    public void save_duplicatedRic_InsertFailsAndReturnsNull()
 	{
-		assertFalse("updateValidity method should return false for a non-existant user", this.userDaoImpl.updateValidity("nonExistantUserId", false, "leon.adeoye"));
+		this.underlyingDao.insert("testRic", "description", true, "me");
+		assertNull("second insert  should return false because ric already exists", this.underlyingDao.insert("testRic", "description", true, "me"));
 	}
 	
 	@Test
-    public void save_ValidParameters_SavedUserAndReturnsTrue()
+    public void update_updateWithValidDescription_DescriptionUpdated()
 	{
-		assertTrue("save method should save a valid user and returns true", this.userDaoImpl.insert("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
-		assertTrue("previously saved user should exist", this.userDaoImpl.get("testUserId").getUserId().equals("testUserId"));
+		this.underlyingDao.insert("testRic", "description1", true, "me");
+		assertNotNull("Update should return true", this.underlyingDao.update("testRic", "updated description", true, "me"));
+		UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.get("testRic");
+		assertEquals("Updated underlying's description should be updated to new value", updatedUnderlying.getDescription(), "updated description");
 	}
 	
 	@Test
-    public void save_duplicatedUserId_SaveFailsAndReturnsFalse()
+    public void delete_ValidRic_DeleteSucceedsAndReturnsTrue()
 	{
-		this.userDaoImpl.insert("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertFalse("second save method should return false because userId already exists", this.userDaoImpl.insert("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
+		this.underlyingDao.insert("testRic", "description", true, "me");
+		assertTrue("previously saved underlying should exist", this.underlyingDao.get("testRic").getRic().equals("testRic"));
+		assertTrue("delete method should return true", this.underlyingDao.delete("testRic"));
+		assertNull("deleted unerlying should not longer exist", this.underlyingDao.get("testRic"));
 	}
 	
 	@Test
-    public void update_updatewithValidEmailAddress_EmailAddressUpdated()
+    public void delete_nonExistentRic_DeleteFailsAndReturnsFalse()
 	{
-		this.userDaoImpl.insert("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertTrue("Update should return true", this.userDaoImpl.update("testUserId", "ethan", "adeoye", "horatio@adeoye.com", "hong kong", "myGroup", true, "me"));
-		UserImpl updatedUser = this.userDaoImpl.get("testUserId");
-		assertEquals("Updated user's email address should be updated to new value", updatedUser.getEmailAddress(), "horatio@adeoye.com");
+		assertFalse("delete method should return false because the underlying does not exist", this.underlyingDao.delete("testRic"));
 	}
 	
 	@Test
-    public void delete_ValidUserId_DeleteSucceedsAndReturnsTrue()
+    public void underlyingExistsWithRic_ExistingRic_ReturnsTrue()
 	{
-		this.userDaoImpl.insert("userIdToBeDeleted", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertTrue("previously saved user should exist", this.userDaoImpl.get("userIdToBeDeleted").getUserId().equals("userIdToBeDeleted"));
-		assertTrue("delete method should return true", this.userDaoImpl.delete("userIdToBeDeleted"));
-		assertNull("deleted user should not longer exist", this.userDaoImpl.get("userIdToBeDeleted"));
-	}
-	
-	@Test
-    public void delete_duplicatedUserId_DeleteFailsAndReturnsFalse()
-	{
-		assertFalse("delete method should return false because the user does not exist", this.userDaoImpl.delete("nonExistantUserId"));
-	}
-	
-	@Test
-    public void userExistsWithEmailAddress_ExistingEmailAddress_ReturnsTrue()
-	{
-		this.userDaoImpl.insert("userId", "ethan", "adeoye", "horatio.adeoye@test.com", "hong kong", "myGroup", true, "me");
+		this.underlyingDao.insert("testRic", "description", true, "me");
 		
-		assertTrue("userExistsWithEmailAddress should return true because email address exists", this.userDaoImpl.userExistsWithEmailAddress("horatio.adeoye@test.com"));
+		assertTrue("underlyingExistsWithRic should return true because ric exists", this.underlyingDao.underlyingExistsWithRic("testRic"));
 	}
 	
 	@Test
-    public void userExistsWithEmailAddress_NonexistentEmailAddress_ReturnsFalse()
+    public void underlyingExistsWithRic_NonExistentRic_ReturnsFalse()
 	{
-		assertFalse("userExistsWithEmailAddress should return false because email address does not exists", this.userDaoImpl.userExistsWithEmailAddress("peppa@test.com"));
-	}
-	
-	@Test
-    public void userExistsWithUserId_ExistingUserId_ReturnsTrue()
-	{
-		this.userDaoImpl.insert("peppa_pig", "ethan", "adeoye", "horatio.adeoye@home.com", "hong kong", "myGroup", true, "me");
-		
-		assertTrue("userExistsWithUserId should return true because userId exists", this.userDaoImpl.userExistsWithUserId("peppa_pig"));
-	}
-	
-	@Test
-    public void userExistsWithUserId_NonexistentUserId_ReturnsFalse()
-	{
-		assertFalse("userExistsWithUserId should return false because userId does not exists", this.userDaoImpl.userExistsWithUserId("papa_pig"));
+		assertFalse("underlyingExistsWithRic should return false because ric does not exists", this.underlyingDao.underlyingExistsWithRic("testRic"));
 	}
 }

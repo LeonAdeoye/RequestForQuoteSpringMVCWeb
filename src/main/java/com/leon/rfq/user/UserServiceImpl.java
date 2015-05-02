@@ -77,10 +77,7 @@ public class UserServiceImpl implements UserService
 			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
-		if(isUserCached(userId))
-			return true;
-		else
-			return this.userDao.userExistsWithUserId(userId);
+		return isUserCached(userId) ? true : this.userDao.userExistsWithUserId(userId);
 	}
 	
 	@Override

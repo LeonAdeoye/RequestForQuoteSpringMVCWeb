@@ -1,6 +1,7 @@
 package com.leon.rfq.underlying;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +18,19 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 {
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	private UnderlyingDao underlyingdDao;
+	private UnderlyingDao underlyingDao;
 	private final Map<String, UnderlyingDetailImpl> underlyings = new HashMap<>();
+	
+	/**
+	 * Returns true if underlying is cached
+	 * 
+	 * @param ric	the ric that is searched for
+	 */
+	@Override
+	public boolean isUnderlyingCached(String ric)
+	{
+		return this.underlyings.containsKey(ric);
+	}
 
 	/**
 	 * Sets the Underlying DAO object reference property.
@@ -37,7 +49,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 			throw new NullPointerException("underlyingDao argument cannot be null");
 		}
 
-		this.underlyingdDao = underlyingDao;
+		this.underlyingDao = underlyingDao;
 	}
 
 	/**
@@ -79,13 +91,20 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user [" + savedByUser + "] to save underlying with RIC [" + ric + "].");
+		
+		if(!isUnderlyingCached(ric))
+		{
+			this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, isValid));
+			
+			UnderlyingDetailImpl newUnderlying = this.underlyingDao.insert(ric, description, isValid, savedByUser);
+			
+			if(newUnderlying != null)
+				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
+			
+			return newUnderlying != null;
+		}
 
-		UnderlyingDetailImpl newUnderlying = this.underlyingdDao.insert(ric, description, isValid, savedByUser);
-
-		if(newUnderlying != null)
-			this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
-
-		return newUnderlying != null;
+		return false;
 	}
 	
 	/**
@@ -126,13 +145,22 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user [" + updatedByUser + "] to update underlying with RIC [" + ric + "].");
+		
+		if(isUnderlyingCached(ric))
+		{
+			this.underlyings.remove(ric);
+		
+			this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, isValid));
+			
+			UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, isValid, updatedByUser);
+			
+			if(updatedUnderlying != null)
+				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, updatedUnderlying));
 
-		UnderlyingDetailImpl newUnderlying = this.underlyingdDao.update(ric, description, isValid, updatedByUser);
-
-		if(newUnderlying != null)
-			this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
-
-		return newUnderlying != null;
+			return updatedUnderlying != null;
+		}
+		
+		return false;
 	}
 
 	/**
@@ -164,8 +192,21 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Received request to get all previously saved underlyings.");
-
-		return this.underlyingdDao.getAll();
+		
+		
+		List<UnderlyingDetailImpl> result = this.underlyingDao.getAll();
+		
+		if(result!= null)
+		{
+			this.underlyings.clear();
+			
+			for(UnderlyingDetailImpl underlying : result)
+				this.underlyings.put(underlying.getRic(), underlying);
+			
+			return result;
+		}
+		else
+			return new LinkedList<UnderlyingDetailImpl>();
 	}
 
 	/**
@@ -188,7 +229,18 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		if(logger.isDebugEnabled())
 			logger.debug("Get underlying with RIC" + ric);
 		
-		return this.underlyingdDao.get(ric);
+		UnderlyingDetailImpl underlying;
+		
+		if(this.isUnderlyingCached(ric))
+			underlying = this.underlyings.get(ric);
+		else
+		{
+			underlying = this.underlyingDao.get(ric);
+			if(underlying != null)
+				this.underlyings.put(ric, underlying);
+		}
+		
+		return underlying;
 	}
 
 	/**
@@ -211,7 +263,14 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		if(logger.isDebugEnabled())
 			logger.debug("Delete underlying with RIC" + ric);
 		
-		return this.underlyingdDao.delete(ric);
+		if(isUnderlyingCached(ric))
+		{
+			this.underlyings.remove(ric);
+			
+			return this.underlyingDao.delete(ric);
+		}
+		
+		return false;
 	}
 
 	/**
@@ -234,7 +293,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		if(logger.isDebugEnabled())
 			logger.debug("Check if underlying exists with RIC " + ric);
 		
-		return this.underlyingdDao.underlyingExistsWithRic(ric);
+		return (isUnderlyingCached(ric) ? true : this.underlyingDao.underlyingExistsWithRic(ric));
 	}
 	
 }

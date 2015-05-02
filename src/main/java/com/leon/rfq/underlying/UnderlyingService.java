@@ -16,4 +16,6 @@ public interface UnderlyingService
 	boolean delete(String ric);
 	
 	boolean underlyingExistsWithRic(String ric);
+	
+	boolean isUnderlyingCached(String ric);
 }
