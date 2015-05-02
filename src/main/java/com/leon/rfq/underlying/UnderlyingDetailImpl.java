@@ -23,21 +23,35 @@ public class UnderlyingDetailImpl
 	private String description;
 	
 	private boolean isValid;
+	
+	private String lastUpdatedBy;
+
+	public String getLastUpdatedBy()
+	{
+		return this.lastUpdatedBy;
+	}
+
+	public void setLastUpdatedBy(String lastUpdatedBy)
+	{
+		this.lastUpdatedBy = lastUpdatedBy;
+	}
 
 	public UnderlyingDetailImpl()
 	{
 		this.ric = "";
 		this.description = "";
 		this.isValid = true;
+		this.lastUpdatedBy = "";
 
 		logger.debug("underlying instantiated = > " +  this);
 	}
 	
-	public UnderlyingDetailImpl(String ric, String description, Boolean isValid)
+	public UnderlyingDetailImpl(String ric, String description, Boolean isValid, String lastUpdatedBy)
 	{
 		this.ric = ric;
 		this.description = description;
 		this.isValid = isValid;
+		this.lastUpdatedBy = lastUpdatedBy;
 
 		logger.debug("underlying instantiated = > " +  this);
 	}
@@ -81,7 +95,9 @@ public class UnderlyingDetailImpl
 		buf.append(this.description);
 		buf.append(", Is valid: ");
 		buf.append(this.isValid);
-
+		buf.append(", LastUpdatedBy: ");
+		buf.append(this.lastUpdatedBy);
+		
 		return buf.toString();
 	}
 
@@ -97,7 +113,7 @@ public class UnderlyingDetailImpl
 		UnderlyingDetailImpl underlying = (UnderlyingDetailImpl) o;
 
 		return this.ric.equals(underlying.ric) && this.description.equals(underlying.description)
-				&& (this.isValid == underlying.isValid);
+				&& this.lastUpdatedBy.equals(underlying.lastUpdatedBy) && (this.isValid == underlying.isValid);
 	}
 
 	@Override
@@ -106,6 +122,7 @@ public class UnderlyingDetailImpl
 		int result = 17;
 		result = (37 * result) + (this.ric == null ? 0 : this.ric.hashCode());
 		result = (37 * result) + (this.description == null ? 0 : this.description.hashCode());
+		result = (37 * result) + (this.lastUpdatedBy == null ? 0 : this.lastUpdatedBy.hashCode());
 		result = (37 * result) + (this.isValid ? 0 : 1);
 		return result;
 	}

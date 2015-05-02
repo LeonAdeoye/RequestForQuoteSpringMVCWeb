@@ -95,14 +95,14 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void save_ValidParameters_SavedUserAndReturnsTrue()
+    public void insert_ValidParameters_SavedUserAndReturnsTrue()
 	{
 		assertTrue("save method should save a valid user and returns true", this.userDaoImpl.insert("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
 		assertTrue("previously saved user should exist", this.userDaoImpl.get("testUserId").getUserId().equals("testUserId"));
 	}
 	
 	@Test
-    public void save_duplicatedUserId_SaveFailsAndReturnsFalse()
+    public void insert_duplicatedUserId_SaveFailsAndReturnsFalse()
 	{
 		this.userDaoImpl.insert("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
 		assertFalse("second save method should return false because userId already exists", this.userDaoImpl.insert("duplicatedUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));

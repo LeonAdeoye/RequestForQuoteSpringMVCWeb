@@ -44,7 +44,14 @@ public class UserImpl
 	
 	public UserImpl()
 	{
-		
+		this.userId = "";
+		this.emailAddress = "";
+		this.firstName = "";
+		this.lastName = "";
+		this.locationName = "";
+		this.groupName = "";
+		this.isValid = true;
+		this.lastUpdatedBy = "";
 	}
 	
 	public UserImpl(String userId, String emailAddress, String firstName,

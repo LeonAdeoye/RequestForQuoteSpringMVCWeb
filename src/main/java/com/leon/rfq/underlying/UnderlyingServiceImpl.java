@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,10 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 {
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
+	
+	@Autowired
 	private UnderlyingDao underlyingDao;
+	
 	private final Map<String, UnderlyingDetailImpl> underlyings = new HashMap<>();
 	
 	/**
@@ -94,7 +98,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		
 		if(!isUnderlyingCached(ric))
 		{
-			this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, isValid));
+			this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, isValid, savedByUser));
 			
 			UnderlyingDetailImpl newUnderlying = this.underlyingDao.insert(ric, description, isValid, savedByUser);
 			
@@ -150,7 +154,7 @@ public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEven
 		{
 			this.underlyings.remove(ric);
 		
-			this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, isValid));
+			this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, isValid,updatedByUser));
 			
 			UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, isValid, updatedByUser);
 			

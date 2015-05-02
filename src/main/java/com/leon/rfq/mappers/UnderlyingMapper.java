@@ -18,5 +18,5 @@ public interface UnderlyingMapper
 
 	int updateValidity(UnderlyingDetailImpl underlying);
 	
-	boolean underlyingExistsWithRic(String ric);
+	UnderlyingDetailImpl underlyingExistsWithRic(String ric);
 }

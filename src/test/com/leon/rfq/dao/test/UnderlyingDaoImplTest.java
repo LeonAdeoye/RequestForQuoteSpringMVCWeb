@@ -88,16 +88,16 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void save_duplicatedRic_InsertFailsAndReturnsNull()
+    public void insert_duplicatedRic_InsertFailsAndReturnsNull()
 	{
 		this.underlyingDao.insert("testRic", "description", true, "me");
-		assertNull("second insert  should return false because ric already exists", this.underlyingDao.insert("testRic", "description", true, "me"));
+		assertNull("second insert should return false because ric already exists", this.underlyingDao.insert("testRic", "description", true, "me"));
 	}
 	
 	@Test
     public void update_updateWithValidDescription_DescriptionUpdated()
 	{
-		this.underlyingDao.insert("testRic", "description1", true, "me");
+		this.underlyingDao.insert("testRic", "description", true, "me");
 		assertNotNull("Update should return true", this.underlyingDao.update("testRic", "updated description", true, "me"));
 		UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.get("testRic");
 		assertEquals("Updated underlying's description should be updated to new value", updatedUnderlying.getDescription(), "updated description");

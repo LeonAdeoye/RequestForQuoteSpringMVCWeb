@@ -40,7 +40,7 @@
 		WHERE ric = #{ric}
 	</delete>
 	
-	<select id="underlyingExistsWithRIC" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
+	<select id="underlyingExistsWithRic" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
 		SELECT ric, description, isValid 
 		FROM underlyings WHERE ric=#{ric}
 	</select>

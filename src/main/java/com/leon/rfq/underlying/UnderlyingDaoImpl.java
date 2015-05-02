@@ -26,12 +26,20 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 		if(logger.isDebugEnabled())
 			logger.debug("Inserting underlying with ric " + ric);
 		
-		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description, isValid);
+		try
+		{
+			UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description, isValid, savedByUser);
+			
+			if(this.underlyingMapper.insert(underlying) == 1)
+				return underlying;
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to insert the underlying with ric " + ric + " because of exception: " + e);
+		}
 		
-		if(this.underlyingMapper.insert(underlying) == 1)
-			return underlying;
-		else
-			return null;
+		return null;
 	}
 
 	@Override
@@ -40,12 +48,20 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 		if(logger.isDebugEnabled())
 			logger.debug("Updating underlying with ric " + ric);
 		
-		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description, isValid);
+		try
+		{
+			UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description, isValid, updatedByUser);
+			
+			if(this.underlyingMapper.update(underlying) == 1)
+				return underlying;
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to update the underlying with ric " + ric + " because of exception: " + e);
+		}
 		
-		if(this.underlyingMapper.update(underlying) == 1)
-			return underlying;
-		else
-			return null;
+		return null;
 	}
 
 	@Override
@@ -113,7 +129,7 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 		
 		try
 		{
-			return this.underlyingMapper.underlyingExistsWithRic(ric);
+			return this.underlyingMapper.underlyingExistsWithRic(ric) != null;
 		}
 		catch(Exception e)
 		{
