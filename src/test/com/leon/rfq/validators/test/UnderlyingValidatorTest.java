@@ -20,22 +20,6 @@ public class UnderlyingValidatorTest extends AbstractJUnit4SpringContextTests
 	private UnderlyingValidator underlyingValidator;
 	
 	@Test
-	public void Underlying_EmptyRic_ShouldBeInvalidated()
-	{
-		// Arrange
-		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl("", "test description", true, "testUser");
-		
-		BindException bindException = new BindException(underlying, "underlying");
-		
-		// Act
-		ValidationUtils.invokeValidator(this.underlyingValidator, underlying, bindException);
-		
-		// Assert
-		assertEquals("Error count should be one if the ric is empty", 1, bindException.getErrorCount());
-		assertTrue("Error message should match if the ric is empty", bindException.getLocalizedMessage().contains("RIC must be 1 to 10 characters in length"));
-	}
-	
-	@Test
 	public void Underlying_ValidParameters_ShouldBeValidated()
 	{
 		// Arrange
