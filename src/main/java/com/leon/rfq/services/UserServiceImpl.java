@@ -1,4 +1,4 @@
-package com.leon.rfq.user;
+package com.leon.rfq.services;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.controllers.UserControllerImpl;
+import com.leon.rfq.dao.UserDao;
+import com.leon.rfq.domains.UserImpl;
 
 @Service
 public class UserServiceImpl implements UserService

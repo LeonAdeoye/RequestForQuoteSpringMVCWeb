@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.leon.rfq.underlying.UnderlyingDetailImpl;
-import com.leon.rfq.underlying.UnderlyingService;
+import com.leon.rfq.domains.UnderlyingDetailImpl;
+import com.leon.rfq.services.UnderlyingService;
 
 @Component
 public class UnderlyingValidator implements Validator

@@ -16,10 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import com.leon.rfq.user.UserDao;
-import com.leon.rfq.user.UserDaoImpl;
-import com.leon.rfq.user.UserService;
-import com.leon.rfq.user.UserServiceImpl;
+import com.leon.rfq.dao.UserDao;
+import com.leon.rfq.dao.UserDaoImpl;
+import com.leon.rfq.services.UserService;
+import com.leon.rfq.services.UserServiceImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class UserServiceImplTest extends AbstractJUnit4SpringContextTests

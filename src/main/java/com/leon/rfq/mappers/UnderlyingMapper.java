@@ -2,7 +2,7 @@ package com.leon.rfq.mappers;
 
 import java.util.List;
 
-import com.leon.rfq.underlying.UnderlyingDetailImpl;
+import com.leon.rfq.domains.UnderlyingDetailImpl;
 
 public interface UnderlyingMapper
 {

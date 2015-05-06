@@ -1,4 +1,4 @@
-package com.leon.rfq.user;
+package com.leon.rfq.dao;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.leon.rfq.domains.UserImpl;
 import com.leon.rfq.mappers.UserMapper;
 
 @Repository

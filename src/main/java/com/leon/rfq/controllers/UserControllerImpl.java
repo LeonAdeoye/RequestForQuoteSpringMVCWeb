@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.leon.rfq.user.UserImpl;
-import com.leon.rfq.user.UserService;
+import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.services.UserService;
 import com.leon.rfq.validators.UserValidator;
 
 @Controller

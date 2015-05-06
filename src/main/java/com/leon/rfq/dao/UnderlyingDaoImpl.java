@@ -1,4 +1,4 @@
-package com.leon.rfq.underlying;
+package com.leon.rfq.dao;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.mappers.UnderlyingMapper;
 
 @Repository

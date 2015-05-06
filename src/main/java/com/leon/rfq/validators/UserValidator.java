@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.leon.rfq.user.UserImpl;
-import com.leon.rfq.user.UserService;
+import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.services.UserService;
 
 @Component
 public class UserValidator implements Validator

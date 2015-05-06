@@ -1,6 +1,9 @@
-package com.leon.rfq.user;
+package com.leon.rfq.services;
 
 import java.util.List;
+
+import com.leon.rfq.dao.UserDao;
+import com.leon.rfq.domains.UserImpl;
 
 public interface UserService
 {

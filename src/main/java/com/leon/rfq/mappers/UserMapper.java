@@ -2,7 +2,7 @@ package com.leon.rfq.mappers;
 
 import java.util.List;
 
-import com.leon.rfq.user.UserImpl;
+import com.leon.rfq.domains.UserImpl;
 
 public interface UserMapper
 {

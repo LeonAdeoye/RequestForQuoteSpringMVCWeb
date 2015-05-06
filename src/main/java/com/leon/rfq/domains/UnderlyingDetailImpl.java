@@ -1,4 +1,4 @@
-package com.leon.rfq.underlying;
+package com.leon.rfq.domains;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

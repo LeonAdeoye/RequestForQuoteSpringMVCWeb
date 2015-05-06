@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.leon.rfq.underlying.UnderlyingDetailImpl;
-import com.leon.rfq.underlying.UnderlyingService;
+import com.leon.rfq.domains.UnderlyingDetailImpl;
+import com.leon.rfq.services.UnderlyingService;
 import com.leon.rfq.validators.UnderlyingValidator;
 
 @Controller

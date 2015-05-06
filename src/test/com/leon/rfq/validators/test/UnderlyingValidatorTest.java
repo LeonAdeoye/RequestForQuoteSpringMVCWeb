@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ValidationUtils;
 
-import com.leon.rfq.underlying.UnderlyingDetailImpl;
+import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.validators.UnderlyingValidator;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
