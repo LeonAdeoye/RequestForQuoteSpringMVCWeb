@@ -13,14 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.leon.rfq.controllers.UserControllerImpl;
 import com.leon.rfq.dao.UserDao;
-import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.domains.UserDetailImpl;
 
 @Service
 public class UserServiceImpl implements UserService
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserControllerImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	private final Map<String, UserImpl> users = new HashMap<>();
+	private final Map<String, UserDetailImpl> users = new HashMap<>();
 	
 	@Autowired
 	private UserDao userDao;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService
 	}
 	
 	@Override
-	public UserImpl get(String userId)
+	public UserDetailImpl get(String userId)
 	{
 		if((userId == null) || userId.isEmpty())
 		{
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService
 			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
-		UserImpl user;
+		UserDetailImpl user;
 		
 		if(isUserCached(userId))
 			user = this.users.get(userId);
@@ -93,9 +93,9 @@ public class UserServiceImpl implements UserService
 			throw new IllegalArgumentException("emailAddress argument is invalid");
 		}
 		
-		for (Map.Entry<String, UserImpl> entry : this.users.entrySet())
+		for (Map.Entry<String, UserDetailImpl> entry : this.users.entrySet())
 		{
-			UserImpl user = entry.getValue();
+			UserDetailImpl user = entry.getValue();
 		    if(emailAddress.equals(user.getEmailAddress()))
 		    	return true;
 		}
@@ -104,21 +104,21 @@ public class UserServiceImpl implements UserService
 	}
 	
 	@Override
-	public List<UserImpl> getAll()
+	public List<UserDetailImpl> getAll()
 	{
-		List<UserImpl> result = this.userDao.getAll();
+		List<UserDetailImpl> result = this.userDao.getAll();
 		
 		if(result!= null)
 		{
 			this.users.clear();
 			
-			for(UserImpl user : result)
+			for(UserDetailImpl user : result)
 				this.users.put(user.getUserId(), user);
 			
 			return result;
 		}
 		else
-			return new LinkedList<UserImpl>();
+			return new LinkedList<UserDetailImpl>();
 	}
 
 	@Override
@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService
 		
 		if(!isUserCached(userId))
 		{
-			this.users.put(userId, new UserImpl(userId, emailAddress, firstName, lastName, locationName,
+			this.users.put(userId, new UserDetailImpl(userId, emailAddress, firstName, lastName, locationName,
 					groupName, isValid, savedByUser));
 			
 			return this.userDao.insert(userId, firstName, lastName, emailAddress, locationName, groupName, isValid, savedByUser);
@@ -235,7 +235,7 @@ public class UserServiceImpl implements UserService
 		
 		if(isUserCached(userId))
 		{
-			UserImpl user = this.users.get(userId);
+			UserDetailImpl user = this.users.get(userId);
 			
 			user.setIsValid(isValid);
 			
@@ -310,7 +310,7 @@ public class UserServiceImpl implements UserService
 		{
 			this.users.remove(userId);
 		
-			this.users.put(userId, new UserImpl(userId, emailAddress, firstName, lastName, locationName,
+			this.users.put(userId, new UserDetailImpl(userId, emailAddress, firstName, lastName, locationName,
 				groupName, isValid, updatedByUser));
 			
 			return this.userDao.update(userId, firstName, lastName, emailAddress, locationName, groupName, isValid, updatedByUser);

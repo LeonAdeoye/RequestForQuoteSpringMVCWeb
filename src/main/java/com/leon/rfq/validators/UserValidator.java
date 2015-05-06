@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.services.UserService;
 
 @Component
@@ -24,7 +24,7 @@ public class UserValidator implements Validator
 	@Override
 	public boolean supports(Class<?> clazz)
 	{
-		return UserImpl.class.isAssignableFrom(clazz);
+		return UserDetailImpl.class.isAssignableFrom(clazz);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class UserValidator implements Validator
 			errors.rejectValue(propertyPath, "", message);
 		}
 		
-		UserImpl user = (UserImpl) target;
+		UserDetailImpl user = (UserDetailImpl) target;
 		
 		if(this.userService.userExistsWithUserId(user.getUserId()))
 			errors.rejectValue("userId", "user.validation.userId.unique");

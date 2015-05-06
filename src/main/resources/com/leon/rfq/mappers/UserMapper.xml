@@ -5,7 +5,7 @@
   
 <mapper namespace="com.leon.rfq.mappers.UserMapper">
 	
-	<resultMap type="UserImpl" id="UserResultSet">
+	<resultMap type="UserDetailImpl" id="UserResultSet">
 		<id 	property="userId" column="userId"/>
 		<result property="emailAddress" column="emailAddress"/>
 		<result property="firstName" column="firstName"/>
@@ -15,15 +15,15 @@
 		<result property="isValid" column="isValid"/>
 	</resultMap>
 	
-	<select id="get" parameterType="java.lang.String" resultType="UserImpl">
+	<select id="get" parameterType="java.lang.String" resultType="UserDetailImpl">
 		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users WHERE userId=#{userId}
 	</select>
 	
-	<select id="userExistsWithEmailAddress" parameterType="java.lang.String" resultType="UserImpl">
+	<select id="userExistsWithEmailAddress" parameterType="java.lang.String" resultType="UserDetailImpl">
 		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users WHERE emailAddress=#{emailAddress}
 	</select>
 	
-	<select id="userExistsWithUserId" parameterType="java.lang.String" resultType="UserImpl">
+	<select id="userExistsWithUserId" parameterType="java.lang.String" resultType="UserDetailImpl">
 		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users WHERE userId=#{userId}
 	</select>
 	
@@ -31,17 +31,17 @@
 		SELECT userId, emailAddress, firstName, lastName, groupName, locationName, isValid FROM users
 	</select>
 	
-	<update id="updateValidity" parameterType="UserImpl">
+	<update id="updateValidity" parameterType="UserDetailImpl">
 		UPDATE users SET isValid = 'N', lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() WHERE userId = #{userId} <!-- TODO use IF statement-->
 	</update>
 	
-	<update id="update" parameterType="UserImpl">
+	<update id="update" parameterType="UserDetailImpl">
 		UPDATE users SET emailAddress = #{emailAddress}, firstName = #{firstName}, lastName= #{lastName}, 
 		groupName = #{groupName}, locationName = #{locationName}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, 
 		lastUpdated = now() WHERE userId = #{userId}
 	</update>	
 	
-	<insert id="insert" parameterType="UserImpl">
+	<insert id="insert" parameterType="UserDetailImpl">
 		INSERT INTO users (userId, emailAddress, firstName, lastName, groupName, locationName, isValid, lastUpdatedBy, lastUpdated)
 		VALUES(#{userId}, #{emailAddress}, #{firstName}, #{lastName}, #{groupName}, #{locationName}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert>

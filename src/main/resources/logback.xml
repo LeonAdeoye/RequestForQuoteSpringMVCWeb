@@ -37,7 +37,7 @@
 		</encoder>
 	</appender>	
 			
-	<logger name="com.leon.rfq.domains.UserImpl" level="TRACE">
+	<logger name="com.leon.rfq.domains.UserDetailImpl" level="TRACE">
 		<appender-ref ref="DOMAINS_LOG_FILE" />           
 	</logger>
 	

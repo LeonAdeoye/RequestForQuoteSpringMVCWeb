@@ -3,13 +3,13 @@ package com.leon.rfq.services;
 import java.util.List;
 
 import com.leon.rfq.dao.UserDao;
-import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.domains.UserDetailImpl;
 
 public interface UserService
 {
-	UserImpl get(String userId);
+	UserDetailImpl get(String userId);
 
-	List<UserImpl> getAll();
+	List<UserDetailImpl> getAll();
 	
 	boolean insert(String userId, String firstName, String lastName, String emailAddress,
 			String locationName, String groupName, boolean isValid, String savedByUser);

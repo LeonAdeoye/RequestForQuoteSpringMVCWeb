@@ -10,10 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @XmlRootElement
-@Alias("UserImpl")
-public class UserImpl
+@Alias("UserDetailImpl")
+public class UserDetailImpl
 {
-	private static final Logger logger = LoggerFactory.getLogger(UserImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserDetailImpl.class);
 	
 	@NotNull(message="{user.validation.userId.notNull}")
 	@Size(min=1, max=20, message="{user.validation.userId.size}")
@@ -42,7 +42,7 @@ public class UserImpl
 	//TODO - add validation
 	private String lastUpdatedBy;
 	
-	public UserImpl()
+	public UserDetailImpl()
 	{
 		this.userId = "";
 		this.emailAddress = "";
@@ -54,7 +54,7 @@ public class UserImpl
 		this.lastUpdatedBy = "";
 	}
 	
-	public UserImpl(String userId, String emailAddress, String firstName,
+	public UserDetailImpl(String userId, String emailAddress, String firstName,
 			String lastName, String locationName, String groupName, boolean isValid, String lastUpdatedBy)
 	{
 		this.userId = userId;
@@ -68,7 +68,7 @@ public class UserImpl
 		
 		if(logger.isDebugEnabled())
 		{
-			logger.debug("Constructor instantiation of UserImpl: " + this.toString());
+			logger.debug("Constructor instantiation of UserDetailImpl: " + this.toString());
 		}
 	}
 
@@ -210,11 +210,11 @@ public class UserImpl
 		{
 			return false;
 		}
-		if (!(obj instanceof UserImpl))
+		if (!(obj instanceof UserDetailImpl))
 		{
 			return false;
 		}
-		UserImpl other = (UserImpl) obj;
+		UserDetailImpl other = (UserDetailImpl) obj;
 		if (this.emailAddress == null)
 		{
 			if (other.emailAddress != null)

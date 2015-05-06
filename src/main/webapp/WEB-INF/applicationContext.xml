@@ -55,8 +55,14 @@
 			<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
 				<property name="classesToBeBound">
 					<list>
-						<value>com.leon.rfq.domains.UserImpl</value>
+						<value>com.leon.rfq.domains.UserDetailImpl</value>
 						<value>com.leon.rfq.domains.UnderlyingDetailImpl</value>
+						<value>com.leon.rfq.domains.GroupDetailImpl</value>
+						<value>com.leon.rfq.domains.ClientDetailImpl</value>
+						<value>com.leon.rfq.domains.HolidayDetailImpl</value>
+						<value>com.leon.rfq.domains.BookDetailImpl</value>
+						<value>com.leon.rfq.domains.RequestDetailImpl</value>
+						<value>com.leon.rfq.domains.OptionDetailImpl</value>
 					</list>
 				</property>
 			</bean>

@@ -2,7 +2,7 @@ package com.leon.rfq.dao;
 
 import java.util.List;
 
-import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.domains.UserDetailImpl;
 
 public interface UserDao
 {
@@ -28,9 +28,9 @@ public interface UserDao
 
 	boolean updateValidity(String userId, boolean isValid, String updatedByUser);
 
-	List<UserImpl> getAll();
+	List<UserDetailImpl> getAll();
 	 
-	UserImpl get(String userId);
+	UserDetailImpl get(String userId);
 
 	boolean userExistsWithEmailAddress(String emailAddress);
 	

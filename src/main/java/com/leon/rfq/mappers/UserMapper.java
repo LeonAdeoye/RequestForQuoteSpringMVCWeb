@@ -2,23 +2,23 @@ package com.leon.rfq.mappers;
 
 import java.util.List;
 
-import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.domains.UserDetailImpl;
 
 public interface UserMapper
 {
-	List<UserImpl> getAll();
+	List<UserDetailImpl> getAll();
 	
-	UserImpl get(String userId);
+	UserDetailImpl get(String userId);
 	
 	int delete(String userId);
 	
-	int insert(UserImpl userImpl);
+	int insert(UserDetailImpl userDetailImpl);
 	
-	int update(UserImpl userImpl);
+	int update(UserDetailImpl userDetailImpl);
 
-	int updateValidity(UserImpl userImpl);
+	int updateValidity(UserDetailImpl userDetailImpl);
 	
-	UserImpl userExistsWithEmailAddress(String emailAddress);
+	UserDetailImpl userExistsWithEmailAddress(String emailAddress);
 	
-	UserImpl userExistsWithUserId(String userId);
+	UserDetailImpl userExistsWithUserId(String userId);
 }

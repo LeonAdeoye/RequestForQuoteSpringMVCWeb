@@ -10,7 +10,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.validation.BindException;
 import org.springframework.validation.ValidationUtils;
 
-import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.validators.UserValidator;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
@@ -23,7 +23,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 	public void User_EmptylastName_ShouldBeInvalidated()
 	{
 		// Arrange
-		UserImpl user = new UserImpl("testUser", "emailAddress@test.com", "firstName",
+		UserDetailImpl user = new UserDetailImpl("testUser", "emailAddress@test.com", "firstName",
 			"", "locationName", "groupName", true, "testUser");
 		
 		BindException bindException = new BindException(user, "user");
@@ -40,7 +40,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 	public void User_ValidParameters_ShouldBeValidated()
 	{
 		// Arrange
-		UserImpl user = new UserImpl("testUser", "emailAddress@test.com", "firstName",
+		UserDetailImpl user = new UserDetailImpl("testUser", "emailAddress@test.com", "firstName",
 			"lastName", "locationName", "groupName", true, "testUser");
 		
 		BindException bindException = new BindException(user, "user");
@@ -56,7 +56,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 	public void User_EmptyFirstName_ShouldBeInvalidated()
 	{
 		// Arrange
-		UserImpl user = new UserImpl("testUser", "emailAddress@test.com", "",
+		UserDetailImpl user = new UserDetailImpl("testUser", "emailAddress@test.com", "",
 			"lastName", "locationName", "groupName", true, "testUser");
 		
 		BindException bindException = new BindException(user, "user");
@@ -73,7 +73,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 	public void User_UserIdTooLong_ShouldBeInvalidated()
 	{
 		// Arrange
-		UserImpl user = new UserImpl("123456789012345678901234567890", "emailAddress@test.com", "firstName",
+		UserDetailImpl user = new UserDetailImpl("123456789012345678901234567890", "emailAddress@test.com", "firstName",
 			"lastName", "locationName", "groupName", true, "testUser");
 		
 		BindException bindException = new BindException(user, "user");
@@ -90,7 +90,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 	public void User_FirstNameTooLong_ShouldBeInvalidated()
 	{
 		// Arrange
-		UserImpl user = new UserImpl("testUser", "emailAddress@test.com", "123456789012345678901234567890",
+		UserDetailImpl user = new UserDetailImpl("testUser", "emailAddress@test.com", "123456789012345678901234567890",
 			"lastName", "locationName", "groupName", true, "testUser");
 		
 		BindException bindException = new BindException(user, "user");
@@ -107,7 +107,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 	public void User_LastNameTooLong_ShouldBeInvalidated()
 	{
 		// Arrange
-		UserImpl user = new UserImpl("testuser", "emailAddress@test.com", "firstName",
+		UserDetailImpl user = new UserDetailImpl("testuser", "emailAddress@test.com", "firstName",
 			"123456789012345678901234567890", "locationName", "groupName", true, "testUser");
 		
 		BindException bindException = new BindException(user, "user");
@@ -124,7 +124,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 	public void User_EmailAddressMissingAT_ShouldBeInvalidated()
 	{
 		// Arrange
-		UserImpl user = new UserImpl("testUser", "test.com", "firstName",
+		UserDetailImpl user = new UserDetailImpl("testUser", "test.com", "firstName",
 			"lastName", "locationName", "groupName", true, "testUser");
 		
 		BindException bindException = new BindException(user, "user");
@@ -141,7 +141,7 @@ public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 	public void User_EmailAddressMissingPeriod_ShouldBeInvalidated()
 	{
 		// Arrange
-		UserImpl user = new UserImpl("testUser", "test@com", "firstName",
+		UserDetailImpl user = new UserDetailImpl("testUser", "test@com", "firstName",
 			"lastName", "locationName", "groupName", true, "testUser");
 		
 		BindException bindException = new BindException(user, "user");

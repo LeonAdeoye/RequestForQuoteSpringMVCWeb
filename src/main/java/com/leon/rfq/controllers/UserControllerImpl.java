@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.services.UserService;
 import com.leon.rfq.validators.UserValidator;
 
@@ -57,14 +57,14 @@ public class UserControllerImpl
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String getNewUserForm(Model model)
 	{
-		UserImpl user = new UserImpl();
+		UserDetailImpl user = new UserDetailImpl();
 		model.addAttribute("newUser", user);
 		
 		return "addUser";
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String processNewUserForm(@ModelAttribute("newUser") @Valid UserImpl newUser,
+	public String processNewUserForm(@ModelAttribute("newUser") @Valid UserDetailImpl newUser,
 			BindingResult result, HttpServletRequest request)
 	{
 		String[] suppressedFields = result.getSuppressedFields();

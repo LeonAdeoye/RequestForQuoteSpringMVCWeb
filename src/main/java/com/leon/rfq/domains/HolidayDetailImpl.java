@@ -6,21 +6,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @XmlRootElement(name="HolidayImpl")
-public final class HolidayImpl
+public final class HolidayDetailImpl
 {
-	private static final Logger logger = LoggerFactory.getLogger(HolidayImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(HolidayDetailImpl.class);
 	private String location;
 	private String holidayDate;
 
-	public HolidayImpl(String location, String holidayDate)
+	public HolidayDetailImpl(String location, String holidayDate)
 	{
 		this.location = location;
 		this.holidayDate = holidayDate;
 
-		logger.debug("HolidayImpl object instantiated = > " +  this);
+		logger.debug("HolidayDetailImpl object instantiated = > " +  this);
 	}
 
-	public HolidayImpl() {}
+	public HolidayDetailImpl() {}
 
 	/**
 	 * @return the location
@@ -100,11 +100,11 @@ public final class HolidayImpl
 		{
 			return false;
 		}
-		if (!(obj instanceof HolidayImpl))
+		if (!(obj instanceof HolidayDetailImpl))
 		{
 			return false;
 		}
-		HolidayImpl other = (HolidayImpl) obj;
+		HolidayDetailImpl other = (HolidayDetailImpl) obj;
 		if (this.holidayDate == null)
 		{
 			if (other.holidayDate != null)

@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.leon.rfq.domains.UserImpl;
+import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.mappers.UserMapper;
 
 @Repository
@@ -46,7 +46,7 @@ public class UserDaoImpl implements UserDao
 		
 		try
 		{
-			return this.userMapper.insert(new UserImpl(userId, emailAddress, firstName, lastName, locationName, groupName, isValid, savedByUser)) == 1;
+			return this.userMapper.insert(new UserDetailImpl(userId, emailAddress, firstName, lastName, locationName, groupName, isValid, savedByUser)) == 1;
 		}
 		catch(Exception e)
 		{
@@ -67,7 +67,7 @@ public class UserDaoImpl implements UserDao
 		
 		try
 		{
-			return this.userMapper.update(new UserImpl(userId, emailAddress, firstName, lastName, locationName, groupName, isValid, savedByUser)) == 1;
+			return this.userMapper.update(new UserDetailImpl(userId, emailAddress, firstName, lastName, locationName, groupName, isValid, savedByUser)) == 1;
 		}
 		catch(Exception e)
 		{
@@ -86,7 +86,7 @@ public class UserDaoImpl implements UserDao
 
 		try
 		{
-			return this.userMapper.updateValidity(new UserImpl(userId, "", "", "", "", "", isValid, updatedByUser)) == 1;
+			return this.userMapper.updateValidity(new UserDetailImpl(userId, "", "", "", "", "", isValid, updatedByUser)) == 1;
 		}
 		catch(Exception e)
 		{
@@ -98,7 +98,7 @@ public class UserDaoImpl implements UserDao
 	}
 
 	@Override
-	public List<UserImpl> getAll()
+	public List<UserDetailImpl> getAll()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all users");
@@ -109,7 +109,7 @@ public class UserDaoImpl implements UserDao
 	}
 
 	@Override
-	public UserImpl get(String userId)
+	public UserDetailImpl get(String userId)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get user with userId: " + userId);
