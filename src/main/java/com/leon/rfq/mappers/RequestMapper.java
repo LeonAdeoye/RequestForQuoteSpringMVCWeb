@@ -12,9 +12,9 @@ public interface RequestMapper
 	
 	int delete(String requestId);
 	
-	int insert(String requestId, String bookCode, int clientId, String savedByUser);
+	int insert(String bookCode, int clientId, String savedByUser);
 	
 	int update(String requestId, String bookCode, int clientId, boolean isValid, String updatedByUser);
 	
-	RequestDetailImpl userExistsWithUserId(String requestId);
+	RequestDetailImpl requestExistsWithReqestId(String requestId);
 }

@@ -22,65 +22,51 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	private RequestDao requestDao;
 
 	@Override
-	public void setApplicationEventPublisher(ApplicationEventPublisher arg0)
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
 	{
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public RequestDetailImpl get(String requestId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return this.requestDao.get(requestId);
 	}
 
 	@Override
 	public List<RequestDetailImpl> getAll()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return this.requestDao.getAll();
 	}
 
 	@Override
-	public boolean insert(String requestSnippet, int clientId, String bookName, String savedByUser)
+	public boolean insert(String requestSnippet, int clientId, String bookCode, String savedByUser)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		//TODO generate fields from request snippet
+		return this.requestDao.insert(bookCode, clientId, savedByUser);
 	}
 
 	@Override
 	public boolean delete(String requestId)
 	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean updateValidity(String userId, boolean isValid, String updatedByUser)
-	{
-		// TODO Auto-generated method stub
-		return false;
+		return this.requestDao.delete(requestId);
 	}
 
 	@Override
 	public void setUserDao(RequestDao requestDao)
 	{
-		// TODO Auto-generated method stub
-		
+		this.requestDao = requestDao;
 	}
 
 	@Override
 	public boolean isRequestCached(String requestId)
 	{
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean requestExistsWithRequestId(String requestId)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return this.requestDao.requestExistsWithRequestId(requestId);
 	}
 }

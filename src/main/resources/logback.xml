@@ -89,6 +89,10 @@
 		<appender-ref ref="DAO_LOG_FILE" />           
 	</logger>
 	
+	<logger name="com.leon.rfq.dao.RequestDaoImpl" level="TRACE">
+		<appender-ref ref="DAO_LOG_FILE" />           
+	</logger>	
+	
 	<logger name="com.leon.rfq.services.UnderlyingServiceImpl" level="TRACE">
 		<appender-ref ref="SERVICES_LOG_FILE" />           
 	</logger>
@@ -96,6 +100,10 @@
 	<logger name="com.leon.rfq.services.UserServiceImpl" level="TRACE">
 		<appender-ref ref="SERVICES_LOG_FILE" />           
 	</logger>
+	
+	<logger name="com.leon.rfq.services.RequestServiceImpl" level="TRACE">
+		<appender-ref ref="SERVICES_LOG_FILE" />           
+	</logger>	
 	   
 	<root level="info">
 		<appender-ref ref="STDOUT" />

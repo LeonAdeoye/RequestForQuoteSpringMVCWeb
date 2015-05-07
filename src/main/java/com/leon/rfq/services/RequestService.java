@@ -14,8 +14,6 @@ public interface RequestService
 	boolean insert(String requestSnippet, int clientId, String bookName, String savedByUser);
 	
 	boolean delete(String requestId);
-	
-	boolean updateValidity(String userId, boolean isValid, String updatedByUser);
 
 	void setUserDao(RequestDao requestDao);
 	

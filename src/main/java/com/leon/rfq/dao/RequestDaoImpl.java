@@ -21,43 +21,37 @@ public class RequestDaoImpl implements RequestDao
 	@Override
 	public boolean delete(String requestId)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return this.requestMapper.delete(requestId) == 1;
 	}
 
 	@Override
-	public boolean insert(String requestId, String bookCode, int clientId, String savedByUser)
+	public boolean insert(String bookCode, int clientId, String savedByUser)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return this.requestMapper.insert(bookCode, clientId, savedByUser) == 1;
 	}
 
 	@Override
 	public boolean update(String requestId, String bookCode, int clientId, boolean isValid, String updatedByUser)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return this.requestMapper.update(requestId, bookCode, clientId, isValid, updatedByUser) == 1;
 	}
 
 	@Override
 	public List<RequestDetailImpl> getAll()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return this.requestMapper.getAll();
 	}
 
 	@Override
 	public RequestDetailImpl get(String requestId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return this.get(requestId);
 	}
 
 	@Override
 	public boolean requestExistsWithRequestId(String requestId)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return this.requestMapper.requestExistsWithReqestId(requestId) != null;
 	}
 
 }
