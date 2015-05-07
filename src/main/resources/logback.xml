@@ -43,11 +43,39 @@
 	
 	<logger name="com.leon.rfq.domains.UnderlyingDetailImpl" level="TRACE">
 		<appender-ref ref="DOMAINS_LOG_FILE" />           
-	</logger>			
+	</logger>
+	
+	<logger name="com.leon.rfq.domains.GroupDetailImpl" level="TRACE">
+		<appender-ref ref="DOMAINS_LOG_FILE" />           
+	</logger>
+	
+	<logger name="com.leon.rfq.domains.ClientDetailImpl" level="TRACE">
+		<appender-ref ref="DOMAINS_LOG_FILE" />           
+	</logger>	
+	
+	<logger name="com.leon.rfq.domains.HolidayDetailImpl" level="TRACE">
+		<appender-ref ref="DOMAINS_LOG_FILE" />           
+	</logger>	
+	
+	<logger name="com.leon.rfq.domains.BookDetailImpl" level="TRACE">
+		<appender-ref ref="DOMAINS_LOG_FILE" />           
+	</logger>	
+	
+	<logger name="com.leon.rfq.domains.OptionDetailImpl" level="TRACE">
+		<appender-ref ref="DOMAINS_LOG_FILE" />           
+	</logger>
+	
+	<logger name="com.leon.rfq.domains.RequestDetailImpl" level="TRACE">
+		<appender-ref ref="DOMAINS_LOG_FILE" />           
+	</logger>
 	
 	<logger name="com.leon.rfq.controllers.UserControllerImpl" level="TRACE">
 		<appender-ref ref="CONTROLLERS_LOG_FILE" />           
 	</logger>
+	
+	<logger name="com.leon.rfq.controllers.RequestControllerImpl" level="TRACE">
+		<appender-ref ref="CONTROLLERS_LOG_FILE" />           
+	</logger>	
 	
 	<logger name="com.leon.rfq.controllers.LoginControllerImpl" level="TRACE">
 		<appender-ref ref="CONTROLLERS_LOG_FILE" />           

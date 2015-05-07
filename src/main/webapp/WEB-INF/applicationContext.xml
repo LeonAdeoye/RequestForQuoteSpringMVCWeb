@@ -41,6 +41,7 @@
 	
 	<bean id="userValidator" class="com.leon.rfq.validators.UserValidator"/>
 	<bean id="underlyingValidator" class="com.leon.rfq.validators.UnderlyingValidator"/>
+	<bean id="requestValidator" class="com.leon.rfq.validators.RequestValidator"/>
 	
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
