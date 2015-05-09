@@ -24,7 +24,7 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
 	{
-		// TODO Auto-generated method stub
+		//applicationEventPublisher.publishEvent(null);
 	}
 
 	@Override
@@ -42,7 +42,6 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	@Override
 	public boolean insert(String requestSnippet, int clientId, String bookCode, String savedByUser)
 	{
-		//TODO generate fields from request snippet
 		return this.requestDao.insert(bookCode, clientId, savedByUser);
 	}
 

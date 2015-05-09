@@ -92,13 +92,9 @@ public class UserServiceImpl implements UserService
 			
 			throw new IllegalArgumentException("emailAddress argument is invalid");
 		}
-		
-		for (Map.Entry<String, UserDetailImpl> entry : this.users.entrySet())
-		{
-			UserDetailImpl user = entry.getValue();
-		    if(emailAddress.equals(user.getEmailAddress()))
-		    	return true;
-		}
+			
+		if(this.users.values().stream().anyMatch(user -> user.getEmailAddress().equals(emailAddress)))
+			return true;
 				
 		return this.userDao.userExistsWithEmailAddress(emailAddress);
 	}
@@ -112,6 +108,7 @@ public class UserServiceImpl implements UserService
 		{
 			this.users.clear();
 			
+			// Could use a more complicated lambda expression here but below is far simpler
 			for(UserDetailImpl user : result)
 				this.users.put(user.getUserId(), user);
 			
