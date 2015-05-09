@@ -13,6 +13,8 @@
         
     <mvc:annotation-driven validator="validator"/>
     
+    <mvc:default-servlet-handler/>
+    
     <mvc:interceptors>
     	<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
     		<property name="paramName" value="language"/>
@@ -30,10 +32,10 @@
       	<property name="suffix" value=".jsp" />
 	</bean>
 	
-	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+ 	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
 		<property name="defaultViews">
 			<list>
-				<ref bean="jsonView"/>
+				<!-- <ref bean="jsonView"/> -->
 				<ref bean="xmlView"/>
 			</list>
 		</property>
@@ -47,9 +49,9 @@
 		<property name="defaultLocale" value="en" />
 	</bean>
 	
-	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-		<!-- <property name="prettyPrint" value="true"/> -->
-	</bean>
+<!-- 	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+		<property name="prettyPrint" value="true"/>
+	</bean> -->
 	
 	<bean id="xmlView" class="org.springframework.web.servlet.view.xml.MarshallingView">
 		<constructor-arg>

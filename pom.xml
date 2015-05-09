@@ -8,7 +8,8 @@
   	<junit.version>4.11</junit.version>
   	<logback.version>1.0.11</logback.version>
   	<slf4j.version>1.7.2</slf4j.version>
-  	<spring.version>4.0.1.RELEASE</spring.version>
+  	<spring.version>4.1.6.RELEASE</spring.version>
+  	<spring.security.version>4.0.0.RELEASE</spring.security.version>
   	<dbcp.version>1.4</dbcp.version>
   	<mysql.version>5.1.6</mysql.version>
   	<mybatis.spring.version>1.2.2</mybatis.spring.version>
@@ -18,8 +19,28 @@
   	<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
   	<jackson-mapper-asl.version>1.9.10</jackson-mapper-asl.version>
   	<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
-  </properties>  
-	<dependencies>	
+  </properties>
+  
+    <dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework</groupId>
+				<artifactId>spring-framework-bom</artifactId>
+				<version>${spring.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.security</groupId>
+				<artifactId>spring-security-bom</artifactId>
+				<version>${spring.security.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
+	<dependencies>
 		<dependency>
 			<groupId>eu.codearte.catch-exception</groupId>
 			<artifactId>catch-exception</artifactId>
@@ -44,22 +65,18 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.springframework</groupId>
-		    <artifactId>spring-web</artifactId>
-		    <version>${spring.version}</version>            
+		    <artifactId>spring-web</artifactId>          
 		</dependency>
 	  	<dependency>
 	  		<groupId>javax.servlet</groupId>
@@ -101,22 +118,18 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>${spring.version}</version>
 	</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-oxm</artifactId>
-			<version>${spring.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>

@@ -14,10 +14,10 @@
 		http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
         
-	<security:http auto-config="true" use-expressions="false" >
+	<security:http auto-config="true" use-expressions="false" >		
 		<security:intercept-url pattern="/users" access="ROLE_USER, ROLE_ADMIN" />
-		<security:intercept-url pattern="/users/add" access="ROLE_ADMIN" />
-		<security:form-login login-page="/login" default-target-url="/users" authentication-failure-url="/loginfailed" />
+		<security:intercept-url pattern="/users/add" access="ROLE_ADMIN" />				
+ 		<security:form-login login-page="/login" default-target-url="/users" authentication-failure-url="/loginfailed" />
 		<security:logout logout-success-url = "/logout"/>
 		<security:csrf disabled="true"/>				
 	</security:http>

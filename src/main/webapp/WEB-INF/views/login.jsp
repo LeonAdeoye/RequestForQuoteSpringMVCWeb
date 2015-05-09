@@ -25,8 +25,8 @@
 								<spring:message code="login.badCredentials.label"/>
 							</div>
 						</c:if>
-				
-						<form action=<c:url value="/j_spring_security_check"></c:url> method="post">
+						
+						<form action="<c:url value="/j_spring_security_check"></c:url>" method="post">
 							<fieldSet>
 								<div class="form-group">								
 									<input name='j_username' placeholder="Enter userName" type="text" class="form-control"/>
