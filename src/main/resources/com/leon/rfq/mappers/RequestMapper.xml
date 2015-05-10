@@ -18,14 +18,15 @@
 		<result property="gamma" column="gamma"/>
 		<result property="vega" column="vega"/>
 		<result property="theta" column="theta"/>
+		<result property="rho" column="rho"/>
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="RequestDetailImpl">
-		SELECT * FROM requestforquotemain WHERE requestId=#{requestId}
+		SELECT * FROM requestforquotemain WHERE identifier=#{requestId}
 	</select>
 	
 	<select id="requestExistsWithRequestId" parameterType="java.lang.String" resultType="RequestDetailImpl">
-		SELECT * FROM requestforquotemain WHERE requestId=#{requestId}
+		SELECT * FROM requestforquotemain WHERE identifier=#{requestId}
 	</select>
 	
 	<select id="getAll" resultMap="RequestResultSet">
@@ -39,7 +40,7 @@
 	
 	<delete id="delete" parameterType="java.lang.String">
 		DELETE FROM requestforquotemain
-		WHERE requestId = #{requestId}
+		WHERE identifier = #{requestId}
 	</delete>		
 			
 </mapper>

@@ -6,7 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 		<link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-		<title><spring:message code="user.addNewUser.label"/></title>
+		<title>Individual Request</title>
 	</head>
 	<body>
 		<section>
@@ -15,56 +15,87 @@
 					<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
 				</div>			
 				<div class="container">								
-					<h1><spring:message code="user.user.label"/></h1>
+					<h1>Individual Request</h1>
 				</div>
 			</div>
 		</section>
 		<section class="container">
-			<form:form modelAttribute="user" class="form-horizontal">
+			<form:form modelAttribute="request" class="form-horizontal">
 				<fieldSet>
-					<legend><spring:message code="user.existingUserDetails.label"/></legend>
+					<legend><spring:message code="request.existingRequestDetails.label"/></legend>
 					<div class="form-group">
-						<label class="control-label col-lg-2 col-lg-2" for="userId"><spring:message code="user.userId.label"/></label>
+						<label class="control-label col-lg-2 col-lg-2" for="requestId"><spring:message code="request.requestId.label"/></label>
 						<div class="col-lg-10">
-							<form:input id="userId" path="userId" type="text" class="form:input-large" value="${user.userId}"/>
+							<form:input id="requestId" path="identifier" type="text" class="form:input-large" value="${request.identifier}"/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-lg-2 col-lg-2" for="lastName"><spring:message code="user.lastName.label"/></label>
+						<label class="control-label col-lg-2 col-lg-2" for="request"><spring:message code="request.snippet.label"/></label>
 						<div class="col-lg-10">
-							<form:input id="lastName" path="lastName" type="text" class="form:input-large" value="${user.lastName}"/>
+							<form:input id="request" path="request" type="text" class="form:input-large" value="${request.request}"/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-lg-2 col-lg-2" for="firstName"><spring:message code="user.firstName.label"/></label>
+						<label class="control-label col-lg-2 col-lg-2" for="status"><spring:message code="request.status.label"/></label>
 						<div class="col-lg-10">
-							<form:input id="firstName" path="firstName" type="text" class="form:input-large" value="${user.firstName}"/>
+							<form:input id="status" path="status" type="text" class="form:input-large" value="${request.status}"/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-lg-2 col-lg-2" for="emailAddress"><spring:message code="user.emailAddress.label"/></label>
+						<label class="control-label col-lg-2 col-lg-2" for="pickedUpBy"><spring:message code="request.pickedUpBy.label"/></label>
 						<div class="col-lg-10">
-							<form:input id="emailAddress" path="emailAddress" type="text" class="form:input-large" value="${user.emailAddress}"/>
+							<form:input id="pickedUpBy" path="pickedUpBy" type="text" class="form:input-large" value="${request.pickedUpBy}"/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-lg-2 col-lg-2" for="locationName"><spring:message code="user.locationName.label"/></label>
+						<label class="control-label col-lg-2 col-lg-2" for="clientId"><spring:message code="request.client.label"/></label>
 						<div class="col-lg-10">
-							<form:input id="locationName" path="locationName" type="text" class="form:input-large" value="${user.locationName}"/>
+							<form:input id="clientId" path="clientId" type="text" class="form:input-large" value="${request.clientId}"/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-lg-2 col-lg-2" for="groupName"><spring:message code="user.groupName.label"/></label>
+						<label class="control-label col-lg-2 col-lg-2" for="bookCode"><spring:message code="request.bookName.label"/></label>
 						<div class="col-lg-10">
-							<form:input id="groupName" path="groupName" type="text" class="form:input-large" value="${user.groupName}"/>
+							<form:input id="bookCode" path="bookCode" type="text" class="form:input-large" value="${request.bookCode}"/>
 						</div>
 					</div>
 					<div class="form-group">
-						<label class="control-label col-lg-2 col-lg-2" for="isValid"><spring:message code="user.isValid.label"/></label>
+						<label class="control-label col-lg-2 col-lg-2" for="premiumAmount"><spring:message code="request.premiumAmount.label"/></label>
 						<div class="col-lg-10">
-							<form:checkbox id="isValid" path="isValid" />
+							<form:input id="premiumAmount" path="premiumAmount" type="text" class="form:input-large" value="${request.premiumAmount}"/>
 						</div>
-					</div>					
+					</div>
+					<div class="form-group">
+						<label class="control-label col-lg-2 col-lg-2" for="delta"><spring:message code="request.delta.label"/></label>
+						<div class="col-lg-10">
+							<form:input id="delta" path="delta" type="text" class="form:input-large" value="${request.delta}"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-lg-2 col-lg-2" for="gamma"><spring:message code="request.gamma.label"/></label>
+						<div class="col-lg-10">
+							<form:input id="gamma" path="gamma" type="text" class="form:input-large" value="${request.gamma}"/>
+						</div>
+					</div>
+																				<div class="form-group">
+						<label class="control-label col-lg-2 col-lg-2" for="vega"><spring:message code="request.vega.label"/></label>
+						<div class="col-lg-10">
+							<form:input id="vega" path="vega" type="text" class="form:input-large" value="${request.vega}"/>
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-lg-2 col-lg-2" for="theta"><spring:message code="request.theta.label"/></label>
+						<div class="col-lg-10">
+							<form:input id="theta" path="theta" type="text" class="form:input-large" value="${request.theta}"/>
+						</div>
+					</div>
+															<div class="form-group">
+						<label class="control-label col-lg-2 col-lg-2" for="rho"><spring:message code="request.rho.label"/></label>
+						<div class="col-lg-10">
+							<form:input id="rho" path="rho" type="text" class="form:input-large" value="${request.rho}"/>
+						</div>
+					</div>
+										
 					<div class="form-group">
 						<div class="col-lg-offset-2 col-lg-10">
 							<input type="submit" id="buttonSave" class="btn btn-primary" value="Update"/>

@@ -45,7 +45,7 @@ public class RequestDaoImpl implements RequestDao
 	@Override
 	public RequestDetailImpl get(String requestId)
 	{
-		return this.get(requestId);
+		return this.requestMapper.get(requestId);
 	}
 
 	@Override

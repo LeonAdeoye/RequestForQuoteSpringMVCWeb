@@ -16,7 +16,7 @@
 		<section>
 			<div class="jumbotron">
 				<div class="container" id="title-header">
-					<h1>Users</h1>
+					<h1><spring:message code="requests.requests.label"/></h1>
 					<div class="pull-right" style="padding-right:50px">
 						<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
 					</div>
@@ -34,7 +34,7 @@
 					<th><spring:message code="request.client.label"/></th>
 					<th><spring:message code="request.bookName.label"/></th>
 					<th><spring:message code="request.tradeDate.label"/></th>
-					<th><spring:message code="request.price.label"/></th>
+					<th><spring:message code="request.premiumAmount.label"/></th>
 					<th><spring:message code="request.delta.label"/></th>
 					<th><spring:message code="request.gamma.label"/></th>
 					<th><spring:message code="request.theta.label"/></th>
