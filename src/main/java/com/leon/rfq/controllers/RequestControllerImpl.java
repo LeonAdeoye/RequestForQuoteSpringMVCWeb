@@ -64,7 +64,7 @@ public class RequestControllerImpl
 	}
 	
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String processNewRequestForm(@ModelAttribute("newUser") @Valid RequestDetailImpl newRequest,
+	public String processNewRequestForm(@ModelAttribute("newRequest") @Valid RequestDetailImpl newRequest,
 			BindingResult result, HttpServletRequest request)
 	{
 		String[] suppressedFields = result.getSuppressedFields();
@@ -85,7 +85,9 @@ public class RequestControllerImpl
 	@RequestMapping("/delete")
 	public String delete(@RequestParam String requestId, Model model)
 	{
-		this.requestService.delete(requestId);
+		if(!this.requestService.delete(requestId))
+			model.addAttribute("error", "Failed to delete request with requestId: " + requestId);
+			
 		return "redirect:/requests";
 	}
 }
