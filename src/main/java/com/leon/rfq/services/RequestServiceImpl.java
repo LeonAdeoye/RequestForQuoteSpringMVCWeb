@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.leon.rfq.dao.RequestDao;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.events.NewRequestEvent;
 
 @Service
 public class RequestServiceImpl implements RequestService, ApplicationEventPublisherAware
@@ -24,7 +25,7 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
 	{
-		//applicationEventPublisher.publishEvent(null);
+		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	@Override
@@ -42,7 +43,11 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	@Override
 	public boolean insert(String requestSnippet, int clientId, String bookCode, String savedByUser)
 	{
-		return this.requestDao.insert(bookCode, clientId, savedByUser);
+		boolean result = this.requestDao.insert(bookCode, clientId, savedByUser);
+		
+		this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, new RequestDetailImpl())); //TODO
+		
+		return result;
 	}
 
 	@Override
