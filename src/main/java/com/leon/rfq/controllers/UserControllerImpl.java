@@ -57,8 +57,7 @@ public class UserControllerImpl
 	@RequestMapping(value = "/add", method = RequestMethod.GET)
 	public String getNewUserForm(Model model)
 	{
-		UserDetailImpl user = new UserDetailImpl();
-		model.addAttribute("newUser", user);
+		model.addAttribute("newUser", new UserDetailImpl());
 		
 		return "addUser";
 	}
@@ -86,14 +85,18 @@ public class UserControllerImpl
 	@RequestMapping("/delete")
 	public String delete(@RequestParam String userId, Model model)
 	{
-		this.userService.delete(userId);
+		if(!this.userService.delete(userId))
+			model.addAttribute("error", "Failed to delete user with userId: " + userId);
+		
 		return "redirect:/users";
 	}
 
 	@RequestMapping("/updateValidity")
 	public String updateValidity(@RequestParam String userId, @RequestParam boolean isValid, @RequestParam String updatedByUser, Model model)
 	{
-		this.userService.updateValidity(userId, isValid, updatedByUser);
+		if(!this.userService.updateValidity(userId, isValid, updatedByUser))
+			model.addAttribute("error", "Failed to update validity user with userId: " + userId);
+			
 		return "redirect:/users";
 	}
 }
