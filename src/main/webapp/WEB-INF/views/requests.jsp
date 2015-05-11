@@ -32,7 +32,7 @@
 					<th><spring:message code="request.status.label"/></th> 
 					<th><spring:message code="request.pickedUpBy.label"/></th>
 					<th><spring:message code="request.client.label"/></th>
-					<th><spring:message code="request.bookName.label"/></th>
+					<th><spring:message code="request.bookCode.label"/></th>
 					<th><spring:message code="request.tradeDate.label"/></th>
 					<th><spring:message code="request.premiumAmount.label"/></th>
 					<th><spring:message code="request.delta.label"/></th>

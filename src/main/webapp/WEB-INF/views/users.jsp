@@ -5,7 +5,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
 		<link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-		<script type="text/javascript" src="jquery-2.1.3.min.js"/>
+		<script src='<c:url value="/javascript/jquery-2.1.3.min.js"/>'></script>
 		<script type="text/javascript">
 			if (typeof jQuery != 'undefined') {
 				 
