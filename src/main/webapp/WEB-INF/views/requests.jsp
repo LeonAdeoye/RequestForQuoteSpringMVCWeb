@@ -7,8 +7,8 @@
 		<link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 		<script type="text/javascript" src="jquery-2.1.3.min.js"/>
 		<script type="text/javascript">
-			if (typeof jQuery != 'undefined')				 
-			    alert("jQuery library is loaded!");
+			if (typeof jQuery == 'undefined')				 
+			    alert("jQuery library is NOT loaded!");
 		</script>		
 		<title><spring:message code="requests.title.label"/></title>
 	</head>
@@ -45,7 +45,7 @@
 					<c:forEach items="${requests}" var="request">
 						<div class="caption">
 							<tr>
-						  		<td><a href="<spring:url value="/requests/request?requestId=${request.identifier}"/>">${request.identifier}</a></td>
+						  		<td><a href="<spring:url value="/requests/request?requestId=${request.requestId}"/>">${request.requestId}</a></td>
 						  		<td>${request.request}</td> 
 						  		<td>${request.status}</td>
 						  		<td>${request.pickedUpBy}</td>

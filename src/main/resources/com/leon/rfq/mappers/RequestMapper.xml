@@ -6,7 +6,7 @@
 <mapper namespace="com.leon.rfq.mappers.RequestMapper">
 	
 	<resultMap type="RequestDetailImpl" id="RequestResultSet">
-		<id 	property="requestId" column="requestId"/>
+		<id 	property="requestId" column="identifier"/>
 		<result property="request" column="request"/>
 		<result property="status" column="status"/>
 		<result property="pickedUpBy" column="pickedUpBy"/>
