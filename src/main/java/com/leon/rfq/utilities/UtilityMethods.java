@@ -23,7 +23,7 @@ public final class UtilityMethods
 	 * @throws  IllegalArgumentException	if dateToConvert string is empty.
 	 * @return 								the java.sql.Date if it successfully converts the string otherwise null.
 	 */
-	public static java.sql.Date convertToDate(String dateToConvert)
+	public static java.sql.Date convertToSqlDate(String dateToConvert)
 	{
 		if((dateToConvert == null) || dateToConvert.isEmpty())
 			throw new IllegalArgumentException("dateToConvert");
@@ -37,6 +37,31 @@ public final class UtilityMethods
 		{
 			if(logger.isErrorEnabled())
 				logger.error("Failed to convert string " + dateToConvert + " to instance of java.sql.Date. Exception thrown:", pe);
+		}
+		return null;
+	}
+	
+	/**
+	 * Converts a string date with a format of MM/dd/yyyy to an instance of java.util.Date.
+	 *
+	 * @param  	dateToConvert 				the string to convert into a java.util.Date instance.
+	 * @throws  IllegalArgumentException	if dateToConvert string is empty.
+	 * @return 								the java.util.Date if it successfully converts the string otherwise null.
+	 */
+	public static java.util.Date convertToDate(String dateToConvert)
+	{
+		if((dateToConvert == null) || dateToConvert.isEmpty())
+			throw new IllegalArgumentException("dateToConvert");
+
+		try
+		{
+			return MMddyyyyFormat.parse(dateToConvert);
+			
+		}
+		catch(ParseException pe)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to convert string " + dateToConvert + " to instance of java.util.Date. Exception thrown:", pe);
 		}
 		return null;
 	}
