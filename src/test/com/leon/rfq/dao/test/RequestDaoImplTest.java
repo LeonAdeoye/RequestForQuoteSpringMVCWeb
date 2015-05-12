@@ -1,12 +1,11 @@
 package com.leon.rfq.dao.test;
 
-/*import static org.junit.Assert.assertEquals;*/
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-
-/*import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-*/
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -66,21 +65,21 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		this.requestDaoImpl.insert("requestIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
 		assertNotNull("getAll method should return a non-null list of requests", this.requestDaoImpl.getAll());
 		assertEquals("count of request should have been incremented ", beforeCount + 1, this.requestDaoImpl.getAll().size());
-	}
+	}*/
 	
 	@Test
     public void get_ValidRequestId_ReturnsValidRequestMatchingRequestId()
 	{
-		assertEquals("get method should return the request when a valid requestId is provided", "leon.adeoye", this.requestDaoImpl.get("leon.adeoye").getRequestId());
+		assertEquals("get method should return the request when a valid requestId is provided", 1, this.requestDaoImpl.get(1).getIdentifier());
 	}
 	
 	@Test
     public void get_NonExistantRequestId_ReturnsValidRequestMatchingRequestId()
 	{
-		assertNull("get method should return null when a non-existant requestId is provided", this.requestDaoImpl.get("nonExistantRequestId"));
+		assertNull("get method should return null when a non-existant requestId is provided", this.requestDaoImpl.get(Integer.MAX_VALUE));
 	}
 	
-	@Test
+	/*@Test
     public void updateValidity_ValidRequestId_UpdatesValidityReturnsTrue()
 	{
 		this.requestDaoImpl.insert("requestIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
@@ -125,26 +124,26 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		assertTrue("previously saved request should exist", this.requestDaoImpl.get(100000).getIdentifier() == 100000);
 		assertTrue("delete method should return true", this.requestDaoImpl.delete("100000"));
 		assertNull("deleted request should not longer exist", this.requestDaoImpl.get("100000"));
-	}
+	}*/
 	
 	@Test
-    public void delete_duplicatedRequestId_DeleteFailsAndReturnsFalse()
+    public void delete_nonExistentRequestId_DeleteFailsAndReturnsFalse()
 	{
-		assertFalse("delete method should return false because the request does not exist", this.requestDaoImpl.delete("nonExistantRequestId"));
+		assertFalse("delete method should return false because the request does not exist", this.requestDaoImpl.delete(Integer.MAX_VALUE));
 	}
 	
 	@Test
     public void requestExistsWithRequestId_ExistingRequestId_ReturnsTrue()
 	{
-		this.requestDaoImpl.insert("100000", "C+P 100", "TESTBOOK", "client", "me");
+		//this.requestDaoImpl.insert("100000", "C+P 100", "TESTBOOK", "client", "me");
 		
-		assertTrue("requestExistsWithRequestId should return true because requestId exists", this.requestDaoImpl.requestExistsWithRequestId("1000000"));
+		assertTrue("requestExistsWithRequestId should return true because requestId exists", this.requestDaoImpl.requestExistsWithRequestId(1));
 	}
-	*/
+	
 	
 	@Test
     public void requestExistsWithRequestId_NonexistentRequestId_ReturnsFalse()
 	{
-		assertFalse("requestExistsWithRequestId should return false because requestId does not exists", this.requestDaoImpl.requestExistsWithRequestId(100000));
+		assertFalse("requestExistsWithRequestId should return false because requestId does not exists", this.requestDaoImpl.requestExistsWithRequestId(Integer.MAX_VALUE));
 	}
 }

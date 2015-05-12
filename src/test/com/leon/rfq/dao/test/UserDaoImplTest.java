@@ -127,7 +127,7 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void delete_duplicatedUserId_DeleteFailsAndReturnsFalse()
+    public void delete_nonexistentUserId_DeleteFailsAndReturnsFalse()
 	{
 		assertFalse("delete method should return false because the user does not exist", this.userDaoImpl.delete("nonExistantUserId"));
 	}

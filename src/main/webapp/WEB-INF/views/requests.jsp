@@ -45,7 +45,7 @@
 					<c:forEach items="${requests}" var="request">
 						<div class="caption">
 							<tr>
-						  		<td><a href="<spring:url value="/requests/request?requestId=${request.requestId}"/>">${request.requestId}</a></td>
+						  		<td><a href="<spring:url value="/requests/request?requestId=${request.identifier}"/>">${request.identifier}</a></td>
 						  		<td>${request.request}</td> 
 						  		<td>${request.status}</td>
 						  		<td>${request.pickedUpBy}</td>

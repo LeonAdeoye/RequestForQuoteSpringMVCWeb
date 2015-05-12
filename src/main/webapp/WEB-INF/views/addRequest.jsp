@@ -28,7 +28,7 @@
 					<div class="form-group">
 						<label class="control-label col-lg-2 col-lg-2" for="requestId"><spring:message code="request.requestId.label"/></label>
 						<div class="col-lg-10">
-							<form:input id="requestId" path="requestId" type="text" class="form:input-large"/>
+							<form:input id="requestId" path="identifier" type="text" class="form:input-large"/>
 						</div>
 					</div>
 					<div class="form-group">

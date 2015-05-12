@@ -6,7 +6,7 @@
 <mapper namespace="com.leon.rfq.mappers.RequestMapper">
 	
 	<resultMap type="RequestDetailImpl" id="RequestResultSet">
-		<id 	property="requestId" column="identifier"/>
+		<id 	property="identifier" column="identifier"/>
 		<result property="request" column="request"/>
 		<result property="status" column="status"/>
 		<result property="pickedUpBy" column="pickedUpBy"/>
@@ -22,11 +22,11 @@
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.Integer" resultType="RequestDetailImpl">
-		SELECT * FROM requestforquotemain WHERE identifier=#{requestId}
+		SELECT * FROM requestforquotemain WHERE identifier=#{identifier}
 	</select>
 	
 	<select id="requestExistsWithRequestId" parameterType="java.lang.Integer" resultType="RequestDetailImpl">
-		SELECT * FROM requestforquotemain WHERE identifier=#{requestId}
+		SELECT * FROM requestforquotemain WHERE identifier=#{identifier}
 	</select>
 	
 	<select id="getAll" resultMap="RequestResultSet">
@@ -34,13 +34,13 @@
 	</select>
 	
 <!-- 	<insert id="insert" parameterType="RequestDetailImpl">
-		INSERT INTO requestforquotemain (requestId, request, firstName, lastName, groupName, locationName, isValid, lastUpdatedBy, lastUpdated)
-		VALUES(#{userId}, #{emailAddress}, #{firstName}, #{lastName}, #{groupName}, #{locationName}, #{isValid}, #{lastUpdatedBy}, now() )
+		INSERT INTO requestforquotemain (identifier, request, firstName, lastName, groupName, locationName, isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{identifier}, #{emailAddress}, #{firstName}, #{lastName}, #{groupName}, #{locationName}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert> -->
 	
 	<delete id="delete" parameterType="java.lang.Integer">
 		DELETE FROM requestforquotemain
-		WHERE identifier = #{requestId}
+		WHERE identifier = #{identifier}
 	</delete>		
 			
 </mapper>

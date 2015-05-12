@@ -11,7 +11,7 @@ public final class RequestDetailImpl
 {
 	private String request;
 	private String bookCode;
-	private int requestId;
+	private int identifier;
 	private int clientId;
 	private boolean isOTC;
 	private String status;
@@ -116,14 +116,14 @@ public final class RequestDetailImpl
 		this.bookCode = bookCode;
 	}
 
-	public int getRequestId()
+	public int getIdentifier()
 	{
-		return this.requestId;
+		return this.identifier;
 	}
 
-	public void setRequestId(int requestId)
+	public void setIdentifier(int requestId)
 	{
-		this.requestId = requestId;
+		this.identifier = requestId;
 	}
 
 	public int getClientId()
@@ -692,7 +692,7 @@ public final class RequestDetailImpl
 		StringBuilder buf = new StringBuilder("Request: ");
 		buf.append(this.request);
 		buf.append(", RequestId: ");
-		buf.append(this.requestId);
+		buf.append(this.identifier);
 		buf.append(", Book code: ");
 		buf.append(this.bookCode);
 
@@ -848,7 +848,7 @@ public final class RequestDetailImpl
 				+ ((this.hedgePrice == null) ? 0 : this.hedgePrice.hashCode());
 		result = (prime * result)
 				+ ((this.hedgeType == null) ? 0 : this.hedgeType.hashCode());
-		result = (prime * result) + this.requestId;
+		result = (prime * result) + this.identifier;
 		result = (prime * result)
 				+ ((this.impliedVol == null) ? 0 : this.impliedVol.hashCode());
 		result = (prime * result) + (this.isOTC ? 1231 : 1237);
@@ -1176,7 +1176,7 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
-		if (this.requestId != other.requestId)
+		if (this.identifier != other.identifier)
 		{
 			return false;
 		}
