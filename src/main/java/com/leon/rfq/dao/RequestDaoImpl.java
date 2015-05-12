@@ -19,7 +19,7 @@ public class RequestDaoImpl implements RequestDao
 	private RequestMapper requestMapper;
 
 	@Override
-	public boolean delete(String requestId)
+	public boolean delete(int requestId)
 	{
 		return this.requestMapper.delete(requestId) == 1;
 	}
@@ -31,7 +31,7 @@ public class RequestDaoImpl implements RequestDao
 	}
 
 	@Override
-	public boolean update(String requestId, String bookCode, int clientId, boolean isValid, String updatedByUser)
+	public boolean update(int requestId, String bookCode, int clientId, boolean isValid, String updatedByUser)
 	{
 		return this.requestMapper.update(requestId, bookCode, clientId, isValid, updatedByUser) == 1;
 	}
@@ -43,15 +43,15 @@ public class RequestDaoImpl implements RequestDao
 	}
 
 	@Override
-	public RequestDetailImpl get(String requestId)
+	public RequestDetailImpl get(int requestId)
 	{
 		return this.requestMapper.get(requestId);
 	}
 
 	@Override
-	public boolean requestExistsWithRequestId(String requestId)
+	public boolean requestExistsWithRequestId(int requestId)
 	{
-		return this.requestMapper.requestExistsWithReqestId(requestId) != null;
+		return this.requestMapper.requestExistsWithRequestId(requestId) != null;
 	}
 
 }

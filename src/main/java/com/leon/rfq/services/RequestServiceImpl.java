@@ -29,7 +29,7 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	}
 
 	@Override
-	public RequestDetailImpl get(String requestId)
+	public RequestDetailImpl get(int requestId)
 	{
 		return this.requestDao.get(requestId);
 	}
@@ -51,7 +51,7 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	}
 
 	@Override
-	public boolean delete(String requestId)
+	public boolean delete(int requestId)
 	{
 		return this.requestDao.delete(requestId);
 	}
@@ -63,13 +63,13 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	}
 
 	@Override
-	public boolean isRequestCached(String requestId)
+	public boolean isRequestCached(int requestId)
 	{
 		return false;
 	}
 
 	@Override
-	public boolean requestExistsWithRequestId(String requestId)
+	public boolean requestExistsWithRequestId(int requestId)
 	{
 		return this.requestDao.requestExistsWithRequestId(requestId);
 	}

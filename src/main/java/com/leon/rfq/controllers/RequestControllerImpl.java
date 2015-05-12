@@ -48,7 +48,7 @@ public class RequestControllerImpl
 	}
 	
 	@RequestMapping("/request")
-	public String get(@RequestParam String requestId, Model model)
+	public String get(@RequestParam int requestId, Model model)
 	{
 		model.addAttribute("request", this.requestService.get(requestId));
 		return "request";
@@ -83,7 +83,7 @@ public class RequestControllerImpl
 	}
 	
 	@RequestMapping("/delete")
-	public String delete(@RequestParam String requestId, Model model)
+	public String delete(@RequestParam int requestId, Model model)
 	{
 		if(!this.requestService.delete(requestId))
 			model.addAttribute("error", "Failed to delete request with requestId: " + requestId);

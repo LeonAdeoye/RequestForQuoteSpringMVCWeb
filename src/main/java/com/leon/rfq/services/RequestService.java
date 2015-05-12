@@ -7,17 +7,17 @@ import com.leon.rfq.domains.RequestDetailImpl;
 
 public interface RequestService
 {
-	RequestDetailImpl get(String requestId);
+	RequestDetailImpl get(int requestId);
 
 	List<RequestDetailImpl> getAll();
 	
 	boolean insert(String requestSnippet, int clientId, String bookName, String savedByUser);
 	
-	boolean delete(String requestId);
+	boolean delete(int requestId);
 
 	void setUserDao(RequestDao requestDao);
 	
-	boolean isRequestCached(String requestId);
+	boolean isRequestCached(int requestId);
 	
-	boolean requestExistsWithRequestId(String requestId);
+	boolean requestExistsWithRequestId(int requestId);
 }

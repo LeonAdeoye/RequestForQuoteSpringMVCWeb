@@ -25,8 +25,8 @@
 		<security:intercept-url pattern="/users/add" access="ROLE_ADMIN" />
 		
 		<security:intercept-url pattern="/requests" access="ROLE_USER, ROLE_ADMIN" />
-		<security:intercept-url pattern="/requests/add" access="ROLE_ADMIN" />
-		<security:intercept-url pattern="/requests/request" access="ROLE_USER" />		
+		<security:intercept-url pattern="/requests/add" access="ROLE_ADMIN, ROLE_USER" />
+		<security:intercept-url pattern="/requests/request" access="ROLE_USER, ROLE_ADMIN" />		
 							
  		<security:form-login login-page="/login" default-target-url="/users" authentication-failure-url="/loginfailed" />
 		<security:logout logout-success-url = "/logout"/>

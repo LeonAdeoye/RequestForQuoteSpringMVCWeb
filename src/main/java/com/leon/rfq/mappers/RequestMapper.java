@@ -8,13 +8,13 @@ public interface RequestMapper
 {
 	List<RequestDetailImpl> getAll();
 	
-	RequestDetailImpl get(String requestId);
+	RequestDetailImpl get(int requestId);
 	
-	int delete(String requestId);
+	int delete(int requestId);
 	
 	int insert(String bookCode, int clientId, String savedByUser);
 	
-	int update(String requestId, String bookCode, int clientId, boolean isValid, String updatedByUser);
+	int update(int requestId, String bookCode, int clientId, boolean isValid, String updatedByUser);
 	
-	RequestDetailImpl requestExistsWithReqestId(String requestId);
+	RequestDetailImpl requestExistsWithRequestId(int requestId);
 }

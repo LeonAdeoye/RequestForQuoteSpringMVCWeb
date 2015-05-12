@@ -6,15 +6,15 @@ import com.leon.rfq.domains.RequestDetailImpl;
 
 public interface RequestDao
 {
-	boolean delete(String requestId);
+	boolean delete(int requestId);
 
 	boolean insert(String bookCode,	int clientId, String savedByUser);
 	 
-	boolean update(String requestId, String bookCode, int clientId,	boolean isValid, String requesedByUser);
+	boolean update(int requestId, String bookCode, int clientId,	boolean isValid, String requesedByUser);
 
 	List<RequestDetailImpl> getAll();
 	 
-	RequestDetailImpl get(String requestId);
+	RequestDetailImpl get(int requestId);
 	
-	boolean requestExistsWithRequestId(String requestId);
+	boolean requestExistsWithRequestId(int requestId);
 }

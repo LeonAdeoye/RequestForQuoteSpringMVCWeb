@@ -6,7 +6,7 @@
 <mapper namespace="com.leon.rfq.mappers.RequestMapper">
 	
 	<resultMap type="RequestDetailImpl" id="RequestResultSet">
-		<id 	property="identifier" column="requestId"/>
+		<id 	property="requestId" column="requestId"/>
 		<result property="request" column="request"/>
 		<result property="status" column="status"/>
 		<result property="pickedUpBy" column="pickedUpBy"/>
@@ -21,11 +21,11 @@
 		<result property="rho" column="rho"/>
 	</resultMap>
 	
-	<select id="get" parameterType="java.lang.String" resultType="RequestDetailImpl">
+	<select id="get" parameterType="java.lang.Integer" resultType="RequestDetailImpl">
 		SELECT * FROM requestforquotemain WHERE identifier=#{requestId}
 	</select>
 	
-	<select id="requestExistsWithRequestId" parameterType="java.lang.String" resultType="RequestDetailImpl">
+	<select id="requestExistsWithRequestId" parameterType="java.lang.Integer" resultType="RequestDetailImpl">
 		SELECT * FROM requestforquotemain WHERE identifier=#{requestId}
 	</select>
 	
@@ -38,7 +38,7 @@
 		VALUES(#{userId}, #{emailAddress}, #{firstName}, #{lastName}, #{groupName}, #{locationName}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert> -->
 	
-	<delete id="delete" parameterType="java.lang.String">
+	<delete id="delete" parameterType="java.lang.Integer">
 		DELETE FROM requestforquotemain
 		WHERE identifier = #{requestId}
 	</delete>		
