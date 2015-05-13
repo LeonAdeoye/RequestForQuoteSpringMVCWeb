@@ -8,7 +8,7 @@ public interface RequestDao
 {
 	boolean delete(int requestId);
 
-	boolean insert(String bookCode,	int clientId, String savedByUser);
+	boolean insert(RequestDetailImpl newRequest);
 	 
 	boolean update(int requestId, String bookCode, int clientId,	boolean isValid, String requesedByUser);
 

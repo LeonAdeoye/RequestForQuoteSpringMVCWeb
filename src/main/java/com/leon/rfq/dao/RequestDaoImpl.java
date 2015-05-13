@@ -25,9 +25,9 @@ public class RequestDaoImpl implements RequestDao
 	}
 
 	@Override
-	public boolean insert(String bookCode, int clientId, String savedByUser)
+	public boolean insert(RequestDetailImpl newRequest)
 	{
-		return this.requestMapper.insert(bookCode, clientId, savedByUser) == 1;
+		return this.requestMapper.insert(newRequest) == 1;
 	}
 
 	@Override

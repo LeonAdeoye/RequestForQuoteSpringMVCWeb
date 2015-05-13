@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.leon.rfq.dao.RequestDao;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
+import com.leon.rfq.option.OptionRequestParser;
 
 @Service
 public class RequestServiceImpl implements RequestService, ApplicationEventPublisherAware
@@ -21,6 +22,9 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	
 	@Autowired
 	private RequestDao requestDao;
+	
+	@Autowired
+	OptionRequestParser optionRequestParser;
 
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
@@ -43,9 +47,19 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	@Override
 	public boolean insert(String requestSnippet, int clientId, String bookCode, String savedByUser)
 	{
-		boolean result = this.requestDao.insert(bookCode, clientId, savedByUser);
+
+		RequestDetailImpl newRequest = new RequestDetailImpl();
 		
-		this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, new RequestDetailImpl())); //TODO
+		if(this.optionRequestParser.isValidOptionRequestSnippet(requestSnippet))
+			this.optionRequestParser.parseRequest(requestSnippet, newRequest);
+		
+		newRequest.setBookCode(bookCode);
+		newRequest.setClientId(clientId);
+		newRequest.setLastUpdatedBy(savedByUser);
+		
+		boolean result = this.requestDao.insert(newRequest);
+		
+		this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest)); //TODO
 		
 		return result;
 	}

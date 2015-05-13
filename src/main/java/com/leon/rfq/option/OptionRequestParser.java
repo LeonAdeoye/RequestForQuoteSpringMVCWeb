@@ -154,16 +154,14 @@ public class OptionRequestParser
         }
     }
 
-    public List<OptionDetailImpl> ParseRequest(String request, RequestDetailImpl parent)
+    public void parseRequest(String request, RequestDetailImpl parent)
     {
     	String[] partsOfTheRequest = request.split(" ");
-    	
     	List<OptionDetailImpl> optionLegs = parseOptionTypes(partsOfTheRequest[0], parent);
         parseOptionStrikes(partsOfTheRequest[1], optionLegs);
         parseOptionMaturityDates(partsOfTheRequest[2], optionLegs);
         parseOptionUnderlyings(partsOfTheRequest[3], optionLegs);
-        
-        return optionLegs;
+        parent.setLegs(optionLegs);
     }
 
     public List<OptionDetailImpl> parseOptionTypes(String snippet, RequestDetailImpl parent)

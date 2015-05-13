@@ -12,7 +12,7 @@ public interface RequestMapper
 	
 	int delete(int requestId);
 	
-	int insert(String bookCode, int clientId, String savedByUser);
+	int insert(RequestDetailImpl newRequest);
 	
 	int update(int requestId, String bookCode, int clientId, boolean isValid, String updatedByUser);
 	

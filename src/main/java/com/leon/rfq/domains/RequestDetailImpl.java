@@ -15,6 +15,7 @@ public final class RequestDetailImpl
 	private int clientId;
 	private boolean isOTC;
 	private String status;
+	private String lastUpdatedBy;
 
 	private int lotSize;
 	private int multiplier;
@@ -85,6 +86,21 @@ public final class RequestDetailImpl
 	private List<OptionDetailImpl> legs;
 
 	public RequestDetailImpl() {}
+	
+	public void setLegs(List<OptionDetailImpl> legs)
+	{
+		this.legs = legs;
+	}
+
+	public void setLastUpdatedBy(String lastUpdatedBy)
+	{
+		this.lastUpdatedBy = lastUpdatedBy;
+	}
+	
+	public String getLastUpdatedBy()
+	{
+		return this.lastUpdatedBy;
+	}
 
 	public List<OptionDetailImpl> getLegs()
 	{
@@ -706,6 +722,8 @@ public final class RequestDetailImpl
 		buf.append(this.theta);
 		buf.append(", Rho: ");
 		buf.append(this.rho);
+		buf.append(", LastUpdatedBy: ");
+		buf.append(this.lastUpdatedBy);
 
 		buf.append(", Delta notional: ");
 		buf.append(this.deltaNotional);
@@ -784,9 +802,6 @@ public final class RequestDetailImpl
 		return null;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode()
 	{
@@ -852,6 +867,8 @@ public final class RequestDetailImpl
 		result = (prime * result)
 				+ ((this.impliedVol == null) ? 0 : this.impliedVol.hashCode());
 		result = (prime * result) + (this.isOTC ? 1231 : 1237);
+		result = (prime * result)
+				+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
 		result = (prime * result) + ((this.legs == null) ? 0 : this.legs.hashCode());
 		result = (prime * result) + this.lotSize;
 		result = (prime * result) + this.multiplier;
@@ -929,9 +946,6 @@ public final class RequestDetailImpl
 		return result;
 	}
 
-	/* (non-Javadoc)
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -1191,6 +1205,16 @@ public final class RequestDetailImpl
 			return false;
 		}
 		if (this.isOTC != other.isOTC)
+		{
+			return false;
+		}
+		if (this.lastUpdatedBy == null)
+		{
+			if (other.lastUpdatedBy != null)
+			{
+				return false;
+			}
+		} else if (!this.lastUpdatedBy.equals(other.lastUpdatedBy))
 		{
 			return false;
 		}
@@ -1504,4 +1528,6 @@ public final class RequestDetailImpl
 		}
 		return true;
 	}
+	
+	
 }
