@@ -199,7 +199,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void underlyingExistsWithRic_existingRic_ReturnsTrue()
+    public void underlyingExistsWithRic_existingRic__CallsCorrectDaoMethod()
 	{
 		// Arrange
 		UnderlyingService underlyingService = new UnderlyingServiceImpl();

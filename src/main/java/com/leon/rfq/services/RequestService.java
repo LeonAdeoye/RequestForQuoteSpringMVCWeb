@@ -20,4 +20,6 @@ public interface RequestService
 	boolean isRequestCached(int requestId);
 	
 	boolean requestExistsWithRequestId(int requestId);
+	
+	void setRequestDao(RequestDao requestDao);
 }

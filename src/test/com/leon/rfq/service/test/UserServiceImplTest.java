@@ -345,7 +345,7 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void userExistsWithEmailAddress_existingEmailAddress_ReturnsTrue()
+    public void userExistsWithEmailAddress_existingEmailAddress__CallsCorrectDaoMethod()
 	{
 		// Arrange
 		UserService userService = new UserServiceImpl();
@@ -358,7 +358,7 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void userExistsWithUserId_existingUserId_ReturnsTrue()
+    public void userExistsWithUserId_existingUserId__CallsCorrectDaoMethod()
 	{
 		// Arrange
 		UserService userService = new UserServiceImpl();

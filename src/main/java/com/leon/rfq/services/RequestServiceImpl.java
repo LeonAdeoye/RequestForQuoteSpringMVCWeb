@@ -25,6 +25,12 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	
 	@Autowired
 	OptionRequestParser optionRequestParser;
+	
+	@Override
+	public void setRequestDao(RequestDao requestDao)
+	{
+		this.requestDao = requestDao;
+	}
 
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)

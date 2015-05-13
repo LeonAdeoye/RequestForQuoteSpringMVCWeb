@@ -13,6 +13,7 @@
 		<result property="clientId" column="clientId"/>
 		<result property="bookCode" column="bookCode"/>
 		<result property="tradeDate" column="tradeDate"/>
+		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
 		<result property="premiumAmount" column="premiumAmount"/>
 		<result property="delta" column="delta"/>
 		<result property="gamma" column="gamma"/>
@@ -33,10 +34,10 @@
 		SELECT * FROM requestforquotemain
 	</select>
 	
-<!-- 	<insert id="insert" parameterType="RequestDetailImpl">
-		INSERT INTO requestforquotemain (identifier, request, firstName, lastName, groupName, locationName, isValid, lastUpdatedBy, lastUpdated)
-		VALUES(#{identifier}, #{emailAddress}, #{firstName}, #{lastName}, #{groupName}, #{locationName}, #{isValid}, #{lastUpdatedBy}, now() )
-	</insert> -->
+ 	<insert id="insert" parameterType="RequestDetailImpl">
+		INSERT INTO requestforquotemain (identifier, request, status, clientId, bookCode, tradeDate, pickedUpBy, lastUpdatedBy, lastUpdated)
+		VALUES(#{identifier}, #{request}, #{status}, #{lastName}, #{clientId}, #{bookCode}, #{tradeDate}, #{pickedUpBy}, #{lastUpdatedBy}, now() )
+	</insert>
 	
 	<delete id="delete" parameterType="java.lang.Integer">
 		DELETE FROM requestforquotemain
