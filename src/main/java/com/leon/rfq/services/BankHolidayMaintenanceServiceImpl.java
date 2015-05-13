@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.domains.HolidayDetailImpl;
-import com.leon.rfq.domains.RequestEnums.LocationEnum;
+import com.leon.rfq.domains.EnumTypes.LocationEnum;
 
 @Service
 public class BankHolidayMaintenanceServiceImpl implements BankHolidayMaintenanceService

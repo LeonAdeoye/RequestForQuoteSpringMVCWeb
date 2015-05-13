@@ -2,11 +2,15 @@ package com.leon.rfq.domains;
 
 import java.math.BigDecimal;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@XmlRootElement(name="OptionDetailImpl", namespace = "com.leon.rfq.domains")
-public final class OptionDetailImpl
+import com.leon.rfq.domains.EnumTypes.SideEnum;
+
+public class OptionDetailImpl
 {
+	private static final Logger logger = LoggerFactory.getLogger(OptionDetailImpl.class);
+	
 	private int legId;
 	private boolean isCall = true;
 	private boolean isEuropean = true;
@@ -34,9 +38,28 @@ public final class OptionDetailImpl
 	private BigDecimal dayCountConvention;
 	private BigDecimal volatility;
 	private BigDecimal interestRate;
-	private String side;
+	private SideEnum side;
+	private RequestDetailImpl parentRequest;
 
 	public OptionDetailImpl() {}
+	
+	public OptionDetailImpl(SideEnum side, int quantity, boolean isCall, int legId, boolean isEuropean, RequestDetailImpl parentRequest)
+	{
+		this.side = side;
+		this.parentRequest = parentRequest;
+		this.legId = legId;
+		this.isCall = isCall;
+		this.quantity = quantity;
+		this.isEuropean = isEuropean;
+		
+		if(logger.isDebugEnabled())
+			logger.debug("Constructor instantiation of OptionDetailImpl: " + this.toString());
+	}
+	
+	RequestDetailImpl getParent()
+	{
+		return this.parentRequest;
+	}
 
 	public BigDecimal getStrikePercentage()
 	{
@@ -268,12 +291,12 @@ public final class OptionDetailImpl
 		this.underlyingRIC = underlyingRIC;
 	}
 
-	public String getSide()
+	public SideEnum getSide()
 	{
 		return this.side;
 	}
 
-	public void setSide(String side)
+	public void setSide(SideEnum side)
 	{
 		this.side = side;
 	}

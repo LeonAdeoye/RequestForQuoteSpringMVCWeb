@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.leon.rfq.domains.HolidayDetailImpl;
-import com.leon.rfq.domains.RequestEnums.LocationEnum;
+import com.leon.rfq.domains.EnumTypes.LocationEnum;
 
 public interface BankHolidayMaintenanceService
 {

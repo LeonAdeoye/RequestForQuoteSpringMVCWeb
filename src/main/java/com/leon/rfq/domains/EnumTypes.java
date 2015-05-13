@@ -1,10 +1,15 @@
 package com.leon.rfq.domains;
 
-public class RequestEnums
+public final class EnumTypes
 {
-	public enum LocationEnum
+	public static enum LocationEnum
 	{
 	    HONG_KONG, LONDON, SYDNEY, TOKYO,
 	    PARIS, FRANKFURT, NEW_YORK
+	}
+	
+	public static enum SideEnum
+	{
+		BUY, SELL
 	}
 }

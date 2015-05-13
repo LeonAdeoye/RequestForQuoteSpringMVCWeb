@@ -45,6 +45,12 @@
 	<bean id="underlyingValidator" class="com.leon.rfq.validators.UnderlyingValidator"/>
 	<bean id="requestValidator" class="com.leon.rfq.validators.RequestValidator"/>
 	
+	<bean id="interestRateService" class="com.leon.rfq.services.InterestRateServiceImpl"/>
+	<bean id="priceService" class="com.leon.rfq.services.PriceServiceImpl"/>
+	<bean id="volatilityService" class="com.leon.rfq.services.VolatilityServiceImpl"/>
+	<bean id="defaultConfigurationService" class="com.leon.rfq.services.DefaultConfigurationServiceImpl"/>
+	<bean id="bankHolidayMaintenanceServiceImpl" class="com.leon.rfq.services.BankHolidayMaintenanceServiceImpl"/>
+	
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
 	</bean>
