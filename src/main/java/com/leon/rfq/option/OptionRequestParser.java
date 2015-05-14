@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.leon.rfq.domains.EnumTypes.SideEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
@@ -21,7 +21,7 @@ import com.leon.rfq.services.PriceService;
 import com.leon.rfq.services.VolatilityService;
 import com.leon.rfq.utilities.UtilityMethods;
 
-@Service
+@Component
 public class OptionRequestParser
 {
 	private static final Logger logger = LoggerFactory.getLogger(OptionRequestParser.class);
@@ -41,6 +41,13 @@ public class OptionRequestParser
 	@Autowired
 	InterestRateService interestRateService;
 	
+	
+	/**
+	 * Determines if the snippet is valid for an option request.
+	 * 
+	 * @param snippet 		the snippet to be pattern matched.
+	 * @returns	true if the snippet is a valid option request snippet.
+	 */
     public boolean isValidOptionRequestSnippet(String snippet)
     {
     	if(logger.isDebugEnabled())
@@ -62,7 +69,7 @@ public class OptionRequestParser
 	 * @param snippet 							the snippet to be pattern matched.
 	 * @returns	true for European options if the initial C/P part of the snippet is in upper case.
 	 */
-    public boolean isEuropeanOption(String snippet)
+    private boolean isEuropeanOption(String snippet)
     {
         Pattern regexp = Pattern.compile("^([+-]?[\\d]*[CP]{1}){1}([-+]{1}[\\d]*[CP]{1})*");
         Matcher matcher = regexp.matcher(snippet);
@@ -70,7 +77,13 @@ public class OptionRequestParser
         return matcher.matches();
     }
 
-    public void parseOptionStrikes(String delimitedStrikes, List<OptionDetailImpl> optionLegs)
+	/**
+	 * Parses the delimited string containing options strikes and assigns them to each option leg.
+	 * 
+	 * @param delimitedStrikes 	the delimited string containing the strikes.
+	 * @param optionLegs 		the list of option legs that the strikes are to be applied to.
+	 */
+    private void parseOptionStrikes(String delimitedStrikes, List<OptionDetailImpl> optionLegs)
     {
     	String[] strikes = delimitedStrikes.split(",");
     	// TODO - need to remove empty entries.
@@ -88,7 +101,13 @@ public class OptionRequestParser
         }
     }
 
-    public void parseOptionMaturityDates(String delimitedDates, List<OptionDetailImpl> optionLegs)
+	/**
+	 * Parses the delimited string containing options maturity dates and assigns them to each option leg.
+	 * 
+	 * @param delimitedDates 	the delimited string containing the maturity dates.
+	 * @param optionLegs 		the list of option legs that the maturity dates are to be applied to.
+	 */
+    private void parseOptionMaturityDates(String delimitedDates, List<OptionDetailImpl> optionLegs)
     {
         String[] dates = delimitedDates.split(",");
         
@@ -121,7 +140,13 @@ public class OptionRequestParser
         }
     }
 
-    public void parseOptionUnderlyings(String delimitedUnderlyings, List<OptionDetailImpl> optionLegs)
+	/**
+	 * Parses the delimited string containing underlying RICs and assigns them to each option leg.
+	 * 
+	 * @param delimitedUnderlyings 	the delimited string containing the underlying RICs.
+	 * @param optionLegs 		the list of option legs that the underlying RICs are to be applied to.
+	 */
+    private void parseOptionUnderlyings(String delimitedUnderlyings, List<OptionDetailImpl> optionLegs)
     {
     	String[] underlyings = delimitedUnderlyings.split(",");
     	String ric;
@@ -144,7 +169,7 @@ public class OptionRequestParser
             for (OptionDetailImpl optionLeg : optionLegs)
             {
                 ric = underlyings[count++];
-                // TODO Add underlying manager
+                // TODO Add to underlying manager new RICs if they don't exist.
                 optionLeg.setUnderlyingRIC(ric);
                 optionLeg.setVolatility(this.volatilityService.getVolatility(ric));
                 optionLeg.setUnderlyingPrice(this.priceService.getMidPrice(ric));
@@ -154,9 +179,16 @@ public class OptionRequestParser
         }
     }
 
-    public void parseRequest(String request, RequestDetailImpl parent)
+	/**
+	 * Parses the request snippet containing other option characteristics and assigns them to each option leg.
+	 * This method calls the other private parsing methods.
+	 * 
+	 * @param snippet 	the option request snippet containing all of option details to be parsed.
+	 * @param parent 	the parent request that these option details belong to.
+	 */
+    public void parseRequest(String snippet, RequestDetailImpl parent)
     {
-    	String[] partsOfTheRequest = request.split(" ");
+    	String[] partsOfTheRequest = snippet.split(" ");
     	List<OptionDetailImpl> optionLegs = parseOptionTypes(partsOfTheRequest[0], parent);
         parseOptionStrikes(partsOfTheRequest[1], optionLegs);
         parseOptionMaturityDates(partsOfTheRequest[2], optionLegs);
@@ -164,7 +196,14 @@ public class OptionRequestParser
         parent.setLegs(optionLegs);
     }
 
-    public List<OptionDetailImpl> parseOptionTypes(String snippet, RequestDetailImpl parent)
+	/**
+	 * Parses the request snippet containing other option characteristics and assigns them to each option leg.
+	 * 
+	 * @param snippet 	the option request snippet containing the other option details.
+	 * @param parent 	the parent request that these option details belong to.
+	 * @Return List<OptionDetailImpl> the list of options with the characteristics populated.
+	 */
+    private List<OptionDetailImpl> parseOptionTypes(String snippet, RequestDetailImpl parent)
     {
     	List<OptionDetailImpl> optionTypes = new LinkedList<>();
     	boolean isEuropean = isEuropeanOption(snippet);

@@ -24,7 +24,7 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 	private RequestDao requestDao;
 	
 	@Autowired
-	OptionRequestParser optionRequestParser;
+	private OptionRequestParser optionRequestParser;
 	
 	@Override
 	public void setRequestDao(RequestDao requestDao)
@@ -65,7 +65,7 @@ public class RequestServiceImpl implements RequestService, ApplicationEventPubli
 		
 		boolean result = this.requestDao.insert(newRequest);
 		
-		this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest)); //TODO
+		this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest)); //TODO request ID
 		
 		return result;
 	}
