@@ -41,7 +41,13 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 	{
 		//this.getAll(); //TODO.
 	}
-	
+
+	/**
+	 * Determines if the request with the matching requestId exists in the request cache
+	 * 
+	 * @param 	requestId 	the requestId of the request that needs to be checked against.
+	 * @returns true if a request with the requestId exists, otherwise false.
+	 */
 	@Override
 	public boolean isRequestCached(int requestId)
 	{
@@ -54,6 +60,12 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
+	/**
+	 * Gets the request with the matching requestId.
+	 * 
+	 * @param 	requestId 	the snippet of the request that needs to be inserted.
+	 * @return 	An instance of RequestDetailImpl if the request which matches the requestId can be found, otherwise null.
+	 */
 	@Override
 	public RequestDetailImpl get(int requestId)
 	{
@@ -73,6 +85,11 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 		return request;
 	}
 
+	/**
+	 * Retrieves all the requests using the DAO instance.
+	 * Once retrieved the map is cleared and the requests re-inserted.
+	 * 
+	 */
 	@Override
 	public List<RequestDetailImpl> getAll()
 	{
@@ -92,6 +109,15 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			return new LinkedList<RequestDetailImpl>();
 	}
 
+	/**
+	 * Inserts the request with the using passed parameters.
+	 * 
+	 * @param 	requestSnippet 	the snippet of the request that needs to be inserted.
+	 * @param	clientId		the client ID of the request that needs to be inserted.
+	 * @param	bookCode		the bookCode of the request that needs to be inserted.
+	 * @param	savedByUser		the user that is inserting the request.
+	 * @throws 	IllegalArgumentException	if requestSnippet, bookCode, or savedByUser parameters are null or empty.
+	 */
 	@Override
 	public boolean insert(String requestSnippet, int clientId, String bookCode, String savedByUser)
 	{
@@ -137,6 +163,12 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 		return result;
 	}
 
+	/**
+	 * Deletes the request with the requestId passed as a parameter.
+	 * 
+	 * @param 	requestId 	the requestId of the request that needs to be deleted.
+	 * @returns true if the request is deleted, otherwise false.
+	 */
 	@Override
 	public boolean delete(int requestId)
 	{
@@ -149,13 +181,23 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 		
 		return false;
 	}
-
+	/**
+	 * Used for unit testing mock.
+	 * 
+	 * @param 	requestDao 	the DAO object of type RequestDao.
+	 */
 	@Override
 	public void setUserDao(RequestDao requestDao)
 	{
 		this.requestDao = requestDao;
 	}
 
+	/**
+	 * Determines if the request with the requestId passed as a parameter exists or not.
+	 * 
+	 * @param 	requestId 	the requestId of the request that needs to be checked against.
+	 * @returns true if the request exists, otherwise false.
+	 */
 	@Override
 	public boolean requestExistsWithRequestId(int requestId)
 	{

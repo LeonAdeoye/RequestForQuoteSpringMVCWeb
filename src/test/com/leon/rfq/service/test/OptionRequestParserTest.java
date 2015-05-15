@@ -21,6 +21,12 @@ public class OptionRequestParserTest  extends AbstractJUnit4SpringContextTests
 	{
 		assertTrue("valid European option should return true", Whitebox.invokeMethod(this.optionRequestParser, "isEuropeanOption", "C 100 20JAN2015 0001.HK"));
 	}
+	
+	@Test
+	public void isValidOptionRequestSnippet_validRequestSnippet_ReturnsTrue() throws Exception
+	{
+		assertTrue("should return true if the snippet is valid", Whitebox.invokeMethod(this.optionRequestParser, "isValidOptionRequestSnippet", "C 100 20JAN2015 0001.HK"));
+	}
 }
 
 

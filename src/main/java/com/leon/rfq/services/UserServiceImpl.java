@@ -34,7 +34,7 @@ public final class UserServiceImpl implements UserService
 	
 	public UserServiceImpl()
 	{
-		this.getAll();
+		//this.getAll();
 	}
 	
 	@Override

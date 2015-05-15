@@ -41,6 +41,9 @@ public final class OptionRequestParser
 	@Autowired(required=true)
 	InterestRateService interestRateService;
 	
+	private static final String REQUEST_PATTERN = "^([+-]?[\\d]*[CP]{1}){1}([-+]{1}[\\d]*[CP]{1})* ([\\d]+){1}(,{1}[\\d]+)* "
+    		+ "[\\d]{1,2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[\\d]{2}(,{1}[\\d]{1,2}(JAN|FEB|MAR"
+    		+ "|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[\\d]{2})* (\\w){4,7}\\.[A-Z]{1,2}(,{1}(\\w){4,7}\\.[A-Z]{1,2})*$";
 	
 	/**
 	 * Determines if the snippet is valid for an option request.
@@ -53,10 +56,7 @@ public final class OptionRequestParser
     	if(logger.isDebugEnabled())
     		logger.debug("Validating option request snippet: " + snippet);
     	
-        Pattern regexp = Pattern.compile("^([+-]?[\\d]*[CP]{1}){1}([-+]{1}[\\d]*[CP]{1})* ([\\d]+){1}(,{1}[\\d]+)* "
-        		+ "[\\d]{1,2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[\\d]{2}(,{1}[\\d]{1,2}(JAN|FEB|MAR"
-        		+ "|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[\\d]{2})* (\\w){4,7}\\.[A-Z]{1,2}(,{1}(\\w){4,7}\\.[A-Z]{1,2})*$",
-        		Pattern.CASE_INSENSITIVE);
+        Pattern regexp = Pattern.compile(REQUEST_PATTERN, Pattern.CASE_INSENSITIVE);
         
         Matcher matcher = regexp.matcher(snippet);
        
@@ -71,10 +71,10 @@ public final class OptionRequestParser
 	 */
     private boolean isEuropeanOption(String snippet)
     {
-        Pattern regexp = Pattern.compile("^([+-]?[\\d]*[CP]{1}){1}([-+]{1}[\\d]*[CP]{1})*");
-        Matcher matcher = regexp.matcher(snippet);
+        Pattern euRegex = Pattern.compile(REQUEST_PATTERN);
+        Matcher euMatcher = euRegex.matcher(snippet);
        
-        return matcher.matches();
+        return euMatcher.matches();
     }
 
 	/**
