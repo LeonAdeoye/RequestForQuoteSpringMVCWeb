@@ -22,23 +22,23 @@ import com.leon.rfq.services.VolatilityService;
 import com.leon.rfq.utilities.UtilityMethods;
 
 @Component
-public class OptionRequestParser
+public final class OptionRequestParser
 {
 	private static final Logger logger = LoggerFactory.getLogger(OptionRequestParser.class);
 	
-	@Autowired
+	@Autowired(required=true)
 	BankHolidayMaintenanceService bankHolidayMaintenanceService;
 	
-	@Autowired
+	@Autowired(required=true)
 	DefaultConfigurationService defaultConfigurationService;
 	
-	@Autowired
+	@Autowired(required=true)
 	VolatilityService volatilityService;
 	
-	@Autowired
+	@Autowired(required=true)
 	PriceService priceService;
 	
-	@Autowired
+	@Autowired(required=true)
 	InterestRateService interestRateService;
 	
 	

@@ -2,8 +2,8 @@ package com.leon.rfq.services;
 
 import java.util.List;
 
-import com.leon.rfq.dao.UnderlyingDao;
 import com.leon.rfq.domains.UnderlyingDetailImpl;
+import com.leon.rfq.repositories.UnderlyingDao;
 
 public interface UnderlyingService
 {

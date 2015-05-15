@@ -18,8 +18,8 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import com.leon.rfq.dao.UserDaoImpl;
 import com.leon.rfq.domains.UserDetailImpl;
+import com.leon.rfq.repositories.UserDaoImpl;
 
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })

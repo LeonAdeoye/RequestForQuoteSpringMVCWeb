@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InterestRateServiceImpl implements InterestRateService
+public final class InterestRateServiceImpl implements InterestRateService
 {
 	private final Map<String, BigDecimal> rates = new HashMap<>();
 	

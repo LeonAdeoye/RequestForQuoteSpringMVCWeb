@@ -13,9 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import com.leon.rfq.dao.RequestDao;
-import com.leon.rfq.dao.RequestDaoImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.repositories.RequestDao;
+import com.leon.rfq.repositories.RequestDaoImpl;
 import com.leon.rfq.services.RequestService;
 import com.leon.rfq.services.RequestServiceImpl;
 

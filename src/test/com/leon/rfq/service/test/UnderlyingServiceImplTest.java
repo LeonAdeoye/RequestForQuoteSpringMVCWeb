@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
-import com.leon.rfq.dao.UnderlyingDao;
-import com.leon.rfq.dao.UnderlyingDaoImpl;
+import com.leon.rfq.repositories.UnderlyingDao;
+import com.leon.rfq.repositories.UnderlyingDaoImpl;
 import com.leon.rfq.services.UnderlyingService;
 import com.leon.rfq.services.UnderlyingServiceImpl;
 

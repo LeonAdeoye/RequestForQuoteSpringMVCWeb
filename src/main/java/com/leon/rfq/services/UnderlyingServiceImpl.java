@@ -12,12 +12,12 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 
-import com.leon.rfq.dao.UnderlyingDao;
 import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.events.NewUnderlyingEvent;
+import com.leon.rfq.repositories.UnderlyingDao;
 
 @Service
-public class UnderlyingServiceImpl implements UnderlyingService, ApplicationEventPublisherAware
+public final class UnderlyingServiceImpl implements UnderlyingService, ApplicationEventPublisherAware
 {
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;

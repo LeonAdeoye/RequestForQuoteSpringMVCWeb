@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import com.leon.rfq.domains.EnumTypes.LocationEnum;
 
 @Service
-public class DefaultConfigurationServiceImpl implements	DefaultConfigurationService
+public final class DefaultConfigurationServiceImpl implements DefaultConfigurationService
 {
 	private BigDecimal defaultDayCountConvention = DefaultConfigurationService.DAY_COUNT_CONVENTION_250;
 	private LocationEnum defaultLocation = LocationEnum.TOKYO;

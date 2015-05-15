@@ -13,13 +13,13 @@ import com.leon.rfq.option.OptionRequestParser;
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class OptionRequestParserTest  extends AbstractJUnit4SpringContextTests
 {
-	@Autowired
+	@Autowired(required=true)
 	private OptionRequestParser optionRequestParser;
 	
 	@Test
 	public void isEuropeanOption_validEuropeanSnippet_ReturnsTrue() throws Exception
 	{
-		assertTrue("valid european option should return true", Whitebox.invokeMethod(this.optionRequestParser, "isEuropeanOption", "C 100 20JAN2015 0001.HK"));
+		assertTrue("valid European option should return true", Whitebox.invokeMethod(this.optionRequestParser, "isEuropeanOption", "C 100 20JAN2015 0001.HK"));
 	}
 }
 

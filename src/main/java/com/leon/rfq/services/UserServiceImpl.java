@@ -12,11 +12,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.controllers.UserControllerImpl;
-import com.leon.rfq.dao.UserDao;
 import com.leon.rfq.domains.UserDetailImpl;
+import com.leon.rfq.repositories.UserDao;
 
 @Service
-public class UserServiceImpl implements UserService
+public final class UserServiceImpl implements UserService
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserControllerImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService
 		this.userDao = userDao;
 	}
 	
-	public void UserService()
+	public UserServiceImpl()
 	{
 		this.getAll();
 	}

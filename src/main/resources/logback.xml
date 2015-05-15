@@ -17,7 +17,7 @@
 	</appender>
 
 	 <appender name="DAO_LOG_FILE" class="ch.qos.logback.core.FileAppender">
-		<file>c:\development\git\RequestForQuoteSpringMVCWeb\logs\daos.log</file>      
+		<file>c:\development\git\RequestForQuoteSpringMVCWeb\logs\repositories.log</file>      
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">    
 			<Pattern>%d{HH:mm:ss.SSS} %-5level %thread  %logger - %msg%n</Pattern>    
 		</encoder>
@@ -81,15 +81,15 @@
 		<appender-ref ref="CONTROLLERS_LOG_FILE" />           
 	</logger>	
 	
-	<logger name="com.leon.rfq.dao.UserDaoImpl" level="TRACE">
+	<logger name="com.leon.rfq.repositories.UserDaoImpl" level="TRACE">
 		<appender-ref ref="DAO_LOG_FILE" />           
 	</logger>
 	
-	<logger name="com.leon.rfq.dao.UnderlyingDaoImpl" level="TRACE">
+	<logger name="com.leon.rfq.repositories.UnderlyingDaoImpl" level="TRACE">
 		<appender-ref ref="DAO_LOG_FILE" />           
 	</logger>
 	
-	<logger name="com.leon.rfq.dao.RequestDaoImpl" level="TRACE">
+	<logger name="com.leon.rfq.repositories.RequestDaoImpl" level="TRACE">
 		<appender-ref ref="DAO_LOG_FILE" />           
 	</logger>	
 	

@@ -5,11 +5,11 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.leon.rfq.domains.HolidayDetailImpl;
 import com.leon.rfq.domains.EnumTypes.LocationEnum;
+import com.leon.rfq.domains.HolidayDetailImpl;
 
 @Service
-public class BankHolidayMaintenanceServiceImpl implements BankHolidayMaintenanceService
+public final class BankHolidayMaintenanceServiceImpl implements BankHolidayMaintenanceService
 {
 
 	@Override

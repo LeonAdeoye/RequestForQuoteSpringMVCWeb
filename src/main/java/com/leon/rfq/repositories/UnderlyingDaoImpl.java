@@ -1,4 +1,4 @@
-package com.leon.rfq.dao;
+package com.leon.rfq.repositories;
 
 import java.util.LinkedList;
 import java.util.List;

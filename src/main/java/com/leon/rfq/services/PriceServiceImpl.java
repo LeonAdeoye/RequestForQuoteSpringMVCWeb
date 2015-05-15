@@ -6,7 +6,7 @@ import java.util.Date;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PriceServiceImpl implements PriceService
+public final class PriceServiceImpl implements PriceService
 {
 
 	@Override

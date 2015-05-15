@@ -2,8 +2,8 @@ package com.leon.rfq.services;
 
 import java.util.List;
 
-import com.leon.rfq.dao.RequestDao;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.repositories.RequestDao;
 
 public interface RequestService
 {
