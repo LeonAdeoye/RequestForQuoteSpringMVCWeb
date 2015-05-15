@@ -1,5 +1,6 @@
 package com.leon.rfq.service.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
+import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.option.OptionRequestParser;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
@@ -26,6 +28,14 @@ public class OptionRequestParserTest  extends AbstractJUnit4SpringContextTests
 	public void isValidOptionRequestSnippet_validRequestSnippet_ReturnsTrue() throws Exception
 	{
 		assertTrue("should return true if the snippet is valid", Whitebox.invokeMethod(this.optionRequestParser, "isValidOptionRequestSnippet", "C 100 20JAN2015 0001.HK"));
+	}
+	
+	@Test
+	public void parseRequest_validRequestSnippet_ReturnsTrue() throws Exception
+	{
+		RequestDetailImpl request = new RequestDetailImpl();
+		this.optionRequestParser.parseRequest("C 100 20JAN2015 0001.HK", request);
+		assertEquals(request.getLegs().size(), 1);
 	}
 }
 
