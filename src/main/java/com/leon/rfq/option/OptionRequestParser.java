@@ -233,7 +233,7 @@ public final class OptionRequestParser
             ++legCount;
             
             if (logger.isDebugEnabled())
-                logger.debug("Leg count incremented to: " + legCount + "Snippet after: " + snippet);
+                logger.debug("Leg count incremented to: " + legCount + ", Snippet after: " + snippet);
         }
         
         return optionTypes;
