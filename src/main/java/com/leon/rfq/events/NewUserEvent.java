@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEvent;
 import com.leon.rfq.domains.UserDetailImpl;
 
 @SuppressWarnings("serial")
-public class NewUserEvent extends ApplicationEvent
+public final class NewUserEvent extends ApplicationEvent
 {
 	private final UserDetailImpl newUser;
 

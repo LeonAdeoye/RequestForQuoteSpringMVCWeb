@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEvent;
 import com.leon.rfq.domains.UnderlyingDetailImpl;
 
 @SuppressWarnings("serial")
-public class NewUnderlyingEvent extends ApplicationEvent
+public final class NewUnderlyingEvent extends ApplicationEvent
 {
 	private final UnderlyingDetailImpl newUnderlying;
 

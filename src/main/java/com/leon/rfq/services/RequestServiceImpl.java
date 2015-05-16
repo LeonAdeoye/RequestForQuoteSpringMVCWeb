@@ -10,14 +10,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.option.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
-@Service
+@Component
 public final class RequestServiceImpl implements RequestService, ApplicationEventPublisherAware
 {
 	private static Logger logger = LoggerFactory.getLogger(RequestServiceImpl.class);
@@ -34,12 +34,6 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 	public void setRequestDao(RequestDao requestDao)
 	{
 		this.requestDao = requestDao;
-	}
-	
-	@Override
-	public void setOptionRequestFactory(OptionRequestFactory optionRequestFactory)
-	{
-		this.optionRequestFactory = optionRequestFactory;
 	}
 	
 	public RequestServiceImpl()

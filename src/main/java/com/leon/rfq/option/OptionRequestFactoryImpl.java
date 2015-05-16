@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.leon.rfq.domains.EnumTypes.SideEnum;
 import com.leon.rfq.domains.EnumTypes.StatusEnum;
@@ -22,8 +22,8 @@ import com.leon.rfq.services.InterestRateService;
 import com.leon.rfq.services.PriceService;
 import com.leon.rfq.services.VolatilityService;
 
-@Service
-public class OptionRequestFactoryImpl implements OptionRequestFactory
+@Component
+public final class OptionRequestFactoryImpl implements OptionRequestFactory
 {
 	private static final Logger logger = LoggerFactory.getLogger(OptionRequestFactoryImpl.class);
 	

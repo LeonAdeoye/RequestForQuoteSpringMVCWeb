@@ -5,7 +5,7 @@ import org.springframework.context.ApplicationEvent;
 import com.leon.rfq.domains.RequestDetailImpl;
 
 @SuppressWarnings("serial")
-public class NewRequestEvent extends ApplicationEvent
+public final class NewRequestEvent extends ApplicationEvent
 {
 	private final RequestDetailImpl newRequest;
 

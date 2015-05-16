@@ -22,7 +22,7 @@ import com.leon.rfq.repositories.RequestDaoImpl;
 import com.leon.rfq.services.RequestService;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
-public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
+public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired(required=true)
 	private RequestService requestService;

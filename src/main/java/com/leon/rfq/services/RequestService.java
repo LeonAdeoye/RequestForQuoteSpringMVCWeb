@@ -3,7 +3,6 @@ package com.leon.rfq.services;
 import java.util.List;
 
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.option.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
 public interface RequestService
@@ -23,6 +22,4 @@ public interface RequestService
 	boolean requestExistsWithRequestId(int requestId);
 	
 	void setRequestDao(RequestDao requestDao);
-	
-	void setOptionRequestFactory(OptionRequestFactory optionRequestFactory);
 }
