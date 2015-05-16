@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
-import com.leon.rfq.option.OptionRequestParser;
+import com.leon.rfq.option.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
 @Service
@@ -29,7 +29,7 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 	private RequestDao requestDao;
 	
 	@Autowired(required=true)
-	private OptionRequestParser optionRequestParser;
+	private OptionRequestFactory optionRequestFactory;
 	
 	@Override
 	public void setRequestDao(RequestDao requestDao)
@@ -145,16 +145,9 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
 		
-		RequestDetailImpl newRequest = new RequestDetailImpl();
-		
-		if(this.optionRequestParser.isValidOptionRequestSnippet(requestSnippet))
-			this.optionRequestParser.parseRequest(requestSnippet, newRequest);
-		
-		newRequest.setBookCode(bookCode);
-		newRequest.setClientId(clientId);
-		newRequest.setLastUpdatedBy(savedByUser);
-		
-		boolean result = this.requestDao.insert(newRequest);
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
+			
+		boolean result = true; //this.requestDao.insert(newRequest);
 		
 		this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest)); //TODO request ID
 		

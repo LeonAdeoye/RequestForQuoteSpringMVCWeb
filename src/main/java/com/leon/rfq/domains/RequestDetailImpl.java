@@ -1,10 +1,13 @@
 package com.leon.rfq.domains;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+
+import com.leon.rfq.domains.EnumTypes.StatusEnum;
 
 @XmlRootElement(name="RequestDetailImpl", namespace = "com.leon.rfq.domains")
 public final class RequestDetailImpl
@@ -14,7 +17,7 @@ public final class RequestDetailImpl
 	private int identifier;
 	private int clientId;
 	private boolean isOTC;
-	private String status;
+	private StatusEnum status;
 	private String lastUpdatedBy;
 
 	private int lotSize;
@@ -22,8 +25,8 @@ public final class RequestDetailImpl
 	private int contracts;
 	private int quantity;
 
-	private String tradeDate;
-	private String expiryDate;
+	private LocalDate tradeDate;
+	private LocalDate expiryDate;
 	private BigDecimal dayCountConvention;
 
 	private BigDecimal notionalMillions;
@@ -49,7 +52,7 @@ public final class RequestDetailImpl
 	private BigDecimal rhoShares;
 
 	private String premiumSettlementCurrency;
-	private String premiumSettlementDate;
+	private LocalDate premiumSettlementDate;
 	private int premiumSettlementDaysOverride;
 	private BigDecimal premiumSettlementFXRate;
 
@@ -182,22 +185,22 @@ public final class RequestDetailImpl
 		this.notionalCurrency = notionalCurrency;
 	}
 
-	public String getTradeDate()
+	public LocalDate getTradeDate()
 	{
 		return this.tradeDate;
 	}
 
-	public void setTradeDate(String tradeDate)
+	public void setTradeDate(LocalDate tradeDate)
 	{
 		this.tradeDate = tradeDate;
 	}
 
-	public String getExpiryDate()
+	public LocalDate getExpiryDate()
 	{
 		return this.expiryDate;
 	}
 
-	public void setExpiryDate(String expiryDate)
+	public void setExpiryDate(LocalDate expiryDate)
 	{
 		this.expiryDate = expiryDate;
 	}
@@ -412,12 +415,12 @@ public final class RequestDetailImpl
 		this.premiumSettlementCurrency = premiumSettlementCurrency;
 	}
 
-	public String getPremiumSettlementDate()
+	public LocalDate getPremiumSettlementDate()
 	{
 		return this.premiumSettlementDate;
 	}
 
-	public void setPremiumSettlementDate(String premiumSettlementDate)
+	public void setPremiumSettlementDate(LocalDate premiumSettlementDate)
 	{
 		this.premiumSettlementDate = premiumSettlementDate;
 	}
@@ -612,12 +615,12 @@ public final class RequestDetailImpl
 		this.premiumPercentage = premiumPercentage;
 	}
 
-	public String getStatus()
+	public StatusEnum getStatus()
 	{
 		return this.status;
 	}
 
-	public void setStatus(String status)
+	public void setStatus(StatusEnum status)
 	{
 		this.status = status;
 	}

@@ -8,7 +8,7 @@
 	<resultMap type="RequestDetailImpl" id="RequestResultSet">
 		<id 	property="identifier" column="identifier"/>
 		<result property="request" column="request"/>
-		<result property="status" column="status"/>
+		<result property="status" typeHandler="org.apache.ibatis.type.EnumTypeHandler" column="status"/>
 		<result property="pickedUpBy" column="pickedUpBy"/>
 		<result property="clientId" column="clientId"/>
 		<result property="bookCode" column="bookCode"/>
@@ -36,7 +36,7 @@
 	
  	<insert id="insert" parameterType="RequestDetailImpl">
 		INSERT INTO requestforquotemain (identifier, request, status, clientId, bookCode, tradeDate, pickedUpBy, lastUpdatedBy, lastUpdated)
-		VALUES(#{identifier}, #{request}, #{status}, #{lastName}, #{clientId}, #{bookCode}, #{tradeDate}, #{pickedUpBy}, #{lastUpdatedBy}, now() )
+		VALUES(#{identifier}, #{request}, #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, #{lastName}, #{clientId}, #{bookCode}, #{tradeDate}, #{pickedUpBy}, #{lastUpdatedBy}, now() )
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.Integer">

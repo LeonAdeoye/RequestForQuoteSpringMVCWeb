@@ -91,7 +91,8 @@
 		
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
   		<property name="dataSource" ref="dataSource" />
-  		<property name="typeAliasesPackage" value="com.leon.rfq"/> 		  		  		
+  		<property name="typeAliasesPackage" value="com.leon.rfq"/>
+  		<property name="typeHandlersPackage" value="com.leon.rfq.repositories"/> 		  		  		
 	</bean>
 	
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">

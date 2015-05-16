@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.leon.rfq.domains.EnumTypes.SideEnum;
+import com.leon.rfq.domains.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BankHolidayMaintenanceService;
@@ -22,9 +23,9 @@ import com.leon.rfq.services.PriceService;
 import com.leon.rfq.services.VolatilityService;
 
 @Component
-public final class OptionRequestParser
+public final class OptionRequestFactoryImpl implements OptionRequestFactory
 {
-	private static final Logger logger = LoggerFactory.getLogger(OptionRequestParser.class);
+	private static final Logger logger = LoggerFactory.getLogger(OptionRequestFactoryImpl.class);
 	
 	@Autowired(required=true)
 	BankHolidayMaintenanceService bankHolidayMaintenanceService;
@@ -54,12 +55,65 @@ public final class OptionRequestParser
 	private static final String LEG_PATTERN = "^(?<leg>[+-]?[1-9]?[CP]{1})+";
 	
 	/**
+	 * Creates an instance of RequestDetailImpl using the parameters passed.
+	 * 
+	 * @param requestSnippet 	the snippet to be used to create the RequestDetailImpl instance.
+	 * @param clientId			the client ID of the RequestDetailImpl instance to be created.
+	 * @param bookCode			the book code of the RequestDetailImpl instance to be created.
+	 * @param savedByUser		the user saving the new instance.
+	 * @returns	the new instance.
+	 */
+	@Override
+	public RequestDetailImpl getNewInstance(String requestSnippet, int clientId, String bookCode, String savedByUser)
+	{
+		RequestDetailImpl newRequest = new RequestDetailImpl();
+		
+		if(this.isValidOptionRequestSnippet(requestSnippet))
+			this.parseRequest(requestSnippet, newRequest);
+		else
+			throw new IllegalArgumentException("requestSnippet argument is invalid");
+		
+		newRequest.setBookCode(bookCode);
+		newRequest.setClientId(clientId);
+		newRequest.setLastUpdatedBy(savedByUser);
+        newRequest.setRequest(requestSnippet);
+        newRequest.setStatus(StatusEnum.PENDING);
+        newRequest.setIdentifier(-1);
+        newRequest.setClientId(clientId);
+        newRequest.setTradeDate(LocalDate.now());
+        
+        if(newRequest.getLegs() !=null)
+            newRequest.setExpiryDate(newRequest.getLegs().get(0).getMaturityDate());
+        
+        newRequest.setLotSize(100);
+        newRequest.setMultiplier(10);
+        newRequest.setContracts(100);
+        newRequest.setNotionalFXRate(new BigDecimal("1"));
+        newRequest.setNotionalMillions(new BigDecimal("1"));
+        newRequest.setBookCode(bookCode);
+
+        if(newRequest.getLegs() !=null)
+            newRequest.setDayCountConvention(newRequest.getLegs().get(0).getDayCountConvention());
+
+        newRequest.setPremiumSettlementFXRate(new BigDecimal("1"));
+        newRequest.setSalesCreditFXRate(new BigDecimal("1"));
+        newRequest.setIsOTC(true);
+        newRequest.setSalesCreditPercentage(new BigDecimal("2"));
+        newRequest.setPremiumSettlementDaysOverride(1);
+        newRequest.setPremiumSettlementDate(LocalDate.now().plusDays(newRequest.getPremiumSettlementDaysOverride()));
+		
+		return newRequest;
+	}
+	
+	
+	/**
 	 * Determines if the snippet is valid for an option request.
 	 * 
 	 * @param snippet 		the snippet to be pattern matched.
 	 * @returns	true if the snippet is a valid option request snippet.
 	 */
-    public boolean isValidOptionRequestSnippet(String snippet)
+    @Override
+	public boolean isValidOptionRequestSnippet(String snippet)
     {
     	if(logger.isDebugEnabled())
     		logger.debug("Validating option request snippet: " + snippet);
@@ -195,7 +249,7 @@ public final class OptionRequestParser
 	 * @param snippet 	the option request snippet containing all of option details to be parsed.
 	 * @param parent 	the parent request that these option details belong to.
 	 */
-    public void parseRequest(String snippet, RequestDetailImpl parent)
+    private void parseRequest(String snippet, RequestDetailImpl parent)
     {
     	String[] partsOfTheRequest = snippet.split(" ");
     	List<OptionDetailImpl> optionLegs = parseOptionTypes(partsOfTheRequest[0], parent);
