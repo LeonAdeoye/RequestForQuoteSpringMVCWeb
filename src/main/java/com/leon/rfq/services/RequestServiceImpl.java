@@ -36,6 +36,12 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 		this.requestDao = requestDao;
 	}
 	
+	@Override
+	public void setOptionRequestFactory(OptionRequestFactory optionRequestFactory)
+	{
+		this.optionRequestFactory = optionRequestFactory;
+	}
+	
 	public RequestServiceImpl()
 	{
 		//this.getAll(); //TODO.

@@ -20,7 +20,6 @@ import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.repositories.RequestDao;
 import com.leon.rfq.repositories.RequestDaoImpl;
 import com.leon.rfq.services.RequestService;
-import com.leon.rfq.services.RequestServiceImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
@@ -44,11 +43,10 @@ public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
     public void get_ValidParameter_CallsDaoGetMethod()
 	{
 		// Arrange
-		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
-		requestService.setRequestDao(requestDaoMock);
+		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		requestService.get(Integer.MAX_VALUE);
+		this.requestService.get(Integer.MAX_VALUE);
 		// Assert
 		verify(requestDaoMock).get(Integer.MAX_VALUE);
 	}
@@ -57,24 +55,22 @@ public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
     public void getAll_NoParameters_CallsDaoGetAllMethod()
 	{
 		// Arrange
-		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
-		requestService.setRequestDao(requestDaoMock);
+		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		requestService.getAll();
+		this.requestService.getAll();
 		// Assert
 		verify(requestDaoMock).getAll();
 	}
 	
 	@Test
-    public void delete_validRequestId_CallsDaoDeleteMethod()
+    public void delete_NonExistantRequestId_DoesNotCallDaoDeleteMethod()
 	{
 		// Arrange
-		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
-		requestService.setRequestDao(requestDaoMock);
+		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		requestService.delete(Integer.MAX_VALUE);
+		this.requestService.delete(Integer.MAX_VALUE);
 		// Assert
 		verify(requestDaoMock, never()).delete(Integer.MAX_VALUE);
 	}
@@ -83,11 +79,10 @@ public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
     public void insert_ValidSnippet_CallsDaoInsertMethod()
 	{
 		// Arrange
-		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
-		requestService.setRequestDao(requestDaoMock);
+		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		this.requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		verify(requestDaoMock).insert(any(RequestDetailImpl.class));
 	}
@@ -96,9 +91,8 @@ public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
     public void insert_InvalidSnippet_ThrowsIllegalArgumentException()
 	{
 		// Arrange
-		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
-		requestService.setRequestDao(requestDaoMock);
+		this.requestService.setRequestDao(requestDaoMock);
 		// Act
 		catchException(this.requestService).insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
@@ -110,11 +104,10 @@ public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
     public void requestExistsWithRequestId_ExistingRequestId_CallsCorrectDaoMethod()
 	{
 		// Arrange
-		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
-		requestService.setRequestDao(requestDaoMock);
+		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		requestService.requestExistsWithRequestId(Integer.MAX_VALUE);
+		this.requestService.requestExistsWithRequestId(Integer.MAX_VALUE);
 		// Assert
 		verify(requestDaoMock).requestExistsWithRequestId(Integer.MAX_VALUE);
 	}
