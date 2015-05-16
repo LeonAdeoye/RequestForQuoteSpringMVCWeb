@@ -1,6 +1,7 @@
 package com.leon.rfq.option;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,7 +20,6 @@ import com.leon.rfq.services.DefaultConfigurationService;
 import com.leon.rfq.services.InterestRateService;
 import com.leon.rfq.services.PriceService;
 import com.leon.rfq.services.VolatilityService;
-import com.leon.rfq.utilities.UtilityMethods;
 
 @Component
 public final class OptionRequestParser
@@ -41,9 +41,17 @@ public final class OptionRequestParser
 	@Autowired(required=true)
 	InterestRateService interestRateService;
 	
-	private static final String REQUEST_PATTERN = "^([+-]?[\\d]*[CP]{1}){1}([-+]{1}[\\d]*[CP]{1})* ([\\d]+){1}(,{1}[\\d]+)* "
+/*	private static final String REQUEST_PATTERN = "^([+-]?[1-9]*[CP]{1}){1}([-+]{1}[1-9]*[CP]{1})* ([\\d]+){1}(,{1}[\\d]+)* "
     		+ "[\\d]{1,2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[\\d]{2}(,{1}[\\d]{1,2}(JAN|FEB|MAR"
     		+ "|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[\\d]{2})* (\\w){4,7}\\.[A-Z]{1,2}(,{1}(\\w){4,7}\\.[A-Z]{1,2})*$";
+*/
+	private static final String REQUEST_PATTERN = "^([+-]?[1-9]*[CP]{1}){1}([-+]{1}[1-9]*[CP]{1})* ([\\d]+){1}(,{1}[\\d]+)* "
+    		+ "[\\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\\d]{2}(,{1}[\\d]{1,2}(Jan|Feb|Mar"
+    		+ "|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\\d]{2})* (\\w){4,7}\\.[A-Z]{1,2}(,{1}(\\w){4,7}\\.[A-Z]{1,2})*$";
+	
+	private static final String DETAIL_PATTERN = "^(?<side>[+-])?(?<quantity>[1-9])?(?<type>[CP]{1})+";
+	
+	private static final String LEG_PATTERN = "^(?<leg>[+-]?[1-9]?[CP]{1})+";
 	
 	/**
 	 * Determines if the snippet is valid for an option request.
@@ -110,17 +118,18 @@ public final class OptionRequestParser
     private void parseOptionMaturityDates(String delimitedDates, List<OptionDetailImpl> optionLegs)
     {
         String[] dates = delimitedDates.split(",");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy");
         
         if (dates.length == 1)
         {
             for (OptionDetailImpl optionLeg : optionLegs)
             {
-                optionLeg.setMaturityDate(dates[0]);
-                optionLeg.setTradeDate(new Date().toString());
+            	optionLeg.setMaturityDate(LocalDate.parse(dates[0], formatter));
+            	optionLeg.setTradeDate(LocalDate.now());
                 
                 optionLeg.setDaysToExpiry(new BigDecimal(this.bankHolidayMaintenanceService.CalculateBusinessDaysToExpiry(
-                		UtilityMethods.convertToDate(optionLeg.getTradeDate()),
-                		UtilityMethods.convertToDate(optionLeg.getMaturityDate()),
+                		optionLeg.getTradeDate(),
+                		optionLeg.getMaturityDate(),
                 		this.defaultConfigurationService.getDefaultLocation())));
             }
         }
@@ -129,12 +138,12 @@ public final class OptionRequestParser
             int count = 0;
             for (OptionDetailImpl optionLeg : optionLegs)
             {
-            	optionLeg.setMaturityDate(dates[count++]);
-            	optionLeg.setTradeDate(new Date().toString());
+            	optionLeg.setMaturityDate(LocalDate.parse(dates[count++], formatter));
+            	optionLeg.setTradeDate(LocalDate.now());
             	
                 optionLeg.setDaysToExpiry(new BigDecimal(this.bankHolidayMaintenanceService.CalculateBusinessDaysToExpiry(
-                		UtilityMethods.convertToDate(optionLeg.getTradeDate()),
-                		UtilityMethods.convertToDate(optionLeg.getMaturityDate()),
+                		optionLeg.getTradeDate(),
+                		optionLeg.getMaturityDate(),
                 		this.defaultConfigurationService.getDefaultLocation())));
             }
         }
@@ -206,11 +215,13 @@ public final class OptionRequestParser
     private List<OptionDetailImpl> parseOptionTypes(String snippet, RequestDetailImpl parent)
     {
     	List<OptionDetailImpl> optionTypes = new LinkedList<>();
+    	
     	boolean isEuropean = isEuropeanOption(snippet);
-        Pattern optionDetailRegex = Pattern.compile("^(?<side>[+-])?(?<quantity>[1-9])?(?<type>[CP]{1})+");
+    	
+        Pattern optionDetailRegex = Pattern.compile(DETAIL_PATTERN);
         Matcher detailMatcher = optionDetailRegex.matcher(snippet);
         
-        Pattern optionLegRegex = Pattern.compile("^(?<leg>[+-]?[1-9]?[CP]{1})+",1);
+        Pattern optionLegRegex = Pattern.compile(LEG_PATTERN);
         Matcher matcher = optionLegRegex.matcher(snippet);
         int legCount = 0;
 
@@ -220,20 +231,27 @@ public final class OptionRequestParser
             	logger.debug("Snippet before: " + snippet);
         	        	
         	String leg = matcher.group("leg");
-            SideEnum side = detailMatcher.group("side").equals("-") ? SideEnum.SELL : SideEnum.BUY;
-            int quantity = detailMatcher.group("quantity").isEmpty() ? 1 : Integer.parseInt(detailMatcher.group("quantity"));
+        	
+        	detailMatcher.find();
+        	String sideGroup = detailMatcher.group("side");
+            SideEnum side = ((sideGroup != null) && sideGroup.equals("-")) ? SideEnum.SELL : SideEnum.BUY;
+            
+            String quantityGroup = detailMatcher.group("quantity");
+            int quantity = (quantityGroup != null) ? Integer.parseInt(detailMatcher.group("quantity")) : 1;
+            
             boolean isCall = detailMatcher.group("type").equals("C");
 
             optionTypes.add(new OptionDetailImpl(side, quantity, isCall, ++legCount, isEuropean, parent));
 
             if (logger.isDebugEnabled())
-                logger.debug("leg #" + legCount + ": " + leg + ", side: " + side + ", quantity: " + quantity + ", Type: " + (isCall ? "CALL" : "PUT") + ", Type: " + (isEuropean ? "European" : "American"));
+                logger.debug("leg #" + legCount + ": " + leg + ", side: " + side + ", quantity: " + quantity + ", Type: " + (isCall ? "CALL" : "PUT"));
 
             snippet = snippet.replaceFirst(leg, "");
-            ++legCount;
             
             if (logger.isDebugEnabled())
-                logger.debug("Leg count incremented to: " + legCount + ", Snippet after: " + snippet);
+                logger.debug("Remaining snippet after processing leg: " + (legCount++) + "is: "+ snippet);
+            
+            matcher = optionLegRegex.matcher(snippet);
         }
         
         return optionTypes;

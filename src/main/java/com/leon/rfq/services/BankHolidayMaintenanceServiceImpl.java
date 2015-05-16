@@ -1,6 +1,6 @@
 package com.leon.rfq.services;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -13,57 +13,56 @@ public final class BankHolidayMaintenanceServiceImpl implements BankHolidayMaint
 {
 
 	@Override
-	public int CalculateBusinessDaysToExpiry(Date startDate, Date endDate, LocationEnum location)
+	public int CalculateBusinessDaysToExpiry(LocalDate startDate, LocalDate endDate, LocationEnum location)
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 250;
 	}
 
 	@Override
-	public int CalculateAllDaysToExpiry(Date startDate, Date endDate)
+	public int CalculateAllDaysToExpiry(LocalDate startDate, LocalDate endDate)
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 250;
 	}
 
 	@Override
-	public int CalculateAllDaysToExpiryFromToday(Date endDate)
+	public int CalculateAllDaysToExpiryFromToday(LocalDate endDate)
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 250;
 	}
 
 	@Override
-	public int CalculateBusinessDaysToExpiryFromToday(Date endDate,
-			LocationEnum location)
+	public int CalculateBusinessDaysToExpiryFromToday(LocalDate endDate, LocationEnum location)
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 250;
 	}
 
 	@Override
-	public boolean IsHoliday(Date dateToValidate, LocationEnum location)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean IsValidBusinessDay(Date dateToValidate, LocationEnum location)
+	public boolean IsHoliday(LocalDate dateToValidate, LocationEnum location)
 	{
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public void AddHoliday(Date holidayDate, LocationEnum location)
+	public boolean IsValidBusinessDay(LocalDate dateToValidate, LocationEnum location)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void AddHoliday(LocalDate holidayDate, LocationEnum location)
 	{
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public boolean SaveToDatabase(Date holidayDate, LocationEnum location)
+	public boolean SaveToDatabase(LocalDate holidayDate, LocationEnum location)
 	{
 		// TODO Auto-generated method stub
 		return false;

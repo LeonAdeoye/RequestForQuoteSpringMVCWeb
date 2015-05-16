@@ -1,6 +1,7 @@
 package com.leon.rfq.domains;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,8 @@ public class OptionDetailImpl
 	private BigDecimal premiumPercentage;
 	private int quantity;
 	private BigDecimal yearsToExpiry;
-	private String tradeDate;
-	private String maturityDate;
+	private LocalDate tradeDate;
+	private LocalDate maturityDate;
 
 	private BigDecimal daysToExpiry;
 	private BigDecimal dayCountConvention;
@@ -71,22 +72,22 @@ public class OptionDetailImpl
 		this.strikePercentage = strikePercentage;
 	}
 
-	public String getMaturityDate()
+	public LocalDate getMaturityDate()
 	{
 		return this.maturityDate;
 	}
 
-	public void setMaturityDate(String maturityDate)
+	public void setMaturityDate(LocalDate maturityDate)
 	{
 		this.maturityDate = maturityDate;
 	}
 	
-	public String getTradeDate()
+	public LocalDate getTradeDate()
 	{
 		return this.tradeDate;
 	}
 
-	public void setTradeDate(String tradeDate)
+	public void setTradeDate(LocalDate tradeDate)
 	{
 		this.tradeDate = tradeDate;
 	}
