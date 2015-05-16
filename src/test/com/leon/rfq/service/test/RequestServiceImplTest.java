@@ -1,13 +1,16 @@
 package com.leon.rfq.service.test;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,7 +25,7 @@ import com.leon.rfq.services.RequestServiceImpl;
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
 {
-	@Autowired
+	@Autowired(required=true)
 	private RequestService requestService;
 	
 	@Before
@@ -77,17 +80,30 @@ public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-	@Ignore
-    public void insert_ValidParameters_CallsDaoInsertMethod()
+    public void insert_ValidSnippet_CallsDaoInsertMethod()
 	{
 		// Arrange
 		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
 		requestService.setRequestDao(requestDaoMock);
 		// Act
-		requestService.insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester");
-		
+		requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		// Assert
 		verify(requestDaoMock).insert(any(RequestDetailImpl.class));
+	}
+	
+	@Test
+    public void insert_InvalidSnippet_ThrowsIllegalArgumentException()
+	{
+		// Arrange
+		RequestService requestService = new RequestServiceImpl();
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		requestService.setRequestDao(requestDaoMock);
+		// Act
+		catchException(this.requestService).insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester");
+		// Assert
+		assertTrue(caughtException() instanceof IllegalArgumentException);
+		assertEquals(caughtException().getMessage(), "requestSnippet argument is invalid");
 	}
 		
 	@Test
@@ -102,25 +118,4 @@ public class RequestServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Assert
 		verify(requestDaoMock).requestExistsWithRequestId(Integer.MAX_VALUE);
 	}
-	
-	/*
-	@Test
-    public void update_NullUpdatedByUser_ThrowsIllegalArgumentException()
-	{
-		catchException(this.requestService).update("userId", "firstName", "lastName", "emailAddress", "location", "group", true, null);
-		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
-	}
-	
-	@Test
-    public void update_EmptyStringUpdatedByUser_ThrowsInvalidArgumentException()
-	{
-		catchException(this.requestService).update("userId", "firstName", "lastName", "emailAddress", "location", "group", true, "");
-		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
-	}
-	*/
-	
 }

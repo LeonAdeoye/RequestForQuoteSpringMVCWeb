@@ -69,9 +69,16 @@ public final class OptionRequestFactoryImpl implements OptionRequestFactory
 		RequestDetailImpl newRequest = new RequestDetailImpl();
 		
 		if(this.isValidOptionRequestSnippet(requestSnippet))
+		{
 			this.parseRequest(requestSnippet, newRequest);
+		}
 		else
+		{
+			if(logger.isErrorEnabled())
+				logger.error("requestSnippet argument is invalid");
+			
 			throw new IllegalArgumentException("requestSnippet argument is invalid");
+		}
 		
 		newRequest.setBookCode(bookCode);
 		newRequest.setClientId(clientId);
@@ -104,7 +111,6 @@ public final class OptionRequestFactoryImpl implements OptionRequestFactory
 		
 		return newRequest;
 	}
-	
 	
 	/**
 	 * Determines if the snippet is valid for an option request.

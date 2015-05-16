@@ -45,7 +45,7 @@
 	<context:component-scan base-package="com.leon.rfq.controllers" />
 	<context:component-scan base-package="com.leon.rfq.option" />
 	
-	<!-- <bean id="optionRequestParser" class="com.leon.rfq.option.OptionRequestParser"/> -->
+	<bean id="optionRequestFactory" class="com.leon.rfq.option.OptionRequestFactoryImpl"/>
 	
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />

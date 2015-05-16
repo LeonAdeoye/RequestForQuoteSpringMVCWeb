@@ -22,7 +22,6 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 {
 	private static Logger logger = LoggerFactory.getLogger(RequestServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	
 	private final Map<Integer, RequestDetailImpl> requests = new HashMap<>();
 	
 	@Autowired(required=true)
@@ -145,13 +144,21 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
 		
-		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
+		boolean result = false;
+		try
+		{
+			RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
 			
-		boolean result = true; //this.requestDao.insert(newRequest);
+			result = this.requestDao.insert(newRequest);
 		
-		this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest)); //TODO request ID
+			this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest)); //TODO request ID
 		
-		this.requests.put(newRequest.getIdentifier(), newRequest);
+			this.requests.put(newRequest.getIdentifier(), newRequest);
+		}
+		catch(IllegalArgumentException iae)
+		{
+			throw iae;
+		}
 
 		return result;
 	}

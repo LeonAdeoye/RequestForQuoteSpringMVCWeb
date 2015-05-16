@@ -15,7 +15,7 @@ import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.option.OptionRequestFactory;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
-public class OptionRequestParserTest  extends AbstractJUnit4SpringContextTests
+public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTests
 {
 	@Autowired(required=true)
 	private OptionRequestFactory optionRequestFactory;
