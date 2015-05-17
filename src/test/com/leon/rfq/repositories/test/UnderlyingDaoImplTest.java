@@ -1,4 +1,4 @@
-package com.leon.rfq.dao.test;
+package com.leon.rfq.repositories.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

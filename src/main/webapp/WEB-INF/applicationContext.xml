@@ -43,7 +43,7 @@
 	<context:component-scan base-package="com.leon.rfq.services" />
 	<context:component-scan base-package="com.leon.rfq.repositories" />
 	<context:component-scan base-package="com.leon.rfq.controllers" />
-	<context:component-scan base-package="com.leon.rfq.option" />
+	<context:component-scan base-package="com.leon.rfq.products" />
 
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />

@@ -1,4 +1,4 @@
-package com.leon.rfq.option;
+package com.leon.rfq.products;
 import static java.lang.Math.exp;
 import static java.lang.Math.log;
 import static java.lang.Math.pow;

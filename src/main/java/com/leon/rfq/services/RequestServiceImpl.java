@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
-import com.leon.rfq.option.OptionRequestFactory;
+import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
 @Component

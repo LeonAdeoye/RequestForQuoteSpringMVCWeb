@@ -1,4 +1,4 @@
-package com.leon.rfq.service.test;
+package com.leon.rfq.services.test;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -19,8 +19,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.option.OptionRequestFactory;
-import com.leon.rfq.option.OptionRequestFactoryImpl;
+import com.leon.rfq.products.OptionRequestFactory;
+import com.leon.rfq.products.OptionRequestFactoryImpl;
 import com.leon.rfq.repositories.RequestDao;
 import com.leon.rfq.repositories.RequestDaoImpl;
 import com.leon.rfq.services.RequestService;

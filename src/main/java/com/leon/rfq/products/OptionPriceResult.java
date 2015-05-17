@@ -1,4 +1,4 @@
-package com.leon.rfq.option;
+package com.leon.rfq.products;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

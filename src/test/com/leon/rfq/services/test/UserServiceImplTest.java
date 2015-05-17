@@ -1,4 +1,4 @@
-package com.leon.rfq.service.test;
+package com.leon.rfq.services.test;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;

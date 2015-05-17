@@ -1,4 +1,4 @@
-package com.leon.rfq.dao.test;
+package com.leon.rfq.repositories.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -19,7 +19,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.option.OptionRequestFactory;
+import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDaoImpl;
 
 

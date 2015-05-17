@@ -37,15 +37,15 @@
 		</encoder>
 	</appender>
 	
-	<appender name="OPTIONS_LOG_FILE" class="ch.qos.logback.core.FileAppender">
-		<file>c:\development\git\RequestForQuoteSpringMVCWeb\logs\options.log</file>      
+	<appender name="PRODUCTS_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+		<file>c:\development\git\RequestForQuoteSpringMVCWeb\logs\products.log</file>      
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">    
 			<Pattern>%d{HH:mm:ss.SSS} %-5level %thread  %logger - %msg%n</Pattern>    
 		</encoder>
 	</appender>	
 
-	<logger name="com.leon.rfq.option.OptionRequestParser" level="TRACE">
-		<appender-ref ref="OPTIONS_LOG_FILE" />           
+	<logger name="com.leon.rfq.products.OptionRequestParser" level="TRACE">
+		<appender-ref ref="PRODUCTS_LOG_FILE" />           
 	</logger>
 			
 	<logger name="com.leon.rfq.domains.UserDetailImpl" level="TRACE">

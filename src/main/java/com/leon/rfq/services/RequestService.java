@@ -3,7 +3,7 @@ package com.leon.rfq.services;
 import java.util.List;
 
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.option.OptionRequestFactory;
+import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
 public interface RequestService

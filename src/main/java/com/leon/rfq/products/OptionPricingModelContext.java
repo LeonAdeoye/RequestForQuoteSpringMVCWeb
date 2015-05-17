@@ -1,4 +1,4 @@
-package com.leon.rfq.option;
+package com.leon.rfq.products;
 
 import java.util.HashMap;
 import java.util.Map;
