@@ -16,4 +16,9 @@ public final class EnumTypes
 	{
 		PENDING, TRADEDAWAY, PICKEDUP, FILLED, INVALID
 	}
+	
+	public static enum HedgeTypeEnum
+	{
+		SHARES, FUTURES
+	}
 }

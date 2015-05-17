@@ -19,6 +19,8 @@
   	<javax.servlet-api.version>3.1.0</javax.servlet-api.version>
   	<jackson-mapper-asl.version>1.9.10</jackson-mapper-asl.version>
   	<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
+  	<JUnitParams.version>1.0.4</JUnitParams.version>
+  	<powermock-module-junit4.version>1.6.2</powermock-module-junit4.version>
   </properties>
   
     <dependencyManagement>
@@ -50,8 +52,33 @@
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
-			<version>1.6.2</version>
-		</dependency>			
+			<version>${powermock-module-junit4.version}</version>
+			<scope>test</scope>
+		</dependency>
+<!-- 		<dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-api-mockito</artifactId>
+            <version>${powermock-module-junit4.version}</version>
+            <scope>test</scope>
+        </dependency> -->       
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4-rule</artifactId>
+            <version>${powermock-module-junit4.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-classloading-xstream</artifactId>
+            <version>${powermock-module-junit4.version}</version>
+            <scope>test</scope>
+        </dependency>
+		<dependency>
+			<groupId>pl.pragmatists</groupId>
+			<artifactId>JUnitParams</artifactId>
+			<version>${JUnitParams.version}</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
@@ -70,6 +97,7 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>

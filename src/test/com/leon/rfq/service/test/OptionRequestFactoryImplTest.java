@@ -14,9 +14,37 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.option.OptionRequestFactory;
 
+
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
+//@RunWith(JUnitParamsRunner.class)
+//@RunWith(PowerMockRunner.class)
+//@PowerMockRunnerDelegate(JUnitParamsRunner.class)
+//@PrepareForTest(OptionRequestFactoryImpl.class)
+
 public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTests
 {
+	//@Rule
+    //public PowerMockRule rule = new PowerMockRule();
+	
+	@SuppressWarnings("unused")
+	private static final Object[] getRequestSnippet()
+	{
+		return new Object[]
+		{
+			new Object[] {"C 100 10Jan2016 0001.HK"},
+			new Object[] {"C+P 100 10Jan2016 0001.HK"},
+			new Object[] {"C-P 100 10Jan2016 0001.HK"},
+			new Object[] {"2C 100 10Jan2016 0001.HK"},
+			new Object[] {"-C 100 10Jan2016 0001.HK"},
+			new Object[] {"+C 100 10Jan2016 0001.HK"},
+			new Object[] {"+C 10 10Nov2016 00001.HK"},
+			new Object[] {"+C-2P 10 10Nov2016 00001.HK"},
+			new Object[] {"+C-P 10 10Nov2016 00001.HK"},
+			new Object[] {"-C-P 10 10Nov2016 00001.HK,1000.JP"},
+			new Object[] {"-1P 10 10Nov2016 00001.HK"}
+		};
+	}
+	
 	@Autowired(required=true)
 	private OptionRequestFactory optionRequestFactory;
 	
@@ -26,11 +54,13 @@ public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTe
 		assertTrue("valid European option should return true", Whitebox.invokeMethod(this.optionRequestFactory, "isEuropeanOption", "C 100 20Jan2015 0001.HK"));
 	}
 	
-	@Test
-	public void isValidOptionRequestSnippet_validRequestSnippet_ReturnsTrue() throws Exception
+	/*@Test
+	@Ignore
+	@Parameters(method="getRequestSnippet")
+	public void isValidOptionRequestSnippet_validRequestSnippet_ReturnsTrue(String requestSnippet) throws Exception
 	{
-		assertTrue("should return true if the snippet is valid", Whitebox.invokeMethod(this.optionRequestFactory, "isValidOptionRequestSnippet", "C 100 20Jan2015 0001.HK"));
-	}
+		assertTrue("should return true if the snippet is valid", this.optionRequestFactory.isValidOptionRequestSnippet(requestSnippet));
+	}*/
 	
 	@Test
 	public void parseRequest_validRequestSnippet_ReturnsTrue() throws Exception

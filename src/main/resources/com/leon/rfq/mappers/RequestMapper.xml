@@ -9,18 +9,189 @@
 		<id 	property="identifier" column="identifier"/>
 		<result property="request" column="request"/>
 		<result property="status" typeHandler="org.apache.ibatis.type.EnumTypeHandler" column="status"/>
-		<result property="pickedUpBy" column="pickedUpBy"/>
 		<result property="clientId" column="clientId"/>
-		<result property="bookCode" column="bookCode"/>
-		<result property="tradeDate" column="tradeDate"/>
-		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
+		<result property="bookCode" column="bookCode"/>		
+		<result property="lotSize" column="lotSize"/>
+		<result property="isOTC" column="isOTC"/>
+		<result property="notionalMillions" column="notionalMillions"/>
+		<result property="notionalCurrency" column="notionalCurrency"/>
+		<result property="notionalFXRate" column="notionalFXRate"/>
+		<result property="contracts" column="contracts"/>
+		<result property="multiplier" column="multiplier"/>
+		<result property="quantity" column="quantity"/>
+		<result property="dayCountConvention" column="dayCountConvention"/>
+		<result property="premiumSettlementCurrency" column="premiumSettlementCurrency"/>
+		<result property="premiumSettlementDate" column="premiumSettlementDate"/>
+		<result property="premiumSettlementDaysOverride" column="premiumSettlementDaysOverride"/>
+		<result property="premiumSettlementFXRate" column="premiumSettlementFXRate"/>
+		<result property="salesCreditAmount" column="salesCreditAmount"/>
+		<result property="salesCreditPercentage" column="salesCreditPercentage"/>
+		<result property="salesCreditFXRate" column="salesCreditFXRate"/>
+		<result property="salesCreditCurrency" column="salesCreditCurrency"/>
+		<result property="salesComment" column="salesComment"/>
+		<result property="traderComment" column="traderComment"/>
+		<result property="clientComment" column="clientComment"/>
 		<result property="premiumAmount" column="premiumAmount"/>
+		<result property="premiumPercentage" column="premiumPercentage"/>
+		<result property="impliedVol" column="impliedVol"/>		
 		<result property="delta" column="delta"/>
 		<result property="gamma" column="gamma"/>
 		<result property="vega" column="vega"/>
 		<result property="theta" column="theta"/>
-		<result property="rho" column="rho"/>
+		<result property="rho" column="rho"/>		
+		<result property="deltaNotional" column="deltaNotional"/>
+		<result property="gammaNotional" column="gammaNotional"/>
+		<result property="vegaNotional" column="vegaNotional"/>
+		<result property="thetaNotional" column="thetaNotional"/>
+		<result property="rhoNotional" column="rhoNotional"/>
+		<result property="deltaShares" column="deltaShares"/>
+		<result property="gammaShares" column="gammaShares"/>
+		<result property="vegaShares" column="vegaShares"/>
+		<result property="thetaShares" column="thetaShares"/>
+		<result property="rhoShares" column="rhoShares"/>
+		<result property="totalPremium" column="totalPremium"/>
+		<result property="hedgePrice" column="hedgePrice"/>
+		<result property="hedgeType" typeHandler="org.apache.ibatis.type.EnumTypeHandler" column="hedgeType"/>
+		<result property="askFinalAmount" column="askFinalAmount"/>
+		<result property="askFinalPercentage" column="askFinalPercentage"/>
+		<result property="askImpliedVol" column="askImpliedVol"/>
+		<result property="askPremiumAmount" column="askPremiumAmount"/>
+		<result property="askPremiumPercentage" column="askPremiumPercentage"/>
+		<result property="bidFinalAmount" column="bidFinalAmount"/>
+		<result property="bidFinalPercentage" column="bidFinalPercentage"/>
+		<result property="bidImpliedVol" column="bidImpliedVol"/>
+		<result property="bidPremiumAmount" column="bidPremiumAmount"/>
+		<result property="bidPremiumPercentage" column="bidPremiumPercentage"/>
+		<result property="tradeDate" column="tradeDate"/>
+		<result property="expiryDate" column="expiryDate"/>
+		<result property="pickedUpBy" column="pickedUpBy"/>		
+		<result property="lastUpdatedBy" column="savedBy"/>
 	</resultMap>
+		
+ 	<insert id="insert" parameterType="RequestDetailImpl" useGeneratedKeys="true" keyProperty="identifier" >
+		INSERT INTO requestforquotemain 
+		(
+		request, 
+		status, 
+		clientId, 
+		bookCode,		
+    	lotSize, 
+    	isOTC,    	  
+    	notionalMillions, 
+    	notionalCurrency, 
+    	notionalFXRate, 
+    	contracts, 
+    	multiplier, 
+    	quantity,  
+    	dayCountConvention,
+    	premiumSettlementCurrency, 
+    	premiumSettlementDate, 
+    	premiumSettlementDaysOverride, 
+    	premiumSettlementFXRate, 
+    	salesCreditAmount, 
+    	salesCreditPercentage, 
+    	salesCreditFXRate, 
+    	salesCreditCurrency, 
+    	salesComment, 
+    	traderComment, 
+    	clientComment, 
+    	premiumAmount, 
+    	premiumPercentage, 
+    	impliedVol, 
+    	delta, 
+    	gamma, 
+    	vega, 
+    	theta, 
+    	rho, 
+	    deltaNotional, 
+	    gammaNotional, 
+	    vegaNotional, 
+	    thetaNotional, 
+	    rhoNotional, 
+	    deltaShares, 
+	    gammaShares, 
+	    vegaShares, 
+	    thetaShares, 
+	    rhoShares, 
+    	totalPremium, 
+    	hedgePrice, 
+    	hedgeType, 
+    	askFinalAmount, 
+    	askFinalPercentage, 
+    	askImpliedVol, 
+    	askPremiumAmount, 
+    	askPremiumPercentage, 
+	    bidFinalAmount, 
+	    bidFinalPercentage, 
+	    bidImpliedVol, 
+	    bidPremiumAmount, 
+	    bidPremiumPercentage,				
+		tradeDate,
+		expiryDate, 
+		pickedUpBy, 
+		savedBy)
+		
+		VALUES(
+		#{request}, 
+		#{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		#{clientId}, 
+		#{bookCode},		
+		#{lotSize},
+		#{isOTC},
+		#{notionalMillions},
+		#{notionalCurrency},
+		#{notionalFXRate},
+		#{contracts},
+		#{multiplier},
+		#{quantity},
+		#{dayCountConvention},
+		#{premiumSettlementCurrency},
+		#{premiumSettlementDate},
+		#{premiumSettlementDaysOverride},
+		#{premiumSettlementFXRate},
+		#{salesCreditAmount},
+		#{salesCreditPercentage},
+		#{salesCreditFXRate},
+		#{salesCreditCurrency},
+		#{salesComment},
+		#{traderComment},
+		#{clientComment},
+		#{premiumAmount},
+		#{premiumPercentage},
+		#{impliedVol},
+		#{delta},
+		#{gamma},
+		#{vega},
+		#{theta},
+		#{rho},
+		#{deltaNotional},
+		#{gammaNotional},
+		#{vegaNotional},
+		#{thetaNotional},
+		#{rhoNotional},
+		#{deltaShares},
+		#{gammaShares},
+		#{vegaShares},
+		#{thetaShares},
+		#{rhoShares},
+		#{totalPremium},
+		#{hedgePrice},
+		#{hedgeType, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		#{askFinalAmount},
+		#{askFinalPercentage},
+		#{askImpliedVol},
+		#{askPremiumAmount},
+		#{askPremiumPercentage},
+		#{bidFinalAmount},
+		#{bidFinalPercentage},
+		#{bidImpliedVol},
+		#{bidPremiumAmount},
+		#{bidPremiumPercentage},																		
+		#{tradeDate},
+		#{expiryDate},		 
+		#{pickedUpBy}, 
+		#{lastUpdatedBy})
+	</insert>
 	
 	<select id="get" parameterType="java.lang.Integer" resultType="RequestDetailImpl">
 		SELECT * FROM requestforquotemain WHERE identifier=#{identifier}
@@ -32,12 +203,7 @@
 	
 	<select id="getAll" resultMap="RequestResultSet">
 		SELECT * FROM requestforquotemain
-	</select>
-	
- 	<insert id="insert" parameterType="RequestDetailImpl">
-		INSERT INTO requestforquotemain (identifier, request, status, clientId, bookCode, tradeDate, pickedUpBy, lastUpdatedBy, lastUpdated)
-		VALUES(#{identifier}, #{request}, #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, #{lastName}, #{clientId}, #{bookCode}, #{tradeDate}, #{pickedUpBy}, #{lastUpdatedBy}, now() )
-	</insert>
+	</select>	
 	
 	<delete id="delete" parameterType="java.lang.Integer">
 		DELETE FROM requestforquotemain

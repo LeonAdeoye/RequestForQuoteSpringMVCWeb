@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.leon.rfq.domains.EnumTypes.HedgeTypeEnum;
 import com.leon.rfq.domains.EnumTypes.StatusEnum;
 
 @XmlRootElement(name="RequestDetailImpl", namespace = "com.leon.rfq.domains")
@@ -82,7 +83,7 @@ public final class RequestDetailImpl
 	private String clientComment;
 
 	private String pickedUpBy;
-	private String hedgeType;
+	private HedgeTypeEnum hedgeType;
 	private BigDecimal hedgePrice;
 	private BigDecimal totalPremium;
 
@@ -695,12 +696,12 @@ public final class RequestDetailImpl
 		this.pickedUpBy = pickedUpBy;
 	}
 
-	public String getHedgeType()
+	public HedgeTypeEnum getHedgeType()
 	{
 		return this.hedgeType;
 	}
 
-	public void setHedgeType(String hedgeType)
+	public void setHedgeType(HedgeTypeEnum hedgeType)
 	{
 		this.hedgeType = hedgeType;
 	}

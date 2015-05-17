@@ -18,6 +18,8 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.option.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDaoImpl;
 
 
@@ -26,6 +28,9 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired
 	private DataSourceTransactionManager transactionManager;
+	
+	@Autowired(required=true)
+	private OptionRequestFactory optionRequestFactory;
 	
 	private TransactionStatus status;
 	
@@ -78,6 +83,16 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		assertNull("get method should return null when a non-existant requestId is provided", this.requestDaoImpl.get(Integer.MAX_VALUE));
 	}
 	
+	@Test
+    public void insert_ValidParameters_InsertsRequestAndReturnsTrue()
+	{
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		
+		assertTrue("Should insert the request and return true", this.requestDaoImpl.insert(newRequest));
+		
+		assertNotNull("Inserted request should now exist and return non-null", this.requestDaoImpl.get(newRequest.getIdentifier()));
+	}
+	
 	/*@Test
     public void updateValidity_ValidRequestId_UpdatesValidityReturnsTrue()
 	{
@@ -91,13 +106,6 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
     public void updateValidity_NonExistantRequestId_ReturnsFalse()
 	{
 		assertFalse("updateValidity method should return false for a non-existant request", this.requestDaoImpl.updateValidity("nonExistantRequestId", false, "leon.adeoye"));
-	}
-	
-	@Test
-    public void insert_ValidParameters_SavedRequestAndReturnsTrue()
-	{
-		assertTrue("save method should save a valid request and returns true", this.requestDaoImpl.insert("testRequestId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
-		assertTrue("previously saved request should exist", this.requestDaoImpl.get("testRequestId").getRequestId().equals("testRequestId"));
 	}
 	
 	@Test
