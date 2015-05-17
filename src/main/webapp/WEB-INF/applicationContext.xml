@@ -101,6 +101,6 @@
 		<property name="basename" value="messages"/>
 	</bean>
 	
-	<mvc:resources mapping="/resources/**" location="/resources/" />	
+	<mvc:resources mapping="/resources/**" location="/resources/defaulttheme/" />	
 			
 </beans>							

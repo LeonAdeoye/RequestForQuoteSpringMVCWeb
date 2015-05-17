@@ -7,6 +7,11 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
 		<link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 		<title>Login</title>
+		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>		
+		<script type="text/javascript">
+			if (typeof jQuery == 'undefined')				 
+			    alert("WARNING: jQuery library is NOT loaded!");
+		</script>			
 	</head>
 	<body>
 		<section>
