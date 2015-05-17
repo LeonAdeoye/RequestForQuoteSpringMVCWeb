@@ -8,6 +8,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,7 @@ import com.leon.rfq.option.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
 @Component
+@Configurable
 public final class RequestServiceImpl implements RequestService, ApplicationEventPublisherAware
 {
 	private static Logger logger = LoggerFactory.getLogger(RequestServiceImpl.class);
@@ -34,6 +36,12 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 	public void setRequestDao(RequestDao requestDao)
 	{
 		this.requestDao = requestDao;
+	}
+	
+	@Override
+	public void setOptionRequestFactory(OptionRequestFactory factory)
+	{
+		this.optionRequestFactory = factory;
 	}
 	
 	public RequestServiceImpl()
@@ -148,7 +156,7 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 		{
 			RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
 			
-			if(this.requestDao.insert(newRequest))
+			if((newRequest != null) && this.requestDao.insert(newRequest))
 			{
 				this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest));
 				this.requests.put(newRequest.getIdentifier(), newRequest);

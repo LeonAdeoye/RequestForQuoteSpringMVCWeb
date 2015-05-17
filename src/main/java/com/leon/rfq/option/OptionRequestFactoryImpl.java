@@ -23,7 +23,7 @@ import com.leon.rfq.services.PriceService;
 import com.leon.rfq.services.VolatilityService;
 
 @Component
-public final class OptionRequestFactoryImpl implements OptionRequestFactory
+public class OptionRequestFactoryImpl implements OptionRequestFactory
 {
 	private static final Logger logger = LoggerFactory.getLogger(OptionRequestFactoryImpl.class);
 	

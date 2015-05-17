@@ -3,6 +3,7 @@ package com.leon.rfq.services;
 import java.util.List;
 
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.option.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
 public interface RequestService
@@ -21,5 +22,7 @@ public interface RequestService
 	
 	boolean requestExistsWithRequestId(int requestId);
 	
-	void setRequestDao(RequestDao requestDao);
+	void setRequestDao(RequestDao requestDao); // For unit test mocking
+	
+	void setOptionRequestFactory(OptionRequestFactory factory); // For unit test mocking
 }
