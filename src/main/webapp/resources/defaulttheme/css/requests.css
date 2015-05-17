@@ -1,6 +1,47 @@
-#requests_language_link
+#title 
 {
-	color: #151;
+	float:left;
+	width:350px;
+}
+
+#add_new 
+{
+	float:left;
+}
+
+#language_link 
+{
+	float: right;
+ 	width:150px;
 	font-weight: bold;
-	padding-right: 50px;
+	text-align: right 
+}
+
+#language_text
+{
+	color: #811;
+}
+
+#requestSnippet
+{
+	float: left;
+	width:350px;
+}
+
+#requestBookCode
+{
+	float: left;
+	width:250px;
+}
+
+#requestClient
+{
+	float: left;
+	width:250px;
+}
+
+#requestAddButton
+{
+	float: right;
+	width:250px;
 }
