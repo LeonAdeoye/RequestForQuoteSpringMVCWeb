@@ -67,7 +67,7 @@ public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTe
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
 		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "C 100 20Jan2015 0001.HK", newRequest );
-		assertEquals(newRequest.getLegs().size(), 1);
+		assertEquals("Number of legs for new request should be 1", newRequest.getLegs().size(), 1);
 	}
 	
 	@Test
@@ -81,8 +81,8 @@ public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTe
 	public void getNewInstance_InvalidRequestSnippet_ThrowsIllegalArgumentException()
 	{
 		catchException(this.optionRequestFactory).getNewInstance("invalidSnippet", 1, "AB01", "testuser");
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "requestSnippet argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
 	}
 }
 

@@ -144,23 +144,23 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
 		
-		boolean result = false;
 		try
 		{
 			RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
 			
-			result = this.requestDao.insert(newRequest);
-		
-			this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest)); //TODO request ID
-		
-			this.requests.put(newRequest.getIdentifier(), newRequest);
+			if(this.requestDao.insert(newRequest))
+			{
+				this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest));
+				this.requests.put(newRequest.getIdentifier(), newRequest);
+				return true;
+			}
 		}
 		catch(IllegalArgumentException iae)
 		{
 			throw iae;
 		}
 
-		return result;
+		return false;
 	}
 
 	/**

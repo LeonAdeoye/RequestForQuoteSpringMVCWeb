@@ -96,8 +96,86 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		// Act
 		catchException(this.requestService).insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "requestSnippet argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
+	}
+	
+	@Test
+    public void insert_EmptySnippet_ThrowsIllegalArgumentException()
+	{
+		// Arrange
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		this.requestService.setRequestDao(requestDaoMock);
+		// Act
+		catchException(this.requestService).insert("", Integer.MAX_VALUE, "testBook", "tester");
+		// Assert
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
+	}
+	
+	@Test
+    public void insert_NullSnippet_ThrowsIllegalArgumentException()
+	{
+		// Arrange
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		this.requestService.setRequestDao(requestDaoMock);
+		// Act
+		catchException(this.requestService).insert(null, Integer.MAX_VALUE, "testBook", "tester");
+		// Assert
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
+	}
+	
+	@Test
+    public void insert_EmptyBookCode_ThrowsIllegalArgumentException()
+	{
+		// Arrange
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		this.requestService.setRequestDao(requestDaoMock);
+		// Act
+		catchException(this.requestService).insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "", "tester");
+		// Assert
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "bookCode argument is invalid");
+	}
+	
+	@Test
+    public void insert_NullBookCode_ThrowsIllegalArgumentException()
+	{
+		// Arrange
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		this.requestService.setRequestDao(requestDaoMock);
+		// Act
+		catchException(this.requestService).insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, null, "tester");
+		// Assert
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "bookCode argument is invalid");
+	}
+	
+	@Test
+    public void insert_EmptySavedByUser_ThrowsIllegalArgumentException()
+	{
+		// Arrange
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		this.requestService.setRequestDao(requestDaoMock);
+		// Act
+		catchException(this.requestService).insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "");
+		// Assert
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "savedByUser argument is invalid");
+	}
+	
+	@Test
+    public void insert_NullSavedByUser_ThrowsIllegalArgumentException()
+	{
+		// Arrange
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		this.requestService.setRequestDao(requestDaoMock);
+		// Act
+		catchException(this.requestService).insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", null);
+		// Assert
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "savedByUser argument is invalid");
 	}
 		
 	@Test

@@ -44,8 +44,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).get(null);
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -53,8 +53,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).get("");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -151,8 +151,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert(null, "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -160,8 +160,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -169,8 +169,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", null, "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "firstName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "firstName argument is invalid");
 	}
 	
 	@Test
@@ -178,8 +178,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "", "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "firstName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "firstName argument is invalid");
 	}
 	
 	@Test
@@ -187,8 +187,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "firstName", null, "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "lastName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "lastName argument is invalid");
 	}
 	
 	@Test
@@ -196,8 +196,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "firstName", "", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "lastName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "lastName argument is invalid");
 	}
 	
 	@Test
@@ -205,8 +205,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", null, "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -214,8 +214,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", "", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -223,8 +223,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", null, "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "locationName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "locationName argument is invalid");
 	}
 	
 	@Test
@@ -232,8 +232,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "locationName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "locationName argument is invalid");
 	}
 	
 	@Test
@@ -241,8 +241,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "location", "group", true, null);
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "savedByUser argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "savedByUser argument is invalid");
 	}
 	
 	@Test
@@ -250,8 +250,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).insert("userId", "firstName", "lastName", "emailAddress", "location", "group", true, "");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "savedByUser argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "savedByUser argument is invalid");
 	}
 	
 	@Test
@@ -259,8 +259,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).delete(null);
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -268,8 +268,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).delete("");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -277,8 +277,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).updateValidity(null, true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -286,8 +286,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).updateValidity("", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -295,8 +295,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).updateValidity("userId", true, null);
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "updatedByUser argument is invalid");
 	}
 	
 	@Test
@@ -304,8 +304,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).updateValidity("userId", true, "");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "updatedByUser argument is invalid");
 	}
 	
 	@Test
@@ -313,8 +313,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).userExistsWithUserId("");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -322,8 +322,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).userExistsWithUserId(null);
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -331,8 +331,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).userExistsWithEmailAddress("");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -340,8 +340,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).userExistsWithEmailAddress(null);
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -375,8 +375,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update(null, "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -384,8 +384,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "userId argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "userId argument is invalid");
 	}
 	
 	@Test
@@ -393,8 +393,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", null, "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "firstName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "firstName argument is invalid");
 	}
 	
 	@Test
@@ -402,8 +402,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "", "lastName", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "firstName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "firstName argument is invalid");
 	}
 	
 	@Test
@@ -411,8 +411,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "firstName", null, "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "lastName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "lastName argument is invalid");
 	}
 	
 	@Test
@@ -420,8 +420,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "firstName", "", "emailAddress", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "lastName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "lastName argument is invalid");
 	}
 	
 	@Test
@@ -429,8 +429,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", null, "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -438,8 +438,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", "", "location", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "emailAddress argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "emailAddress argument is invalid");
 	}
 	
 	@Test
@@ -447,8 +447,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", null, "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "locationName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "locationName argument is invalid");
 	}
 	
 	@Test
@@ -456,8 +456,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "", "group", true, "tester");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "locationName argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "locationName argument is invalid");
 	}
 	
 	@Test
@@ -465,8 +465,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "location", "group", true, null);
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "updatedByUser argument is invalid");
 	}
 	
 	@Test
@@ -474,8 +474,8 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		catchException(this.userService).update("userId", "firstName", "lastName", "emailAddress", "location", "group", true, "");
 		
-		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals(caughtException().getMessage(), "updatedByUser argument is invalid");
+		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "updatedByUser argument is invalid");
 	}
 	
 }
