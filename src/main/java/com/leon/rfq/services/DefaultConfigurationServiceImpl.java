@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 import org.springframework.stereotype.Service;
 
-import com.leon.rfq.domains.EnumTypes.LocationEnum;
+import com.leon.rfq.common.EnumTypes.LocationEnum;
 
 @Service
 public final class DefaultConfigurationServiceImpl implements DefaultConfigurationService

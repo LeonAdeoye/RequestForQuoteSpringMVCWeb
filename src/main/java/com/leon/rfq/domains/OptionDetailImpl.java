@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.leon.rfq.domains.EnumTypes.SideEnum;
+import com.leon.rfq.common.EnumTypes.SideEnum;
 
 public class OptionDetailImpl
 {

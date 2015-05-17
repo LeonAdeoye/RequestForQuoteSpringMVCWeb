@@ -3,7 +3,7 @@ package com.leon.rfq.services;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.leon.rfq.domains.EnumTypes.LocationEnum;
+import com.leon.rfq.common.EnumTypes.LocationEnum;
 import com.leon.rfq.domains.HolidayDetailImpl;
 
 public interface BankHolidayMaintenanceService

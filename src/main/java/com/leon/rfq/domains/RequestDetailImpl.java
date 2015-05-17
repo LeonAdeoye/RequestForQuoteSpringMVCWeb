@@ -5,15 +5,22 @@ import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.leon.rfq.domains.EnumTypes.HedgeTypeEnum;
-import com.leon.rfq.domains.EnumTypes.StatusEnum;
+import com.leon.rfq.common.Constants;
+import com.leon.rfq.common.EnumTypes.HedgeTypeEnum;
+import com.leon.rfq.common.EnumTypes.StatusEnum;
 
 @XmlRootElement(name="RequestDetailImpl", namespace = "com.leon.rfq.domains")
 public final class RequestDetailImpl
 {
+	@Pattern(regexp=Constants.REQUEST_PATTERN, message="{request.validation.snippet.pattern}")
+	@Size(min=1, max=100, message="{request.validation.snippet.size}")
 	private String request;
+	
+	@Size(min=1, max=20, message="{request.validation.bookCode.size}")
 	private String bookCode;
 	private int identifier;
 	private int clientId;
@@ -78,10 +85,14 @@ public final class RequestDetailImpl
 	private BigDecimal askFinalAmount;
 	private BigDecimal askFinalPercentage;
 
+	@Size(min=1, max=300, message="{request.validation.salesComment.size}")
 	private String salesComment;
+	@Size(min=1, max=300, message="{request.validation.traderComment.size}")
 	private String traderComment;
+	@Size(min=1, max=300, message="{request.validation.clientComment.size}")
 	private String clientComment;
 
+	@Size(min=1, max=20, message="{request.validation.pickedUpBy.size}")
 	private String pickedUpBy;
 	private HedgeTypeEnum hedgeType;
 	private BigDecimal hedgePrice;

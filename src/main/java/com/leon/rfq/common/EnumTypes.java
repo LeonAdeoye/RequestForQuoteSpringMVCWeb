@@ -1,4 +1,4 @@
-package com.leon.rfq.domains;
+package com.leon.rfq.common;
 
 public final class EnumTypes
 {

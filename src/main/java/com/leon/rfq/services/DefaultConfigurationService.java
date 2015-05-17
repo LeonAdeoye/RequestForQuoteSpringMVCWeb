@@ -2,7 +2,7 @@ package com.leon.rfq.services;
 
 import java.math.BigDecimal;
 
-import com.leon.rfq.domains.EnumTypes.LocationEnum;
+import com.leon.rfq.common.EnumTypes.LocationEnum;
 
 public interface DefaultConfigurationService
 {

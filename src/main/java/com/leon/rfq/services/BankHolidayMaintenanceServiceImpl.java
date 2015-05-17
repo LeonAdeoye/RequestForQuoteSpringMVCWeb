@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.leon.rfq.domains.EnumTypes.LocationEnum;
+import com.leon.rfq.common.EnumTypes.LocationEnum;
 import com.leon.rfq.domains.HolidayDetailImpl;
 
 @Service

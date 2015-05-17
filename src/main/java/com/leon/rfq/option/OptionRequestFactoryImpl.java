@@ -12,8 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.leon.rfq.domains.EnumTypes.SideEnum;
-import com.leon.rfq.domains.EnumTypes.StatusEnum;
+import com.leon.rfq.common.Constants;
+import com.leon.rfq.common.EnumTypes.SideEnum;
+import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BankHolidayMaintenanceService;
@@ -41,18 +42,6 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	
 	@Autowired(required=true)
 	InterestRateService interestRateService;
-	
-/*	private static final String REQUEST_PATTERN = "^([+-]?[1-9]*[CP]{1}){1}([-+]{1}[1-9]*[CP]{1})* ([\\d]+){1}(,{1}[\\d]+)* "
-    		+ "[\\d]{1,2}(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[\\d]{2}(,{1}[\\d]{1,2}(JAN|FEB|MAR"
-    		+ "|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)20[\\d]{2})* (\\w){4,7}\\.[A-Z]{1,2}(,{1}(\\w){4,7}\\.[A-Z]{1,2})*$";
-*/
-	private static final String REQUEST_PATTERN = "^([+-]?[1-9]*[CP]{1}){1}([-+]{1}[1-9]*[CP]{1})* ([\\d]+){1}(,{1}[\\d]+)* "
-    		+ "[\\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\\d]{2}(,{1}[\\d]{1,2}(Jan|Feb|Mar"
-    		+ "|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\\d]{2})* (\\w){4,7}\\.[A-Z]{1,2}(,{1}(\\w){4,7}\\.[A-Z]{1,2})*$";
-	
-	private static final String DETAIL_PATTERN = "^(?<side>[+-])?(?<quantity>[1-9])?(?<type>[CP]{1})+";
-	
-	private static final String LEG_PATTERN = "^(?<leg>[+-]?[1-9]?[CP]{1})+";
 	
 	/**
 	 * Creates an instance of RequestDetailImpl using the parameters passed.
@@ -124,7 +113,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     	if(logger.isDebugEnabled())
     		logger.debug("Validating option request snippet: " + snippet);
     	
-        Pattern regexp = Pattern.compile(REQUEST_PATTERN, Pattern.CASE_INSENSITIVE);
+        Pattern regexp = Pattern.compile(Constants.REQUEST_PATTERN, Pattern.CASE_INSENSITIVE);
         
         Matcher matcher = regexp.matcher(snippet);
        
@@ -139,7 +128,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 */
     private boolean isEuropeanOption(String snippet)
     {
-        Pattern euRegex = Pattern.compile(REQUEST_PATTERN);
+        Pattern euRegex = Pattern.compile(Constants.REQUEST_PATTERN);
         Matcher euMatcher = euRegex.matcher(snippet);
        
         return euMatcher.matches();
@@ -278,10 +267,10 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     	
     	boolean isEuropean = isEuropeanOption(snippet);
     	
-        Pattern optionDetailRegex = Pattern.compile(DETAIL_PATTERN);
+        Pattern optionDetailRegex = Pattern.compile(Constants.DETAIL_PATTERN);
         Matcher detailMatcher = optionDetailRegex.matcher(snippet);
         
-        Pattern optionLegRegex = Pattern.compile(LEG_PATTERN);
+        Pattern optionLegRegex = Pattern.compile(Constants.LEG_PATTERN);
         Matcher matcher = optionLegRegex.matcher(snippet);
         int legCount = 0;
 
