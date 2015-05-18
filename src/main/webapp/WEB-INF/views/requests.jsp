@@ -14,49 +14,37 @@
 		<title><spring:message code="requests.title.label"/></title>
 	</head>
 	<body>
-		<section>
-			<div class="jumbotron">
-				<div class="container">
-					<div id="title">
-						<h1><spring:message code="requests.requests.label"/></h1>
+				<div id="requests_bar">
+					<div id="requests_title">
+						<p id="new_requests"><spring:message code="request.addNewRequest.label"/></p>
 					</div>
-					<div class="pull-right" id="language_link">
-						<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
-					</div>
-					<div class="addNew" id="add_new">
+					<div class="addNew" id="requests_add_new">
 						<form:form modelAttribute="newRequest" class="form-horizontal">
 							<form:errors path="*" cssClass="alert alert-danger" element="div"/>			
 							<fieldSet>
-								<legend><spring:message code="request.addNewRequest.label"/></legend>
-								<div class="form-group" id="requestSnippet">
-									<label class="control-label col-lg-2 col-lg-2" for="request"><spring:message code="request.snippet.label"/></label>
-									<div class="col-lg-10">
-										<form:input id="request" path="request" type="text" class="form:input-large"/>
-									</div>
+								<div class="form-group" id="requests_snippet">
+									<form:input id="request" path="request" value="Enter request snippet..." type="text" class="form:input-large"/>
 								</div>
-								<div class="form-group" id="requestClient">
-									<label class="control-label col-lg-2 col-lg-2" for="clientId"><spring:message code="request.client.label"/></label>
-									<div class="col-lg-10">
-										<form:input id="clientId" path="clientId" type="text" class="form:input-large"/>
-									</div>
+								<div class="form-group" id="requests_client">
+									<form:input id="clientId" path="clientId" value="Select client..." type="text" class="form:input-large"/>
 								</div>
-								<div class="form-group" id="requestBookCode">
-									<label class="control-label col-lg-2 col-lg-2" for="bookCode"><spring:message code="request.bookCode.label"/></label>
-									<div class="col-lg-10">
-										<form:input id="bookCode" path="bookCode" type="text" class="form:input-large"/>
-									</div>
+								<div class="form-group" id="requests_bookCode">
+									<form:input id="bookCode" path="bookCode" value="select book code..."type="text" class="form:input-large"/>
 								</div>
-								<div class="form-group" id="requestAddButton">
-									<div class="col-lg-offset-2 col-lg-10">
-										<input type="submit" id="buttonAdd" class="btn btn-primary" value="Add"/>
-									</div>
-								</div>															
+								<div class="form-group" id="requests_add_button">
+									<input type="submit" id="buttonAdd" class="btn btn-primary" value="Add"/>
+								</div>
+								<div class="form-group" id="requests_clear_button">
+									<button>Clear</button>									
+								</div>																							
 							</fieldSet>
 						</form:form>
-					</div>			
+					</div>
+					<div class="pull-right" id="requests_language_link">
+						<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
+					</div>								
 				</div>
-			</div>
-		</section>
+
 		<section>
 			<table style="width:100%" border="1">
 				<tr>

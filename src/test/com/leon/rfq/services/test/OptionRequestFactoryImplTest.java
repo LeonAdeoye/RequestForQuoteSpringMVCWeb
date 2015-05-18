@@ -16,16 +16,11 @@ import com.leon.rfq.products.OptionRequestFactory;
 
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
-//@RunWith(JUnitParamsRunner.class)
-//@RunWith(PowerMockRunner.class)
-//@PowerMockRunnerDelegate(JUnitParamsRunner.class)
-//@PrepareForTest(OptionRequestFactoryImpl.class)
-
+/*@RunWith(PowerMockRunner.class)
+@PowerMockRunnerDelegate(JUnitParamsRunner.class)
+@PrepareForTest(OptionRequestFactoryImpl.class)*/
 public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTests
 {
-	//@Rule
-    //public PowerMockRule rule = new PowerMockRule();
-	
 	@SuppressWarnings("unused")
 	private static final Object[] getRequestSnippet()
 	{
@@ -49,18 +44,20 @@ public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTe
 	private OptionRequestFactory optionRequestFactory;
 	
 	@Test
-	public void isEuropeanOption_validEuropeanSnippet_ReturnsTrue() throws Exception
+	public void testisEuropeanOption_validEuropeanSnippet_ReturnsTrue() throws Exception
 	{
 		assertTrue("valid European option should return true", Whitebox.invokeMethod(this.optionRequestFactory, "isEuropeanOption", "C 100 20Jan2015 0001.HK"));
 	}
 	
-	/*@Test
+	/*
+	@Test
 	@Ignore
 	@Parameters(method="getRequestSnippet")
-	public void isValidOptionRequestSnippet_validRequestSnippet_ReturnsTrue(String requestSnippet) throws Exception
+	public void testisValidOptionRequestSnippet_validRequestSnippet_ReturnsTrue(String requestSnippet) throws Exception
 	{
 		assertTrue("should return true if the snippet is valid", this.optionRequestFactory.isValidOptionRequestSnippet(requestSnippet));
-	}*/
+	}
+	*/
 	
 	@Test
 	public void parseRequest_validRequestSnippet_ReturnsTrue() throws Exception

@@ -1,47 +1,47 @@
-#title 
+#requests_title 
 {
 	float:left;
-	width:350px;
+	height:35px;
 }
 
-#add_new 
+#requests_add_new 
 {
 	float:left;
+	width:660px
 }
 
-#language_link 
+.form_group
 {
-	float: right;
- 	width:150px;
-	font-weight: bold;
-	text-align: right 
+	float:left;
+	padding:2px;
 }
 
-#language_text
+#requests_language_link 
 {
-	color: #811;
+	float:right;
+	color:#FFFFFF 
 }
 
-#requestSnippet
+#requests_snippet
 {
-	float: left;
-	width:350px;
+	float:left;
+	width:300px;
+	height:20px
 }
 
-#requestBookCode
+#requests_bar
 {
-	float: left;
-	width:250px;
+	background-color:#4D7A97;
+	color:#FFFFFF;
+	width:100%;
+	clear:right;
+	overflow:hidden;
+	font-size:14px;
+	height:55px;
+	
 }
 
-#requestClient
+fieldset
 {
-	float: left;
-	width:250px;
-}
-
-#requestAddButton
-{
-	float: right;
-	width:250px;
+	border:0;
 }
