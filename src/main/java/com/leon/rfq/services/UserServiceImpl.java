@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.leon.rfq.controllers.UserControllerImpl;
 import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.repositories.UserDao;
 
 @Service
 public final class UserServiceImpl implements UserService
 {
-	private static final Logger logger = LoggerFactory.getLogger(UserControllerImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
 	private final Map<String, UserDetailImpl> users = new HashMap<>();
 	
