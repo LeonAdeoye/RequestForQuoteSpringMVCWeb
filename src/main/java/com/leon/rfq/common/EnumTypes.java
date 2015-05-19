@@ -21,4 +21,14 @@ public final class EnumTypes
 	{
 		SHARES, FUTURES
 	}
+	
+	public static enum PriceSimulatorRequestEnum
+	{
+		ADD_UNDERLYING,
+		REMOVE_UNDERLYING,
+		SUSPEND_UNDERLYING,
+		AWAKEN_UNDERLYING,
+		SUSPEND_ALL,
+		AWAKEN_ALL
+	}
 }

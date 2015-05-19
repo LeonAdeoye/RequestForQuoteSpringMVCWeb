@@ -6,15 +6,14 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 
-import com.leon.rfq.domains.OptionDetailImpl;
+import com.leon.rfq.events.PriceSimulatorRequestEvent;
 
 public final class PriceSimulatorImpl extends Thread implements PriceSimulator,
-ApplicationListener, ApplicationEventPublisherAware
+ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceSimulatorImpl.class);
 	private final Map<String, PriceGenerator> priceMap  = new HashMap<>();
@@ -43,10 +42,20 @@ ApplicationListener, ApplicationEventPublisherAware
 		private PriceGenerator(double priceMean, double priceVariance)
 		{
 			if(priceMean <= 0.0)
-				throw new IllegalArgumentException("priceMean");
+			{
+				if(logger.isErrorEnabled())
+					logger.error("priceMean argument is invalid");
+				
+				throw new IllegalArgumentException("priceMean argument is invalid");
+			}
 
 			if(priceVariance <= 0.0)
-				throw new IllegalArgumentException("priceVariance");
+			{
+				if(logger.isErrorEnabled())
+					logger.error("priceVariance argument is invalid");
+				
+				throw new IllegalArgumentException("priceVariance argument is invalid");
+			}
 
 			this.priceMean = priceMean;
 			this.priceVariance = priceVariance;
@@ -114,44 +123,28 @@ ApplicationListener, ApplicationEventPublisherAware
 	}
 
 	@Override
-	public void onApplicationEvent(ApplicationEvent event)
+	public void onApplicationEvent(PriceSimulatorRequestEvent requestEvent)
 	{
-		if((event instanceof PriceSimulatorRequestEvent))
+		switch(requestEvent.getRequestType())
 		{
-			PriceSimulatorRequestEvent requestEvent = (PriceSimulatorRequestEvent) event;
-
-			switch(requestEvent.getRequestType())
-			{
-			case ADD_UNDERLYING:
-				add(requestEvent.getUnderlyingRIC(), requestEvent.getPriceMean(), requestEvent.getPriceVariance());
-				break;
-			case REMOVE_UNDERLYING:
-				remove(requestEvent.getUnderlyingRIC());
-				break;
-			case SUSPEND_UNDERLYING:
-				suspend(requestEvent.getUnderlyingRIC());
-				break;
-			case AWAKEN_UNDERLYING:
-				awaken(requestEvent.getUnderlyingRIC());
-				break;
-			case SUSPEND_ALL:
-				suspendAll();
-				break;
-			case AWAKEN_ALL:
-				awakenAll();
-				break;
-			}
-		}
-		else if(event instanceof TaggedRequestEvent)
-		{
-			TaggedRequestEvent taggedRequestEvent = (TaggedRequestEvent) event;
-
-			if(logger.isDebugEnabled())
-				logger.debug("Tagged request event received for request: " + taggedRequestEvent.getRequest());
-
-			// TODO fix exception thrown here
-			for(OptionDetailImpl optionLeg : taggedRequestEvent.getRequest().getLegs().getOptionDetailList())
-				add(optionLeg.getUnderlyingRIC(), optionLeg.getUnderlyingPrice(), 0.5);
+		case ADD_UNDERLYING:
+			add(requestEvent.getUnderlyingRIC(), requestEvent.getPriceMean(), requestEvent.getPriceVariance());
+			break;
+		case REMOVE_UNDERLYING:
+			remove(requestEvent.getUnderlyingRIC());
+			break;
+		case SUSPEND_UNDERLYING:
+			suspend(requestEvent.getUnderlyingRIC());
+			break;
+		case AWAKEN_UNDERLYING:
+			awaken(requestEvent.getUnderlyingRIC());
+			break;
+		case SUSPEND_ALL:
+			suspendAll();
+			break;
+		case AWAKEN_ALL:
+			awakenAll();
+			break;
 		}
 	}
 
