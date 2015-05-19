@@ -12,14 +12,16 @@ public final class BookDetailImpl
 	private String bookCode;
 	private boolean isValid;
 	private String entity;
+	private String lastUpdatedByUser;
 
 	public BookDetailImpl() {}
 
-	public BookDetailImpl(String bookCode, String entity, boolean isValid)
+	public BookDetailImpl(String bookCode, String entity, boolean isValid, String lastUpdatedByUser)
 	{
 		this.bookCode = bookCode;
 		this.entity = entity;
 		this.isValid = isValid;
+		this.lastUpdatedByUser = lastUpdatedByUser;
 
 		logger.debug("BookDetailImpl object instantiated => " +  this);
 	}
@@ -32,6 +34,16 @@ public final class BookDetailImpl
 	public void setBookCode(String bookCode)
 	{
 		this.bookCode = bookCode;
+	}
+	
+	public String getLastUpdatedByUser()
+	{
+		return this.lastUpdatedByUser;
+	}
+
+	public void setLastUpdatedByUser(String lastUpdatedByUser)
+	{
+		this.lastUpdatedByUser = lastUpdatedByUser;
 	}
 
 	public String getEntity()
@@ -61,11 +73,13 @@ public final class BookDetailImpl
 		buf.append(this.bookCode);
 		buf.append(", Entity: ");
 		buf.append(this.entity);
+		buf.append(", LastUpdatedByUser: ");
+		buf.append(this.lastUpdatedByUser);
 		buf.append(", Is Valid: ");
 		buf.append(this.isValid ? "TRUE" : "FALSE");
 		return buf.toString();
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -75,6 +89,7 @@ public final class BookDetailImpl
 				+ ((this.bookCode == null) ? 0 : this.bookCode.hashCode());
 		result = (prime * result) + ((this.entity == null) ? 0 : this.entity.hashCode());
 		result = (prime * result) + (this.isValid ? 1231 : 1237);
+		result = (prime * result)	+ ((this.lastUpdatedByUser == null) ? 0 : this.lastUpdatedByUser.hashCode());
 		return result;
 	}
 
@@ -118,7 +133,17 @@ public final class BookDetailImpl
 		{
 			return false;
 		}
+		if (this.lastUpdatedByUser == null)
+		{
+			if (other.lastUpdatedByUser != null)
+			{
+				return false;
+			}
+		} else if (!this.lastUpdatedByUser.equals(other.lastUpdatedByUser))
+		{
+			return false;
+		}
 		return true;
 	}
-	
+		
 }

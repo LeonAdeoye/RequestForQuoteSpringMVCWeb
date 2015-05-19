@@ -4,8 +4,13 @@ import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import junitparams.JUnitParamsRunner;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.PowerMockRunnerDelegate;
 import org.powermock.reflect.Whitebox;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -13,12 +18,13 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.products.OptionRequestFactory;
+import com.leon.rfq.products.OptionRequestFactoryImpl;
 
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
-/*@RunWith(PowerMockRunner.class)
+@RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(JUnitParamsRunner.class)
-@PrepareForTest(OptionRequestFactoryImpl.class)*/
+@PrepareForTest(OptionRequestFactoryImpl.class)
 public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTests
 {
 	@SuppressWarnings("unused")
@@ -49,15 +55,12 @@ public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTe
 		assertTrue("valid European option should return true", Whitebox.invokeMethod(this.optionRequestFactory, "isEuropeanOption", "C 100 20Jan2015 0001.HK"));
 	}
 	
-	/*
-	@Test
-	@Ignore
+/*	@Test
 	@Parameters(method="getRequestSnippet")
-	public void testisValidOptionRequestSnippet_validRequestSnippet_ReturnsTrue(String requestSnippet) throws Exception
+	public void isValidOptionRequestSnippet_validRequestSnippet_ReturnsTrue(String requestSnippet) throws Exception
 	{
 		assertTrue("should return true if the snippet is valid", this.optionRequestFactory.isValidOptionRequestSnippet(requestSnippet));
-	}
-	*/
+	}*/
 	
 	@Test
 	public void parseRequest_validRequestSnippet_ReturnsTrue() throws Exception
