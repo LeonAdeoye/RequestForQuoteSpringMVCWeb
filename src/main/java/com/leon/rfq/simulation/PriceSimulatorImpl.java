@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
+import com.leon.rfq.events.PriceUpdateEvent;
 
 public final class PriceSimulatorImpl extends Thread implements PriceSimulator,
 ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware

@@ -4,7 +4,8 @@ public final class EnumTypes
 {
 	public static enum LocationEnum
 	{
-	    HONG_KONG, LONDON, SYDNEY, TOKYO, PARIS, FRANKFURT, NEW_YORK
+	    HONG_KONG, LONDON, SYDNEY, TOKYO,
+	    PARIS, FRANKFURT, NEW_YORK
 	}
 	
 	public static enum SideEnum
@@ -14,7 +15,8 @@ public final class EnumTypes
 	
 	public static enum StatusEnum
 	{
-		PENDING, TRADEDAWAY, PICKEDUP, FILLED, INVALID
+		PENDING, TRADEDAWAY, PICKEDUP,
+		FILLED, INVALID
 	}
 	
 	public static enum HedgeTypeEnum
@@ -24,11 +26,8 @@ public final class EnumTypes
 	
 	public static enum PriceSimulatorRequestEnum
 	{
-		ADD_UNDERLYING,
-		REMOVE_UNDERLYING,
-		SUSPEND_UNDERLYING,
-		AWAKEN_UNDERLYING,
-		SUSPEND_ALL,
-		AWAKEN_ALL
+		ADD_UNDERLYING,	REMOVE_UNDERLYING,
+		SUSPEND_UNDERLYING,	AWAKEN_UNDERLYING,
+		SUSPEND_ALL, AWAKEN_ALL
 	}
 }
