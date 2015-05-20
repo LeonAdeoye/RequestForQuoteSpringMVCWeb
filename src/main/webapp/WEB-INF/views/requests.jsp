@@ -1,10 +1,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">		
-		<link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+		<!-- <link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"> -->
 		<link href="<c:url value="/resources/css/requests.css" />" rel="stylesheet" type="test/css">
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>		
 		<script type="text/javascript">
@@ -16,26 +17,26 @@
 	<body>
 				<div id="requests_bar">
 					<div id="requests_title">
-						<p id="new_requests"><spring:message code="request.addNewRequest.label"/></p>
+						<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
 					</div>
 					<div class="addNew" id="requests_add_new">
 						<form:form modelAttribute="newRequest" class="form-horizontal">
 							<form:errors path="*" cssClass="alert alert-danger" element="div"/>			
 							<fieldSet>
-								<div class="form-group" id="requests_snippet">
-									<form:input id="request" path="request" value="Enter request snippet..." type="text" class="form:input-large"/>
+								<div class="form-group">
+									<form:input id="requests_snippet" path="request" value="Enter request snippet..." type="text"/>
 								</div>
-								<div class="form-group" id="requests_client">
-									<form:input id="clientId" path="clientId" value="Select client..." type="text" class="form:input-large"/>
+								<div class="form-group">
+									<form:input id="requests_client" path="clientId" value="Select client name..." type="text"/>
 								</div>
-								<div class="form-group" id="requests_bookCode">
-									<form:input id="bookCode" path="bookCode" value="select book code..."type="text" class="form:input-large"/>
+								<div class="form-group">
+									<form:input id="requests_bookCode" path="bookCode" value="select book code..." type="text"/>
 								</div>
-								<div class="form-group" id="requests_add_button">
-									<input type="submit" id="buttonAdd" class="btn btn-primary" value="Add"/>
+								<div class="form-group">
+									<input type="submit" id="requests_add_button" class="btn" value="<spring:message code="requests.addRequest.button.label"/>"/>
 								</div>
-								<div class="form-group" id="requests_clear_button">
-									<button>Clear</button>									
+								<div class="form-group">
+									<button id="requests_clear_button" value="Clear" class="btn"><spring:message code="requests.clearRequest.button.label"/></button>									
 								</div>																							
 							</fieldSet>
 						</form:form>

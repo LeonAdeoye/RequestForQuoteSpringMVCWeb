@@ -7,13 +7,7 @@
 #requests_add_new 
 {
 	float:left;
-	width:660px
-}
-
-.form_group
-{
-	float:left;
-	padding:2px;
+	width:960px
 }
 
 #requests_language_link 
@@ -26,19 +20,56 @@
 {
 	float:left;
 	width:300px;
-	height:20px
+	height:20px;
+	padding:2px;
+	border:1px;
+	margin:3px;	
+}
+
+#requests_client
+{
+	float:left;
+	width:200px;
+	height:20px;
+	padding:2px;
+	border:1px;
+	margin:3px;
+}
+
+#requests_bookCode
+{
+	float:left;
+	width:200px;
+	height:20px;
+	padding:2px;
+	border:1px;
+	margin:3px;
+}
+
+#requests_add_button
+{
+	float:left;
+	height:22px;
+	padding:2px;
+	margin:2px;
+}
+
+#requests_clear_button
+{
+	float:left;
+	height:22px;
+	padding:2px;
+	margin:2px;
 }
 
 #requests_bar
 {
-	background-color:#4D7A97;
-	color:#FFFFFF;
 	width:100%;
 	clear:right;
 	overflow:hidden;
 	font-size:14px;
-	height:55px;
-	
+	background-color:#4D7A97;
+	height:35px;
 }
 
 fieldset

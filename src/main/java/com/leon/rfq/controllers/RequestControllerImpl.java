@@ -22,7 +22,6 @@ import com.leon.rfq.services.RequestService;
 import com.leon.rfq.validators.RequestValidator;
 
 @Controller
-@RequestMapping("/requests")
 public class RequestControllerImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(RequestControllerImpl.class);
@@ -36,34 +35,54 @@ public class RequestControllerImpl
 	@InitBinder
 	public void initialiseBinder(WebDataBinder binder)
 	{
-		binder.setAllowedFields("requestSnippet", "bookName", "clientId");
+		binder.setAllowedFields("request", "bookCode", "clientId", "language");
 		binder.setValidator(this.requestValidator);
 	}
 		
-	@RequestMapping()
+	@RequestMapping(value = "/requests", method = RequestMethod.GET)
 	public String getAll(Model model)
 	{
 		model.addAttribute("requests", this.requestService.getAll());
+		model.addAttribute("newRequest", new RequestDetailImpl());
+		
 		return "requests";
 	}
 	
-	@RequestMapping("/request")
+	@RequestMapping(value = "/requests", method = RequestMethod.POST)
+	public String getAll(@ModelAttribute("newRequest") @Valid RequestDetailImpl newRequest,
+			BindingResult result, HttpServletRequest request)
+	{
+		String[] suppressedFields = result.getSuppressedFields();
+		if(suppressedFields.length > 0)
+		{
+			throw new RuntimeException("Attempting to bind disallowed fields: " +
+					StringUtils.arrayToCommaDelimitedString(suppressedFields));
+		}
+		
+		if(result.hasErrors())
+			return "requests";
+		
+		this.requestService.insert(newRequest.getRequest(), newRequest.getClientId(), newRequest.getBookCode(),  "ladeoye"); //TODO
+		
+		return "redirect:/requests";
+	}
+	
+	@RequestMapping("/requests/request")
 	public String get(@RequestParam int requestId, Model model)
 	{
 		model.addAttribute("request", this.requestService.get(requestId));
 		return "request";
 	}
 
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	@RequestMapping(value = "/requests/add", method = RequestMethod.GET)
 	public String getNewUserForm(Model model)
 	{
-		RequestDetailImpl request = new RequestDetailImpl();
-		model.addAttribute("newRequest", request);
+		model.addAttribute("newRequest", new RequestDetailImpl());
 		
 		return "addRequest";
 	}
 	
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	@RequestMapping(value = "/requests/add", method = RequestMethod.POST)
 	public String processNewRequestForm(@ModelAttribute("newRequest") @Valid RequestDetailImpl newRequest,
 			BindingResult result, HttpServletRequest request)
 	{
@@ -82,7 +101,7 @@ public class RequestControllerImpl
 		return "redirect:/requests";
 	}
 	
-	@RequestMapping("/delete")
+	@RequestMapping("/requests/delete")
 	public String delete(@RequestParam int requestId, Model model)
 	{
 		if(!this.requestService.delete(requestId))
