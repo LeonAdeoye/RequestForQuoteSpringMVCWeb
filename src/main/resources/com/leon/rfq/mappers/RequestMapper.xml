@@ -203,6 +203,7 @@
 	
 	<select id="getAll" resultMap="RequestResultSet">
 		SELECT * FROM requestforquotemain
+		ORDER BY identifier DESC
 	</select>	
 	
 	<delete id="delete" parameterType="java.lang.Integer">

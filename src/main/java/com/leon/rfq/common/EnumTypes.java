@@ -30,4 +30,9 @@ public final class EnumTypes
 		SUSPEND_UNDERLYING,	AWAKEN_UNDERLYING,
 		SUSPEND_ALL, AWAKEN_ALL
 	}
+	
+	public static enum ClientTier
+	{
+		TOP, MIDDLE, BOTTOM
+	}
 }

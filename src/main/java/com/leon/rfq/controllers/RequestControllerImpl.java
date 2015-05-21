@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.services.BookService;
+import com.leon.rfq.services.ClientService;
 import com.leon.rfq.services.RequestService;
 import com.leon.rfq.validators.RequestValidator;
 
@@ -28,6 +30,12 @@ public class RequestControllerImpl
 	
 	@Autowired
 	RequestService requestService;
+	
+	@Autowired
+	BookService bookService;
+	
+	@Autowired
+	ClientService clientService;
 	
 	@Autowired
 	private RequestValidator requestValidator;
@@ -44,6 +52,8 @@ public class RequestControllerImpl
 	{
 		model.addAttribute("requests", this.requestService.getAll());
 		model.addAttribute("newRequest", new RequestDetailImpl());
+		model.addAttribute("books", this.bookService.getAll());
+		model.addAttribute("clients", this.clientService.getAll());
 		
 		return "requests";
 	}
