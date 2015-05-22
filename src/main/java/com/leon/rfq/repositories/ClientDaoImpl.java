@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.leon.rfq.common.EnumTypes.ClientTier;
+import com.leon.rfq.common.EnumTypes.ClientTierEnum;
 import com.leon.rfq.domains.ClientDetailImpl;
 import com.leon.rfq.mappers.ClientMapper;
 
@@ -39,7 +39,7 @@ public class ClientDaoImpl implements ClientDao
 	}
 
 	@Override
-	public boolean insert(String clientName, ClientTier tier, boolean isValid,	String savedByUser)
+	public boolean insert(String clientName, ClientTierEnum tier, boolean isValid,	String savedByUser)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Insert the client with clientName: " + clientName);
@@ -58,7 +58,7 @@ public class ClientDaoImpl implements ClientDao
 	}
 	
 	@Override
-	public boolean update(int clientId, String clientName, ClientTier tier, boolean isValid, String updatedByUser)
+	public boolean update(int clientId, String clientName, ClientTierEnum tier, boolean isValid, String updatedByUser)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Update the client with clientId " + clientId);

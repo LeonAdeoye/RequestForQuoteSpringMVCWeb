@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.leon.rfq.common.EnumTypes.ClientTier;
+import com.leon.rfq.common.EnumTypes.ClientTierEnum;
 import com.leon.rfq.domains.ClientDetailImpl;
 import com.leon.rfq.repositories.ClientDao;
 
@@ -86,7 +86,7 @@ public final class ClientServiceImpl implements ClientService
 	}
 
 	@Override
-	public boolean insert(String clientName, ClientTier tier, boolean isValid, String savedByUser)
+	public boolean insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser)
 	{
 		if((clientName == null) || clientName.isEmpty())
 		{
@@ -121,7 +121,7 @@ public final class ClientServiceImpl implements ClientService
 	}
 
 	@Override
-	public boolean update(int clientId, String clientName, ClientTier tier,
+	public boolean update(int clientId, String clientName, ClientTierEnum tier,
 			boolean isValid, String updatedByUser)
 	{
 		if((clientName == null) || clientName.isEmpty())

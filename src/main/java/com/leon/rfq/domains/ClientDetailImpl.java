@@ -5,7 +5,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.leon.rfq.common.EnumTypes.ClientTier;
+import com.leon.rfq.common.EnumTypes.ClientTierEnum;
 
 @XmlRootElement(name="ClientDetailImpl")
 public final class ClientDetailImpl
@@ -14,12 +14,12 @@ public final class ClientDetailImpl
 	private String name;
 	private int clientId;
 	private boolean isValid;
-	private ClientTier tier;
+	private ClientTierEnum tier;
 	private String lastUpdatedBy;
 
 	public ClientDetailImpl() {}
 
-	public ClientDetailImpl(String name, int clientId, ClientTier tier, boolean isValid, String lastUpdatedBy)
+	public ClientDetailImpl(String name, int clientId, ClientTierEnum tier, boolean isValid, String lastUpdatedBy)
 	{
 		this.name = name;
 		this.clientId = clientId;
@@ -50,12 +50,12 @@ public final class ClientDetailImpl
 		this.clientId = clientId;
 	}
 
-	public ClientTier getTier()
+	public ClientTierEnum getTier()
 	{
 		return this.tier;
 	}
 
-	public void setTier(ClientTier tier)
+	public void setTier(ClientTierEnum tier)
 	{
 		this.tier = tier;
 	}

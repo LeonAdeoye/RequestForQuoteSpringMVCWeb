@@ -31,7 +31,7 @@ public final class EnumTypes
 		SUSPEND_ALL, AWAKEN_ALL
 	}
 	
-	public static enum ClientTier
+	public static enum ClientTierEnum
 	{
 		TOP, MIDDLE, BOTTOM
 	}
