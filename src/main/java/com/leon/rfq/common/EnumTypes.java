@@ -33,6 +33,6 @@ public final class EnumTypes
 	
 	public static enum ClientTierEnum
 	{
-		TOP, MIDDLE, BOTTOM
+		Top, Middle, Bottom
 	}
 }

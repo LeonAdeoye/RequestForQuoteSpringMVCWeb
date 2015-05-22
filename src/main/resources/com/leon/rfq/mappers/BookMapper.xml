@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.leon.rfq.mappers.BookMapper">
+	
+	<resultMap type="BookDetailImpl" id="BookResultSet">
+		<id 	property="bookCode" column="bookCode"/>
+		<result property="entity" column="entity"/>
+		<result property="isValid" column="isValid"/>
+		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
+	</resultMap>
+	
+	<select id="get" parameterType="java.lang.String" resultType="BookDetailImpl">
+		SELECT bookCode, entity, isValid FROM books WHERE bookCode=#{bookCode}
+	</select>
+	
+	<select id="bookExistsWithBookCode" parameterType="java.lang.String" resultType="BookDetailImpl">
+		SELECT bookCode, entity,  isValid FROM books WHERE bookCode=#{bookCode}
+	</select>
+	
+	<select id="getAll" resultMap="BookResultSet">
+		SELECT bookCode, entity, isValid FROM books
+	</select>
+	
+	<update id="updateValidity" parameterType="BookDetailImpl">
+		UPDATE books SET isValid = 'N', lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() WHERE bookCode = #{bookCode} <!-- TODO use IF statement-->
+	</update>
+	
+	<update id="update" parameterType="BookDetailImpl">
+		UPDATE books SET entity = #{entity}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, 
+		lastUpdated = now() WHERE bookCode = #{bookCode}
+	</update>	
+	
+	<insert id="insert" parameterType="BookDetailImpl">
+		INSERT INTO books (bookCode, entity,  isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{bookCode}, #{entity}, #{isValid}, #{lastUpdatedBy}, now() )
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM books
+		WHERE bookCode = #{bookCode}
+	</delete>		
+			
+</mapper>
