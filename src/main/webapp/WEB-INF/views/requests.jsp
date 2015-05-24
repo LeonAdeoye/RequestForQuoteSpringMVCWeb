@@ -31,7 +31,7 @@
 									<form:input id="requests_client" class="new_request" path="clientId" value="Select client name..." type="text" default_value="Select client name..." />
 								</div>
 								<div class="form-group">
-									<form:input id="requests_bookCode" class="new_request" path="bookCode" value="select book code..." type="text" default_value="select book code..." />
+									<form:input id="requests_bookCode" class="new_request" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />
 								</div>
 								<div class="form-group">
 									<input type="submit" id="requests_add_button" class="btn" value="<spring:message code="requests.addRequest.button.label"/>"/>

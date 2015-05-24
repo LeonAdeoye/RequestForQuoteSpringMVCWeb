@@ -177,43 +177,43 @@
 			</testResource>
 		</testResources>		
 		<finalName>requestForQuote</finalName>
-		 <plugins>
-			  <plugin>	 
-			    <groupId>org.apache.maven.plugins</groupId>
+		<plugins>		 
+			<plugin>	 
+				<groupId>org.apache.maven.plugins</groupId>
 			    <artifactId>maven-compiler-plugin</artifactId>
 			    <version>3.1</version>
 			    <configuration>
 			      <source>1.8</source>
 			      <target>1.8</target>
 			    </configuration>
-			  </plugin>	 
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.3</version>
-					<configuration>
-					    <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.tomcat.maven</groupId>
-					<artifactId>tomcat7-maven-plugin</artifactId>
-					<version>2.2</version>
-					<configuration>
-						<url>http://127.0.0.1:9080/manager/text</url>
-						<update>true</update> 
-						<server>TomcatServer</server>
-						<path>/${project.build.finalName}</path>			
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>cobertura-maven-plugin</artifactId>
-					<version>2.6</version>
-					<configuration>
-						<format>xml</format>
-					</configuration>
-				</plugin>
+			</plugin>	 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.3</version>
+				<configuration>
+				    <packagingExcludes>WEB-INF/web.xml</packagingExcludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<url>http://127.0.0.1:9080/manager/text</url>
+					<update>true</update> 
+					<server>TomcatServer</server>
+					<path>/${project.build.finalName}</path>			
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<format>xml</format>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>	    
 </project>

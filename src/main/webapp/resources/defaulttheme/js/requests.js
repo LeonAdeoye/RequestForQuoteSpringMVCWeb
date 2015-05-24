@@ -3,9 +3,19 @@ function enableAddButton()
 	$("input#requests_add_button").removeAttr('disabled');
 }
 
+function enableClearButton()
+{
+	$("input#requests_clear_button").removeAttr('disabled');
+}
+
 function disableAddButton()
 {
 	$("input#requests_add_button").attr('disabled', 'disabled');
+}
+
+function disableClearButton()
+{
+	$("input#requests_clear_button").attr('disabled', 'disabled');
 }
 
 function snippetMatches(snippet)
@@ -15,7 +25,7 @@ function snippetMatches(snippet)
 
 function toggleAddButtonState()
 {
-	if(snippetMatches($("input#requests_snippet")))
+	if(snippetMatches($("input#requests_snippet").val()))
 		enableAddButton();
 	else
 		disableAddButton();
@@ -24,24 +34,31 @@ function toggleAddButtonState()
 function myTrim(x)
 {
 	return x.replace(/^\s+|\s+$/gm,'');
+	
 }
 
-$(document).ready(disableAddButton);
+$(document).ready(function()
+{
+	disableAddButton();
+});
 
-$(".new_request").click(function()
+$("input#requests_snippet").keyup(toggleAddButtonState);
+$("input#requests_snippet").focusout(toggleAddButtonState);
+
+$("input.new_request").click(function()
 {
 	if($(this).val() == $(this).attr("default_value"))
 	{
-		$(this).value("");
+		$(this).val("");
 		
-		if($(this).is("input#requests_snippet")
+		if($(this).is("input#requests_snippet"))
 			disableAddButton();
 	}
 });
 
-$(".new_request").focusout(function()
+$("input.new_request").focusout(function()
 {
-	if(myTrim($(this).val())) == "")
+	if(myTrim($(this).val()) == "")
 		$(this).val($(this).attr("default_value"));
 });
 
@@ -51,8 +68,6 @@ $("#requests_clear_button").click(function()
 	disableAddButton();
 });
 
-var SNIPPET_REGEX = /^([+-]?[1-9]*[CP]{1}){1}([-+]{1}[1-9]*[CP]{1})* ([\d]+){1}(,{1}[\d]+)* "
-	+ "[\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\d]{2}(,{1}[\d]{1,2}(Jan|Feb|Mar"
-	+ "|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\d]{2})* (\w){4,7}\.[A-Z]{1,2}(,{1}(\w){4,7}\.[A-Z]{1,2})*$/;
+var SNIPPET_REGEX = /^([+-]?[1-9]*[CP]{1}){1}([-+]{1}[1-9]*[CP]{1})* ([\d]+){1}(,{1}[\d]+)* [\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\d]{2}(,{1}[\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\d]{2})* (\w){4,7}\.[A-Z]{1,2}(,{1}(\w){4,7}\.[A-Z]{1,2})*$/;
 
 

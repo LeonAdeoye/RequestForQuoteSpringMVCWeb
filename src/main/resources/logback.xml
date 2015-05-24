@@ -13,7 +13,7 @@
 		<file>c:\development\git\RequestForQuoteSpringMVCWeb\logs\controllers.log</file>      
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">    
 			<Pattern>%d{HH:mm:ss.SSS} %-5level %thread  %logger - %msg%n</Pattern>    
-		</encoder>
+		</encoder>		
 	</appender>
 
 	 <appender name="REPOSITORIES_LOG_FILE" class="ch.qos.logback.core.FileAppender">
