@@ -84,7 +84,7 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
     public void updateValidity_ValidUserId_UpdatesValidityReturnsTrue()
 	{
 		this.userDaoImpl.insert("userIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertTrue("previously saved user should exist", this.userDaoImpl.get("userIdToBeUpdated").getUserId().equals("userIdToBeUpdated"));
+		assertEquals("previously saved user should exist", "userIdToBeUpdated", this.userDaoImpl.get("userIdToBeUpdated").getUserId());
 		assertTrue("updateValidity method should update validity to the provided value for the saved user", this.userDaoImpl.updateValidity("userIdToBeUpdated", false, "leon.adeoye"));
 		assertFalse("updated user validity should have changed", this.userDaoImpl.get("userIdToBeUpdated").getIsValid());
 	}
@@ -122,7 +122,7 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
     public void delete_ValidUserId_DeleteSucceedsAndReturnsTrue()
 	{
 		this.userDaoImpl.insert("userIdToBeDeleted", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertTrue("previously saved user should exist", this.userDaoImpl.get("userIdToBeDeleted").getUserId().equals("userIdToBeDeleted"));
+		assertEquals("previously saved user should exist", "userIdToBeDeleted", this.userDaoImpl.get("userIdToBeDeleted").getUserId());
 		assertTrue("delete method should return true", this.userDaoImpl.delete("userIdToBeDeleted"));
 		assertNull("deleted user should not longer exist", this.userDaoImpl.get("userIdToBeDeleted"));
 	}

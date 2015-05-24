@@ -20,7 +20,7 @@
   	<jackson-mapper-asl.version>1.9.10</jackson-mapper-asl.version>
   	<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
   	<JUnitParams.version>1.0.4</JUnitParams.version>
-  	<powermock-module-junit4.version>1.6.2</powermock-module-junit4.version>
+  	<powermock.version>1.6.2</powermock.version>
   </properties>
   
     <dependencyManagement>
@@ -52,19 +52,19 @@
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
-			<version>${powermock-module-junit4.version}</version>
+			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>     
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-module-junit4-rule</artifactId>
-            <version>${powermock-module-junit4.version}</version>
+            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.powermock</groupId>
             <artifactId>powermock-classloading-xstream</artifactId>
-            <version>${powermock-module-junit4.version}</version>
+            <version>${powermock.version}</version>
             <scope>test</scope>
         </dependency>
 		<dependency>

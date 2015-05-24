@@ -8,13 +8,13 @@ public interface ClientMapper
 {
 	List<ClientDetailImpl> getAll();
 	
-	ClientDetailImpl get(int clientId);
+	ClientDetailImpl get(String clientName);
 	
-	int delete(int clientId);
+	int delete(String clientId);
 	
 	int insert(ClientDetailImpl clientDetailImpl);
 	
 	int update(ClientDetailImpl clientDetailImpl);
 	
-	ClientDetailImpl clientExistsWithClientId(int clientId);
+	ClientDetailImpl clientExistsWithClientName(String clientName);
 }

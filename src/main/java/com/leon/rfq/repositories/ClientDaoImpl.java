@@ -20,33 +20,34 @@ public class ClientDaoImpl implements ClientDao
 	private ClientMapper clientMapper;
 
 	@Override
-	public boolean delete(int clientId)
+	public boolean delete(String clientName)
 	{
 		if(logger.isDebugEnabled())
-			logger.debug("Delete the client with clientId " + clientId);
+			logger.debug("Delete the client with client name " + clientName);
 		
 		try
 		{
-			return this.clientMapper.delete(clientId) == 1;
+			return this.clientMapper.delete(clientName) == 1;
 		}
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("Failed to delete the client with clientId " + clientId + " because of exception: " + e);
+				logger.error("Failed to delete the client with client name " + clientName + " because of exception: " + e);
 			
 			return false;
 		}
 	}
 
 	@Override
-	public boolean insert(String clientName, ClientTierEnum tier, boolean isValid,	String savedByUser)
+	public boolean insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser)
 	{
 		if(logger.isDebugEnabled())
-			logger.debug("Insert the client with clientName: " + clientName);
+			logger.debug("Inserting a new client with clientName: " + clientName);
 		
 		try
 		{
-			return this.clientMapper.insert(new ClientDetailImpl(clientName, -1, tier, isValid, savedByUser)) == 1;
+			ClientDetailImpl newClient = new ClientDetailImpl(clientName, tier, isValid, savedByUser);
+			return this.clientMapper.insert(newClient) == 1;
 		}
 		catch(Exception e)
 		{
@@ -61,7 +62,7 @@ public class ClientDaoImpl implements ClientDao
 	public boolean update(int clientId, String clientName, ClientTierEnum tier, boolean isValid, String updatedByUser)
 	{
 		if(logger.isDebugEnabled())
-			logger.debug("Update the client with clientId " + clientId);
+			logger.debug("Update the client with client ID: " + clientId);
 		
 		try
 		{
@@ -70,7 +71,7 @@ public class ClientDaoImpl implements ClientDao
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("Failed to update the client with clientId " + clientId + " because of exception: " + e);
+				logger.error("Failed to update the client with client ID:" + clientId + " because of exception: " + e);
 			
 			return false;
 		}
@@ -82,26 +83,24 @@ public class ClientDaoImpl implements ClientDao
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all clients");
 		
-		logger.debug(String.format("Size of clients to be returned: %d", this.clientMapper.getAll().size()));
-
 		return this.clientMapper.getAll();
 	}
 
 	@Override
-	public ClientDetailImpl get(int clientId)
+	public ClientDetailImpl get(String clientName)
 	{
 		if(logger.isDebugEnabled())
-			logger.debug("Request to get client with clientId: " + clientId);
+			logger.debug("Request to get client with client name: " + clientName);
 		
-		return this.clientMapper.get(clientId);
+		return this.clientMapper.get(clientName);
 	}
-	
+		
 	@Override
-	public boolean clientExistsWithClientId(int clientId)
+	public boolean clientExistsWithClientName(String clientName)
 	{
 		if(logger.isDebugEnabled())
-			logger.debug("Request to check if client exists with clientId: " + clientId);
+			logger.debug("Request to check if client exists with client name: " + clientName);
 		
-		return this.clientMapper.clientExistsWithClientId(clientId) != null;
+		return this.clientMapper.clientExistsWithClientName(clientName) != null;
 	}
 }

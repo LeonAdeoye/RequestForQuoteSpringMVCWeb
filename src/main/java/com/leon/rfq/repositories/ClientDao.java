@@ -7,7 +7,7 @@ import com.leon.rfq.domains.ClientDetailImpl;
 
 public interface ClientDao
 {
-	boolean delete(int clientId);
+	boolean delete(String clientName);
 
 	boolean insert(String clientName,
 			ClientTierEnum tier,
@@ -22,7 +22,7 @@ public interface ClientDao
 
 	List<ClientDetailImpl> getAll();
 	 
-	ClientDetailImpl get(int clientId);
+	ClientDetailImpl get(String clientName);
 
-	boolean clientExistsWithClientId(int clientId);
+	boolean clientExistsWithClientName(String clientName);
 }

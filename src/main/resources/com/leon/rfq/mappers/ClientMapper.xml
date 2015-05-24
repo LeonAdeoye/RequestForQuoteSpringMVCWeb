@@ -6,7 +6,7 @@
 <mapper namespace="com.leon.rfq.mappers.ClientMapper">
 	
 	<resultMap type="ClientDetailImpl" id="ClientResultSet">
-		<id 	property="clientId" column="identifier"/>
+		<id 	property="identifier" column="identifier"/>
 		<result property="name" column="name"/>
 		<result property="isValid" column="isValid"/>
 		<result property="tier" column="tier" typeHandler="org.apache.ibatis.type.EnumTypeHandler" />
@@ -14,41 +14,35 @@
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="ClientDetailImpl">
-		SELECT identifier, name, tier, isValid
-		FROM clients WHERE identifier=#{clientId}
-	</select>
+		SELECT *
+		FROM clients WHERE name = #{name}
+	</select>	
 	
-	<select id="bookExistsWithClientId" parameterType="java.lang.String" resultType="ClientDetailImpl">
-		SELECT identifier, name, tier, isValid 
-		FROM clients WHERE identifier=#{clientId}
-	</select>
+	<select id="clientExistsWithClientName" parameterType="java.lang.String" resultType="ClientDetailImpl">
+		SELECT * 
+		FROM clients WHERE name = #{name}
+	</select>	
 	
 	<select id="getAll" resultMap="ClientResultSet">
-		SELECT identifier, name, tier, isValid 
+		SELECT *
 		FROM clients
 	</select>
 	
-	<update id="updateValidity" parameterType="ClientDetailImpl">
-		UPDATE clients 
-		SET isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
-		WHERE identifier = #{clientId} <!-- TODO was previously setting isValid to 'N' may be can use use IF statement-->
-	</update>
-	
 	<update id="update" parameterType="ClientDetailImpl">
 		UPDATE clients 
-		SET name = #{name}, tier = #{tier typeHandler=org.apache.ibatis.type.EnumTypeHandler}, 
+		SET name = #{name}, tier = #{tier, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, 
 		isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
-		WHERE identifier = #{clientId}
+		WHERE identifier = #{identifier}
 	</update>	
 	
-	<insert id="insert" parameterType="ClientDetailImpl" useGeneratedKeys="true" keyProperty="identifier">
+	<insert id="insert" parameterType="ClientDetailImpl" useGeneratedKeys="true" keyProperty="identifier" keyColumn="identifier">
 		INSERT INTO clients (name, tier, isValid, lastUpdatedBy, lastUpdated)
 		VALUES(#{name}, #{tier, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, #{isValid}, #{lastUpdatedBy}, now())
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.String">
 		DELETE FROM clients
-		WHERE identifier = #{clientId}
+		WHERE name = #{name}
 	</delete>		
 			
 </mapper>

@@ -8,7 +8,9 @@ import com.leon.rfq.repositories.ClientDao;
 
 public interface ClientService
 {
-	ClientDetailImpl get(int clientId);
+	void initialise();
+	
+	ClientDetailImpl get(String clientName);
 
 	List<ClientDetailImpl> getAll();
 	
@@ -16,11 +18,11 @@ public interface ClientService
 	
 	boolean update(int clientId, String clientName, ClientTierEnum tier, boolean isValid, String updatedByUser);
 	
-	boolean delete(int clientId);
+	boolean delete(String clientName);
 
 	void setClientDao(ClientDao clientDao);
 	
-	boolean isClientCached(int clientId);
+	boolean isClientCached(String clientName);
 	
-	boolean clientExistsWithClientId(int clientId);
+	boolean clientExistsWithClientName(String clientName);
 }

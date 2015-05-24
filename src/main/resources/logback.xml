@@ -16,7 +16,7 @@
 		</encoder>
 	</appender>
 
-	 <appender name="DAO_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+	 <appender name="REPOSITORIES_LOG_FILE" class="ch.qos.logback.core.FileAppender">
 		<file>c:\development\git\RequestForQuoteSpringMVCWeb\logs\repositories.log</file>      
 		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">    
 			<Pattern>%d{HH:mm:ss.SSS} %-5level %thread  %logger - %msg%n</Pattern>    
@@ -93,15 +93,23 @@
 	</logger>	
 	
 	<logger name="com.leon.rfq.repositories.UserDaoImpl" level="TRACE">
-		<appender-ref ref="DAO_LOG_FILE" />           
+		<appender-ref ref="REPOSITORIES_LOG_FILE" />           
+	</logger>
+	
+	<logger name="com.leon.rfq.repositories.ClientDaoImpl" level="TRACE">
+		<appender-ref ref="REPOSITORIES_LOG_FILE" />           
+	</logger>
+	
+	<logger name="com.leon.rfq.repositories.BookDaoImpl" level="TRACE">
+		<appender-ref ref="REPOSITORIES_LOG_FILE" />           
 	</logger>
 	
 	<logger name="com.leon.rfq.repositories.UnderlyingDaoImpl" level="TRACE">
-		<appender-ref ref="DAO_LOG_FILE" />           
+		<appender-ref ref="REPOSITORIES_LOG_FILE" />           
 	</logger>
 	
 	<logger name="com.leon.rfq.repositories.RequestDaoImpl" level="TRACE">
-		<appender-ref ref="DAO_LOG_FILE" />           
+		<appender-ref ref="REPOSITORIES_LOG_FILE" />           
 	</logger>	
 	
 	<logger name="com.leon.rfq.services.UnderlyingServiceImpl" level="TRACE">
@@ -113,6 +121,14 @@
 	</logger>
 	
 	<logger name="com.leon.rfq.services.RequestServiceImpl" level="TRACE">
+		<appender-ref ref="SERVICES_LOG_FILE" />           
+	</logger>
+	
+	<logger name="com.leon.rfq.services.BookServiceImpl" level="TRACE">
+		<appender-ref ref="SERVICES_LOG_FILE" />           
+	</logger>
+	
+	<logger name="com.leon.rfq.services.ClientServiceImpl" level="TRACE">
 		<appender-ref ref="SERVICES_LOG_FILE" />           
 	</logger>	
 	   

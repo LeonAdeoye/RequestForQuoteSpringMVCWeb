@@ -12,20 +12,30 @@ public final class ClientDetailImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(ClientDetailImpl.class);
 	private String name;
-	private int clientId;
+	private int identifier;  // Using clientId does not work despite using ALL of the recommended MyBatis attributes.
 	private boolean isValid;
 	private ClientTierEnum tier;
 	private String lastUpdatedBy;
 
 	public ClientDetailImpl() {}
 
-	public ClientDetailImpl(String name, int clientId, ClientTierEnum tier, boolean isValid, String lastUpdatedBy)
+	public ClientDetailImpl(String name, int clientId, ClientTierEnum tier, boolean isValid, String createdByUser)
 	{
 		this.name = name;
-		this.clientId = clientId;
+		this.identifier = clientId;
 		this.tier = tier;
 		this.isValid = isValid;
-		this.lastUpdatedBy = lastUpdatedBy;
+		this.lastUpdatedBy = createdByUser;
+
+		logger.debug("ClientDetailImpl object instantiated = > " +  this);
+	}
+	
+	public ClientDetailImpl(String name, ClientTierEnum tier, boolean isValid, String createdByUser)
+	{
+		this.name = name;
+		this.tier = tier;
+		this.isValid = isValid;
+		this.lastUpdatedBy = createdByUser;
 
 		logger.debug("ClientDetailImpl object instantiated = > " +  this);
 	}
@@ -42,12 +52,12 @@ public final class ClientDetailImpl
 
 	public int getClientId()
 	{
-		return this.clientId;
+		return this.identifier;
 	}
 
-	public void setIdClientId(int clientId)
+	public void setClientId(int clientId)
 	{
-		this.clientId = clientId;
+		this.identifier = clientId;
 	}
 
 	public ClientTierEnum getTier()
@@ -86,8 +96,8 @@ public final class ClientDetailImpl
 		StringBuilder builder = new StringBuilder();
 		builder.append("ClientDetailImpl [name=");
 		builder.append(this.name);
-		builder.append(", clientId=");
-		builder.append(this.clientId);
+		builder.append(", identifier=");
+		builder.append(this.identifier);
 		builder.append(", isValid=");
 		builder.append(this.isValid);
 		builder.append(", tier=");
@@ -103,7 +113,7 @@ public final class ClientDetailImpl
 	{
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + this.clientId;
+		result = (prime * result) + this.identifier;
 		result = (prime * result) + (this.isValid ? 1231 : 1237);
 		result = (prime * result)	+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
 		result = (prime * result) + ((this.name == null) ? 0 : this.name.hashCode());
@@ -127,7 +137,7 @@ public final class ClientDetailImpl
 			return false;
 		}
 		ClientDetailImpl other = (ClientDetailImpl) obj;
-		if (this.clientId != other.clientId)
+		if (this.identifier != other.identifier)
 		{
 			return false;
 		}
