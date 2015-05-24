@@ -5,12 +5,33 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VolatilityServiceImpl implements VolatilityService
 {
+	private static Logger logger = LoggerFactory.getLogger(VolatilityServiceImpl.class);
 	Map<String, Map<Date, BigDecimal>> volatilityCache = new HashMap<>();
+	
+	@Override
+	@PostConstruct
+	public void initialise()
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Initializing underlying service by getting all existing underlyings...");
+		
+		this.getAll();
+	}
+
+	@Override
+	public Map<String, Map<Date, BigDecimal>> getAll()
+	{
+		return new HashMap<String, Map<Date, BigDecimal>>();
+	}
 
 	@Override
 	public BigDecimal getVolatility(String ric)

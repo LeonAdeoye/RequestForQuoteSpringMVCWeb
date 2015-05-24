@@ -21,4 +21,6 @@ public interface UnderlyingService
 	boolean underlyingExistsWithRic(String ric);
 	
 	boolean isUnderlyingCached(String ric);
+
+	void initialise();
 }

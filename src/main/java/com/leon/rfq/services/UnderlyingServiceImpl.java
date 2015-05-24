@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,18 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 {
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
+	
+	public UnderlyingServiceImpl() {}
+	
+	@Override
+	@PostConstruct
+	public void initialise()
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Initializing underlying service by getting all existing underlyings...");
+		
+		this.getAll();
+	}
 	
 	@Autowired
 	private UnderlyingDao underlyingDao;

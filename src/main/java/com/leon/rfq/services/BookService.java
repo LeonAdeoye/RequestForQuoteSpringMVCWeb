@@ -22,4 +22,6 @@ public interface BookService
 	boolean isBookCached(String bookCode);
 	
 	boolean bookExistsWithBookCode(String bookCode);
+
+	void initialise();
 }

@@ -28,4 +28,6 @@ public interface UserService
 	
 	boolean update(String userId, String firstName, String lastName, String emailAddress,
 			String locationName, String groupName, boolean isValid, String savedByUser);
+
+	void initialise();
 }

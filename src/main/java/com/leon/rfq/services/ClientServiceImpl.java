@@ -27,9 +27,13 @@ public final class ClientServiceImpl implements ClientService
 	@Autowired
 	private ClientDao clientDao;
 	
+	@Override
 	@PostConstruct
 	public void initialise()
 	{
+		if(logger.isDebugEnabled())
+			logger.debug("Initializing client service by getting all existing clients...");
+		
 		this.getAll();
 	}
 	

@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +33,17 @@ public final class BookServiceImpl implements BookService
 		this.bookDao = bookDao;
 	}
 	
-	public BookServiceImpl()
+	@Override
+	@PostConstruct
+	public void initialise()
 	{
-		//this.getAll();
+		if(logger.isDebugEnabled())
+			logger.debug("Initializing book service by getting all existing books...");
+		
+		this.getAll();
 	}
+	
+	public BookServiceImpl() {}
 	
 	@Override
 	public boolean isBookCached(String bookCode)

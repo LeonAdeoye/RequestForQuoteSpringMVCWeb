@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +33,17 @@ public final class UserServiceImpl implements UserService
 		this.userDao = userDao;
 	}
 	
-	public UserServiceImpl()
+	@Override
+	@PostConstruct
+	public void initialise()
 	{
-		//this.getAll();
+		if(logger.isDebugEnabled())
+			logger.debug("Initializing user service by getting all existing users...");
+		
+		this.getAll();
 	}
+	
+	public UserServiceImpl() {}
 	
 	@Override
 	public boolean isUserCached(String userId)
