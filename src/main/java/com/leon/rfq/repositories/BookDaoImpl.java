@@ -120,7 +120,7 @@ public class BookDaoImpl implements BookDao
 		if(logger.isDebugEnabled())
 			logger.debug("Request to check if book exists with bookCode: " + bookCode);
 		
-		return this.bookMapper.bookExistsWithBookcode(bookCode) != null;
+		return this.bookMapper.bookExistsWithBookCode(bookCode) != null;
 	}
 }
 

@@ -36,12 +36,12 @@ public final class BookDetailImpl
 		this.bookCode = bookCode;
 	}
 	
-	public String getLastUpdatedByUser()
+	public String getLastUpdatedBy()
 	{
 		return this.lastUpdatedByUser;
 	}
 
-	public void setLastUpdatedByUser(String lastUpdatedByUser)
+	public void setLastUpdatedBy(String lastUpdatedByUser)
 	{
 		this.lastUpdatedByUser = lastUpdatedByUser;
 	}

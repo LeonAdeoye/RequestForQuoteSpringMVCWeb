@@ -18,5 +18,5 @@ public interface BookMapper
 
 	int updateValidity(BookDetailImpl bookDetailImpl);
 	
-	BookDetailImpl bookExistsWithBookcode(String bookCode);
+	BookDetailImpl bookExistsWithBookCode(String bookCode);
 }

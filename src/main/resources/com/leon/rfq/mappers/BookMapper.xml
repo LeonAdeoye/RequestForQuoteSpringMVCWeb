@@ -13,24 +13,30 @@
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="BookDetailImpl">
-		SELECT bookCode, entity, isValid FROM books WHERE bookCode=#{bookCode}
+		SELECT bookCode, entity, isValid, lastUpdatedBy 
+		FROM books WHERE bookCode=#{bookCode}
 	</select>
 	
 	<select id="bookExistsWithBookCode" parameterType="java.lang.String" resultType="BookDetailImpl">
-		SELECT bookCode, entity,  isValid FROM books WHERE bookCode=#{bookCode}
+		SELECT bookCode, entity,  isValid, lastUpdatedBy
+		FROM books WHERE bookCode=#{bookCode}
 	</select>
 	
 	<select id="getAll" resultMap="BookResultSet">
-		SELECT bookCode, entity, isValid FROM books
+		SELECT bookCode, entity, isValid, lastUpdatedBy 
+		FROM books
 	</select>
 	
 	<update id="updateValidity" parameterType="BookDetailImpl">
-		UPDATE books SET isValid = 'N', lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() WHERE bookCode = #{bookCode} <!-- TODO use IF statement-->
+		UPDATE books 
+		SET isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
+		WHERE bookCode = #{bookCode} <!-- TODO test isValid update (used to set to 'N') and may be use IF statement-->
 	</update>
 	
 	<update id="update" parameterType="BookDetailImpl">
-		UPDATE books SET entity = #{entity}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, 
-		lastUpdated = now() WHERE bookCode = #{bookCode}
+		UPDATE books
+		SET entity = #{entity}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
+		WHERE bookCode = #{bookCode}
 	</update>	
 	
 	<insert id="insert" parameterType="BookDetailImpl">

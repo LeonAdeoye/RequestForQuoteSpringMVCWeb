@@ -70,11 +70,12 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void get_ValidUserId_ReturnsValidUserMatchingUserId()
 	{
-		assertEquals("get method should return the user when a valid userId is provided", "leon.adeoye", this.userDaoImpl.get("leon.adeoye").getUserId());
+		this.userDaoImpl.insert("testuser", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
+		assertEquals("get method should return the user when a valid userId is provided", "testuser", this.userDaoImpl.get("testuser").getUserId());
 	}
 	
 	@Test
-    public void get_NonExistantUserId_ReturnsValidUserMatchingUserId()
+    public void get_NonExistantUserId_ReturnsNull()
 	{
 		assertNull("get method should return null when a non-existant userId is provided", this.userDaoImpl.get("nonExistantUserId"));
 	}
@@ -85,7 +86,7 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 		this.userDaoImpl.insert("userIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
 		assertTrue("previously saved user should exist", this.userDaoImpl.get("userIdToBeUpdated").getUserId().equals("userIdToBeUpdated"));
 		assertTrue("updateValidity method should update validity to the provided value for the saved user", this.userDaoImpl.updateValidity("userIdToBeUpdated", false, "leon.adeoye"));
-		assertTrue("updated user validity should have changed", !this.userDaoImpl.get("userIdToBeUpdated").getIsValid());
+		assertFalse("updated user validity should have changed", this.userDaoImpl.get("userIdToBeUpdated").getIsValid());
 	}
 	
 	@Test
@@ -97,8 +98,8 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void insert_ValidParameters_SavedUserAndReturnsTrue()
 	{
-		assertTrue("save method should save a valid user and returns true", this.userDaoImpl.insert("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
-		assertTrue("previously saved user should exist", this.userDaoImpl.get("testUserId").getUserId().equals("testUserId"));
+		assertTrue("Insert method should save a valid user and return true", this.userDaoImpl.insert("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
+		assertEquals("previously saved user should now exist", "testUserId", this.userDaoImpl.get("testUserId").getUserId());
 	}
 	
 	@Test
@@ -109,7 +110,7 @@ public class UserDaoImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void update_updatewithValidEmailAddress_EmailAddressUpdated()
+    public void update_ValidEmailAddress_EmailAddressUpdated()
 	{
 		this.userDaoImpl.insert("testUserId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
 		assertTrue("Update should return true", this.userDaoImpl.update("testUserId", "ethan", "adeoye", "horatio@adeoye.com", "hong kong", "myGroup", true, "me"));

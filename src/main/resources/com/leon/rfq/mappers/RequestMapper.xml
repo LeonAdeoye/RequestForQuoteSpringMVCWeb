@@ -194,16 +194,19 @@
 	</insert>
 	
 	<select id="get" parameterType="java.lang.Integer" resultType="RequestDetailImpl">
-		SELECT * FROM requestforquotemain WHERE identifier=#{identifier}
+		SELECT * FROM requestforquotemain
+		WHERE identifier=#{identifier}
 	</select>
 	
 	<select id="requestExistsWithRequestId" parameterType="java.lang.Integer" resultType="RequestDetailImpl">
-		SELECT * FROM requestforquotemain WHERE identifier=#{identifier}
+		SELECT * FROM requestforquotemain
+		WHERE identifier=#{identifier}
 	</select>
 	
 	<select id="getAll" resultMap="RequestResultSet">
-		SELECT * FROM requestforquotemain
-		ORDER BY identifier DESC
+		SELECT * 
+		FROM requestforquotemain
+		ORDER BY identifier DESC <!-- TODO only get today's trades -->
 	</select>	
 	
 	<delete id="delete" parameterType="java.lang.Integer">

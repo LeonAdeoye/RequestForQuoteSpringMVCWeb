@@ -14,24 +14,31 @@
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="ClientDetailImpl">
-		SELECT identifier, name, tier, isValid FROM clients WHERE identifier=#{clientId}
+		SELECT identifier, name, tier, isValid
+		FROM clients WHERE identifier=#{clientId}
 	</select>
 	
 	<select id="bookExistsWithClientId" parameterType="java.lang.String" resultType="ClientDetailImpl">
-		SELECT identifier, name, tier, isValid FROM clients WHERE identifier=#{clientId}
+		SELECT identifier, name, tier, isValid 
+		FROM clients WHERE identifier=#{clientId}
 	</select>
 	
 	<select id="getAll" resultMap="ClientResultSet">
-		SELECT identifier, name, tier, isValid FROM clients
+		SELECT identifier, name, tier, isValid 
+		FROM clients
 	</select>
 	
 	<update id="updateValidity" parameterType="ClientDetailImpl">
-		UPDATE clients SET isValid = 'N', lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() WHERE identifier = #{clientId} <!-- TODO use IF statement-->
+		UPDATE clients 
+		SET isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
+		WHERE identifier = #{clientId} <!-- TODO was previously setting isValid to 'N' may be can use use IF statement-->
 	</update>
 	
 	<update id="update" parameterType="ClientDetailImpl">
-		UPDATE clients SET name = #{name}, tier = #{tier typeHandler=org.apache.ibatis.type.EnumTypeHandler}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, 
-		lastUpdated = now() WHERE identifier = #{clientId}
+		UPDATE clients 
+		SET name = #{name}, tier = #{tier typeHandler=org.apache.ibatis.type.EnumTypeHandler}, 
+		isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
+		WHERE identifier = #{clientId}
 	</update>	
 	
 	<insert id="insert" parameterType="ClientDetailImpl" useGeneratedKeys="true" keyProperty="identifier">
