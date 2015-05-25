@@ -3,6 +3,7 @@ package com.leon.rfq.services;
 import java.util.List;
 
 import com.leon.rfq.common.EnumTypes.ClientTierEnum;
+import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.ClientDetailImpl;
 import com.leon.rfq.repositories.ClientDao;
 
@@ -27,4 +28,6 @@ public interface ClientService
 	boolean isClientCached(String clientName);
 	
 	boolean clientExistsWithClientName(String clientName);
+
+	List<Tag> getMatchingClientTags(String pattern);
 }

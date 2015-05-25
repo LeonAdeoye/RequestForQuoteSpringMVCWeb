@@ -2,6 +2,7 @@ package com.leon.rfq.services;
 
 import java.util.List;
 
+import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.BookDetailImpl;
 import com.leon.rfq.repositories.BookDao;
 
@@ -26,4 +27,6 @@ public interface BookService
 	boolean bookExistsWithBookCode(String bookCode);
 
 	void initialise();
+
+	List<Tag> getMatchingBookTags(String bookPattern);
 }

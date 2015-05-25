@@ -39,8 +39,72 @@ function myTrim(x)
 }
 
 $(document).ready(function()
-{
-	$(".btn").button();
+{	
+	$("input#requests_bookCode").autocomplete(
+	{
+		minLength:3,
+        source: function (request, response) 
+        {
+            $.ajax(
+            {
+                type: "GET",
+                url: contextPath + "/requests/matchingBookTags?pattern=" + request.term,
+                dataType: "json",
+                data: 
+                {
+                    term: request.termCode
+                },
+                error: function (xhr, textStatus, errorThrown) 
+                {
+                    alert('Error: ' + xhr.responseText);
+                },
+                success: function (data) 
+                {
+                    response($.map(data, function (item) 
+                    {
+                        return {
+                            		label: item.label,
+                            		value: item.value
+                        		}
+                    }));
+                }
+            });
+        }
+    });
+	
+	$("input#requests_client").autocomplete(
+			{
+				minLength:2,
+		        source: function (request, response) 
+		        {
+		            $.ajax(
+		            {
+		                type: "GET",
+		                url: contextPath + "/requests/matchingClientTags?pattern=" + request.term,
+		                dataType: "json",
+		                data: 
+		                {
+		                    term: request.termCode
+		                },
+		                error: function (xhr, textStatus, errorThrown) 
+		                {
+		                    alert('Error: ' + xhr.responseText);
+		                },
+		                success: function (data) 
+		                {
+		                    response($.map(data, function (item) 
+		                    {
+		                        return {
+		                            		label: item.label,
+		                            		value: item.value
+		                        		}
+		                    }));
+		                }
+		            });
+		        }
+		    });	
+	
+	$(".btn").button(); // TODO disable does not work yet. find disabled attribute and add it.
 	
 	disableAddButton();	
 	$("input#requests_snippet").keyup(toggleAddButtonState);

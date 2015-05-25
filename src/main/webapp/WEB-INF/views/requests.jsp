@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/knockout-3.3.0.js" />"></script>		
 		<script type="text/javascript">
+			var contextPath='<%=request.getContextPath()%>' /* needed for autocomplete */
 			if (typeof jQuery == 'undefined')				 
 			    alert("WARNING: jQuery library is NOT loaded!");
 		</script>		

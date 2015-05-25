@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -14,6 +15,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.common.EnumTypes.ClientTierEnum;
+import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.ClientDetailImpl;
 import com.leon.rfq.repositories.ClientDao;
 
@@ -193,5 +195,12 @@ public final class ClientServiceImpl implements ClientService
 		}
 		else
 			return false;
+	}
+
+	@Override
+	public List<Tag> getMatchingClientTags(String pattern)
+	{
+		return this.getAllFromCacheOnly().stream().filter(client -> client.getName().contains(pattern))
+				.map(client -> new Tag(String.valueOf(client.getClientId()), client.getName())).collect(Collectors.toList());
 	}
 }

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.BookDetailImpl;
 import com.leon.rfq.repositories.BookDao;
 
@@ -203,5 +205,12 @@ public final class BookServiceImpl implements BookService
 		}
 		
 		return false;
+	}
+	
+	@Override
+	public List<Tag> getMatchingBookTags(String pattern)
+	{
+		return this.getAllFromCacheOnly().stream().filter(book -> book.getBookCode().contains(pattern))
+				.map(book -> new Tag(book.getBookCode())).collect(Collectors.toList());
 	}
 }

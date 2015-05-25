@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BookService;
@@ -118,5 +119,17 @@ public class RequestControllerImpl
 			model.addAttribute("error", "Failed to delete request with requestId: " + requestId);
 			
 		return "redirect:/requests";
+	}
+	
+	@RequestMapping(value = "/requests/matchingBookTags", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Object getBookMatches(@RequestParam String pattern)
+	{
+		return this.bookService.getMatchingBookTags(pattern);
+	}
+	
+	@RequestMapping(value = "/requests/matchingClientTags", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Object getClientMatches(@RequestParam String pattern)
+	{
+		return this.clientService.getMatchingClientTags(pattern);
 	}
 }
