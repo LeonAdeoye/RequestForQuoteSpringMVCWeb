@@ -40,6 +40,8 @@ function myTrim(x)
 
 $(document).ready(function()
 {
+	$(".btn").button();
+	
 	disableAddButton();	
 	$("input#requests_snippet").keyup(toggleAddButtonState);
 	$("input#requests_snippet").focusout(toggleAddButtonState);

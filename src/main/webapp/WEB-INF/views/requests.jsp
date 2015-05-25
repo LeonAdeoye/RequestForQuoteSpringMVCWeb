@@ -5,10 +5,12 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">		
-		<link href="<c:url value="/resources/css/requests.css" />" rel="stylesheet" type="test/css">
+		<link href="<c:url value="/resources/css/requests.css" />" rel="stylesheet" type="text/css">
+		<link href="<c:url value="/resources/css/jquery-ui.min.css" />" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/js/knockout-3.3.0.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/knockout-3.3.0.js" />"></script>		
 		<script type="text/javascript">
 			if (typeof jQuery == 'undefined')				 
 			    alert("WARNING: jQuery library is NOT loaded!");

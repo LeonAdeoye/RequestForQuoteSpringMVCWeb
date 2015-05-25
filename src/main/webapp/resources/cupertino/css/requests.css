@@ -50,16 +50,14 @@
 {
 	float:left;
 	height:22px;
-	padding:2px;
-	margin:2px;
+	font-weight:normal;
 }
 
 #requests_clear_button
 {
 	float:left;
 	height:22px;
-	padding:2px;
-	margin:2px;
+	font-weight:normal;
 }
 
 #requests_bar
@@ -68,7 +66,7 @@
 	clear:right;
 	overflow:hidden;
 	font-size:14px;
-	background-color:#4D7A97;
+	background-color:rgb(59, 170, 227);
 	height:35px;
 }
 
