@@ -1,3 +1,5 @@
+var SNIPPET_REGEX = /^([+-]?[1-9]*[CP]{1}){1}([-+]{1}[1-9]*[CP]{1})* ([\d]+){1}(,{1}[\d]+)* [\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\d]{2}(,{1}[\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\d]{2})* (\w){4,7}\.[A-Z]{1,2}(,{1}(\w){4,7}\.[A-Z]{1,2})*$/;
+
 function enableAddButton()
 {
 	$("input#requests_add_button").removeAttr('disabled');
@@ -34,40 +36,38 @@ function toggleAddButtonState()
 function myTrim(x)
 {
 	return x.replace(/^\s+|\s+$/gm,'');
-	
 }
 
 $(document).ready(function()
 {
-	disableAddButton();
-});
+	disableAddButton();	
+	$("input#requests_snippet").keyup(toggleAddButtonState);
+	$("input#requests_snippet").focusout(toggleAddButtonState);
 
-$("input#requests_snippet").keyup(toggleAddButtonState);
-$("input#requests_snippet").focusout(toggleAddButtonState);
-
-$("input.new_request").click(function()
-{
-	if($(this).val() == $(this).attr("default_value"))
+	$("input.new_request").click(function()
 	{
-		$(this).val("");
+		if($(this).val() == $(this).attr("default_value"))
+		{
+			$(this).val("");
+			
+			if($(this).is("input#requests_snippet"))
+				disableAddButton();
+		}
+	});
+
+	$("input.new_request").focusout(function()
+	{
+		if(myTrim($(this).val()) == "")
+			$(this).val($(this).attr("default_value"));
+	});
+
+	$("#requests_clear_button").click(function()
+	{
+		$("input.new_request").val($(this).attr("default_value"));
 		
-		if($(this).is("input#requests_snippet"))
-			disableAddButton();
-	}
+		disableAddButton();		
+	});	
 });
 
-$("input.new_request").focusout(function()
-{
-	if(myTrim($(this).val()) == "")
-		$(this).val($(this).attr("default_value"));
-});
-
-$("#requests_clear_button").click(function()
-{
-	$("input.new_request").val($(this).attr("default_value"));
-	disableAddButton();
-});
-
-var SNIPPET_REGEX = /^([+-]?[1-9]*[CP]{1}){1}([-+]{1}[1-9]*[CP]{1})* ([\d]+){1}(,{1}[\d]+)* [\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\d]{2}(,{1}[\d]{1,2}(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)20[\d]{2})* (\w){4,7}\.[A-Z]{1,2}(,{1}(\w){4,7}\.[A-Z]{1,2})*$/;
 
 
