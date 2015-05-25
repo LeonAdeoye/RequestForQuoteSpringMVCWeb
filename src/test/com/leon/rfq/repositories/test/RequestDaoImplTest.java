@@ -62,19 +62,25 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		this.transactionManager.rollback(this.status);
 	}
 	
-	/*@Test
+	@Test
     public void getAll_ValidScenario_ReturnsValidListOfAllRequests()
 	{
+		// Arrange
 		int beforeCount = this.requestDaoImpl.getAll().size();
-		this.requestDaoImpl.insert("requestIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertNotNull("getAll method should return a non-null list of requests", this.requestDaoImpl.getAll());
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		this.requestDaoImpl.insert(newRequest);
+		// Act and Assert
 		assertEquals("count of request should have been incremented ", beforeCount + 1, this.requestDaoImpl.getAll().size());
-	}*/
+	}
 	
 	@Test
     public void get_ValidRequestId_ReturnsValidRequestMatchingRequestId()
 	{
-		assertEquals("get method should return the request when a valid requestId is provided", 1, this.requestDaoImpl.get(1).getIdentifier());
+		// Arrange
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		this.requestDaoImpl.insert(newRequest);
+		// Act and Assert
+		assertEquals("get method should return the request when a valid requestId is provided", newRequest.getIdentifier(), this.requestDaoImpl.get(newRequest.getIdentifier()).getIdentifier());
 	}
 	
 	@Test
@@ -86,52 +92,25 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void insert_ValidParameters_InsertsRequestAndReturnsTrue()
 	{
+		// Arrange
 		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
-		
+		// Act and Assert
 		assertTrue("Should insert the request and return true", this.requestDaoImpl.insert(newRequest));
-		
+		// Assert
 		assertNotNull("Inserted request should now exist and return non-null", this.requestDaoImpl.get(newRequest.getIdentifier()));
-	}
-	
-	/*@Test
-    public void updateValidity_ValidRequestId_UpdatesValidityReturnsTrue()
-	{
-		this.requestDaoImpl.insert("requestIdToBeUpdated", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertTrue("previously saved request should exist", this.requestDaoImpl.get("requestIdToBeUpdated").getRequestId().equals("requestIdToBeUpdated"));
-		assertTrue("updateValidity method should update validity to the provided value for the saved request", this.requestDaoImpl.updateValidity("requestIdToBeUpdated", false, "leon.adeoye"));
-		assertTrue("updated request validity should have changed", !this.requestDaoImpl.get("requestIdToBeUpdated").getIsValid());
-	}
-	
-	@Test
-    public void updateValidity_NonExistantRequestId_ReturnsFalse()
-	{
-		assertFalse("updateValidity method should return false for a non-existant request", this.requestDaoImpl.updateValidity("nonExistantRequestId", false, "leon.adeoye"));
-	}
-	
-	@Test
-    public void insert_duplicatedRequestId_SaveFailsAndReturnsFalse()
-	{
-		this.requestDaoImpl.insert("duplicatedRequestId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertFalse("second save method should return false because requestId already exists", this.requestDaoImpl.insert("duplicatedRequestId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me"));
-	}
-	
-	@Test
-    public void update_updatewithValidEmailAddress_EmailAddressUpdated()
-	{
-		this.requestDaoImpl.insert("testRequestId", "ethan", "adeoye", "horatio.adeoye", "hong kong", "myGroup", true, "me");
-		assertTrue("Update should return true", this.requestDaoImpl.update("testRequestId", "ethan", "adeoye", "horatio@adeoye.com", "hong kong", "myGroup", true, "me"));
-		RequestDetailImpl updatedRequest = this.requestDaoImpl.get("testRequestId");
-		assertEquals("Updated request's email address should be updated to new value", updatedRequest.getEmailAddress(), "horatio@adeoye.com");
 	}
 	
 	@Test
     public void delete_ValidRequestId_DeleteSucceedsAndReturnsTrue()
 	{
-		this.requestDaoImpl.insert("100000", "C+P 100", "TESTBOOK", "client", "me");
-		assertTrue("previously saved request should exist", this.requestDaoImpl.get(100000).getIdentifier() == 100000);
-		assertTrue("delete method should return true", this.requestDaoImpl.delete("100000"));
-		assertNull("deleted request should not longer exist", this.requestDaoImpl.get("100000"));
-	}*/
+		// Arrange
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		this.requestDaoImpl.insert(newRequest);
+		// Act and Assert
+		assertTrue("delete method should return true", this.requestDaoImpl.delete(newRequest.getIdentifier()));
+		// Assert
+		assertNull("deleted request should not longer exist", this.requestDaoImpl.get(newRequest.getIdentifier()));
+	}
 	
 	@Test
     public void delete_nonExistentRequestId_DeleteFailsAndReturnsFalse()
@@ -142,9 +121,11 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void requestExistsWithRequestId_ExistingRequestId_ReturnsTrue()
 	{
-		//this.requestDaoImpl.insert("100000", "C+P 100", "TESTBOOK", "client", "me");
-		
-		assertTrue("requestExistsWithRequestId should return true because requestId exists", this.requestDaoImpl.requestExistsWithRequestId(1));
+		// Arrange
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		this.requestDaoImpl.insert(newRequest);
+		// Act and Assert
+		assertTrue("requestExistsWithRequestId should return true because requestId exists", this.requestDaoImpl.requestExistsWithRequestId(newRequest.getIdentifier()));
 	}
 	
 	

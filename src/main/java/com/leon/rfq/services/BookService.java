@@ -11,6 +11,8 @@ public interface BookService
 
 	List<BookDetailImpl> getAll();
 	
+	List<BookDetailImpl> getAllFromCacheOnly();
+	
 	boolean insert(String bookCode, String entity, boolean isValid, String savedByUser);
 	
 	boolean delete(String bookCode);

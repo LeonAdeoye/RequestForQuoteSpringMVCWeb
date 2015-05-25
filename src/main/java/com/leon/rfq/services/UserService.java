@@ -30,4 +30,6 @@ public interface UserService
 			String locationName, String groupName, boolean isValid, String savedByUser);
 
 	void initialise();
+
+	List<UserDetailImpl> getAllFromCacheOnly();
 }

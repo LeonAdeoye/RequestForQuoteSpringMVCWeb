@@ -1,9 +1,11 @@
 package com.leon.rfq.services;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,10 +46,7 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 		this.optionRequestFactory = factory;
 	}
 	
-	public RequestServiceImpl()
-	{
-		//this.getAll(); //TODO.
-	}
+	public RequestServiceImpl() {}
 
 	/**
 	 * Determines if the request with the matching requestId exists in the request cache
@@ -91,6 +90,16 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 		
 		return request;
 	}
+	
+	/**
+	 * Gets all requests previously saved to the cache only. Does not retrieve from the database.
+	 * @returns a list of requests that were previously saved in the cache.
+	 */
+	@Override
+	public List<RequestDetailImpl> getAllFromCacheOnly()
+	{
+		return new LinkedList<RequestDetailImpl>(this.requests.values());
+	}
 
 	/**
 	 * Retrieves all the requests using the DAO instance.
@@ -111,6 +120,31 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 				this.requests.put(request.getIdentifier(), request);
 			
 			return result;
+		}
+		else
+			return new LinkedList<RequestDetailImpl>();
+	}
+	
+	/**
+	 * Retrieves all the requests from today only using the DAO instance.
+	 * Once today's RFQs are retrieved the cache is cleared and the requests re-inserted.
+	 * 
+	 */
+	@Override
+	public List<RequestDetailImpl> getAllFromTodayOnly()
+	{
+		List<RequestDetailImpl> result = this.requestDao.getAll();
+		
+		if(result!= null)
+		{
+			this.requests.clear();
+			
+			// Could use a more complicated lambda expression here but below is far simpler
+			for(RequestDetailImpl request : result)
+				this.requests.put(request.getIdentifier(), request);
+			
+			// TODO - change back top "== 0"
+			return result.stream().filter(request -> request.getTradeDate().compareTo(LocalDate.now()) <= 0).collect(Collectors.toList());
 		}
 		else
 			return new LinkedList<RequestDetailImpl>();

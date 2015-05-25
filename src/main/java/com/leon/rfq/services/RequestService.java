@@ -9,8 +9,6 @@ import com.leon.rfq.repositories.RequestDao;
 public interface RequestService
 {
 	RequestDetailImpl get(int requestId);
-
-	List<RequestDetailImpl> getAll();
 	
 	boolean insert(String requestSnippet, int clientId, String bookName, String savedByUser);
 	
@@ -25,4 +23,10 @@ public interface RequestService
 	void setRequestDao(RequestDao requestDao); // For unit test mocking
 	
 	void setOptionRequestFactory(OptionRequestFactory factory); // For unit test mocking
+	
+	List<RequestDetailImpl> getAll();
+
+	List<RequestDetailImpl> getAllFromCacheOnly();
+
+	List<RequestDetailImpl> getAllFromTodayOnly();
 }

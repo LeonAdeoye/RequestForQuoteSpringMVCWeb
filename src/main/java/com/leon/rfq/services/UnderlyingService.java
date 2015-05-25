@@ -23,4 +23,6 @@ public interface UnderlyingService
 	boolean isUnderlyingCached(String ric);
 
 	void initialise();
+
+	List<UnderlyingDetailImpl> getAllFromCacheOnly();
 }

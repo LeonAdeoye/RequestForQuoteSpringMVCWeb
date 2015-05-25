@@ -111,6 +111,12 @@ public final class ClientServiceImpl implements ClientService
 		else
 			return new LinkedList<ClientDetailImpl>();
 	}
+	
+	@Override
+	public List<ClientDetailImpl> getAllFromCacheOnly()
+	{
+		return new LinkedList<ClientDetailImpl>(this.clients.values());
+	}
 
 	@Override
 	public boolean insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser)

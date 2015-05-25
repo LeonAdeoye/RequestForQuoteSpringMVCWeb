@@ -14,6 +14,8 @@ public interface ClientService
 
 	List<ClientDetailImpl> getAll();
 	
+	List<ClientDetailImpl> getAllFromCacheOnly();
+	
 	boolean insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser);
 	
 	boolean update(int clientId, String clientName, ClientTierEnum tier, boolean isValid, String updatedByUser);

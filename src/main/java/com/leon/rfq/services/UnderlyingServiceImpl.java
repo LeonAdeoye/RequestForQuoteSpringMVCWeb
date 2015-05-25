@@ -202,6 +202,16 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
+	
+	/**
+	 * Gets all underlyings previously saved to the cache only. Does not retrieve from the database.
+	 * @returns a list of underlyings that were previously saved in the cache.
+	 */
+	@Override
+	public List<UnderlyingDetailImpl> getAllFromCacheOnly()
+	{
+		return new LinkedList<UnderlyingDetailImpl>(this.underlyings.values());
+	}
 
 	/**
 	 * Gets all underlyings previously saved to the database.

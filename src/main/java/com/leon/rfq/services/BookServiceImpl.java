@@ -108,6 +108,12 @@ public final class BookServiceImpl implements BookService
 		else
 			return new LinkedList<BookDetailImpl>();
 	}
+	
+	@Override
+	public List<BookDetailImpl> getAllFromCacheOnly()
+	{
+		return new LinkedList<BookDetailImpl>(this.books.values());
+	}
 
 	@Override
 	public boolean insert(String bookCode, String entity, boolean isValid, String savedByUser)

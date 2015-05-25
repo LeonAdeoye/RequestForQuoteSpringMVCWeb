@@ -50,10 +50,10 @@ public class RequestControllerImpl
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
 	public String getAll(Model model)
 	{
-		model.addAttribute("requests", this.requestService.getAll());
+		model.addAttribute("requests", this.requestService.getAllFromTodayOnly());
 		model.addAttribute("newRequest", new RequestDetailImpl());
-		model.addAttribute("books", this.bookService.getAll());
-		model.addAttribute("clients", this.clientService.getAll());
+		model.addAttribute("books", this.bookService.getAllFromCacheOnly());
+		model.addAttribute("clients", this.clientService.getAllFromCacheOnly());
 		
 		return "requests";
 	}

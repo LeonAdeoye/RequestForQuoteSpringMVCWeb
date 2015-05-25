@@ -125,6 +125,12 @@ public final class UserServiceImpl implements UserService
 		else
 			return new LinkedList<UserDetailImpl>();
 	}
+	
+	@Override
+	public List<UserDetailImpl> getAllFromCacheOnly()
+	{
+		return new LinkedList<UserDetailImpl>(this.users.values());
+	}
 
 	@Override
 	public boolean insert(String userId, String firstName, String lastName,
