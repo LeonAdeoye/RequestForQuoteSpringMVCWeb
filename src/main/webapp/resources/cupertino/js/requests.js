@@ -73,36 +73,58 @@ $(document).ready(function()
     });
 	
 	$("input#requests_client").autocomplete(
-			{
-				minLength:2,
-		        source: function (request, response) 
-		        {
-		            $.ajax(
-		            {
-		                type: "GET",
-		                url: contextPath + "/requests/matchingClientTags?pattern=" + request.term,
-		                dataType: "json",
-		                data: 
-		                {
-		                    term: request.termCode
-		                },
-		                error: function (xhr, textStatus, errorThrown) 
-		                {
-		                    alert('Error: ' + xhr.responseText);
-		                },
-		                success: function (data) 
-		                {
-		                    response($.map(data, function (item) 
-		                    {
-		                        return {
-		                            		label: item.label,
-		                            		value: item.value
-		                        		}
-		                    }));
-		                }
-		            });
-		        }
-		    });	
+	{
+		minLength:2,
+        source: function (request, response) 
+        {
+            $.ajax(
+            {
+                type: "GET",
+                url: contextPath + "/requests/matchingClientTags?pattern=" + request.term,
+                dataType: "json",
+                data: 
+                {
+                    term: request.termCode
+                },
+                error: function (xhr, textStatus, errorThrown) 
+                {
+                    alert('Error: ' + xhr.responseText);
+                },
+                success: function (data) 
+                {
+                    response($.map(data, function (item) 
+                    {
+                        return {
+                            		label: item.label,
+                            		value: item.value
+                        		}
+                    }));
+                }
+            });
+        }
+    });
+	
+/*	$("input#requests_add_button").click(function()
+	{		
+	    var request = 
+	    {
+	    	request:$("input#requests_snippet").val(), 
+			bookCode:$("input#requests_bookCode").val(), 
+			ClientId:$("input#requests_clientId").val()
+	    };
+	    
+	    $.ajax(
+	    {
+	        url: contextPath + "/requests/add,
+	        dataType : 'json',
+	        type : 'POST',
+	        data: JSON.stringify(request),
+	        success: function(response)
+	        {
+	            alert('Load was performed.');
+	        }
+	    });		
+	});	*/
 	
 	$(".btn").button(); // TODO disable does not work yet. find disabled attribute and add it.
 	
@@ -127,7 +149,7 @@ $(document).ready(function()
 			$(this).val($(this).attr("default_value"));
 	});
 
-	$("#requests_clear_button").click(function()
+	$("input#requests_clear_button").click(function()
 	{
 		$("input.new_request").val($(this).attr("default_value"));
 		
