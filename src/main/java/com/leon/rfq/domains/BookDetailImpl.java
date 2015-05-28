@@ -1,5 +1,7 @@
 package com.leon.rfq.domains;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.slf4j.Logger;
@@ -9,8 +11,12 @@ import org.slf4j.LoggerFactory;
 public final class BookDetailImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(BookDetailImpl.class);
+	@NotNull(message="{book.validation.bookCode.notNull}")
+	@Size(min=1, max=10, message="{book.validation.bookCode.size}")
 	private String bookCode;
 	private boolean isValid;
+	@NotNull(message="{book.validation.entity.notNull}")
+	@Size(min=1, max=10, message="{book.validation.entity.size}")
 	private String entity;
 	private String lastUpdatedByUser;
 

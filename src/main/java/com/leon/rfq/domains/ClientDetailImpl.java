@@ -1,5 +1,7 @@
 package com.leon.rfq.domains;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.slf4j.Logger;
@@ -11,6 +13,8 @@ import com.leon.rfq.common.EnumTypes.ClientTierEnum;
 public final class ClientDetailImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(ClientDetailImpl.class);
+	@NotNull(message="{client.validation.clientName.notNull}")
+	@Size(min=1, max=45, message="{client.validation.clientName.size}")
 	private String name;
 	private int identifier;  // Using clientId does not work despite using ALL of the recommended MyBatis attributes.
 	private boolean isValid;
