@@ -17,7 +17,7 @@ import com.leon.rfq.common.EnumTypes.SideEnum;
 import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.services.BankHolidayMaintenanceService;
+import com.leon.rfq.services.BankHolidayService;
 import com.leon.rfq.services.DefaultConfigurationService;
 import com.leon.rfq.services.InterestRateService;
 import com.leon.rfq.services.PriceService;
@@ -29,7 +29,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	private static final Logger logger = LoggerFactory.getLogger(OptionRequestFactoryImpl.class);
 	
 	@Autowired(required=true)
-	BankHolidayMaintenanceService bankHolidayMaintenanceService;
+	BankHolidayService bankHolidayMaintenanceService;
 	
 	@Autowired(required=true)
 	DefaultConfigurationService defaultConfigurationService;
