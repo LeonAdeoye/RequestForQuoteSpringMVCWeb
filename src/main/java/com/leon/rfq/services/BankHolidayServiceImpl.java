@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -20,8 +21,14 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	private final Map<LocationEnum, Set<LocalDate>> bankHolidays = new HashMap<>();
 	private ApplicationEventPublisher applicationEventPublisher;
 	
-	@Autowired
+	@Autowired(required=true)
 	private BankHolidayDao dao;
+	
+	@Override
+	public void setBankHolidayDao(BankHolidayDao bankHolidayDao)
+	{
+		this.dao = bankHolidayDao;
+	}
 	
 	public boolean isBankHolidayCached(LocationEnum location, LocalDate dateToBeChecked)
 	{
@@ -31,12 +38,16 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	@Override
 	public long calculateBusinessDaysToExpiry(LocalDate startDate, LocalDate endDate, LocationEnum location)
 	{
+		long allDays = calculateAllDaysToExpiry(startDate, endDate);
+		
 		if(this.bankHolidays.containsKey(location))
 		{
-			//this.bankHolidays.get(location).stream().reduce()
+			return Stream.iterate(startDate, nextDate -> startDate.plus(1, ChronoUnit.DAYS))
+					.limit(allDays)
+					.filter(theDate -> isBankHoliday(theDate, location)).count();
 		}
 		
-		return calculateAllDaysToExpiry(LocalDate.now(), endDate);
+		return allDays;
 	}
 
 	@Override

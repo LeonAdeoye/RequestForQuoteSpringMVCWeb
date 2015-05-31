@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import com.leon.rfq.repositories.BookDao;
 import com.leon.rfq.repositories.BookDaoImpl;
 import com.leon.rfq.services.BookService;
-import com.leon.rfq.services.BookServiceImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
@@ -61,11 +60,10 @@ public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
     public void get_ValidParameter_CallsDaoGetMethod()
 	{
 		// Arrange
-		BookService bookService = new BookServiceImpl();
 		BookDao bookDaoMock = mock(BookDaoImpl.class);
-		bookService.setBookDao(bookDaoMock);
+		this.bookService.setBookDao(bookDaoMock);
 		// Act
-		bookService.get("testBook");
+		this.bookService.get("testBook");
 		// Assert
 		verify(bookDaoMock).get("testBook");
 	}
@@ -74,11 +72,10 @@ public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
     public void getAll_NoParameters_CallsDaoGetAllMethod()
 	{
 		// Arrange
-		BookService bookService = new BookServiceImpl();
 		BookDao bookDaoMock = mock(BookDaoImpl.class);
-		bookService.setBookDao(bookDaoMock);
+		this.bookService.setBookDao(bookDaoMock);
 		// Act
-		bookService.getAll();
+		this.bookService.getAll();
 		// Assert
 		verify(bookDaoMock).getAll();
 	}
@@ -87,11 +84,10 @@ public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
     public void delete_validBookCode_CallsDaoDeleteMethod()
 	{
 		// Arrange
-		BookService bookService = new BookServiceImpl();
 		BookDao bookDaoMock = mock(BookDaoImpl.class);
-		bookService.setBookDao(bookDaoMock);
+		this.bookService.setBookDao(bookDaoMock);
 		// Act
-		bookService.delete("bookToBeDeleted");
+		this.bookService.delete("bookToBeDeleted");
 		// Assert
 		verify(bookDaoMock, never()).delete("bookToBeDeleted");
 	}
@@ -100,11 +96,10 @@ public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
     public void updateValidity_NonExistentBookCode_DoesNotCallDaoUpdateValidityMethod()
 	{
 		// Arrange
-		BookService bookService = new BookServiceImpl();
 		BookDao bookDaoMock = mock(BookDaoImpl.class);
-		bookService.setBookDao(bookDaoMock);
+		this.bookService.setBookDao(bookDaoMock);
 		// Act
-		bookService.updateValidity("bookToBeUpdated", true, "tester");
+		this.bookService.updateValidity("bookToBeUpdated", true, "tester");
 		// Assert
 		verify(bookDaoMock, never()).updateValidity("bookToBeUpdated", true, "tester");
 	}
@@ -113,22 +108,20 @@ public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
     public void updateValidity_NonExistentBookCode_ReturnFalse()
 	{
 		// Arrange
-		BookService bookService = new BookServiceImpl();
 		BookDao bookDaoMock = mock(BookDaoImpl.class);
-		bookService.setBookDao(bookDaoMock);
+		this.bookService.setBookDao(bookDaoMock);
 		// Act and Assert
-		assertFalse("updateValidity should return false if book does not exist.", bookService.updateValidity("bookToBeUpdated", true, "tester"));
+		assertFalse("updateValidity should return false if book does not exist.", this.bookService.updateValidity("bookToBeUpdated", true, "tester"));
 	}
 	
 	@Test
     public void updateValidity_validBookCode_CallsDaoUpdateValidityMethod()
 	{
 		// Arrange
-		BookService bookService = new BookServiceImpl();
 		BookDao bookDaoMock = mock(BookDaoImpl.class);
-		bookService.setBookDao(bookDaoMock);
+		this.bookService.setBookDao(bookDaoMock);
 		// Act
-		bookService.updateValidity("bookToBeUpdated", true, "tester");
+		this.bookService.updateValidity("bookToBeUpdated", true, "tester");
 		// Assert
 		verify(bookDaoMock, never()).updateValidity("bookToBeUpdated", true, "tester");
 	}
@@ -137,11 +130,10 @@ public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
     public void insert_validParameters_CallsDaoSaveMethod()
 	{
 		// Arrange
-		BookService bookService = new BookServiceImpl();
 		BookDao bookDaoMock = mock(BookDaoImpl.class);
-		bookService.setBookDao(bookDaoMock);
+		this.bookService.setBookDao(bookDaoMock);
 		// Act
-		bookService.insert("testBook", "entity", true, "tester");
+		this.bookService.insert("testBook", "entity", true, "tester");
 		// Assert
 		verify(bookDaoMock).insert("testBook", "entity", true, "tester");
 	}
@@ -276,11 +268,10 @@ public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
     public void bookExistsWithBookCode_existingBookCode__CallsCorrectDaoMethod()
 	{
 		// Arrange
-		BookService bookService = new BookServiceImpl();
 		BookDao bookDaoMock = mock(BookDaoImpl.class);
-		bookService.setBookDao(bookDaoMock);
+		this.bookService.setBookDao(bookDaoMock);
 		// Act
-		bookService.bookExistsWithBookCode("bookCode");
+		this.bookService.bookExistsWithBookCode("bookCode");
 		// Assert
 		verify(bookDaoMock).bookExistsWithBookCode("bookCode");
 	}

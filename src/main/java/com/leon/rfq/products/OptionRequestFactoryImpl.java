@@ -29,7 +29,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	private static final Logger logger = LoggerFactory.getLogger(OptionRequestFactoryImpl.class);
 	
 	@Autowired(required=true)
-	BankHolidayService bankHolidayMaintenanceService;
+	BankHolidayService bankHolidayService;
 	
 	@Autowired(required=true)
 	DefaultConfigurationService defaultConfigurationService;
@@ -176,7 +176,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             	optionLeg.setMaturityDate(LocalDate.parse(dates[0], formatter));
             	optionLeg.setTradeDate(LocalDate.now());
                 
-                optionLeg.setDaysToExpiry(new BigDecimal(this.bankHolidayMaintenanceService.CalculateBusinessDaysToExpiry(
+                optionLeg.setDaysToExpiry(new BigDecimal(this.bankHolidayService.calculateBusinessDaysToExpiry(
                 		optionLeg.getTradeDate(),
                 		optionLeg.getMaturityDate(),
                 		this.defaultConfigurationService.getDefaultLocation())));
@@ -190,7 +190,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             	optionLeg.setMaturityDate(LocalDate.parse(dates[count++], formatter));
             	optionLeg.setTradeDate(LocalDate.now());
             	
-                optionLeg.setDaysToExpiry(new BigDecimal(this.bankHolidayMaintenanceService.CalculateBusinessDaysToExpiry(
+                optionLeg.setDaysToExpiry(new BigDecimal(this.bankHolidayService.calculateBusinessDaysToExpiry(
                 		optionLeg.getTradeDate(),
                 		optionLeg.getMaturityDate(),
                 		this.defaultConfigurationService.getDefaultLocation())));
