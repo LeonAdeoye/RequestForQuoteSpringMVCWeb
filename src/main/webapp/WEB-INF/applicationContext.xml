@@ -62,7 +62,7 @@
 						<value>com.leon.rfq.domains.UnderlyingDetailImpl</value>
 						<value>com.leon.rfq.domains.GroupDetailImpl</value>
 						<value>com.leon.rfq.domains.ClientDetailImpl</value>
-						<value>com.leon.rfq.domains.HolidayDetailImpl</value>
+						<value>com.leon.rfq.domains.BankHolidayDetailImpl</value>
 						<value>com.leon.rfq.domains.BookDetailImpl</value>
 						<value>com.leon.rfq.domains.RequestDetailImpl</value>
 						<value>com.leon.rfq.domains.OptionDetailImpl</value>

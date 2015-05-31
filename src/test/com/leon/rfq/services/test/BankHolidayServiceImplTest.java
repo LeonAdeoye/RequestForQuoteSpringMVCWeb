@@ -1,8 +1,11 @@
 package com.leon.rfq.services.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+
+import java.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,5 +41,19 @@ public class BankHolidayServiceImplTest extends AbstractJUnit4SpringContextTests
 		this.bankHolidayService.getHolidaysInLocation(LocationEnum.TOKYO);
 		// Assert
 		verify(bankHolidayDaoMock).getAll(LocationEnum.TOKYO);
+	}
+	
+	@Test
+    public void calculateAllDaysToExpiry_ValidDates_CorrectResultReturned()
+	{
+		// Arrange
+		assertEquals("Should calculate correct number of days between two dates", this.bankHolidayService.calculateAllDaysToExpiry(LocalDate.now(), LocalDate.now().plusDays(10)), 10);
+	}
+	
+	@Test
+    public void calculateAllDaysToExpiryFromToday_ValidDates_CorrectResultReturned()
+	{
+		// Arrange
+		assertEquals("Should calculate correct number of days between today and end date", this.bankHolidayService.calculateAllDaysToExpiryFromToday(LocalDate.now().plusDays(10)), 10);
 	}
 }

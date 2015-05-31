@@ -2,15 +2,15 @@ package com.leon.rfq.events;
 
 import org.springframework.context.ApplicationEvent;
 
-import com.leon.rfq.domains.HolidayDetailImpl;
+import com.leon.rfq.domains.BankHolidayDetailImpl;
 
 
 @SuppressWarnings("serial")
 public class NewHolidayEvent extends ApplicationEvent
 {
-	private final HolidayDetailImpl holiday;
+	private final BankHolidayDetailImpl holiday;
 
-	public NewHolidayEvent(Object source, HolidayDetailImpl holiday)
+	public NewHolidayEvent(Object source, BankHolidayDetailImpl holiday)
 	{
 		super(source);
 		this.holiday = holiday;
@@ -22,7 +22,7 @@ public class NewHolidayEvent extends ApplicationEvent
 		return "New holiday event: " + this.holiday;
 	}
 
-	public HolidayDetailImpl getHoliday()
+	public BankHolidayDetailImpl getHoliday()
 	{
 		return this.holiday;
 	}

@@ -42,9 +42,9 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 		
 		if(this.bankHolidays.containsKey(location))
 		{
-			return Stream.iterate(startDate, nextDate -> startDate.plus(1, ChronoUnit.DAYS))
+			return Stream.iterate(startDate, nextDate -> startDate.plusDays(1))
 					.limit(allDays)
-					.filter(theDate -> isBankHoliday(theDate, location)).count();
+					.filter(theDate -> !isBankHoliday(theDate, location)).count();
 		}
 		
 		return allDays;

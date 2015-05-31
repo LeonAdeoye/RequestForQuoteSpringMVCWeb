@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.leon.rfq.mappers.BankHolidayMapper">
+	
+	<resultMap type="BankHolidayDetailImpl" id="BankHolidayResultSet">
+		<id 	property="identifier" column="identifier"/>
+		<result property="bankHolidayDate" column="bankHolidayDate"/>
+		<result property="isValid" column="isValid"/>
+		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
+	</resultMap>
+	
+	<select id="get" parameterType="java.lang.String" resultType="BankHolidayDetailImpl">
+		SELECT identifier, bankHolidayDate, isValid, lastUpdatedBy 
+		FROM holidays WHERE Location=#{location}
+	</select>
+	
+	<select id="bankHolidayExists" parameterType="java.lang.String" resultType="BankHolidayDetailImpl">
+		SELECT identifier, bankHolidayDate, isValid, lastUpdatedBy
+		FROM holidays WHERE bookCode=#{bookCode}
+	</select>
+	
+	<select id="getAll" resultMap="BankHolidayResultSet">
+		SELECT identifier, bankHolidayDate, isValid, lastUpdatedBy  
+		FROM holidays WHERE Location=#{location}
+	</select>
+	
+	<update id="update" parameterType="BankHolidayDetailImpl">
+		UPDATE holidays 
+		SET isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
+		WHERE identifier = #{identifier}
+	</update>	
+	
+	<insert id="insert" parameterType="BankHolidayDetailImpl">
+		INSERT INTO holidays (bankHolidayDate, location,  isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{bankHolidayDate}, #{location}, #{isValid}, #{lastUpdatedBy}, now() )
+	</insert>
+	
+	<delete id="delete" parameterType="java.lang.String">
+		DELETE FROM holidays
+		WHERE bookCode = #{bookCode}
+	</delete>		
+			
+</mapper>
