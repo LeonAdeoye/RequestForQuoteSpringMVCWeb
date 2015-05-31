@@ -11,13 +11,13 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ValidationUtils;
 
 import com.leon.rfq.domains.UserDetailImpl;
-import com.leon.rfq.validators.UserValidator;
+import com.leon.rfq.validators.UserValidatorImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class UserValidatorTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired
-	private UserValidator userValidator;
+	private UserValidatorImpl userValidator;
 	
 	@Test
 	public void User_EmptylastName_ShouldBeInvalidated()

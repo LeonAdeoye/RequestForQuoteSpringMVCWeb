@@ -1,4 +1,4 @@
-package com.leon.rfq.simulation;
+package com.leon.rfq.simulators;
 
 public interface PriceSimulator
 {

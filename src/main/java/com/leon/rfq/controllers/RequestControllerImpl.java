@@ -22,7 +22,7 @@ import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BookService;
 import com.leon.rfq.services.ClientService;
 import com.leon.rfq.services.RequestService;
-import com.leon.rfq.validators.RequestValidator;
+import com.leon.rfq.validators.RequestValidatorImpl;
 
 @Controller
 public class RequestControllerImpl
@@ -39,7 +39,7 @@ public class RequestControllerImpl
 	ClientService clientService;
 	
 	@Autowired
-	private RequestValidator requestValidator;
+	private RequestValidatorImpl requestValidator;
 	
 	@InitBinder
 	public void initialiseBinder(WebDataBinder binder)

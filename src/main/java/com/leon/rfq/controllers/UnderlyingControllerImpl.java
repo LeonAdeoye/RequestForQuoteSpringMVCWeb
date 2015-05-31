@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.services.UnderlyingService;
-import com.leon.rfq.validators.UnderlyingValidator;
+import com.leon.rfq.validators.UnderlyingValidatorImpl;
 
 @Controller
 @RequestMapping("/underlyings")
@@ -31,7 +31,7 @@ public class UnderlyingControllerImpl
 	UnderlyingService underlyingService;
 	
 	@Autowired
-	private UnderlyingValidator underlyingValidator;
+	private UnderlyingValidatorImpl underlyingValidator;
 	
 	@InitBinder
 	public void initialiseBinder(WebDataBinder binder)

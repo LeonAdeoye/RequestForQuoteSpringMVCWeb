@@ -11,13 +11,13 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ValidationUtils;
 
 import com.leon.rfq.domains.UnderlyingDetailImpl;
-import com.leon.rfq.validators.UnderlyingValidator;
+import com.leon.rfq.validators.UnderlyingValidatorImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class UnderlyingValidatorTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired
-	private UnderlyingValidator underlyingValidator;
+	private UnderlyingValidatorImpl underlyingValidator;
 	
 	@Test
 	public void Underlying_ValidParameters_ShouldBeValidated()

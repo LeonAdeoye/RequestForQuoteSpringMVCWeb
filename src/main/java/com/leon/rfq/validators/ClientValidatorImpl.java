@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.leon.rfq.domains.BookDetailImpl;
-import com.leon.rfq.services.BookService;
+import com.leon.rfq.domains.ClientDetailImpl;
+import com.leon.rfq.services.ClientService;
 
 @Component
-public class BookValidator implements Validator
+public class ClientValidatorImpl implements Validator
 {
 	@Autowired
-	private BookService bookService;
+	private ClientService clientService;
 	
 	@Autowired
 	private javax.validation.Validator beanValidator;
@@ -24,7 +24,7 @@ public class BookValidator implements Validator
 	@Override
 	public boolean supports(Class<?> clazz)
 	{
-		return BookDetailImpl.class.isAssignableFrom(clazz);
+		return ClientDetailImpl.class.isAssignableFrom(clazz);
 	}
 
 	@Override
@@ -39,10 +39,10 @@ public class BookValidator implements Validator
 			errors.rejectValue(propertyPath, "", message);
 		}
 		
-		BookDetailImpl book = (BookDetailImpl) target;
+		ClientDetailImpl client = (ClientDetailImpl) target;
 		
-		if(this.bookService.bookExistsWithBookCode(book.getBookCode()))
-			errors.rejectValue("bookCode", "book.validation.bookCode.unique");
+		if(this.clientService.clientExistsWithClientName(client.getName()))
+			errors.rejectValue("clientId", "client.validation.clientName.unique");
 	}
 
 }

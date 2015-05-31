@@ -12,13 +12,13 @@ import org.springframework.validation.ValidationUtils;
 
 import com.leon.rfq.common.EnumTypes.ClientTierEnum;
 import com.leon.rfq.domains.ClientDetailImpl;
-import com.leon.rfq.validators.ClientValidator;
+import com.leon.rfq.validators.ClientValidatorImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class ClientValidatorTest extends AbstractJUnit4SpringContextTests
 {
 	@Autowired
-	private ClientValidator clientValidator;
+	private ClientValidatorImpl clientValidator;
 	
 	@Test
 	public void Client_ValidParameters_ShouldBeValidated()

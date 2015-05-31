@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.services.RequestService;
+import com.leon.rfq.domains.UnderlyingDetailImpl;
+import com.leon.rfq.services.UnderlyingService;
 
 @Component
-public class RequestValidator implements Validator
+public class UnderlyingValidatorImpl implements Validator
 {
 	@Autowired
-	private RequestService requestService;
+	private UnderlyingService underlyingService;
 	
 	@Autowired
 	private javax.validation.Validator beanValidator;
@@ -24,7 +24,7 @@ public class RequestValidator implements Validator
 	@Override
 	public boolean supports(Class<?> clazz)
 	{
-		return RequestDetailImpl.class.isAssignableFrom(clazz);
+		return UnderlyingDetailImpl.class.isAssignableFrom(clazz);
 	}
 
 	@Override
@@ -39,7 +39,10 @@ public class RequestValidator implements Validator
 			errors.rejectValue(propertyPath, "", message);
 		}
 		
-		RequestDetailImpl request = (RequestDetailImpl) target;
-		// TODO
+		UnderlyingDetailImpl underlying = (UnderlyingDetailImpl) target;
+		
+		if(this.underlyingService.underlyingExistsWithRic(underlying.getRic()))
+			errors.rejectValue("ric", "underlying.validation.ric.unique");
 	}
+
 }

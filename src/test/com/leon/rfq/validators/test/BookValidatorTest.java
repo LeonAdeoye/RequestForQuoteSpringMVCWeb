@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
@@ -11,20 +13,20 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ValidationUtils;
 
 import com.leon.rfq.domains.BookDetailImpl;
-import com.leon.rfq.validators.BookValidator;
+import com.leon.rfq.validators.BookValidatorImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class BookValidatorTest extends AbstractJUnit4SpringContextTests
 {
+	private static final Logger logger = LoggerFactory.getLogger(BookValidatorTest.class);
 	@Autowired
-	private BookValidator bookValidator;
+	BookValidatorImpl bookValidator;
 	
 	@Test
 	public void Book_ValidParameters_ShouldBeValidated()
 	{
 		// Arrange
-		BookDetailImpl book = new BookDetailImpl("testBook", "entity", true, "testBook");
-		
+		BookDetailImpl book = new BookDetailImpl("GENESIS", "entity", true, "testUser");
 		BindException bindException = new BindException(book, "book");
 		
 		// Act
@@ -38,8 +40,7 @@ public class BookValidatorTest extends AbstractJUnit4SpringContextTests
 	public void Book_EmptyEntity_ShouldBeInvalidated()
 	{
 		// Arrange
-		BookDetailImpl book = new BookDetailImpl("testBook", "", true, "testBook");
-		
+		BookDetailImpl book = new BookDetailImpl("GENESIS", "", true, "testUser");
 		BindException bindException = new BindException(book, "book");
 		
 		// Act
@@ -54,8 +55,7 @@ public class BookValidatorTest extends AbstractJUnit4SpringContextTests
 	public void Book_NullEntity_ShouldBeInvalidated()
 	{
 		// Arrange
-		BookDetailImpl book = new BookDetailImpl("testBook", null, true, "testBook");
-		
+		BookDetailImpl book = new BookDetailImpl("GENESIS", null, true, "testUser");
 		BindException bindException = new BindException(book, "book");
 		
 		// Act
@@ -71,7 +71,6 @@ public class BookValidatorTest extends AbstractJUnit4SpringContextTests
 	{
 		// Arrange
 		BookDetailImpl book = new BookDetailImpl("123456789012345678901234567890", "entity", true, "testBook");
-		
 		BindException bindException = new BindException(book, "book");
 		
 		// Act
@@ -86,8 +85,7 @@ public class BookValidatorTest extends AbstractJUnit4SpringContextTests
 	public void Book_EntityTooLong_ShouldBeInvalidated()
 	{
 		// Arrange
-		BookDetailImpl book = new BookDetailImpl("testBook", "123456789012345678901234567890", true, "testBook");
-		
+		BookDetailImpl book = new BookDetailImpl("GENESIS", "123456789012345678901234567890", true, "testBook");
 		BindException bindException = new BindException(book, "book");
 		
 		// Act

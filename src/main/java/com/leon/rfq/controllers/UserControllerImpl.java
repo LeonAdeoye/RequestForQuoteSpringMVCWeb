@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.services.UserService;
-import com.leon.rfq.validators.UserValidator;
+import com.leon.rfq.validators.UserValidatorImpl;
 
 @Controller
 @RequestMapping("/users")
@@ -31,7 +31,7 @@ public class UserControllerImpl
 	UserService userService;
 	
 	@Autowired
-	private UserValidator userValidator;
+	private UserValidatorImpl userValidator;
 	
 	@InitBinder
 	public void initialiseBinder(WebDataBinder binder)
