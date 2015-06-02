@@ -7,40 +7,46 @@
 	
 	<resultMap type="BankHolidayDetailImpl" id="BankHolidayResultSet">
 		<id 	property="identifier" column="identifier"/>
+		<result property="location" typeHandler="org.apache.ibatis.type.EnumTypeHandler" column="location"/>
 		<result property="bankHolidayDate" column="bankHolidayDate"/>
 		<result property="isValid" column="isValid"/>
 		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
 	</resultMap>
 	
-	<select id="get" parameterType="java.lang.String" resultType="BankHolidayDetailImpl">
-		SELECT identifier, bankHolidayDate, isValid, lastUpdatedBy 
-		FROM holidays WHERE Location=#{location}
+	<select id="getAll" parameterType="java.lang.String" resultMap="BankHolidayResultSet">
+		SELECT identifier, location, bankHolidayDate, isValid, lastUpdatedBy 
+		FROM holidays WHERE location=#{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
 	</select>
 	
-	<select id="bankHolidayExists" parameterType="java.lang.String" resultType="BankHolidayDetailImpl">
+	<select id="bankHolidayExists" parameterType="BankHolidayDetailImpl" resultType="BankHolidayDetailImpl">
 		SELECT identifier, bankHolidayDate, isValid, lastUpdatedBy
-		FROM holidays WHERE bookCode=#{bookCode}
-	</select>
-	
-	<select id="getAll" resultMap="BankHolidayResultSet">
-		SELECT identifier, bankHolidayDate, isValid, lastUpdatedBy  
-		FROM holidays WHERE Location=#{location}
+		FROM holidays WHERE location=#{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler} 
+		AND bankHolidayDate = #{bankHolidayDate} 
 	</select>
 	
 	<update id="update" parameterType="BankHolidayDetailImpl">
 		UPDATE holidays 
-		SET isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
+		SET isValid = #{isValid}, 
+		location = #{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, 
+		lastUpdatedBy = #{lastUpdatedBy}, 
+		lastUpdated = now() 
 		WHERE identifier = #{identifier}
 	</update>	
 	
-	<insert id="insert" parameterType="BankHolidayDetailImpl">
+	<insert id="insert" parameterType="BankHolidayDetailImpl" useGeneratedKeys="true" keyProperty="identifier">
 		INSERT INTO holidays (bankHolidayDate, location,  isValid, lastUpdatedBy, lastUpdated)
-		VALUES(#{bankHolidayDate}, #{location}, #{isValid}, #{lastUpdatedBy}, now() )
+		VALUES(#{bankHolidayDate}, #{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, 
+		#{isValid}, #{lastUpdatedBy}, now() )
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.String">
 		DELETE FROM holidays
-		WHERE bookCode = #{bookCode}
-	</delete>		
+		WHERE location = #{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+	</delete>
+	
+	<delete id="delete" parameterType="java.lang.Integer">
+		DELETE FROM holidays
+		WHERE identifier = #{identifier}
+	</delete>			
 			
 </mapper>

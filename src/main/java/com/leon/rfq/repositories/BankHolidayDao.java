@@ -9,11 +9,11 @@ public interface BankHolidayDao
 {
 	boolean delete(LocationEnum location);
 	
-	boolean delete(LocationEnum location, LocalDate dateToBeDeleted);
+	boolean delete(int identifier);
 
 	boolean insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser);
 	
-	boolean update(LocationEnum location, LocalDate dateToBeInserted, boolean isValid, String savedByUser);
+	boolean update(LocationEnum location, LocalDate dateToBeInserted, boolean isValid, String updatedByUser);
 	 
 	Set<LocalDate> getAll(LocationEnum location);
 

@@ -18,17 +18,28 @@ public final class BankHolidayDetailImpl
 	private LocalDate bankHolidayDate;
 	private boolean isValid;
 	private String lastUpdatedBy;
+	private int identifier;
 	
 	public BankHolidayDetailImpl() {}
-		
-	public BankHolidayDetailImpl(LocationEnum location,
-			LocalDate bankHolidayDate, boolean isValid, String lastUpdatedBy)
+
+	public BankHolidayDetailImpl(LocationEnum location,	LocalDate bankHolidayDate, boolean isValid,
+			String lastUpdatedBy, int identifier)
 	{
-		super();
 		this.location = location;
 		this.bankHolidayDate = bankHolidayDate;
 		this.isValid = isValid;
 		this.lastUpdatedBy = lastUpdatedBy;
+		this.identifier = identifier;
+	}
+	
+	public BankHolidayDetailImpl(LocationEnum location,	LocalDate bankHolidayDate, boolean isValid,
+			String lastUpdatedBy)
+	{
+		this.location = location;
+		this.bankHolidayDate = bankHolidayDate;
+		this.isValid = isValid;
+		this.lastUpdatedBy = lastUpdatedBy;
+		this.identifier = -1;
 	}
 
 	public LocationEnum getLocation()
@@ -71,6 +82,16 @@ public final class BankHolidayDetailImpl
 		this.lastUpdatedBy = lastUpdatedBy;
 	}
 
+	public int getIdentifier()
+	{
+		return this.identifier;
+	}
+
+	public void setIdentifier(int identifier)
+	{
+		this.identifier = identifier;
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -78,6 +99,7 @@ public final class BankHolidayDetailImpl
 		int result = 1;
 		result = (prime * result)
 				+ ((this.bankHolidayDate == null) ? 0 : this.bankHolidayDate.hashCode());
+		result = (prime * result) + this.identifier;
 		result = (prime * result) + (this.isValid ? 1231 : 1237);
 		result = (prime * result)
 				+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
@@ -112,6 +134,10 @@ public final class BankHolidayDetailImpl
 		{
 			return false;
 		}
+		if (this.identifier != other.identifier)
+		{
+			return false;
+		}
 		if (this.isValid != other.isValid)
 		{
 			return false;
@@ -132,4 +158,24 @@ public final class BankHolidayDetailImpl
 		}
 		return true;
 	}
+
+	@Override
+	public String toString()
+	{
+		StringBuilder builder = new StringBuilder();
+		builder.append("BankHolidayDetailImpl [location=");
+		builder.append(this.location);
+		builder.append(", bankHolidayDate=");
+		builder.append(this.bankHolidayDate);
+		builder.append(", isValid=");
+		builder.append(this.isValid);
+		builder.append(", lastUpdatedBy=");
+		builder.append(this.lastUpdatedBy);
+		builder.append(", identifier=");
+		builder.append(this.identifier);
+		builder.append("]");
+		return builder.toString();
+	}
+	
+		
 }

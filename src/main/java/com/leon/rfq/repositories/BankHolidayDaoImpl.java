@@ -2,6 +2,7 @@ package com.leon.rfq.repositories;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,9 +24,9 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	}
 
 	@Override
-	public boolean delete(LocationEnum location, LocalDate dateToBeDeleted)
+	public boolean delete(int identifier)
 	{
-		return this.bankHolidayMapper.delete(location) == 1;
+		return this.bankHolidayMapper.delete(identifier) == 1;
 	}
 
 	@Override
@@ -45,7 +46,8 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	@Override
 	public Set<LocalDate> getAll(LocationEnum location)
 	{
-		return this.bankHolidayMapper.getAll(location);
+		return this.bankHolidayMapper.getAll(location).stream()
+				.map(BankHolidayDetailImpl::getBankHolidayDate).collect(Collectors.toSet());
 	}
 
 	@Override
