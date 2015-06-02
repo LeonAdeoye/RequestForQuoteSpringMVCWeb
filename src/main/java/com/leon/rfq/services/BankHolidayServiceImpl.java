@@ -10,6 +10,8 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import com.leon.rfq.repositories.BankHolidayDao;
 @Service
 public final class BankHolidayServiceImpl implements BankHolidayService
 {
+	private static final Logger logger = LoggerFactory.getLogger(BankHolidayServiceImpl.class);
 	private final Map<LocationEnum, Set<LocalDate>> bankHolidays = new HashMap<>();
 	private ApplicationEventPublisher applicationEventPublisher;
 	
@@ -36,6 +39,9 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	@PostConstruct
 	public void initialise()
 	{
+		if(logger.isDebugEnabled())
+			logger.debug("Initializing bank holiday service by getting all existing bank holidays...");
+		
 		this.getAll();
 	}
 	
@@ -68,18 +74,42 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	@Override
 	public long calculateAllDaysToExpiry(LocalDate startDate, LocalDate endDate)
 	{
+		if(startDate.compareTo(endDate)>= 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("startDate can not come before endDate");
+			
+			throw new IllegalArgumentException("startDate can not come before endDate");
+		}
+		
 		 return startDate.until(endDate, ChronoUnit.DAYS);
 	}
 
 	@Override
 	public long calculateAllDaysToExpiryFromToday(LocalDate endDate)
 	{
+		if(LocalDate.now().compareTo(endDate)>= 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("endDate can not come before today");
+			
+			throw new IllegalArgumentException("endDate can not come before today");
+		}
+		
 		return calculateAllDaysToExpiry(LocalDate.now(), endDate);
 	}
 
 	@Override
 	public long calculateBusinessDaysToExpiryFromToday(LocalDate endDate, LocationEnum location)
 	{
+		if(LocalDate.now().compareTo(endDate)>= 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("endDate can not come before today");
+			
+			throw new IllegalArgumentException("endDate can not come before today");
+		}
+		
 		return calculateBusinessDaysToExpiry(LocalDate.now(), endDate, location);
 	}
 
@@ -106,6 +136,14 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	@Override
 	public boolean insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser)
 	{
+		if((savedByUser == null) || savedByUser.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("savedByUser argument is invalid");
+			
+			throw new IllegalArgumentException("savedByUser argument is invalid");
+		}
+		
 		if(!isBankHolidayCached(location, dateToBeInserted))
 			return this.dao.insert(location, dateToBeInserted, savedByUser);
 		else
