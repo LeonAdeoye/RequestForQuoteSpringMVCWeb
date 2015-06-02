@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,19 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 		this.dao = bankHolidayDao;
 	}
 	
+	@Override
+	@PostConstruct
+	public void initialise()
+	{
+		this.getAll();
+	}
+	
+	@Override
+	public void getAll()
+	{
+		// populate cache
+	}
+
 	public boolean isBankHolidayCached(LocationEnum location, LocalDate dateToBeChecked)
 	{
 		return this.bankHolidays.get(location).stream().anyMatch(theDate -> theDate.compareTo(dateToBeChecked) == 0);

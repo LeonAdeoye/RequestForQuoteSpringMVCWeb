@@ -17,4 +17,6 @@ public interface BankHolidayService
     boolean insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser);
     Set<LocalDate> getHolidaysInLocation(LocationEnum location);
     void setBankHolidayDao(BankHolidayDao bankHolidayDao);
+	void initialise();
+	void getAll();
 }
