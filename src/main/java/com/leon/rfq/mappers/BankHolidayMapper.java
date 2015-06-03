@@ -1,14 +1,16 @@
 package com.leon.rfq.mappers;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.common.EnumTypes.LocationEnum;
 import com.leon.rfq.domains.BankHolidayDetailImpl;
 
 public interface BankHolidayMapper
 {
-	List<BankHolidayDetailImpl> getAll(LocationEnum location);
+	Set<BankHolidayDetailImpl> getAll(LocationEnum location);
+	
+	Set<BankHolidayDetailImpl> getAll();
 	
 	int delete(LocationEnum location);
 	

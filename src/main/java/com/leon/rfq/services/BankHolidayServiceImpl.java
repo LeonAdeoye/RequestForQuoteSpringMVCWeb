@@ -48,7 +48,8 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	@Override
 	public void getAll()
 	{
-		// populate cache
+		this.bankHolidays.clear();
+		this.bankHolidays.putAll(this.dao.getAll());
 	}
 
 	public boolean isBankHolidayCached(LocationEnum location, LocalDate dateToBeChecked)
@@ -102,14 +103,6 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	@Override
 	public long calculateBusinessDaysToExpiryFromToday(LocalDate endDate, LocationEnum location)
 	{
-		if(LocalDate.now().compareTo(endDate)>= 0)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("endDate can not come before today");
-			
-			throw new IllegalArgumentException("endDate can not come before today");
-		}
-		
 		return calculateBusinessDaysToExpiry(LocalDate.now(), endDate, location);
 	}
 

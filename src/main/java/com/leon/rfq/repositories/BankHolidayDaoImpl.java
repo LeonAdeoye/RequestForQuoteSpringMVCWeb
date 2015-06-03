@@ -1,6 +1,9 @@
 package com.leon.rfq.repositories;
 
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -48,6 +51,17 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	{
 		return this.bankHolidayMapper.getAll(location).stream()
 				.map(BankHolidayDetailImpl::getBankHolidayDate).collect(Collectors.toSet());
+	}
+	
+	@Override
+	public Map<LocationEnum, Set<LocalDate>> getAll()
+	{
+		Map<LocationEnum, Set<LocalDate>> result = new HashMap<>();
+		
+		for(Map.Entry<LocationEnum, List<BankHolidayDetailImpl>> entry : this.bankHolidayMapper.getAll().stream().collect(Collectors.groupingBy(BankHolidayDetailImpl::getLocation)).entrySet())
+			result.put(entry.getKey(), entry.getValue().stream().map(BankHolidayDetailImpl::getBankHolidayDate).collect(Collectors.toSet()));
+		
+		return result;
 	}
 
 	@Override
