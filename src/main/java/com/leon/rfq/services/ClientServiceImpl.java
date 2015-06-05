@@ -1,9 +1,10 @@
 package com.leon.rfq.services;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -24,7 +25,7 @@ public final class ClientServiceImpl implements ClientService
 {
 	private static final Logger logger = LoggerFactory.getLogger(ClientServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	private final Map<String, ClientDetailImpl> clients = new HashMap<>();
+	private final Map<String, ClientDetailImpl> clients = new ConcurrentSkipListMap<>();
 	
 	@Autowired
 	private ClientDao clientDao;
@@ -75,7 +76,7 @@ public final class ClientServiceImpl implements ClientService
 		{
 			client = this.clientDao.get(clientName);
 			if(client != null)
-				this.clients.put(clientName, client);
+				this.clients.putIfAbsent(clientName, client);
 		}
 		
 		return client;
@@ -98,7 +99,7 @@ public final class ClientServiceImpl implements ClientService
 	@Override
 	public List<ClientDetailImpl> getAll()
 	{
-		List<ClientDetailImpl> result = this.clientDao.getAll();
+		List<ClientDetailImpl> result = Collections.synchronizedList(this.clientDao.getAll());
 		
 		if(result!= null)
 		{
@@ -106,7 +107,7 @@ public final class ClientServiceImpl implements ClientService
 			
 			// Could use a more complicated lambda expression here but below is far simpler
 			for(ClientDetailImpl client : result)
-				this.clients.put(client.getName(), client);
+				this.clients.putIfAbsent(client.getName(), client);
 			
 			return result;
 		}
@@ -117,7 +118,7 @@ public final class ClientServiceImpl implements ClientService
 	@Override
 	public List<ClientDetailImpl> getAllFromCacheOnly()
 	{
-		return new LinkedList<ClientDetailImpl>(this.clients.values());
+		return Collections.synchronizedList(this.clients.values().stream().collect(Collectors.toList()));
 	}
 
 	@Override
@@ -141,7 +142,7 @@ public final class ClientServiceImpl implements ClientService
 		
 		if(!isClientCached(clientName))
 		{
-			this.clients.put(clientName, new ClientDetailImpl(clientName, tier, isValid, savedByUser));
+			this.clients.putIfAbsent(clientName, new ClientDetailImpl(clientName, tier, isValid, savedByUser));
 			return this.clientDao.insert(clientName, tier, isValid, savedByUser);
 		}
 			
@@ -200,7 +201,7 @@ public final class ClientServiceImpl implements ClientService
 	@Override
 	public List<Tag> getMatchingClientTags(String pattern)
 	{
-		return this.getAllFromCacheOnly().stream().filter(client -> client.getName().contains(pattern))
-				.map(client -> new Tag(String.valueOf(client.getClientId()), client.getName())).collect(Collectors.toList());
+		return Collections.synchronizedList(this.getAllFromCacheOnly().stream().filter(client -> client.getName().contains(pattern))
+				.map(client -> new Tag(String.valueOf(client.getClientId()), client.getName())).collect(Collectors.toList()));
 	}
 }
