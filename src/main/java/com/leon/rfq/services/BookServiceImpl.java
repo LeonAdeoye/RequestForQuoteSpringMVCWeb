@@ -1,9 +1,10 @@
 package com.leon.rfq.services;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +24,7 @@ public final class BookServiceImpl implements BookService
 {
 	private static final Logger logger = LoggerFactory.getLogger(BookServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	private final Map<String, BookDetailImpl> books = new HashMap<>();
+	private final Map<String, BookDetailImpl> books = new ConcurrentSkipListMap<>();
 	
 	@Autowired
 	private BookDao bookDao;
@@ -72,7 +73,7 @@ public final class BookServiceImpl implements BookService
 		{
 			book = this.bookDao.get(bookCode);
 			if(book != null)
-				this.books.put(bookCode, book);
+				this.books.putIfAbsent(bookCode, book);
 		}
 		
 		return book;
@@ -103,7 +104,7 @@ public final class BookServiceImpl implements BookService
 			
 			// Could use a more complicated lambda expression here but below is far simpler
 			for(BookDetailImpl book : result)
-				this.books.put(book.getBookCode(), book);
+				this.books.putIfAbsent(book.getBookCode(), book);
 			
 			return result;
 		}
@@ -114,7 +115,7 @@ public final class BookServiceImpl implements BookService
 	@Override
 	public List<BookDetailImpl> getAllFromCacheOnly()
 	{
-		return new LinkedList<BookDetailImpl>(this.books.values());
+		return Collections.synchronizedList(this.books.values().stream().collect(Collectors.toList()));
 	}
 
 	@Override
@@ -147,7 +148,7 @@ public final class BookServiceImpl implements BookService
 		
 		if(!isBookCached(bookCode))
 		{
-			this.books.put(bookCode, new BookDetailImpl(bookCode, entity, isValid, savedByUser));
+			this.books.putIfAbsent(bookCode, new BookDetailImpl(bookCode, entity, isValid, savedByUser));
 			
 			return this.bookDao.insert(bookCode, entity, isValid, savedByUser);
 		}
@@ -210,7 +211,7 @@ public final class BookServiceImpl implements BookService
 	@Override
 	public List<Tag> getMatchingBookTags(String pattern)
 	{
-		return this.getAllFromCacheOnly().stream().filter(book -> book.getBookCode().contains(pattern))
-				.map(book -> new Tag(book.getBookCode())).collect(Collectors.toList());
+		return Collections.synchronizedList(this.getAllFromCacheOnly().stream().filter(book -> book.getBookCode().contains(pattern))
+				.map(book -> new Tag(book.getBookCode())).collect(Collectors.toList()));
 	}
 }
