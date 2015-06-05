@@ -24,6 +24,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
 	
+	
 	public UnderlyingServiceImpl() {}
 	
 	@Override

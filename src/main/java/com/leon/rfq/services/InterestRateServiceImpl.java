@@ -1,8 +1,8 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 import javax.annotation.PostConstruct;
 
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public final class InterestRateServiceImpl implements InterestRateService
 {
 	private static Logger logger = LoggerFactory.getLogger(InterestRateServiceImpl.class);
-	private final Map<String, BigDecimal> rates = new HashMap<>();
+	private final Map<String, BigDecimal> rates = new ConcurrentSkipListMap<>();
 	
 	public InterestRateServiceImpl() {}
 	
@@ -49,6 +49,6 @@ public final class InterestRateServiceImpl implements InterestRateService
 	@Override
 	public Map<String, BigDecimal> getAll()
 	{
-		return new HashMap<String, BigDecimal>();
+		return new ConcurrentSkipListMap<String, BigDecimal>();
 	}
 }
