@@ -3,9 +3,10 @@ package com.leon.rfq.services;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +24,7 @@ import com.leon.rfq.repositories.BankHolidayDao;
 public final class BankHolidayServiceImpl implements BankHolidayService
 {
 	private static final Logger logger = LoggerFactory.getLogger(BankHolidayServiceImpl.class);
-	private final Map<LocationEnum, Set<LocalDate>> bankHolidays = new HashMap<>();
+	private final Map<LocationEnum, Set<LocalDate>> bankHolidays = new ConcurrentSkipListMap<>();
 	private ApplicationEventPublisher applicationEventPublisher;
 	
 	@Autowired(required=true)
@@ -138,7 +139,21 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 		}
 		
 		if(!isBankHolidayCached(location, dateToBeInserted))
+		{
+			if(this.bankHolidays.keySet().stream().anyMatch(key -> key.equals(location)))
+			{
+				Set<LocalDate> set = this.bankHolidays.get(location);
+				set.add(dateToBeInserted);
+				this.bankHolidays.put(location, set);
+			}
+			else
+			{
+				Set<LocalDate> set = new ConcurrentSkipListSet<>();
+				set.add(dateToBeInserted);
+				this.bankHolidays.putIfAbsent(location, set);
+			}
 			return this.dao.insert(location, dateToBeInserted, savedByUser);
+		}
 		else
 			return false;
 	}
