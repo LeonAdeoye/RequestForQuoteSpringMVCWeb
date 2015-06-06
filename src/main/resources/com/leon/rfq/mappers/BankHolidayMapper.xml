@@ -7,7 +7,7 @@
 	
 	<resultMap type="BankHolidayDetailImpl" id="BankHolidayResultSet">
 		<id 	property="identifier" column="identifier"/>
-		<result property="location" typeHandler="org.apache.ibatis.type.EnumTypeHandler" column="location"/>
+		<result property="location" column="location" typeHandler="org.apache.ibatis.type.EnumTypeHandler"/>
 		<result property="bankHolidayDate" column="bankHolidayDate"/>
 		<result property="isValid" column="isValid"/>
 		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
@@ -15,22 +15,29 @@
 	
 	<select id="getAll" parameterType="java.lang.String" resultMap="BankHolidayResultSet">
 		SELECT identifier, location, bankHolidayDate, isValid, lastUpdatedBy 
-		FROM holidays WHERE location=#{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
+		FROM holidays 
+		WHERE location=#{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
 	</select>
+	
+	<select id="getAll" resultMap="BankHolidayResultSet">
+		SELECT identifier, location, bankHolidayDate, isValid, lastUpdatedBy 
+		FROM holidays
+	</select>	
 	
 	<select id="bankHolidayExists" parameterType="BankHolidayDetailImpl" resultType="BankHolidayDetailImpl">
 		SELECT identifier, bankHolidayDate, isValid, lastUpdatedBy
-		FROM holidays WHERE location=#{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler} 
+		FROM holidays 
+		WHERE location=#{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler} 
 		AND bankHolidayDate = #{bankHolidayDate} 
 	</select>
 	
-	<update id="update" parameterType="BankHolidayDetailImpl">
+	<update id="updateValidity" parameterType="BankHolidayDetailImpl">
 		UPDATE holidays 
 		SET isValid = #{isValid}, 
-		location = #{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, 
 		lastUpdatedBy = #{lastUpdatedBy}, 
 		lastUpdated = now() 
-		WHERE identifier = #{identifier}
+		WHERE location=#{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler} 
+		AND bankHolidayDate = #{bankHolidayDate}
 	</update>	
 	
 	<insert id="insert" parameterType="BankHolidayDetailImpl" useGeneratedKeys="true" keyProperty="identifier">

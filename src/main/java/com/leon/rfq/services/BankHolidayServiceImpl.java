@@ -72,7 +72,7 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 		if(isLocationCached(location))
 		{
 			return Stream.iterate(startDate, nextDate -> startDate.plusDays(1)).limit(allDays)
-					.filter(theDate -> !isBankHoliday(theDate, location)).count();
+					.filter(theDate -> !isBankHolidayCached(location, theDate)).count();
 		}
 		
 		return allDays;
@@ -113,12 +113,6 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	}
 
 	@Override
-	public boolean isBankHoliday(LocalDate dateToCheck, LocationEnum location)
-	{
-		return this.bankHolidays.get(location).stream().anyMatch(theDate -> theDate.compareTo(dateToCheck) == 0);
-	}
-
-	@Override
 	public boolean isValidBusinessDay(LocalDate dateToValidate, LocationEnum location)
 	{
 		if((dateToValidate.getDayOfWeek() == DayOfWeek.SATURDAY)
@@ -129,6 +123,37 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 			return this.bankHolidays.get(location).stream().anyMatch(theDate -> theDate.compareTo(dateToValidate) != 0);
 		
 		return true;
+	}
+	
+	@Override
+	public boolean updateValidity(LocationEnum location, LocalDate dateToBeUpdated, boolean validity, String updatedByUser)
+	{
+		if((updatedByUser == null) || updatedByUser.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("updatedByUser argument is invalid");
+			
+			throw new IllegalArgumentException("updatedByUser argument is invalid");
+		}
+		
+		if(logger.isDebugEnabled())
+			logger.debug("Updating validity of" + location.toString() + " bank holiday date" + dateToBeUpdated);
+		
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
+			
+			if(isBankHolidayCached(location, dateToBeUpdated))
+				return this.dao.updateValidity(location, dateToBeUpdated, validity, updatedByUser);
+			
+			return false;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	@Override
@@ -143,7 +168,7 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 		}
 		
 		if(logger.isDebugEnabled())
-			logger.debug("Inserting " + location.toString() + " bank holiday with date" + dateToBeInserted);
+			logger.debug("Inserting " + location.toString() + " bank holiday date" + dateToBeInserted);
 		
 		ReentrantLock lock = new ReentrantLock();
 		

@@ -18,7 +18,7 @@ public interface BankHolidayMapper
 	
 	int insert(BankHolidayDetailImpl bankHoliday);
 
-	int update(BankHolidayDetailImpl bankHoliday);
+	int updateValidity(BankHolidayDetailImpl bankHoliday);
 	
-	boolean BankHolidayExists(LocationEnum location, LocalDate dateToCheck);
+	BankHolidayDetailImpl bankHolidayExists(LocationEnum location, LocalDate dateToCheck);
 }

@@ -21,7 +21,7 @@ import com.leon.rfq.services.BankHolidayService;
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class BankHolidayServiceImplTest extends AbstractJUnit4SpringContextTests
 {
-	@Autowired
+	@Autowired(required=true)
 	private BankHolidayService bankHolidayService;
 	
 	@Before
@@ -29,8 +29,7 @@ public class BankHolidayServiceImplTest extends AbstractJUnit4SpringContextTests
 	{
 		assertNotNull("autowired bankHolidayDaoImpl should not be null", this.bankHolidayService);
 	}
-	
-	
+		
 	@Test
     public void getHolidaysInLocation_ValidLocation_DaoMethodCalled()
 	{

@@ -17,7 +17,7 @@ import com.leon.rfq.mappers.BankHolidayMapper;
 @Repository
 public class BankHolidayDaoImpl implements BankHolidayDao
 {
-	@Autowired
+	@Autowired(required=true)
 	private BankHolidayMapper bankHolidayMapper;
 	
 	@Override
@@ -40,10 +40,10 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	}
 	
 	@Override
-	public boolean update(LocationEnum location, LocalDate dateToBeInserted, boolean isValid, String savedByUser)
+	public boolean updateValidity(LocationEnum location, LocalDate dateToBeInserted, boolean isValid, String savedByUser)
 	{
 		BankHolidayDetailImpl bankHoliday = new BankHolidayDetailImpl(location, dateToBeInserted, isValid, savedByUser);
-		return this.bankHolidayMapper.update(bankHoliday) == 1;
+		return this.bankHolidayMapper.updateValidity(bankHoliday) == 1;
 	}
 
 	@Override
@@ -67,6 +67,6 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	@Override
 	public boolean bankHolidayExists(LocationEnum location,	LocalDate dateToCheck)
 	{
-		return this.bankHolidayMapper.BankHolidayExists(location, dateToCheck);
+		return this.bankHolidayMapper.bankHolidayExists(location, dateToCheck) != null;
 	}
 }

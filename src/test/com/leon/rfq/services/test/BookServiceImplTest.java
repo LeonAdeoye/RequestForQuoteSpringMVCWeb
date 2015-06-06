@@ -23,7 +23,7 @@ import com.leon.rfq.services.BookService;
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class BookServiceImplTest extends AbstractJUnit4SpringContextTests
 {
-	@Autowired
+	@Autowired(required=true)
 	private BookService bookService;
 	
 	@Before

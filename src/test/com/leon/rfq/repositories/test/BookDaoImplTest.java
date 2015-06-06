@@ -25,12 +25,12 @@ import com.leon.rfq.repositories.BookDaoImpl;
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class BookDaoImplTest extends AbstractJUnit4SpringContextTests
 {
-	@Autowired
+	@Autowired(required=true)
 	private DataSourceTransactionManager transactionManager;
 	
 	private TransactionStatus status;
 	
-	@Autowired
+	@Autowired(required=true)
 	private BookDaoImpl bookDaoImpl;
 	
 	@BeforeClass

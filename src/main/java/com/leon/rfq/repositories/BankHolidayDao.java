@@ -14,7 +14,7 @@ public interface BankHolidayDao
 
 	boolean insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser);
 	
-	boolean update(LocationEnum location, LocalDate dateToBeInserted, boolean isValid, String updatedByUser);
+	boolean updateValidity(LocationEnum location, LocalDate dateToBeUpdated, boolean isValid, String updatedByUser);
 	 
 	Set<LocalDate> getAll(LocationEnum location);
 	
