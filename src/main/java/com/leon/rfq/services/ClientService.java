@@ -1,6 +1,7 @@
 package com.leon.rfq.services;
 
 import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.common.EnumTypes.ClientTierEnum;
 import com.leon.rfq.common.Tag;
@@ -13,9 +14,9 @@ public interface ClientService
 	
 	ClientDetailImpl get(String clientName);
 
-	List<ClientDetailImpl> getAll();
+	Set<ClientDetailImpl> getAll();
 	
-	List<ClientDetailImpl> getAllFromCacheOnly();
+	Set<ClientDetailImpl> getAllFromCacheOnly();
 	
 	boolean insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser);
 	

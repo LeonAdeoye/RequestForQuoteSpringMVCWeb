@@ -1,9 +1,10 @@
 package com.leon.rfq.services;
 
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.stream.Collectors;
 
@@ -27,7 +28,7 @@ public final class ClientServiceImpl implements ClientService
 	private ApplicationEventPublisher applicationEventPublisher;
 	private final Map<String, ClientDetailImpl> clients = new ConcurrentSkipListMap<>();
 	
-	@Autowired
+	@Autowired(required=true)
 	private ClientDao clientDao;
 	
 	@Override
@@ -97,28 +98,28 @@ public final class ClientServiceImpl implements ClientService
 	}
 		
 	@Override
-	public List<ClientDetailImpl> getAll()
+	public Set<ClientDetailImpl> getAll()
 	{
-		List<ClientDetailImpl> result = Collections.synchronizedList(this.clientDao.getAll());
+		Set<ClientDetailImpl> clients = Collections.synchronizedSet(this.clientDao.getAll());
 		
-		if(result!= null)
+		if(clients!= null)
 		{
 			this.clients.clear();
 			
 			// Could use a more complicated lambda expression here but below is far simpler
-			for(ClientDetailImpl client : result)
+			for(ClientDetailImpl client : clients)
 				this.clients.putIfAbsent(client.getName(), client);
 			
-			return result;
+			return clients;
 		}
 		else
-			return new LinkedList<ClientDetailImpl>();
+			return new HashSet<ClientDetailImpl>();
 	}
 	
 	@Override
-	public List<ClientDetailImpl> getAllFromCacheOnly()
+	public Set<ClientDetailImpl> getAllFromCacheOnly()
 	{
-		return Collections.synchronizedList(this.clients.values().stream().collect(Collectors.toList()));
+		return Collections.synchronizedSet(this.clients.values().stream().collect(Collectors.toSet()));
 	}
 
 	@Override

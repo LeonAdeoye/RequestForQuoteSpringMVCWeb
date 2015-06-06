@@ -1,7 +1,7 @@
 package com.leon.rfq.repositories;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +66,7 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 	}
 
 	@Override
-	public List<UnderlyingDetailImpl> getAll()
+	public Set<UnderlyingDetailImpl> getAll()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all underlyings");
@@ -80,7 +80,7 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 			if(logger.isErrorEnabled())
 				logger.error("Failed to get all underlyings because of exception: " + e);
 			
-			return new LinkedList<UnderlyingDetailImpl>();
+			return new HashSet<UnderlyingDetailImpl>();
 		}
 	}
 

@@ -1,6 +1,6 @@
 package com.leon.rfq.repositories;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.domains.UnderlyingDetailImpl;
 
@@ -12,7 +12,7 @@ public interface UnderlyingDao
 	
 	boolean delete(String ric);
 
-	List<UnderlyingDetailImpl> getAll();
+	Set<UnderlyingDetailImpl> getAll();
 
 	UnderlyingDetailImpl get(String ric);
 	

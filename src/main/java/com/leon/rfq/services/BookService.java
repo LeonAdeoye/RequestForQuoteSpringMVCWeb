@@ -1,6 +1,7 @@
 package com.leon.rfq.services;
 
 import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.BookDetailImpl;
@@ -10,9 +11,9 @@ public interface BookService
 {
 	BookDetailImpl get(String bookCode);
 
-	List<BookDetailImpl> getAll();
+	Set<BookDetailImpl> getAll();
 	
-	List<BookDetailImpl> getAllFromCacheOnly();
+	Set<BookDetailImpl> getAllFromCacheOnly();
 	
 	boolean insert(String bookCode, String entity, boolean isValid, String savedByUser);
 	
@@ -21,8 +22,6 @@ public interface BookService
 	boolean updateValidity(String bookCode, boolean isValid, String updatedByUser);
 
 	void setBookDao(BookDao bookDao);
-	
-	boolean isBookCached(String bookCode);
 	
 	boolean bookExistsWithBookCode(String bookCode);
 

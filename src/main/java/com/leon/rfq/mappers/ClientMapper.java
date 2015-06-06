@@ -1,12 +1,12 @@
 package com.leon.rfq.mappers;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.domains.ClientDetailImpl;
 
 public interface ClientMapper
 {
-	List<ClientDetailImpl> getAll();
+	Set<ClientDetailImpl> getAll();
 	
 	ClientDetailImpl get(String clientName);
 	

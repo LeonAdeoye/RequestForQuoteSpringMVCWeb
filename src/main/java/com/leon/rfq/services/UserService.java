@@ -1,6 +1,6 @@
 package com.leon.rfq.services;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.repositories.UserDao;
@@ -9,7 +9,7 @@ public interface UserService
 {
 	UserDetailImpl get(String userId);
 
-	List<UserDetailImpl> getAll();
+	Set<UserDetailImpl> getAll();
 	
 	boolean insert(String userId, String firstName, String lastName, String emailAddress,
 			String locationName, String groupName, boolean isValid, String savedByUser);
@@ -31,5 +31,5 @@ public interface UserService
 
 	void initialise();
 
-	List<UserDetailImpl> getAllFromCacheOnly();
+	Set<UserDetailImpl> getAllFromCacheOnly();
 }

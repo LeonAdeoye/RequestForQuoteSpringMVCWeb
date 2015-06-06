@@ -1,6 +1,6 @@
 package com.leon.rfq.repositories;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.common.EnumTypes.ClientTierEnum;
 import com.leon.rfq.domains.ClientDetailImpl;
@@ -20,7 +20,7 @@ public interface ClientDao
 			boolean isValid,
 			String savedByUser);
 
-	List<ClientDetailImpl> getAll();
+	Set<ClientDetailImpl> getAll();
 	 
 	ClientDetailImpl get(String clientName);
 

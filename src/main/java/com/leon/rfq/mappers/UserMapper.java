@@ -1,12 +1,12 @@
 package com.leon.rfq.mappers;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.domains.UserDetailImpl;
 
 public interface UserMapper
 {
-	List<UserDetailImpl> getAll();
+	Set<UserDetailImpl> getAll();
 	
 	UserDetailImpl get(String userId);
 	

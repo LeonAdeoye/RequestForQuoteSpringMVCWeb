@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
@@ -53,9 +54,14 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 		this.bankHolidays.putAll(this.dao.getAll());
 	}
 
-	public boolean isBankHolidayCached(LocationEnum location, LocalDate dateToBeChecked)
+	private boolean isBankHolidayCached(LocationEnum location, LocalDate dateToBeChecked)
 	{
 		return this.bankHolidays.get(location).stream().anyMatch(theDate -> theDate.compareTo(dateToBeChecked) == 0);
+	}
+	
+	private boolean isLocationCached(LocationEnum location)
+	{
+		return this.bankHolidays.containsKey(location);
 	}
 
 	@Override
@@ -63,10 +69,9 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	{
 		long allDays = calculateAllDaysToExpiry(startDate, endDate);
 		
-		if(this.bankHolidays.containsKey(location))
+		if(isLocationCached(location))
 		{
-			return Stream.iterate(startDate, nextDate -> startDate.plusDays(1))
-					.limit(allDays)
+			return Stream.iterate(startDate, nextDate -> startDate.plusDays(1)).limit(allDays)
 					.filter(theDate -> !isBankHoliday(theDate, location)).count();
 		}
 		
@@ -120,9 +125,8 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 				|| (dateToValidate.getDayOfWeek() == DayOfWeek.SUNDAY))
 			return false;
 		
-		if(this.bankHolidays.containsKey(location))
-			return this.bankHolidays.get(location).stream()
-					.anyMatch(theDate -> theDate.compareTo(dateToValidate) != 0);
+		if(isLocationCached(location))
+			return this.bankHolidays.get(location).stream().anyMatch(theDate -> theDate.compareTo(dateToValidate) != 0);
 		
 		return true;
 	}
@@ -138,30 +142,45 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
 		
-		if(!isBankHolidayCached(location, dateToBeInserted))
+		if(logger.isDebugEnabled())
+			logger.debug("Inserting " + location.toString() + " bank holiday with date" + dateToBeInserted);
+		
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
 		{
-			if(this.bankHolidays.keySet().stream().anyMatch(key -> key.equals(location)))
+			lock.lock();
+			
+			if(!isBankHolidayCached(location, dateToBeInserted))
 			{
-				Set<LocalDate> set = this.bankHolidays.get(location);
-				set.add(dateToBeInserted);
-				this.bankHolidays.put(location, set);
+				if(this.bankHolidays.keySet().stream().anyMatch(key -> key.equals(location)))
+				{
+					Set<LocalDate> set = this.bankHolidays.get(location);
+					set.add(dateToBeInserted);
+					this.bankHolidays.put(location, set);
+				}
+				else
+				{
+					Set<LocalDate> set = new ConcurrentSkipListSet<>();
+					set.add(dateToBeInserted);
+					this.bankHolidays.putIfAbsent(location, set);
+				}
+				
+				return this.dao.insert(location, dateToBeInserted, savedByUser);
 			}
-			else
-			{
-				Set<LocalDate> set = new ConcurrentSkipListSet<>();
-				set.add(dateToBeInserted);
-				this.bankHolidays.putIfAbsent(location, set);
-			}
-			return this.dao.insert(location, dateToBeInserted, savedByUser);
-		}
-		else
+			
 			return false;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public Set<LocalDate> getHolidaysInLocation(LocationEnum location)
 	{
-		if(this.bankHolidays.containsKey(location))
+		if(isLocationCached(location))
 			return this.bankHolidays.get(location);
 		else
 			return this.dao.getAll(location);

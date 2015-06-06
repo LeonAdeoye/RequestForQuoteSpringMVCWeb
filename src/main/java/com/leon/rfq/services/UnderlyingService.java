@@ -1,6 +1,6 @@
 package com.leon.rfq.services;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.repositories.UnderlyingDao;
@@ -10,9 +10,10 @@ public interface UnderlyingService
 	void setUnderlyingDao(UnderlyingDao underlyingDao);
 
 	boolean insert(String RIC, String description, boolean isValid,	String savedBy);
+	
 	boolean update(String RIC, String description, boolean isValid,	String savedBy);
 
-	List<UnderlyingDetailImpl> getAll();
+	Set<UnderlyingDetailImpl> getAll();
 	
 	UnderlyingDetailImpl get(String ric);
 	
@@ -24,5 +25,5 @@ public interface UnderlyingService
 
 	void initialise();
 
-	List<UnderlyingDetailImpl> getAllFromCacheOnly();
+	Set<UnderlyingDetailImpl> getAllFromCacheOnly();
 }

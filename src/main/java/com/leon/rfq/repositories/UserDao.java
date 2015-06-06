@@ -1,6 +1,6 @@
 package com.leon.rfq.repositories;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.domains.UserDetailImpl;
 
@@ -28,7 +28,7 @@ public interface UserDao
 
 	boolean updateValidity(String userId, boolean isValid, String updatedByUser);
 
-	List<UserDetailImpl> getAll();
+	Set<UserDetailImpl> getAll();
 	 
 	UserDetailImpl get(String userId);
 

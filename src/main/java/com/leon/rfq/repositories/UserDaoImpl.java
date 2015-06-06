@@ -1,6 +1,6 @@
 package com.leon.rfq.repositories;
 
-import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,7 +98,7 @@ public class UserDaoImpl implements UserDao
 	}
 
 	@Override
-	public List<UserDetailImpl> getAll()
+	public Set<UserDetailImpl> getAll()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all users");

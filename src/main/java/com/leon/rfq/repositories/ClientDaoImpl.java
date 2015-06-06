@@ -1,6 +1,6 @@
 package com.leon.rfq.repositories;
 
-import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,7 +78,7 @@ public class ClientDaoImpl implements ClientDao
 	}
 
 	@Override
-	public List<ClientDetailImpl> getAll()
+	public Set<ClientDetailImpl> getAll()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all clients");

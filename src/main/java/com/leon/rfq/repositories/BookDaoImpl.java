@@ -1,6 +1,6 @@
 package com.leon.rfq.repositories;
 
-import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -95,7 +95,7 @@ public class BookDaoImpl implements BookDao
 	}
 
 	@Override
-	public List<BookDetailImpl> getAll()
+	public Set<BookDetailImpl> getAll()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all books");

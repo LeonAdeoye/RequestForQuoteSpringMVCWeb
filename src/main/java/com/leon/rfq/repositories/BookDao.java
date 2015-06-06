@@ -1,6 +1,6 @@
 package com.leon.rfq.repositories;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.domains.BookDetailImpl;
 
@@ -20,7 +20,7 @@ public interface BookDao
 
 	boolean updateValidity(String bookCode, boolean isValid, String updatedByUser);
 
-	List<BookDetailImpl> getAll();
+	Set<BookDetailImpl> getAll();
 	 
 	BookDetailImpl get(String bookCode);
 

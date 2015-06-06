@@ -1,10 +1,12 @@
 package com.leon.rfq.services;
 
 import java.util.Collections;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -26,7 +28,7 @@ public final class BookServiceImpl implements BookService
 	private ApplicationEventPublisher applicationEventPublisher;
 	private final Map<String, BookDetailImpl> books = new ConcurrentSkipListMap<>();
 	
-	@Autowired
+	@Autowired(required=true)
 	private BookDao bookDao;
 	
 	// For unit testing mocking framework.
@@ -48,8 +50,7 @@ public final class BookServiceImpl implements BookService
 	
 	public BookServiceImpl() {}
 	
-	@Override
-	public boolean isBookCached(String bookCode)
+	private boolean isBookCached(String bookCode)
 	{
 		return this.books.containsKey(bookCode);
 	}
@@ -65,18 +66,32 @@ public final class BookServiceImpl implements BookService
 			throw new IllegalArgumentException("bookCode argument is invalid");
 		}
 		
-		BookDetailImpl book;
+		if(logger.isDebugEnabled())
+			logger.debug("Getting the book with book code" + bookCode);
 		
-		if(isBookCached(bookCode))
-			book = this.books.get(bookCode);
-		else
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
 		{
-			book = this.bookDao.get(bookCode);
-			if(book != null)
-				this.books.putIfAbsent(bookCode, book);
+			lock.lock();
+									
+			BookDetailImpl book;
+			
+			if(isBookCached(bookCode))
+				book = this.books.get(bookCode);
+			else
+			{
+				book = this.bookDao.get(bookCode);
+				if(book != null)
+					this.books.putIfAbsent(bookCode, book);
+			}
+			
+			return book;
 		}
-		
-		return book;
+		finally
+		{
+			lock.unlock();
+		}
 	}
 	
 	@Override
@@ -94,28 +109,42 @@ public final class BookServiceImpl implements BookService
 	}
 		
 	@Override
-	public List<BookDetailImpl> getAll()
+	public Set<BookDetailImpl> getAll()
 	{
-		List<BookDetailImpl> result = this.bookDao.getAll();
+		if(logger.isDebugEnabled())
+			logger.debug("Getting all the books");
 		
-		if(result!= null)
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
 		{
-			this.books.clear();
+			lock.lock();
+		
+			Set<BookDetailImpl> result = this.bookDao.getAll();
 			
-			// Could use a more complicated lambda expression here but below is far simpler
-			for(BookDetailImpl book : result)
-				this.books.putIfAbsent(book.getBookCode(), book);
-			
-			return result;
+			if(result!= null)
+			{
+				this.books.clear();
+				
+				// Could use a more complicated lambda expression here but below is far simpler
+				for(BookDetailImpl book : result)
+					this.books.putIfAbsent(book.getBookCode(), book);
+				
+				return result;
+			}
+			else
+				return new HashSet<BookDetailImpl>();
 		}
-		else
-			return new LinkedList<BookDetailImpl>();
+		finally
+		{
+			lock.unlock();
+		}
 	}
 	
 	@Override
-	public List<BookDetailImpl> getAllFromCacheOnly()
+	public Set<BookDetailImpl> getAllFromCacheOnly()
 	{
-		return Collections.synchronizedList(this.books.values().stream().collect(Collectors.toList()));
+		return this.books.values().stream().collect(Collectors.toSet());
 	}
 
 	@Override
@@ -144,16 +173,29 @@ public final class BookServiceImpl implements BookService
 			
 			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
+				
+		if(logger.isDebugEnabled())
+			logger.debug("Inserting the book with book code" + bookCode);
 		
+		ReentrantLock lock = new ReentrantLock();
 		
-		if(!isBookCached(bookCode))
+		try
 		{
-			this.books.putIfAbsent(bookCode, new BookDetailImpl(bookCode, entity, isValid, savedByUser));
-			
-			return this.bookDao.insert(bookCode, entity, isValid, savedByUser);
-		}
+			lock.lock();
 		
-		return true;
+			if(!isBookCached(bookCode))
+			{
+				this.books.putIfAbsent(bookCode, new BookDetailImpl(bookCode, entity, isValid, savedByUser));
+				
+				return this.bookDao.insert(bookCode, entity, isValid, savedByUser);
+			}
+			
+			return true;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	@Override
@@ -167,14 +209,28 @@ public final class BookServiceImpl implements BookService
 			throw new IllegalArgumentException("bookCode argument is invalid");
 		}
 		
-		if(isBookCached(bookCode))
-		{
-			this.books.remove(bookCode);
-			
-			return this.bookDao.delete(bookCode);
-		}
+		if(logger.isDebugEnabled())
+			logger.debug("Deleting the book with book code" + bookCode);
 		
-		return false;
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
+				
+			if(isBookCached(bookCode))
+			{
+				this.books.remove(bookCode);
+				
+				return this.bookDao.delete(bookCode);
+			}
+			
+			return false;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	@Override
@@ -196,16 +252,30 @@ public final class BookServiceImpl implements BookService
 			throw new IllegalArgumentException("updatedByUser argument is invalid");
 		}
 		
-		if(isBookCached(bookCode))
-		{
-			BookDetailImpl book = this.books.get(bookCode);
-			
-			book.setIsValid(isValid);
-			
-			return this.bookDao.updateValidity(bookCode, isValid, updatedByUser);
-		}
+		if(logger.isDebugEnabled())
+			logger.debug("Updating the validity of the book with book code" + bookCode);
 		
-		return false;
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
+		
+			if(isBookCached(bookCode))
+			{
+				BookDetailImpl book = this.books.get(bookCode);
+				
+				book.setIsValid(isValid);
+				
+				return this.bookDao.updateValidity(bookCode, isValid, updatedByUser);
+			}
+			
+			return false;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 	
 	@Override
