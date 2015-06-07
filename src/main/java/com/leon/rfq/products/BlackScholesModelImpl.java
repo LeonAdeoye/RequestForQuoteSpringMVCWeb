@@ -2,8 +2,10 @@ package com.leon.rfq.products;
 import static java.lang.Math.exp;
 import static java.lang.Math.log;
 import static java.lang.Math.pow;
-import static java.lang.Math.sqrt;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
  
@@ -16,6 +18,9 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         private double t = 0.0;
         private boolean isCallOption = true;
         private boolean isEuropeanOption = true;
+        
+        private static BigDecimal TWO = BigDecimal.valueOf(2.0);
+        private static final int SCALE = 3;
         
         public BlackScholesModelImpl()
         {
@@ -46,10 +51,10 @@ public final class BlackScholesModelImpl implements OptionPricingModel
                 double timeToExpiryInYears = input.get(TIME_TO_EXPIRY);
                
                 // Calculate these two intermediate calculations and reuse
-                this.d1 = (log(underlyingPrice/strike)+((interestRate + ((volatility * volatility)/2))* timeToExpiryInYears))/(volatility * sqrt(timeToExpiryInYears));
-                this.d2 = this.d1 - (volatility * sqrt(timeToExpiryInYears));
+                this.d1 = (log(underlyingPrice/strike)+((interestRate + ((volatility * volatility)/2))* timeToExpiryInYears))/(volatility * Math.sqrt(timeToExpiryInYears));
+                this.d2 = this.d1 - (volatility * Math.sqrt(timeToExpiryInYears));
                 this.e = exp(-interestRate * timeToExpiryInYears);
-                this.t = sqrt(timeToExpiryInYears);
+                this.t = Math.sqrt(timeToExpiryInYears);
                                              
         		optionResult.setPrice(this.calculateOptionPrice(underlyingPrice, strike, timeToExpiryInYears, interestRate));
         		optionResult.setDelta(this.calculateOptionDelta());
@@ -177,7 +182,7 @@ public final class BlackScholesModelImpl implements OptionPricingModel
    
             L = Math.abs(X);
             K = 1.0 / (1.0 + (0.2316419 * L));
-            w = 1.0 - ((1.0 / sqrt(2.0 * Math.PI)) * exp((-L *L) / 2) * ((a1 * K) + (a2 * K *K) + (a3
+            w = 1.0 - ((1.0 / Math.sqrt(2.0 * Math.PI)) * exp((-L *L) / 2) * ((a1 * K) + (a2 * K *K) + (a3
             * pow(K,3)) + (a4 * pow(K,4)) + (a5 * pow(K,5))));
    
             if (X < 0.0)
@@ -188,29 +193,41 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         }
        
         // The normal distribution function
-        public double ND(double X)
+        public static double ND(double X)
         {
             double L = Math.abs(X);
             return (1.0 / Math.sqrt(2.0 * Math.PI)) * Math.exp((-L *L) / 2);
         }
         
+        public static BigDecimal squareRoot(BigDecimal value)
+        {
+            BigDecimal x = new BigDecimal(Math.sqrt(value.doubleValue()));
+            return x.add(new BigDecimal(value.subtract(x.multiply(x)).doubleValue() / (x.doubleValue() * 2.0)));
+        }
+        
+        public static BigDecimal NormalDistribution(BigDecimal initialValue)
+        {
+            // double L = Math.abs(X);
+            // return (1.0 / Math.sqrt(2.0 * Math.PI)) * Math.exp((-L *L) / 2);
+            
+            BigDecimal absolute = initialValue.abs();
+            BigDecimal firstValue = BigDecimal.ONE.divide(squareRoot(TWO.multiply(BigDecimal.valueOf(Math.PI))), SCALE, RoundingMode.HALF_UP);
+            
+            int intValue = ((BigDecimal.valueOf(-1).multiply(absolute)).multiply(absolute)).divide(TWO, SCALE, RoundingMode.HALF_UP).intValue();
+            BigDecimal secondValue = BigDecimal.valueOf(Math.E).pow(intValue, MathContext.UNLIMITED);
+            
+            return firstValue.multiply(secondValue);
+        }
+        
         public static void main(String... args)
         {
-        	// For testing...
-        	Map<String, Double> input = new HashMap<>();
+        	double fred = ND(0.775);
+        	System.out.println(fred);
+			BigDecimal bon = NormalDistribution(new BigDecimal("0.775"));
+        	System.out.println(bon);
         	
-			input.put(VOLATILITY, 0.2);
-			input.put(UNDERLYING_PRICE, 90.0);
-			input.put(STRIKE, 100.0);
-			input.put(TIME_TO_EXPIRY, 1.0);
-			input.put(INTEREST_RATE, 0.1);
-			
-			OptionPriceResultSet resultSet = new OptionPriceResultSet();
-			BlackScholesModelImpl model = new BlackScholesModelImpl();
-			
-			model.calculateRange(resultSet, input, UNDERLYING_PRICE,	70, 90, 5);
-			input.put(STRIKE, 100.0);
-			input.put(TIME_TO_EXPIRY, 2.0);
-			model.calculateRange(resultSet, input, UNDERLYING_PRICE,	70, 90, 5);
-        }
+        	// For testing...
+        	@SuppressWarnings("unused")
+			Map<String, Double> input = new HashMap<>();
+       }
 }
