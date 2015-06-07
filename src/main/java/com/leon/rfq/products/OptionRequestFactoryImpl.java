@@ -29,19 +29,21 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	private static final Logger logger = LoggerFactory.getLogger(OptionRequestFactoryImpl.class);
 	
 	@Autowired(required=true)
-	BankHolidayService bankHolidayService;
+	private BankHolidayService bankHolidayService;
 	
 	@Autowired(required=true)
-	DefaultConfigurationService defaultConfigurationService;
+	private DefaultConfigurationService defaultConfigurationService;
 	
 	@Autowired(required=true)
-	VolatilityService volatilityService;
+	private VolatilityService volatilityService;
 	
 	@Autowired(required=true)
-	PriceService priceService;
+	private  PriceService priceService;
 	
 	@Autowired(required=true)
-	InterestRateService interestRateService;
+	private InterestRateService interestRateService;
+	
+	public OptionRequestFactoryImpl() {}
 	
 	/**
 	 * Creates an instance of RequestDetailImpl using the parameters passed.
@@ -50,14 +52,13 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 * @param clientId			the client ID of the RequestDetailImpl instance to be created.
 	 * @param bookCode			the book code of the RequestDetailImpl instance to be created.
 	 * @param savedByUser		the user saving the new instance.
-	 * @returns	the new instance.
+	 * @return	the new instance.
 	 */
-	@Override
 	public RequestDetailImpl getNewInstance(String requestSnippet, int clientId, String bookCode, String savedByUser)
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
 		
-		if(!this.isValidOptionRequestSnippet(requestSnippet))
+		if(!isValidOptionRequestSnippet(requestSnippet))
 		{
 			if(logger.isErrorEnabled())
 				logger.error("requestSnippet argument is invalid");
@@ -65,7 +66,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 			throw new IllegalArgumentException("requestSnippet argument is invalid");
 		}
 		
-		if(!this.parseRequest(requestSnippet, newRequest))
+		if(!parseRequest(requestSnippet, newRequest))
 		{
 			if(logger.isErrorEnabled())
 				logger.error("requestSnippet argument is invalid");
@@ -109,10 +110,9 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 * Determines if the snippet is valid for an option request.
 	 * 
 	 * @param snippet 		the snippet to be pattern matched.
-	 * @returns	true if the snippet is a valid option request snippet.
+	 * @return	true if the snippet is a valid option request snippet.
 	 */
-    @Override
-	public boolean isValidOptionRequestSnippet(String snippet)
+	public static boolean isValidOptionRequestSnippet(String snippet)
     {
     	if(logger.isDebugEnabled())
     		logger.debug("Validating option request snippet: " + snippet);
@@ -128,9 +128,9 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 * Determines if an option is American or European depending on the capitalization of the initial part of snippet.
 	 * 
 	 * @param snippet 							the snippet to be pattern matched.
-	 * @returns	true for European options if the initial C/P part of the snippet is in upper case.
+	 * @return	true for European options if the initial C/P part of the snippet is in upper case.
 	 */
-    private boolean isEuropeanOption(String snippet)
+    public static boolean isEuropeanOption(String snippet)
     {
         Pattern euRegex = Pattern.compile(Constants.REQUEST_PATTERN);
         Matcher euMatcher = euRegex.matcher(snippet);
@@ -249,7 +249,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 * @param parent 	the parent request that these option details belong to.
 	 * @return boolean	true if the option is parsed successfully otherwise false;
 	 */
-    private boolean parseRequest(String snippet, RequestDetailImpl parent)
+    public boolean parseRequest(String snippet, RequestDetailImpl parent)
     {
     	try
     	{
