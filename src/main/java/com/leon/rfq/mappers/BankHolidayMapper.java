@@ -8,13 +8,13 @@ import com.leon.rfq.domains.BankHolidayDetailImpl;
 
 public interface BankHolidayMapper
 {
-	Set<BankHolidayDetailImpl> getAll(LocationEnum location);
+	Set<BankHolidayDetailImpl> getAllInLocation(LocationEnum location);
 	
 	Set<BankHolidayDetailImpl> getAll();
 	
-	int delete(LocationEnum location);
+	int deleteByLocation(LocationEnum location);
 	
-	int delete(int identifier);
+	int deleteById(int identifier);
 	
 	int insert(BankHolidayDetailImpl bankHoliday);
 

@@ -37,9 +37,9 @@ public class BankHolidayServiceImplTest extends AbstractJUnit4SpringContextTests
 		BankHolidayDao bankHolidayDaoMock = mock(BankHolidayDaoImpl.class);
 		this.bankHolidayService.setBankHolidayDao(bankHolidayDaoMock);
 		// Act
-		this.bankHolidayService.getHolidaysInLocation(LocationEnum.TOKYO);
+		this.bankHolidayService.getHolidaysInLocation(LocationEnum.LONDON);
 		// Assert
-		verify(bankHolidayDaoMock).getAll(LocationEnum.TOKYO);
+		verify(bankHolidayDaoMock).getAll(LocationEnum.LONDON);
 	}
 	
 	@Test

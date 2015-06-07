@@ -3,6 +3,7 @@ package com.leon.rfq.services.test;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -60,14 +61,22 @@ public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTe
 	public void parseRequest_validRequestSnippet_ReturnsTrue() throws Exception
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
-		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "C 100 20Jan2015 0001.HK", newRequest );
+		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "C 100 20Jan2030 0001.HK", newRequest );
 		assertEquals("Number of legs for new request should be 1", newRequest.getLegs().size(), 1);
+	}
+	
+	@Test
+	public void parseRequest_InvalidMaturityDate_ReturnsFalse() throws Exception
+	{
+		RequestDetailImpl newRequest = new RequestDetailImpl();
+		boolean result = Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "C 100 20Jan2010 0001.HK", newRequest );
+		assertFalse("shoudl return false because maturity precedes today", result);
 	}
 	
 	@Test
 	public void getNewInstance_validRequestSnippet_ReturnsValidRequestNewInstance() throws Exception
 	{
-		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 100 20Jan2015 0001.HK", 1, "AB01", "testuser");
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 100 20Jan2030 0001.HK", 1, "AB01", "testuser");
 		assertEquals("should create one leg", request.getLegs().size(), 1);
 	}
 	

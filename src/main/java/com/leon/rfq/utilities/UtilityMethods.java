@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 
 public final class UtilityMethods
 {
+	private UtilityMethods() {} // Prevents instantiation
+	
 	private static final Logger logger = LoggerFactory.getLogger(UtilityMethods.class);
 	private final static DateFormat MMddyyyyFormat = new SimpleDateFormat("MM/dd/yyyy");
 

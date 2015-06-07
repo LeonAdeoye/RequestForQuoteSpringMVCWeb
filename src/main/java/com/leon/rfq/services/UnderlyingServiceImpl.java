@@ -111,7 +111,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		}
 
 		if(logger.isDebugEnabled())
-			logger.debug("Received request from user [" + savedByUser + "] to save underlying with RIC [" + ric + "].");
+			logger.debug("Received request from user: " + savedByUser + " to save underlying with RIC: " + ric);
 		
 		ReentrantLock lock = new ReentrantLock();
 				
@@ -176,7 +176,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		}
 		
 		if(logger.isDebugEnabled())
-			logger.debug("Received request from user [" + updatedByUser + "] to update underlying with RIC [" + ric + "].");
+			logger.debug("Received request from user: " + updatedByUser + " to update underlying with RIC: " + ric);
 		
 		ReentrantLock lock = new ReentrantLock();
 		
@@ -290,7 +290,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		}
 		
 		if(logger.isDebugEnabled())
-			logger.debug("Get underlying with RIC" + ric);
+			logger.debug("Get underlying with RIC: " + ric);
 		
 		ReentrantLock lock = new ReentrantLock();
 		
@@ -337,7 +337,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		ReentrantLock lock = new ReentrantLock();
 		
 		if(logger.isDebugEnabled())
-			logger.debug("Delete underlying with RIC" + ric);
+			logger.debug("Delete underlying with RIC: " + ric);
 		
 		try
 		{
@@ -376,7 +376,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		}
 		
 		if(logger.isDebugEnabled())
-			logger.debug("Check if underlying exists with RIC " + ric);
+			logger.debug("Check if underlying exists with RIC: " + ric);
 		
 		return (isUnderlyingCached(ric) ? true : this.underlyingDao.underlyingExistsWithRic(ric));
 	}

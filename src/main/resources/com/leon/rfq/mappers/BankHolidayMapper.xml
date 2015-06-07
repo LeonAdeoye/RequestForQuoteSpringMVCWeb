@@ -13,7 +13,7 @@
 		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
 	</resultMap>
 	
-	<select id="getAll" parameterType="java.lang.String" resultMap="BankHolidayResultSet">
+	<select id="getAllInLocation" parameterType="java.lang.String" resultMap="BankHolidayResultSet">
 		SELECT identifier, location, bankHolidayDate, isValid, lastUpdatedBy 
 		FROM holidays 
 		WHERE location=#{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
@@ -46,12 +46,12 @@
 		#{isValid}, #{lastUpdatedBy}, now() )
 	</insert>
 	
-	<delete id="delete" parameterType="java.lang.String">
+	<delete id="deleteByLocation" parameterType="java.lang.String">
 		DELETE FROM holidays
 		WHERE location = #{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}
 	</delete>
 	
-	<delete id="delete" parameterType="java.lang.Integer">
+	<delete id="deleteById" parameterType="java.lang.Integer">
 		DELETE FROM holidays
 		WHERE identifier = #{identifier}
 	</delete>			

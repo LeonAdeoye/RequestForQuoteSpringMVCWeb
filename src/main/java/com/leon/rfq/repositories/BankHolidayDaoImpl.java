@@ -23,13 +23,13 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	@Override
 	public boolean delete(LocationEnum location)
 	{
-		return this.bankHolidayMapper.delete(location) > 0;
+		return this.bankHolidayMapper.deleteByLocation(location) > 0;
 	}
 
 	@Override
 	public boolean delete(int identifier)
 	{
-		return this.bankHolidayMapper.delete(identifier) == 1;
+		return this.bankHolidayMapper.deleteById(identifier) == 1;
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	@Override
 	public Set<LocalDate> getAll(LocationEnum location)
 	{
-		return this.bankHolidayMapper.getAll(location).stream()
+		return this.bankHolidayMapper.getAllInLocation(location).stream()
 				.map(BankHolidayDetailImpl::getBankHolidayDate).collect(Collectors.toSet());
 	}
 	

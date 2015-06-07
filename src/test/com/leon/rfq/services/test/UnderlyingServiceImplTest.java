@@ -60,10 +60,11 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
     public void get_ValidRic_CallsDaoGetMethod()
 	{
 		// Arrange
+		UnderlyingService underlyingService = new UnderlyingServiceImpl(); // Need local instance to clear cache
 		UnderlyingDao underlyingDaoMock = mock(UnderlyingDaoImpl.class);
-		this.underlyingService.setUnderlyingDao(underlyingDaoMock);
+		underlyingService.setUnderlyingDao(underlyingDaoMock);
 		// Act
-		this.underlyingService.get("testRIC");
+		underlyingService.get("testRIC");
 		// Assert
 		verify(underlyingDaoMock).get("testRIC");
 	}

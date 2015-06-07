@@ -57,11 +57,15 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
 		
-		if(this.isValidOptionRequestSnippet(requestSnippet))
+		if(!this.isValidOptionRequestSnippet(requestSnippet))
 		{
-			this.parseRequest(requestSnippet, newRequest);
+			if(logger.isErrorEnabled())
+				logger.error("requestSnippet argument is invalid");
+			
+			throw new IllegalArgumentException("requestSnippet argument is invalid");
 		}
-		else
+		
+		if(!this.parseRequest(requestSnippet, newRequest))
 		{
 			if(logger.isErrorEnabled())
 				logger.error("requestSnippet argument is invalid");
@@ -243,15 +247,26 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 * 
 	 * @param snippet 	the option request snippet containing all of option details to be parsed.
 	 * @param parent 	the parent request that these option details belong to.
+	 * @return boolean	true if the option is parsed successfully otherwise false;
 	 */
-    private void parseRequest(String snippet, RequestDetailImpl parent)
+    private boolean parseRequest(String snippet, RequestDetailImpl parent)
     {
-    	String[] partsOfTheRequest = snippet.split(" ");
-    	List<OptionDetailImpl> optionLegs = parseOptionTypes(partsOfTheRequest[0], parent);
-        parseOptionStrikes(partsOfTheRequest[1], optionLegs);
-        parseOptionMaturityDates(partsOfTheRequest[2], optionLegs);
-        parseOptionUnderlyings(partsOfTheRequest[3], optionLegs);
-        parent.setLegs(optionLegs);
+    	try
+    	{
+	    	String[] partsOfTheRequest = snippet.split(" ");
+	    	List<OptionDetailImpl> optionLegs = parseOptionTypes(partsOfTheRequest[0], parent);
+	        parseOptionStrikes(partsOfTheRequest[1], optionLegs);
+	        parseOptionMaturityDates(partsOfTheRequest[2], optionLegs);
+	        parseOptionUnderlyings(partsOfTheRequest[3], optionLegs);
+	        parent.setLegs(optionLegs);
+	        return true;
+    	}
+    	catch(Exception e)
+    	{
+    		if(logger.isErrorEnabled())
+    			logger.error("Failed to parse option request. Exception thrown: "+ e);
+    		return false;
+    	}
     }
 
 	/**
