@@ -19,7 +19,6 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import com.leon.rfq.repositories.UserDao;
 import com.leon.rfq.repositories.UserDaoImpl;
 import com.leon.rfq.services.UserService;
-import com.leon.rfq.services.UserServiceImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
@@ -61,11 +60,10 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
     public void get_ValidParameter_CallsDaoGetMethod()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act
-		userService.get("testUser");
+		this.userService.get("testUser");
 		// Assert
 		verify(userDaoMock).get("testUser");
 	}
@@ -74,11 +72,10 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
     public void getAll_NoParameters_CallsDaoGetAllMethod()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act
-		userService.getAll();
+		this.userService.getAll();
 		// Assert
 		verify(userDaoMock).getAll();
 	}
@@ -87,11 +84,10 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
     public void delete_validUserId_CallsDaoDeleteMethod()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act
-		userService.delete("userToBeDeleted");
+		this.userService.delete("userToBeDeleted");
 		// Assert
 		verify(userDaoMock, never()).delete("userToBeDeleted");
 	}
@@ -100,11 +96,10 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
     public void updateValidity_NonExistentUserId_DoesNotCallDaoUpdateValidityMethod()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act
-		userService.updateValidity("userToBeUpdated", true, "tester");
+		this.userService.updateValidity("userToBeUpdated", true, "tester");
 		// Assert
 		verify(userDaoMock, never()).updateValidity("userToBeUpdated", true, "tester");
 	}
@@ -113,22 +108,20 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
     public void updateValidity_NonExistentUserId_ReturnFalse()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act and Assert
-		assertFalse("updateValidity should return false if user does not exist.", userService.updateValidity("userToBeUpdated", true, "tester"));
+		assertFalse("updateValidity should return false if user does not exist.", this.userService.updateValidity("userToBeUpdated", true, "tester"));
 	}
 	
 	@Test
     public void updateValidity_validUserId_CallsDaoUpdateValidityMethod()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act
-		userService.updateValidity("userToBeUpdated", true, "tester");
+		this.userService.updateValidity("userToBeUpdated", true, "tester");
 		// Assert
 		verify(userDaoMock, never()).updateValidity("userToBeUpdated", true, "tester");
 	}
@@ -137,11 +130,10 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
     public void insert_validParameters_CallsDaoSaveMethod()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act
-		userService.insert("userToBeSaved", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
+		this.userService.insert("userToBeSaved", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 		// Assert
 		verify(userDaoMock).insert("userToBeSaved", "firstName", "lastName", "emailAddress", "location", "group", true, "tester");
 	}
@@ -348,11 +340,10 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
     public void userExistsWithEmailAddress_existingEmailAddress__CallsCorrectDaoMethod()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act
-		userService.userExistsWithEmailAddress("emailAddress");
+		this.userService.userExistsWithEmailAddress("emailAddress");
 		// Assert
 		verify(userDaoMock).userExistsWithEmailAddress("emailAddress");
 	}
@@ -361,11 +352,10 @@ public class UserServiceImplTest extends AbstractJUnit4SpringContextTests
     public void userExistsWithUserId_existingUserId__CallsCorrectDaoMethod()
 	{
 		// Arrange
-		UserService userService = new UserServiceImpl();
 		UserDao userDaoMock = mock(UserDaoImpl.class);
-		userService.setUserDao(userDaoMock);
+		this.userService.setUserDao(userDaoMock);
 		// Act
-		userService.userExistsWithUserId("userId");
+		this.userService.userExistsWithUserId("userId");
 		// Assert
 		verify(userDaoMock).userExistsWithUserId("userId");
 	}

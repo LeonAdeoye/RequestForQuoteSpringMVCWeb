@@ -23,7 +23,7 @@ import com.leon.rfq.services.UnderlyingServiceImpl;
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 {
-	@Autowired
+	@Autowired(required=true)
 	private UnderlyingService underlyingService;
 	
 	@Before
@@ -60,11 +60,10 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
     public void get_ValidRic_CallsDaoGetMethod()
 	{
 		// Arrange
-		UnderlyingService underlyingService = new UnderlyingServiceImpl();
 		UnderlyingDao underlyingDaoMock = mock(UnderlyingDaoImpl.class);
-		underlyingService.setUnderlyingDao(underlyingDaoMock);
+		this.underlyingService.setUnderlyingDao(underlyingDaoMock);
 		// Act
-		underlyingService.get("testRIC");
+		this.underlyingService.get("testRIC");
 		// Assert
 		verify(underlyingDaoMock).get("testRIC");
 	}
@@ -73,11 +72,10 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
     public void getAll_NoParameters_CallsDaoGetAllMethod()
 	{
 		// Arrange
-		UnderlyingService underlyingService = new UnderlyingServiceImpl();
 		UnderlyingDao underlyingDaoMock = mock(UnderlyingDaoImpl.class);
-		underlyingService.setUnderlyingDao(underlyingDaoMock);
+		this.underlyingService.setUnderlyingDao(underlyingDaoMock);
 		// Act
-		underlyingService.getAll();
+		this.underlyingService.getAll();
 		// Assert
 		verify(underlyingDaoMock).getAll();
 	}
@@ -86,11 +84,10 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
     public void delete_validRic_CallsDaoDeleteMethod()
 	{
 		// Arrange
-		UnderlyingService underlyingService = new UnderlyingServiceImpl();
 		UnderlyingDao underlyingDaoMock = mock(UnderlyingDaoImpl.class);
-		underlyingService.setUnderlyingDao(underlyingDaoMock);
+		this.underlyingService.setUnderlyingDao(underlyingDaoMock);
 		// Act
-		underlyingService.delete("testRIC");
+		this.underlyingService.delete("testRIC");
 		// Assert
 		verify(underlyingDaoMock, never()).delete("testRIC");
 	}
@@ -99,11 +96,10 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
     public void insert_validParameters_CallsDaoSaveMethod()
 	{
 		// Arrange
-		UnderlyingService underlyingService = new UnderlyingServiceImpl();
 		UnderlyingDao underlyingDaoMock = mock(UnderlyingDaoImpl.class);
-		underlyingService.setUnderlyingDao(underlyingDaoMock);
+		this.underlyingService.setUnderlyingDao(underlyingDaoMock);
 		// Act
-		underlyingService.insert("testRIC", "description", true, "tester");
+		this.underlyingService.insert("testRIC", "description", true, "tester");
 		// Assert
 		verify(underlyingDaoMock).insert("testRIC", "description", true, "tester");
 	}
