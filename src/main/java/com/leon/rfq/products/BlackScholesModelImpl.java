@@ -4,7 +4,6 @@ import static java.lang.Math.log;
 import static java.lang.Math.pow;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,10 +19,32 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         private boolean isEuropeanOption = true;
         
         private static BigDecimal TWO = BigDecimal.valueOf(2.0);
-        private static final int SCALE = 3;
+        private static BigDecimal NEGATIVE_ONE = BigDecimal.valueOf(-1);
+        
+        private static BigDecimal A0 = new BigDecimal("0.2316419");
+        private static BigDecimal A1 = new BigDecimal("0.31938153");
+        private static BigDecimal A2 = new BigDecimal("-0.356563782");
+        private static BigDecimal A3 = new BigDecimal("1.781477937");
+        private static BigDecimal A4 = new BigDecimal("-1.821255978");
+        private static BigDecimal A5 = new BigDecimal("1.330274429");
+        
+        private static final int SCALE = 4;
+        
+        private static BigDecimal PI_CALCULATED_VALUE = BigDecimal.ONE.divide(squareRoot(TWO.multiply(BigDecimal.valueOf(Math.PI))), SCALE, RoundingMode.HALF_UP);
         
         public BlackScholesModelImpl()
         {
+        }
+        
+        public void initialization()
+        {
+        	
+        }
+        
+        private static BigDecimal expCalculatedValue(BigDecimal initialValue)
+        {
+        	BigDecimal absolute =  initialValue.abs();
+        	return BigDecimal.valueOf(Math.exp(((NEGATIVE_ONE.multiply(absolute)).multiply(absolute)).divide(TWO, SCALE, RoundingMode.HALF_UP).doubleValue()));
         }
        
         @Override
@@ -199,31 +220,44 @@ public final class BlackScholesModelImpl implements OptionPricingModel
             return (1.0 / Math.sqrt(2.0 * Math.PI)) * Math.exp((-L *L) / 2);
         }
         
+        private BigDecimal scale(BigDecimal initialValue)
+        {
+        	return initialValue.setScale(SCALE, RoundingMode.HALF_UP);
+        }
+        
+        private BigDecimal negate(BigDecimal initialValue)
+        {
+        	return initialValue.multiply(NEGATIVE_ONE);
+        }
+        
         public static BigDecimal squareRoot(BigDecimal value)
         {
             BigDecimal x = new BigDecimal(Math.sqrt(value.doubleValue()));
             return x.add(new BigDecimal(value.subtract(x.multiply(x)).doubleValue() / (x.doubleValue() * 2.0)));
         }
         
-        public static BigDecimal NormalDistribution(BigDecimal initialValue)
+        public static BigDecimal normalDistribution(BigDecimal initialValue)
         {
-            // double L = Math.abs(X);
-            // return (1.0 / Math.sqrt(2.0 * Math.PI)) * Math.exp((-L *L) / 2);
-            
-            BigDecimal absolute = initialValue.abs();
-            BigDecimal firstValue = BigDecimal.ONE.divide(squareRoot(TWO.multiply(BigDecimal.valueOf(Math.PI))), SCALE, RoundingMode.HALF_UP);
-            
-            int intValue = ((BigDecimal.valueOf(-1).multiply(absolute)).multiply(absolute)).divide(TWO, SCALE, RoundingMode.HALF_UP).intValue();
-            BigDecimal secondValue = BigDecimal.valueOf(Math.E).pow(intValue, MathContext.UNLIMITED);
-            
-            return firstValue.multiply(secondValue);
+            return PI_CALCULATED_VALUE.multiply(expCalculatedValue(initialValue));
+        }
+        
+        public static BigDecimal cummulativeNormalDistribution(BigDecimal initialValue)
+        {
+        	BigDecimal absolute =  initialValue.abs();
+        	BigDecimal k = BigDecimal.ONE.divide(BigDecimal.ONE.add(A0.multiply(absolute)), SCALE, RoundingMode.HALF_UP);
+        	BigDecimal kPowers = ((A1.multiply(k)).add(A2.multiply(k.pow(2))).add(A3.multiply(k.pow(3)))).add(A4.multiply(k.pow(4)).add(A5.multiply(k.pow(5))));
+        	BigDecimal result = BigDecimal.ONE.subtract(normalDistribution(initialValue).multiply(kPowers));
+        	
+        	if(initialValue.compareTo(BigDecimal.ZERO) == -1)
+        		return BigDecimal.ONE.subtract(result);
+        	return result;
         }
         
         public static void main(String... args)
         {
         	double fred = ND(0.775);
         	System.out.println(fred);
-			BigDecimal bon = NormalDistribution(new BigDecimal("0.775"));
+			BigDecimal bon = normalDistribution(new BigDecimal("0.775"));
         	System.out.println(bon);
         	
         	// For testing...
