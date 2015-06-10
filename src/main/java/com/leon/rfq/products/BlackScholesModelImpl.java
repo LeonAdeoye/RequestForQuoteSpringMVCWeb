@@ -1,13 +1,11 @@
 package com.leon.rfq.products;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Map;
  
 public final class BlackScholesModelImpl implements OptionPricingModel
 {
         // Variables for intermediate calculations
         private boolean isCallOption = true;
-        
         private static BigDecimal TWO = BigDecimal.valueOf(2.0);
         private static BigDecimal NEGATIVE_ONE = BigDecimal.valueOf(-1);
         private static BigDecimal HUNDRED = BigDecimal.valueOf(100);
@@ -88,41 +86,8 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         {
         	throw new UnsupportedOperationException("Black and scholes model can only be used to price European options");
         }
-       
-        @Override
-		public OptionPriceResult calculate(Map<String, Double> input)
-        {
-    		OptionPriceResult optionResult = new OptionPriceResult();
-            try
-            {
-/*                double volatility = input.get(VOLATILITY);
-                double interestRate = input.get(INTEREST_RATE);
-                double strike = input.get(STRIKE);
-                double underlyingPrice = input.get(UNDERLYING_PRICE);
-                double timeToExpiryInYears = input.get(TIME_TO_EXPIRY);
-               
-                // Calculate these two intermediate calculations and reuse
-                this.d1 = (log(underlyingPrice/strike)+((interestRate + ((volatility * volatility)/2))* timeToExpiryInYears))/(volatility * Math.sqrt(timeToExpiryInYears));
-                this.d2 = this.d1 - (volatility * Math.sqrt(timeToExpiryInYears));
-                this.e = exp(-interestRate * timeToExpiryInYears);
-                this.t = Math.sqrt(timeToExpiryInYears);
-                                             
-        		optionResult.setPrice(this.calculateOptionPrice(underlyingPrice, strike, timeToExpiryInYears, interestRate));
-        		optionResult.setDelta(this.calculateOptionDelta());
-        		optionResult.setGamma(this.calculateOptionGamma(underlyingPrice, volatility));
-        		optionResult.setVega(this.calculateOptionVega(underlyingPrice));
-        		optionResult.setRho(this.calculateOptionRho(strike, timeToExpiryInYears, interestRate));
-        		optionResult.setTheta(this.calculateOptionTheta(underlyingPrice, strike, interestRate, volatility));*/
-        		
-                return optionResult;
-            }
-            catch(Exception e)
-            {
-                throw new RuntimeException(this.toString() + " calculation error: " + e.getMessage());
-            }
-        }
         
-        @Override
+/*        @Override
 		public void calculateRange(OptionPriceResultSet optionPriceResultSet, Map<String, Double> input, String rangeKey, double startValue, double endValue, double increment)
         {
             try
@@ -139,7 +104,7 @@ public final class BlackScholesModelImpl implements OptionPricingModel
             {
             	throw new RuntimeException(this.toString() + " calculation range error: " + e.getMessage());
             }
-        }
+        }*/
                        
         public BigDecimal calculateTheoreticalValue() throws Exception
         {

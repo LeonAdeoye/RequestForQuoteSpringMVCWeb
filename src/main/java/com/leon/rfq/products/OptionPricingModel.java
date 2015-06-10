@@ -1,5 +1,4 @@
 package com.leon.rfq.products;
-import java.util.Map;
  
 public interface OptionPricingModel
 {
@@ -15,12 +14,7 @@ public interface OptionPricingModel
         static final String UNDERLYING_PRICE = "UNDERLYING_PRICE";
         static final String STRIKE = "STRIKE";
         static final  String TIME_TO_EXPIRY = "TIME_TO_EXPIRY";
-             
-        OptionPriceResult calculate(Map<String, Double> input) throws Exception;
-        
-        void calculateRange(OptionPriceResultSet optionPriceResultSet, Map<String, Double> input, String rangeKey, double startValue,
-        		double endValue, double increment) throws Exception;
-        
+                     
         void setToCall(boolean isCallOption);
         
         void setToEuropean(boolean isEuropeanOption);
