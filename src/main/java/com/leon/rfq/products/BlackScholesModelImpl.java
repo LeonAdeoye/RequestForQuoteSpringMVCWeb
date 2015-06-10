@@ -1,19 +1,11 @@
 package com.leon.rfq.products;
-import static java.lang.Math.exp;
-import static java.lang.Math.log;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
 import java.util.Map;
  
 public final class BlackScholesModelImpl implements OptionPricingModel
 {
         // Variables for intermediate calculations
-        //private double d1 = 0.0;
-        //private double d2 = 0.0;
-        private double e = 0.0;
-        private double t = 0.0;
         private boolean isCallOption = true;
         private boolean isEuropeanOption = true;
         
@@ -28,33 +20,56 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         private static BigDecimal A4 = new BigDecimal("-1.821255978");
         private static BigDecimal A5 = new BigDecimal("1.330274429");
         
-        private static final int SCALE = 4;
+        private static int SCALE = 4;
         
         private BigDecimal piCalcVal;
         private BigDecimal timeToExpirySquareRoot;
-        private BigDecimal timeToExpiryInYears;
+        private final BigDecimal timeToExpiryInYears;
         private BigDecimal expInterestRate;
-        private BigDecimal interestRate;
-        private BigDecimal underlyingPrice;
-        private BigDecimal strike;
-        private BigDecimal volatility;
+        private final BigDecimal interestRate;
+        private final BigDecimal underlyingPrice;
+        private final BigDecimal strike;
+        private final BigDecimal volatility;
         private BigDecimal d1;
         private BigDecimal d2;
         
-        public BlackScholesModelImpl()
+        private BigDecimal theoreticalValue;
+        private BigDecimal intrinsicValue;
+        private BigDecimal timeValue;
+        private BigDecimal delta;
+        private BigDecimal gamma;
+        private BigDecimal vega;
+        private BigDecimal theta;
+        private BigDecimal rho;
+        private BigDecimal lambda;
+
+        
+        public BlackScholesModelImpl(boolean isCallOption, BigDecimal timeToExpiryInYears, BigDecimal volatility,
+        		BigDecimal strike, BigDecimal underlyingPrice, BigDecimal interestRate)
         {
+        	this.isCallOption = isCallOption;
+        	this.timeToExpiryInYears = timeToExpiryInYears;
+        	this.volatility = volatility;
+        	this.strike = strike;
+        	this.interestRate = interestRate;
+        	this.underlyingPrice = underlyingPrice;
         }
         
-        public void initialization()
+        public void calculateSeedValues()
         {
         	this.piCalcVal = BigDecimal.ONE.divide(squareRoot(TWO.multiply(BigDecimal.valueOf(Math.PI))), SCALE, RoundingMode.HALF_UP);
         	this.timeToExpirySquareRoot = squareRoot(this.timeToExpiryInYears);
-        	this.expInterestRate = BigDecimal.valueOf(Math.exp((NEGATIVE_ONE.multiply(this.interestRate).multiply(this.timeToExpiryInYears)).doubleValue()));
+        	this.expInterestRate = BigDecimal.valueOf(Math.exp((negate(this.interestRate).multiply(this.timeToExpiryInYears)).doubleValue()));
         	BigDecimal logCalc = BigDecimal.valueOf(Math.log(this.underlyingPrice.divide(this.strike, SCALE, RoundingMode.HALF_UP).doubleValue()));
         	BigDecimal volSq = this.volatility.multiply(this.timeToExpirySquareRoot);
         	BigDecimal volPow = this.volatility.pow(2).divide(TWO, SCALE, RoundingMode.HALF_UP);
         	this.d1 = (logCalc.add(this.interestRate.add(volPow.multiply(this.timeToExpiryInYears)))).divide(volSq, SCALE, RoundingMode.HALF_UP);
         	this.d2 = this.d1.subtract(volSq);
+        }
+        
+        public void setScale(int scale)
+        {
+        	this.SCALE = scale;
         }
         
         private static BigDecimal expCalculatedValue(BigDecimal initialValue)
@@ -81,7 +96,7 @@ public final class BlackScholesModelImpl implements OptionPricingModel
     		OptionPriceResult optionResult = new OptionPriceResult();
             try
             {
-                double volatility = input.get(VOLATILITY);
+/*                double volatility = input.get(VOLATILITY);
                 double interestRate = input.get(INTEREST_RATE);
                 double strike = input.get(STRIKE);
                 double underlyingPrice = input.get(UNDERLYING_PRICE);
@@ -98,7 +113,7 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         		optionResult.setGamma(this.calculateOptionGamma(underlyingPrice, volatility));
         		optionResult.setVega(this.calculateOptionVega(underlyingPrice));
         		optionResult.setRho(this.calculateOptionRho(strike, timeToExpiryInYears, interestRate));
-        		optionResult.setTheta(this.calculateOptionTheta(underlyingPrice, strike, interestRate, volatility));
+        		optionResult.setTheta(this.calculateOptionTheta(underlyingPrice, strike, interestRate, volatility));*/
         		
                 return optionResult;
             }
@@ -127,46 +142,82 @@ public final class BlackScholesModelImpl implements OptionPricingModel
             }
         }
                        
-        public BigDecimal calculateOptionPrice() throws Exception
+        public BigDecimal calculateTheoreticalValue() throws Exception
         {
             if (this.isCallOption)
-                return this.underlyingPrice.multiply(cummulativeNormalDistribution(this.d1)).subtract(this.strike.multiply(BigDecimal.ZERO.multiply(cummulativeNormalDistribution(this.d2))));
+            	this.theoreticalValue = this.underlyingPrice.multiply(cummulativeNormalDensity(this.d1))
+            	.subtract(this.strike.multiply(this.expInterestRate.multiply(cummulativeNormalDensity(this.d2))));
             else
-                return this.strike.multiply(BigDecimal.ZERO).multiply(cummulativeNormalDistribution(negate(this.d2))).subtract(this.underlyingPrice.multiply(cummulativeNormalDistribution(negate(this.d1))));
+            	this.theoreticalValue = this.strike.multiply(this.expInterestRate).multiply(cummulativeNormalDensity(negate(this.d2)))
+            	.subtract(this.underlyingPrice.multiply(cummulativeNormalDensity(negate(this.d1))));
+            
+            return scale(this.theoreticalValue);
         }
        
-        public BigDecimal calculateOptionDelta() throws Exception
+        public BigDecimal calculateDelta() throws Exception
         {
-            if(this.isCallOption)
-            	return scale(cummulativeNormalDistribution(this.d1));
-            else
-                return scale(negate(cummulativeNormalDistribution(negate(this.d1))));
+        	this.delta = this.isCallOption ? cummulativeNormalDensity(this.d1) : negate(cummulativeNormalDensity(negate(this.d1)));
+        	
+        	return scale(this.delta);
         }
        
-        public BigDecimal calculateOptionGamma() throws Exception
+        public BigDecimal calculateGamma() throws Exception
         {
-                return normalDistribution(this.d1).divide(this.underlyingPrice.multiply(this.volatility).multiply(BigDecimal.ZERO), SCALE, RoundingMode.HALF_UP);
+        	this.gamma = normalDensity(this.d1).divide(this.underlyingPrice.multiply(this.volatility)
+        			.multiply(this.timeToExpirySquareRoot), SCALE, RoundingMode.HALF_UP);
+        	
+        	return this.gamma;
         }
        
-        public BigDecimal calculateOptionVega() throws Exception
+        public BigDecimal calculateVega() throws Exception
         {
-        	return (normalDistribution(this.d1).multiply(this.underlyingPrice.multiply(BigDecimal.ZERO)).divide(HUNDRED, SCALE, RoundingMode.HALF_UP));
+        	this.vega = (normalDensity(this.d1).multiply(this.underlyingPrice
+        			.multiply(this.timeToExpirySquareRoot)).divide(HUNDRED, SCALE, RoundingMode.HALF_UP));
+        	
+        	return this.vega;
         }
        
-        public BigDecimal calculateOptionTheta() throws Exception
+        public BigDecimal calculateTheta() throws Exception
+        {
+            BigDecimal left = (this.underlyingPrice.multiply(this.volatility).multiply(normalDensity(this.d1)))
+            		.divide(TWO.multiply(this.timeToExpirySquareRoot), SCALE, RoundingMode.HALF_UP);
+            
+            BigDecimal right = (this.interestRate.multiply(this.strike).multiply(this.expInterestRate)
+            		.multiply(cummulativeNormalDensity(this.isCallOption ? this.d2 : negate(this.d2))));
+            
+            this.theta = negate(left.add(right)).divide(HUNDRED, SCALE, RoundingMode.HALF_UP);
+            
+            return this.theta;
+        }
+       
+        public BigDecimal calculateRho() throws Exception
         {
             if (this.isCallOption)
-                    return -1 * ((((this.underlyingPrice * this.volatility * ND(this.d1))/(2 * this.t))  + (this.interestRate * this.strike * this.e * CND(this.d2))) / 100.0);
+            	this.rho = this.timeToExpiryInYears.multiply(this.strike).multiply(this.expInterestRate)
+            		.multiply(cummulativeNormalDensity(this.d2)).divide(HUNDRED, SCALE, RoundingMode.HALF_UP);
             else
-                    return -1 * ((((this.underlyingPrice * this.volatility * ND(this.d1))/(2 * this.t))  + (this.interestRate * this.strike * this.e * CND(-this.d2))) / 100.0);
+            	this.rho = negate(this.timeToExpiryInYears).multiply(this.strike).multiply(this.expInterestRate)
+                	.multiply(cummulativeNormalDensity(negate(this.d2))).divide(HUNDRED, SCALE, RoundingMode.HALF_UP);
+                    
+            return this.rho;
         }
-       
-        public BigDecimal calculateOptionRho() throws Exception
+        
+        public BigDecimal calculateLambda() throws Exception
         {
-            if (this.isCallOption)
-                    return (this.timeToExpiryInYears * this.strike * this.e * cummulativeNormalDistribution(this.d2)) .divide(HUNDRED, SCALE, RoundingMode.HALF_UP);
-            else
-                    return (negate(this.timeToExpiryInYears).multiply(this.strike).multiply * this.e * cummulativeNormalDistribution(negate(this.d2))).divide(HUNDRED, SCALE, RoundingMode.HALF_UP);
+        	this.lambda = this.underlyingPrice.multiply(this.delta).divide(this.theoreticalValue, SCALE, RoundingMode.HALF_DOWN);
+        	return scale(this.lambda);
+        }
+        
+        public BigDecimal calculateIntrinsicValue() throws Exception
+        {
+        	this.intrinsicValue = this.isCallOption ? this.underlyingPrice.subtract(this.strike) : this.strike.subtract(this.underlyingPrice);
+        	return scale(this.intrinsicValue.compareTo(BigDecimal.ZERO) > 0 ? this.intrinsicValue : BigDecimal.ZERO);
+        }
+        
+        public BigDecimal calculateTimeValue() throws Exception
+        {
+        	this.timeValue = calculateTheoreticalValue().subtract(calculateIntrinsicValue());
+        	return scale(this.timeValue.compareTo(BigDecimal.ZERO) > 0 ? this.timeValue : BigDecimal.ZERO);
         }
         
         private BigDecimal scale(BigDecimal initialValue)
@@ -185,17 +236,17 @@ public final class BlackScholesModelImpl implements OptionPricingModel
             return x.add(new BigDecimal(value.subtract(x.multiply(x)).doubleValue() / (x.doubleValue() * 2.0)));
         }
         
-        public BigDecimal normalDistribution(BigDecimal initialValue)
+        public BigDecimal normalDensity(BigDecimal initialValue)
         {
             return this.piCalcVal.multiply(expCalculatedValue(initialValue));
         }
         
-        public BigDecimal cummulativeNormalDistribution(BigDecimal initialValue)
+        public BigDecimal cummulativeNormalDensity(BigDecimal initialValue)
         {
         	BigDecimal absolute =  initialValue.abs();
         	BigDecimal k = BigDecimal.ONE.divide(BigDecimal.ONE.add(A0.multiply(absolute)), SCALE, RoundingMode.HALF_UP);
         	BigDecimal kPowers = ((A1.multiply(k)).add(A2.multiply(k.pow(2))).add(A3.multiply(k.pow(3)))).add(A4.multiply(k.pow(4)).add(A5.multiply(k.pow(5))));
-        	BigDecimal result = BigDecimal.ONE.subtract(normalDistribution(initialValue).multiply(kPowers));
+        	BigDecimal result = BigDecimal.ONE.subtract(normalDensity(initialValue).multiply(kPowers));
         	
         	if(initialValue.compareTo(BigDecimal.ZERO) == -1)
         		return BigDecimal.ONE.subtract(result);
@@ -205,13 +256,26 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         
         public static void main(String... args)
         {
-        	double fred = ND(0.775);
-        	System.out.println(fred);
-			BigDecimal bon = normalDistribution(new BigDecimal("0.775"));
-        	System.out.println(bon);
-        	
-        	// For testing...
-        	@SuppressWarnings("unused")
-			Map<String, Double> input = new HashMap<>();
+        	try
+        	{
+	        	BlackScholesModelImpl model = new BlackScholesModelImpl(true, BigDecimal.ONE, BigDecimal.valueOf(0.2),
+	            		BigDecimal.valueOf(100), BigDecimal.valueOf(90), BigDecimal.valueOf(0.05));
+	        	
+	        	model.calculateSeedValues();
+	        	
+	        	System.out.println("Theorectical value: " + model.calculateTheoreticalValue());
+	        	System.out.println("Intrinsic value: " + model.calculateIntrinsicValue());
+	        	System.out.println("Time value: " + model.calculateTimeValue());
+	        	System.out.println("Delta: " + model.calculateDelta());
+	        	System.out.println("Gamma: " + model.calculateGamma());
+	        	System.out.println("Vega: " + model.calculateVega());
+	        	System.out.println("Theta: " + model.calculateTheta());
+	        	System.out.println("Rho: " + model.calculateRho());
+	        	System.out.println("Lambda: " + model.calculateLambda());
+        	}
+        	catch(Exception e)
+        	{
+        		e.printStackTrace();
+        	}
        }
 }
