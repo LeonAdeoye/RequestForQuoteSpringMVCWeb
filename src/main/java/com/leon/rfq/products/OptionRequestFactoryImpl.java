@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.leon.rfq.common.Constants;
+import com.leon.rfq.common.RegexConstants;
 import com.leon.rfq.common.EnumTypes.SideEnum;
 import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
@@ -117,7 +117,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     	if(logger.isDebugEnabled())
     		logger.debug("Validating option request snippet: " + snippet);
     	
-        Pattern regexp = Pattern.compile(Constants.REQUEST_PATTERN, Pattern.CASE_INSENSITIVE);
+        Pattern regexp = Pattern.compile(RegexConstants.REQUEST_PATTERN, Pattern.CASE_INSENSITIVE);
         
         Matcher matcher = regexp.matcher(snippet);
        
@@ -132,7 +132,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 */
     public static boolean isEuropeanOption(String snippet)
     {
-        Pattern euRegex = Pattern.compile(Constants.REQUEST_PATTERN);
+        Pattern euRegex = Pattern.compile(RegexConstants.REQUEST_PATTERN);
         Matcher euMatcher = euRegex.matcher(snippet);
        
         return euMatcher.matches();
@@ -282,10 +282,10 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     	
     	boolean isEuropean = isEuropeanOption(snippet);
     	
-        Pattern optionDetailRegex = Pattern.compile(Constants.DETAIL_PATTERN);
+        Pattern optionDetailRegex = Pattern.compile(RegexConstants.DETAIL_PATTERN);
         Matcher detailMatcher = optionDetailRegex.matcher(snippet);
         
-        Pattern optionLegRegex = Pattern.compile(Constants.LEG_PATTERN);
+        Pattern optionLegRegex = Pattern.compile(RegexConstants.LEG_PATTERN);
         Matcher matcher = optionLegRegex.matcher(snippet);
         int legCount = 0;
 

@@ -1,10 +1,19 @@
 package com.leon.rfq.products;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.leon.rfq.common.OptionConstants;
  
-public final class BlackScholesModelImpl implements OptionPricingModel
+public final class BlackScholesModelImpl implements PricingModel
 {
-        // Variables for intermediate calculations
+	private static final Logger logger = LoggerFactory.getLogger(BlackScholesModelImpl.class);
+	
         private boolean isCallOption = true;
         private static BigDecimal TWO = BigDecimal.valueOf(2.0);
         private static BigDecimal NEGATIVE_ONE = BigDecimal.valueOf(-1);
@@ -21,12 +30,12 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         
         private BigDecimal piCalcVal;
         private BigDecimal timeToExpirySquareRoot;
-        private final BigDecimal timeToExpiryInYears;
+        private BigDecimal timeToExpiryInYears;
         private BigDecimal expInterestRate;
-        private final BigDecimal interestRate;
-        private final BigDecimal underlyingPrice;
-        private final BigDecimal strike;
-        private final BigDecimal volatility;
+        private BigDecimal interestRate;
+        private BigDecimal underlyingPrice;
+        private BigDecimal strike;
+        private BigDecimal volatility;
         private BigDecimal d1;
         private BigDecimal d2;
         
@@ -39,18 +48,6 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         private BigDecimal theta;
         private BigDecimal rho;
         private BigDecimal lambda;
-
-        
-        public BlackScholesModelImpl(boolean isCallOption, BigDecimal timeToExpiryInYears, BigDecimal volatility,
-        		BigDecimal strike, BigDecimal underlyingPrice, BigDecimal interestRate)
-        {
-        	this.isCallOption = isCallOption;
-        	this.timeToExpiryInYears = timeToExpiryInYears;
-        	this.volatility = volatility;
-        	this.strike = strike;
-        	this.interestRate = interestRate;
-        	this.underlyingPrice = underlyingPrice;
-        }
         
         public void calculateSeedValues()
         {
@@ -72,41 +69,10 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         private BigDecimal expCalculatedValue(BigDecimal initialValue)
         {
         	BigDecimal absolute =  initialValue.abs();
-        	return BigDecimal.valueOf(Math.exp(((NEGATIVE_ONE.multiply(absolute)).multiply(absolute)).divide(TWO, this.scale, RoundingMode.HALF_UP).doubleValue()));
+        	return BigDecimal.valueOf(Math.exp(((negate(absolute)).multiply(absolute)).divide(TWO, this.scale, RoundingMode.HALF_UP).doubleValue()));
         }
-               
-        @Override
-		public void setToCall(boolean isCallOption)
-        {
-            this.isCallOption = isCallOption;
-        }
-       
-        @Override
-		public void setToEuropean(boolean isEuropeanOption) throws UnsupportedOperationException
-        {
-        	throw new UnsupportedOperationException("Black and scholes model can only be used to price European options");
-        }
-        
-/*        @Override
-		public void calculateRange(OptionPriceResultSet optionPriceResultSet, Map<String, Double> input, String rangeKey, double startValue, double endValue, double increment)
-        {
-            try
-            {
-                for(double value = startValue; value <= endValue; value += increment)
-                {
-                    input.put(rangeKey, value);
-                    OptionPriceResult optionPriceResult = calculate(input);
-                    optionPriceResult.setRangeVariable(value);
-                    optionPriceResultSet.merge(optionPriceResult);
-                }
-            }
-            catch(Exception e)
-            {
-            	throw new RuntimeException(this.toString() + " calculation range error: " + e.getMessage());
-            }
-        }*/
                        
-        public BigDecimal calculateTheoreticalValue() throws Exception
+        private BigDecimal calculateTheoreticalValue() throws Exception
         {
             if (this.isCallOption)
             	this.theoreticalValue = this.underlyingPrice.multiply(cummulativeNormalDensity(this.d1))
@@ -118,14 +84,14 @@ public final class BlackScholesModelImpl implements OptionPricingModel
             return scale(this.theoreticalValue);
         }
        
-        public BigDecimal calculateDelta() throws Exception
+        private BigDecimal calculateDelta() throws Exception
         {
         	this.delta = this.isCallOption ? cummulativeNormalDensity(this.d1) : negate(cummulativeNormalDensity(negate(this.d1)));
         	
         	return scale(this.delta);
         }
        
-        public BigDecimal calculateGamma() throws Exception
+        private BigDecimal calculateGamma() throws Exception
         {
         	this.gamma = normalDensity(this.d1).divide(this.underlyingPrice.multiply(this.volatility)
         			.multiply(this.timeToExpirySquareRoot), this.scale, RoundingMode.HALF_UP);
@@ -133,7 +99,7 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         	return this.gamma;
         }
        
-        public BigDecimal calculateVega() throws Exception
+        private BigDecimal calculateVega() throws Exception
         {
         	this.vega = (normalDensity(this.d1).multiply(this.underlyingPrice
         			.multiply(this.timeToExpirySquareRoot)).divide(HUNDRED, this.scale, RoundingMode.HALF_UP));
@@ -141,20 +107,24 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         	return this.vega;
         }
        
-        public BigDecimal calculateTheta() throws Exception
+        private BigDecimal calculateTheta() throws Exception
         {
-            BigDecimal left = (this.underlyingPrice.multiply(this.volatility).multiply(normalDensity(this.d1)))
-            		.divide(TWO.multiply(this.timeToExpirySquareRoot), this.scale, RoundingMode.HALF_UP);
+            BigDecimal left = negate((this.underlyingPrice
+            		.multiply(this.volatility).multiply(normalDensity(this.d1)))
+            		.divide(TWO.multiply(this.timeToExpirySquareRoot), this.scale, RoundingMode.HALF_UP));
             
             BigDecimal right = (this.interestRate.multiply(this.strike).multiply(this.expInterestRate)
             		.multiply(cummulativeNormalDensity(this.isCallOption ? this.d2 : negate(this.d2))));
             
-            this.theta = negate(left.add(right)).divide(HUNDRED, this.scale, RoundingMode.HALF_UP);
+            if(this.isCallOption)
+            	this.theta = left.subtract(right).divide(HUNDRED, this.scale, RoundingMode.HALF_UP);
+            else
+            	this.theta = left.add(right).divide(HUNDRED, this.scale, RoundingMode.HALF_UP);
             
             return this.theta;
         }
        
-        public BigDecimal calculateRho() throws Exception
+        private BigDecimal calculateRho() throws Exception
         {
             if (this.isCallOption)
             	this.rho = this.timeToExpiryInYears.multiply(this.strike).multiply(this.expInterestRate)
@@ -166,19 +136,19 @@ public final class BlackScholesModelImpl implements OptionPricingModel
             return this.rho;
         }
         
-        public BigDecimal calculateLambda() throws Exception
+        private BigDecimal calculateLambda() throws Exception
         {
         	this.lambda = this.underlyingPrice.multiply(this.delta).divide(this.theoreticalValue, this.scale, RoundingMode.HALF_DOWN);
         	return scale(this.lambda);
         }
         
-        public BigDecimal calculateIntrinsicValue() throws Exception
+        private BigDecimal calculateIntrinsicValue() throws Exception
         {
         	this.intrinsicValue = this.isCallOption ? this.underlyingPrice.subtract(this.strike) : this.strike.subtract(this.underlyingPrice);
         	return scale(this.intrinsicValue.compareTo(BigDecimal.ZERO) > 0 ? this.intrinsicValue : BigDecimal.ZERO);
         }
         
-        public BigDecimal calculateTimeValue() throws Exception
+        private BigDecimal calculateTimeValue() throws Exception
         {
         	this.timeValue = calculateTheoreticalValue().subtract(calculateIntrinsicValue());
         	return scale(this.timeValue.compareTo(BigDecimal.ZERO) > 0 ? this.timeValue : BigDecimal.ZERO);
@@ -194,18 +164,18 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         	return initialValue.multiply(NEGATIVE_ONE);
         }
         
-        public static BigDecimal squareRoot(BigDecimal value)
+        private static BigDecimal squareRoot(BigDecimal value)
         {
             BigDecimal x = new BigDecimal(Math.sqrt(value.doubleValue()));
             return x.add(new BigDecimal(value.subtract(x.multiply(x)).doubleValue() / (x.doubleValue() * 2.0)));
         }
         
-        public BigDecimal normalDensity(BigDecimal initialValue)
+        private BigDecimal normalDensity(BigDecimal initialValue)
         {
             return this.piCalcVal.multiply(expCalculatedValue(initialValue));
         }
         
-        public BigDecimal cummulativeNormalDensity(BigDecimal initialValue)
+        private BigDecimal cummulativeNormalDensity(BigDecimal initialValue)
         {
         	BigDecimal absolute =  initialValue.abs();
         	BigDecimal k = BigDecimal.ONE.divide(BigDecimal.ONE.add(A0.multiply(absolute)), this.scale, RoundingMode.HALF_UP);
@@ -218,28 +188,143 @@ public final class BlackScholesModelImpl implements OptionPricingModel
         	return result;
         }
         
-        public static void main(String... args)
-        {
-        	try
-        	{
-	        	BlackScholesModelImpl model = new BlackScholesModelImpl(false, BigDecimal.ONE, BigDecimal.valueOf(0.2),
-	            		BigDecimal.valueOf(100), BigDecimal.valueOf(90), BigDecimal.valueOf(0.05));
-	        	
-	        	model.calculateSeedValues();
-	        	
-	        	System.out.println("Theorectical value: " + model.calculateTheoreticalValue());
-	        	System.out.println("Intrinsic value: " + model.calculateIntrinsicValue());
-	        	System.out.println("Time value: " + model.calculateTimeValue());
-	        	System.out.println("Delta: " + model.calculateDelta());
-	        	System.out.println("Gamma: " + model.calculateGamma());
-	        	System.out.println("Vega: " + model.calculateVega());
-	        	System.out.println("Theta: " + model.calculateTheta());
-	        	System.out.println("Rho: " + model.calculateRho());
-	        	System.out.println("Lambda: " + model.calculateLambda());
-        	}
-        	catch(Exception e)
-        	{
-        		e.printStackTrace();
-        	}
-       }
+		@Override
+		public void configure(Map<String, BigDecimal> inputs)
+		{
+			this.volatility = inputs.get(OptionConstants.VOLATILITY);
+			this.strike = inputs.get(OptionConstants.STRIKE);
+			this.underlyingPrice = inputs.get(OptionConstants.UNDERLYING_PRICE);
+			this.interestRate = inputs.get(OptionConstants.INTEREST_RATE);
+			this.timeToExpiryInYears = inputs.get(OptionConstants.TIME_TO_EXPIRY);
+			this.isCallOption = inputs.get(OptionConstants.IS_CALL_OPTION).equals(BigDecimal.ONE);
+		}
+
+		@Override
+		public Map<String, BigDecimal> calculate()
+		{
+			try
+			{
+				Map<String, BigDecimal> result = new HashMap<>();
+				
+				calculateSeedValues();
+				
+				result.put(OptionConstants.THEORETICAL_VALUE, calculateTheoreticalValue());
+				result.put(OptionConstants.INTRINSIC_VALUE, calculateIntrinsicValue());
+				result.put(OptionConstants.TIME_VALUE, calculateTimeValue());
+				result.put(OptionConstants.DELTA, calculateDelta());
+				result.put(OptionConstants.GAMMA, calculateGamma());
+				result.put(OptionConstants.VEGA, calculateVega());
+				result.put(OptionConstants.THETA, calculateTheta());
+				result.put(OptionConstants.RHO, calculateRho());
+				result.put(OptionConstants.LAMBDA, calculateLambda());
+				
+				return result;
+			}
+			catch(Exception e)
+			{
+				logger.isErrorEnabled();
+					logger.error("Failed to complete Black and Scholes calculation using following inputs: " + this);
+				
+				return new HashMap<String, BigDecimal>();
+			}
+		}
+
+		@Override
+		public Map<String, BigDecimal> calculate(List<String> listOfRequiredOutputs)
+		{
+			try
+			{
+				Map<String, BigDecimal> result = new HashMap<>();
+				
+				calculateSeedValues();
+				
+				for(String output : listOfRequiredOutputs)
+				{
+					if(output.equals(OptionConstants.THEORETICAL_VALUE))
+					{
+						result.put(OptionConstants.THEORETICAL_VALUE, calculateTheoreticalValue());
+						continue;
+					}
+					
+					if(output.equals(OptionConstants.INTRINSIC_VALUE))
+					{
+						result.put(OptionConstants.INTRINSIC_VALUE, calculateIntrinsicValue());
+						continue;
+					}
+					
+					if(output.equals(OptionConstants.TIME_VALUE))
+					{
+						result.put(OptionConstants.TIME_VALUE, calculateTimeValue());
+						continue;
+					}
+					
+					if(output.equals(OptionConstants.DELTA))
+					{
+						result.put(OptionConstants.DELTA, calculateDelta());
+						continue;
+					}
+
+					if(output.equals(OptionConstants.GAMMA))
+					{
+						result.put(OptionConstants.GAMMA, calculateGamma());
+						continue;
+					}
+					
+					if(output.equals(OptionConstants.VEGA))
+					{
+						result.put(OptionConstants.VEGA, calculateVega());
+						continue;
+					}
+					
+					if(output.equals(OptionConstants.THETA))
+					{
+						result.put(OptionConstants.THETA, calculateTheta());
+						continue;
+					}
+					
+					if(output.equals(OptionConstants.RHO))
+					{
+						result.put(OptionConstants.RHO, calculateRho());
+						continue;
+					}
+										
+					if(output.equals(OptionConstants.LAMBDA))
+					{
+						result.put(OptionConstants.LAMBDA, calculateLambda());
+						continue;
+					}
+				}
+				
+				return result;
+			}
+			catch(Exception e)
+			{
+				logger.isErrorEnabled();
+					logger.error("Failed to complete Black and Scholes calculation using following inputs: " + this);
+				
+				return new HashMap<String, BigDecimal>();
+			}
+		}
+
+		@Override
+		public String toString()
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.append("BlackScholesModelImpl [isCallOption=");
+			builder.append(this.isCallOption);
+			builder.append(", timeToExpiryInYears=");
+			builder.append(this.timeToExpiryInYears);
+			builder.append(", interestRate=");
+			builder.append(this.interestRate);
+			builder.append(", underlyingPrice=");
+			builder.append(this.underlyingPrice);
+			builder.append(", strike=");
+			builder.append(this.strike);
+			builder.append(", volatility=");
+			builder.append(this.volatility);
+			builder.append("]");
+			return builder.toString();
+		}
+		
+		
 }
