@@ -14,7 +14,7 @@ public class CalculationEngineImpl
 		return model.calculate();
 	}
 	
-	Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model, Map<String, BigDecimal> inputs,
+	public static Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model, Map<String, BigDecimal> inputs,
 			RangeParameters params)
 	{
 		Map<BigDecimal, Map<String, BigDecimal>> result = new TreeMap<>();

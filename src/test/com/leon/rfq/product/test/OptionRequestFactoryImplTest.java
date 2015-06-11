@@ -1,4 +1,4 @@
-package com.leon.rfq.services.test;
+package com.leon.rfq.product.test;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -20,7 +20,7 @@ import com.leon.rfq.products.OptionRequestFactory;
 /*@RunWith(PowerMockRunner.class)
 @PowerMockRunnerDelegate(JUnitParamsRunner.class)
 @PrepareForTest(OptionRequestFactoryImpl.class)*/
-public class OptionRequestFactoryImplTest  extends AbstractJUnit4SpringContextTests
+public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTests
 {
 	@SuppressWarnings("unused")
 	private static final Object[] getRequestSnippet()
