@@ -2,8 +2,11 @@ package com.leon.rfq.products;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,9 +15,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.leon.rfq.common.RegexConstants;
 import com.leon.rfq.common.EnumTypes.SideEnum;
 import com.leon.rfq.common.EnumTypes.StatusEnum;
+import com.leon.rfq.common.RegexConstants;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BankHolidayService;
@@ -54,6 +57,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 * @param savedByUser		the user saving the new instance.
 	 * @return	the new instance.
 	 */
+	@Override
 	public RequestDetailImpl getNewInstance(String requestSnippet, int clientId, String bookCode, String savedByUser)
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
@@ -102,6 +106,10 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         newRequest.setSalesCreditPercentage(new BigDecimal("2"));
         newRequest.setPremiumSettlementDaysOverride(1);
         newRequest.setPremiumSettlementDate(LocalDate.now().plusDays(newRequest.getPremiumSettlementDaysOverride()));
+        
+        Map<String, BigDecimal> inputs = new HashMap<>();
+        FutureTask<Map<String, BigDecimal>> calculation = new FutureTask<>(new CalculationRequest(new BlackScholesModelImpl() , inputs));
+        Thread t = new Thread(calculation);
 		
 		return newRequest;
 	}
@@ -249,7 +257,8 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 * @param parent 	the parent request that these option details belong to.
 	 * @return boolean	true if the option is parsed successfully otherwise false;
 	 */
-    public boolean parseRequest(String snippet, RequestDetailImpl parent)
+    @Override
+	public boolean parseRequest(String snippet, RequestDetailImpl parent)
     {
     	try
     	{
