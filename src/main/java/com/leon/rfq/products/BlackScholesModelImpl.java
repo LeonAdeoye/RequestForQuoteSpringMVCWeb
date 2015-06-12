@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.leon.rfq.common.OptionConstants;
  
-public final class BlackScholesModelImpl implements PricingModel
+public class BlackScholesModelImpl implements PricingModel
 {
 	private static final Logger logger = LoggerFactory.getLogger(BlackScholesModelImpl.class);
 	
