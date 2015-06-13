@@ -1,5 +1,6 @@
 package com.leon.rfq.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -247,5 +248,10 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			return true;
 		else
 			return this.requestDao.requestExistsWithRequestId(requestId);
+	}
+	
+	public void processCalculationResult(Map<String, BigDecimal> outputs)
+	{
+		
 	}
 }

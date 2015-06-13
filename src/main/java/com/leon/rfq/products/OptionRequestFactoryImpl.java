@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.FutureTask;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +20,7 @@ import com.leon.rfq.common.RegexConstants;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BankHolidayService;
+import com.leon.rfq.services.CalculationServiceImpl;
 import com.leon.rfq.services.DefaultConfigurationService;
 import com.leon.rfq.services.InterestRateService;
 import com.leon.rfq.services.PriceService;
@@ -45,6 +45,9 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	
 	@Autowired(required=true)
 	private InterestRateService interestRateService;
+	
+	@Autowired(required=true)
+	private CalculationServiceImpl calculationService;
 	
 	public OptionRequestFactoryImpl() {}
 	
@@ -108,8 +111,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         newRequest.setPremiumSettlementDate(LocalDate.now().plusDays(newRequest.getPremiumSettlementDaysOverride()));
         
         Map<String, BigDecimal> inputs = new HashMap<>();
-        FutureTask<Map<String, BigDecimal>> calculation = new FutureTask<>(new CalculationRequest(new BlackScholesModelImpl() , inputs));
-        Thread t = new Thread(calculation);
+        this.calculationService.calculate(newRequest.getIdentifier(), new BlackScholesModelImpl(), inputs);
 		
 		return newRequest;
 	}
