@@ -22,10 +22,14 @@ public final class CalculationServiceImpl implements CalculationService
 	public CalculationServiceImpl() {}
 	
 	@Override
-	public Future<Map<String, BigDecimal>>calculate(long identifier, PricingModel model, Map<String, BigDecimal> inputs)
+	public Future<Map<String, BigDecimal>> calculate(long identifier, PricingModel model, Map<String, BigDecimal> inputs)
 	{
-		return CompletableFuture.supplyAsync(() ->
-		CalculationEngineImpl.calculate(model, inputs)).thenAccept(RequestServiceImpl::processCalculationResult());
+		return CompletableFuture.supplyAsync(() -> CalculationEngineImpl.calculate(model, inputs));
+	}
+	
+	public static void consumeCalculationResponse(Map<String, BigDecimal> result)
+	{
+		
 	}
 	
 }
