@@ -250,8 +250,18 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			return this.requestDao.requestExistsWithRequestId(requestId);
 	}
 	
-	public void processCalculationResult(Map<String, BigDecimal> outputs)
+	public static Boolean processCalculationResult(Map<String, BigDecimal> outputs, Throwable throwable)
 	{
-		
+		if(outputs != null)
+		{
+			return true;
+		}
+		else
+		{
+			if(logger.isErrorEnabled())
+				logger.error(throwable.getMessage());
+			
+			return false;
+		}
 	}
 }

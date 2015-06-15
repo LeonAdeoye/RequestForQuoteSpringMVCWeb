@@ -85,7 +85,7 @@ public class BankHolidayDaoImplTest extends AbstractJUnit4SpringContextTests
 	}
 		
 	@Test
-    public void insert_duplicatedbankHolidayCode_SaveFailsAndReturnsFalse()
+    public void insert_duplicatedbankHolidayCode_InsertFailsAndReturnsFalse()
 	{
 		this.bankHolidayDaoImpl.insert(LocationEnum.FRANKFURT, LocalDate.now(), "testUser");
 		assertFalse("second save method should return false because bank holiday already exists", this.bankHolidayDaoImpl.insert(LocationEnum.FRANKFURT, LocalDate.now(), "testUser"));

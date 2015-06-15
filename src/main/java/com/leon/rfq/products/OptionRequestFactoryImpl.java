@@ -2,10 +2,8 @@ package com.leon.rfq.products;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -110,9 +108,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         newRequest.setPremiumSettlementDaysOverride(1);
         newRequest.setPremiumSettlementDate(LocalDate.now().plusDays(newRequest.getPremiumSettlementDaysOverride()));
         
-        Map<String, BigDecimal> inputs = new HashMap<>();
-        this.calculationService.calculate(newRequest.getIdentifier(), new BlackScholesModelImpl(), inputs);
-		
+        // TODO
 		return newRequest;
 	}
 	
