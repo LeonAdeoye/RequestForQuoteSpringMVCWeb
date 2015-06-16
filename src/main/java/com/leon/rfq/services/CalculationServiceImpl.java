@@ -57,12 +57,10 @@ public class CalculationServiceImpl
 		leg.setVega(outputs.get(OptionConstants.VEGA));
 		leg.setTheta(outputs.get(OptionConstants.THETA));
 		leg.setRho(outputs.get(OptionConstants.RHO));
-		
-		//TODO
-/*		leg.setIntrinsicValue(outputs.get(OptionConstants.INTRINSIC_VALUE));
+		leg.setIntrinsicValue(outputs.get(OptionConstants.INTRINSIC_VALUE));
 		leg.setLambda(outputs.get(OptionConstants.LAMBDA));
 		leg.setTimeValue(outputs.get(OptionConstants.TIME_VALUE));
-*/	}
+	}
 	
 	
 	public static Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model, Map<String, BigDecimal> inputs,
