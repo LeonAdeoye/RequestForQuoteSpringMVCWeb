@@ -5,13 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.springframework.context.ApplicationListener;
+
 import com.leon.rfq.common.OptionConstants;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
 
-public class CalculationServiceImpl
+public class CalculationServiceImpl implements ApplicationListener<NewRequestEvent>
 {
 	private CalculationServiceImpl() {}
 	
@@ -77,5 +80,11 @@ public class CalculationServiceImpl
 			result.put(value, model.calculate(params.getListOfRequiredOutput()));
 		}
 		return result;
+	}
+
+	@Override
+	public void onApplicationEvent(NewRequestEvent event)
+	{
+		
 	}
 }
