@@ -1,66 +1,83 @@
 package com.leon.rfq.services;
 
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-
+import com.leon.rfq.common.OptionConstants;
+import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.products.CalculationEngineImpl;
-import com.leon.rfq.products.CalculationResult;
 import com.leon.rfq.products.PricingModel;
+import com.leon.rfq.products.RangeParameters;
 
-@Service
-public final class CalculationServiceImpl implements CalculationService
+public class CalculationServiceImpl
 {
-	private static final Logger logger = LoggerFactory.getLogger(CalculationServiceImpl.class);
+	private CalculationServiceImpl() {}
 	
-	public CalculationServiceImpl() {}
-	
-	@Override
-	public void calculate(RequestDetailImpl request, PricingModel model)
+	public static Map<String, BigDecimal> calculate(PricingModel model, Map<String, BigDecimal> inputs)
 	{
-		if((request == null) || (request.getLegs() == null) || (request.getLegs().size() == 0))
-			throw new IllegalArgumentException("request argument is invalid");
-
-		if(model == null)
-			throw new IllegalArgumentException("model argument is invalid");
-		
-		List<CompletableFuture<CalculationResult>> listOfFutures =
-				request.getLegs().stream().map(leg -> CompletableFuture.supplyAsync(() ->
-				CalculationEngineImpl.calculate(model, leg)))
-				.collect(Collectors.<CompletableFuture<CalculationResult>>toList());
-		
-		CompletableFuture<List<CalculationResult>> allDone = sequence(listOfFutures);
-		
-		allDone.handle(this::processCalculationResult);
+		model.configure(inputs);
+		return model.calculate();
 	}
 	
-	private static <T> CompletableFuture<List<T>> sequence(List<CompletableFuture<T>> futures)
+	public static void calculate(PricingModel model, RequestDetailImpl request)
 	{
-	    CompletableFuture<Void> allDoneFuture = CompletableFuture
-	    		.allOf(futures.toArray(new CompletableFuture[futures.size()]));
-	    
-	    return allDoneFuture.thenApply(v -> futures.stream()
-	    		.map(future -> future.join()).collect(Collectors.<T>toList()));
-	}
-	
-	public boolean processCalculationResult(List<CalculationResult> result, Throwable ex)
-	{
-		if(result != null)
+		for(OptionDetailImpl leg : request.getLegs())
 		{
-			return true;
-		}
-		else
-		{
-			if(logger.isErrorEnabled())
-				logger.error(ex.getMessage());
-			
-			return false;
+			model.configure(extractModelInputs(leg));
+			extractModelOutputs(model.calculate(), leg);
 		}
 	}
 	
+	public static void calculate(PricingModel model, OptionDetailImpl leg)
+	{
+		model.configure(extractModelInputs(leg));
+		extractModelOutputs(model.calculate(), leg);
+	}
+	
+	public static Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg)
+	{
+		Map<String, BigDecimal> inputs = new HashMap<>();
+		inputs.put(OptionConstants.UNDERLYING_PRICE, leg.getUnderlyingPrice());
+		inputs.put(OptionConstants.STRIKE, leg.getStrike());
+		inputs.put(OptionConstants.VOLATILITY, leg.getVolatility());
+		inputs.put(OptionConstants.INTEREST_RATE, leg.getInterestRate());
+		inputs.put(OptionConstants.TIME_TO_EXPIRY, leg.getYearsToExpiry());
+		inputs.put(OptionConstants.IS_CALL_OPTION, leg.getIsCall() ? BigDecimal.valueOf(1) : BigDecimal.valueOf(0));
+		inputs.put(OptionConstants.IS_EUROPEAN_OPTION, leg.getIsEuropean() ? BigDecimal.valueOf(1) : BigDecimal.valueOf(0));
+		return inputs;
+	}
+	
+	public static void extractModelOutputs(Map<String, BigDecimal> outputs, OptionDetailImpl leg)
+	{
+		leg.setPremium(outputs.get(OptionConstants.THEORETICAL_VALUE));
+		leg.setDelta(outputs.get(OptionConstants.DELTA));
+		leg.setGamma(outputs.get(OptionConstants.GAMMA));
+		leg.setVega(outputs.get(OptionConstants.VEGA));
+		leg.setTheta(outputs.get(OptionConstants.THETA));
+		leg.setRho(outputs.get(OptionConstants.RHO));
+		
+		//TODO
+/*		leg.setIntrinsicValue(outputs.get(OptionConstants.INTRINSIC_VALUE));
+		leg.setLambda(outputs.get(OptionConstants.LAMBDA));
+		leg.setTimeValue(outputs.get(OptionConstants.TIME_VALUE));
+*/	}
+	
+	
+	public static Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model, Map<String, BigDecimal> inputs,
+			RangeParameters params)
+	{
+		Map<BigDecimal, Map<String, BigDecimal>> result = new TreeMap<>();
+		
+		for(BigDecimal value = params.getStartValue();
+				value.compareTo(params.getEndValue()) <= 0;
+				value = value.add(params.getIncrement()))
+		{
+			inputs.put(params.getRangeVariableName(), value);
+			model.configure(inputs);
+			result.put(value, model.calculate(params.getListOfRequiredOutput()));
+		}
+		return result;
+	}
 }

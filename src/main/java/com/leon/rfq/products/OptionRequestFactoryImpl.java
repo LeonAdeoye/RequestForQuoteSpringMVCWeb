@@ -44,9 +44,6 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	@Autowired(required=true)
 	private InterestRateService interestRateService;
 	
-	@Autowired(required=true)
-	private CalculationServiceImpl calculationService;
-	
 	public OptionRequestFactoryImpl() {}
 	
 	/**
@@ -108,8 +105,10 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         newRequest.setPremiumSettlementDaysOverride(1);
         newRequest.setPremiumSettlementDate(LocalDate.now().plusDays(newRequest.getPremiumSettlementDaysOverride()));
         
-        // TODO
-		return newRequest;
+        // TODO select model depending on certain criteria
+        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), newRequest);
+		
+        return newRequest;
 	}
 	
 	/**

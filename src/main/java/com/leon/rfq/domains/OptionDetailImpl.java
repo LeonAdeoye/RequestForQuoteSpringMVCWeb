@@ -41,6 +41,10 @@ public class OptionDetailImpl
 	private BigDecimal interestRate;
 	private SideEnum side;
 	private RequestDetailImpl parentRequest;
+	
+	private BigDecimal intrinsicValue;
+	private BigDecimal timeValue;
+	private BigDecimal lambda;
 
 	public OptionDetailImpl() {}
 	
@@ -70,6 +74,38 @@ public class OptionDetailImpl
 	public void setStrikePercentage(BigDecimal strikePercentage)
 	{
 		this.strikePercentage = strikePercentage;
+	}
+	
+	
+
+	public BigDecimal getIntrinsicValue()
+	{
+		return this.intrinsicValue;
+	}
+
+	public void setIntrinsicValue(BigDecimal intrinsicValue)
+	{
+		this.intrinsicValue = intrinsicValue;
+	}
+
+	public BigDecimal getTimeValue()
+	{
+		return this.timeValue;
+	}
+
+	public void setTimeValue(BigDecimal timeValue)
+	{
+		this.timeValue = timeValue;
+	}
+
+	public BigDecimal getLambda()
+	{
+		return this.lambda;
+	}
+
+	public void setLambda(BigDecimal lambda)
+	{
+		this.lambda = lambda;
 	}
 
 	public LocalDate getMaturityDate()
@@ -301,66 +337,71 @@ public class OptionDetailImpl
 	{
 		this.side = side;
 	}
+	
+	
 
 	@Override
 	public String toString()
 	{
-		StringBuilder buf = new StringBuilder(" Leg ID: ");
-		buf.append(this.legId);
-		buf.append(", Is call: ");
-		buf.append(this.isCall);
-		buf.append(", Is european: ");
-		buf.append(this.isEuropean);
-		buf.append(", Underlying RIC: ");
-		buf.append(this.underlyingRIC);
-		buf.append(", Side: ");
-		buf.append(this.side);
-		buf.append(", Description: ");
-		buf.append(this.description);
-		buf.append(", Quantity: ");
-		buf.append(this.quantity);
-
-		buf.append(", Underlying price: ");
-		buf.append(this.underlyingPrice);
-		buf.append(", Interest rate: ");
-		buf.append(this.interestRate);
-		buf.append(", Volatility: ");
-		buf.append(this.volatility);
-		buf.append(", Days to expiry: ");
-		buf.append(this.daysToExpiry);
-		buf.append(", Years to expiry: ");
-		buf.append(this.yearsToExpiry);
-		buf.append(", Maturity date: ");
-		buf.append(this.maturityDate);
-		buf.append(", trade date: ");
-		buf.append(this.tradeDate);
-		buf.append(", Day count convention: ");
-		buf.append(this.dayCountConvention);
-		buf.append(", Strike: ");
-		buf.append(this.strike);
-		buf.append(", Strike Percentage: ");
-		buf.append(this.strikePercentage);
-		buf.append(", Strike Percentage: ");
-		buf.append(this.strikePercentage);
-
-
-		buf.append(", Delta: ");
-		buf.append(this.delta);
-		buf.append(", Gamma: ");
-		buf.append(this.gamma);
-		buf.append(", Vega: ");
-		buf.append(this.vega);
-		buf.append(", Theta: ");
-		buf.append(this.theta);
-		buf.append(", Rho: ");
-		buf.append(this.rho);
-		buf.append(", Premium: ");
-		buf.append(this.premium);
-		buf.append(", Premium Percentage: ");
-		buf.append(this.premiumPercentage);
-
-
-		return buf.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("OptionDetailImpl [legId=");
+		builder.append(this.legId);
+		builder.append(", isCall=");
+		builder.append(this.isCall);
+		builder.append(", isEuropean=");
+		builder.append(this.isEuropean);
+		builder.append(", delta=");
+		builder.append(this.delta);
+		builder.append(", gamma=");
+		builder.append(this.gamma);
+		builder.append(", theta=");
+		builder.append(this.theta);
+		builder.append(", vega=");
+		builder.append(this.vega);
+		builder.append(", rho=");
+		builder.append(this.rho);
+		builder.append(", premium=");
+		builder.append(this.premium);
+		builder.append(", underlyingRIC=");
+		builder.append(this.underlyingRIC);
+		builder.append(", underlyingPrice=");
+		builder.append(this.underlyingPrice);
+		builder.append(", strike=");
+		builder.append(this.strike);
+		builder.append(", strikePercentage=");
+		builder.append(this.strikePercentage);
+		builder.append(", description=");
+		builder.append(this.description);
+		builder.append(", premiumPercentage=");
+		builder.append(this.premiumPercentage);
+		builder.append(", quantity=");
+		builder.append(this.quantity);
+		builder.append(", yearsToExpiry=");
+		builder.append(this.yearsToExpiry);
+		builder.append(", tradeDate=");
+		builder.append(this.tradeDate);
+		builder.append(", maturityDate=");
+		builder.append(this.maturityDate);
+		builder.append(", daysToExpiry=");
+		builder.append(this.daysToExpiry);
+		builder.append(", dayCountConvention=");
+		builder.append(this.dayCountConvention);
+		builder.append(", volatility=");
+		builder.append(this.volatility);
+		builder.append(", interestRate=");
+		builder.append(this.interestRate);
+		builder.append(", side=");
+		builder.append(this.side);
+		builder.append(", parentRequest=");
+		builder.append(this.parentRequest);
+		builder.append(", intrinsicValue=");
+		builder.append(this.intrinsicValue);
+		builder.append(", timeValue=");
+		builder.append(this.timeValue);
+		builder.append(", lambda=");
+		builder.append(this.lambda);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	@Override
@@ -380,11 +421,16 @@ public class OptionDetailImpl
 		result = (prime * result) + ((this.gamma == null) ? 0 : this.gamma.hashCode());
 		result = (prime * result)
 				+ ((this.interestRate == null) ? 0 : this.interestRate.hashCode());
+		result = (prime * result)
+				+ ((this.intrinsicValue == null) ? 0 : this.intrinsicValue.hashCode());
 		result = (prime * result) + (this.isCall ? 1231 : 1237);
 		result = (prime * result) + (this.isEuropean ? 1231 : 1237);
+		result = (prime * result) + ((this.lambda == null) ? 0 : this.lambda.hashCode());
 		result = (prime * result) + this.legId;
 		result = (prime * result)
 				+ ((this.maturityDate == null) ? 0 : this.maturityDate.hashCode());
+		result = (prime * result)
+				+ ((this.parentRequest == null) ? 0 : this.parentRequest.hashCode());
 		result = (prime * result) + ((this.premium == null) ? 0 : this.premium.hashCode());
 		result = (prime
 				* result)
@@ -398,6 +444,8 @@ public class OptionDetailImpl
 				* result)
 				+ ((this.strikePercentage == null) ? 0 : this.strikePercentage.hashCode());
 		result = (prime * result) + ((this.theta == null) ? 0 : this.theta.hashCode());
+		result = (prime * result)
+				+ ((this.timeValue == null) ? 0 : this.timeValue.hashCode());
 		result = (prime * result)
 				+ ((this.tradeDate == null) ? 0 : this.tradeDate.hashCode());
 		result = (prime * result)
@@ -488,11 +536,31 @@ public class OptionDetailImpl
 		{
 			return false;
 		}
+		if (this.intrinsicValue == null)
+		{
+			if (other.intrinsicValue != null)
+			{
+				return false;
+			}
+		} else if (!this.intrinsicValue.equals(other.intrinsicValue))
+		{
+			return false;
+		}
 		if (this.isCall != other.isCall)
 		{
 			return false;
 		}
 		if (this.isEuropean != other.isEuropean)
+		{
+			return false;
+		}
+		if (this.lambda == null)
+		{
+			if (other.lambda != null)
+			{
+				return false;
+			}
+		} else if (!this.lambda.equals(other.lambda))
 		{
 			return false;
 		}
@@ -507,6 +575,16 @@ public class OptionDetailImpl
 				return false;
 			}
 		} else if (!this.maturityDate.equals(other.maturityDate))
+		{
+			return false;
+		}
+		if (this.parentRequest == null)
+		{
+			if (other.parentRequest != null)
+			{
+				return false;
+			}
+		} else if (!this.parentRequest.equals(other.parentRequest))
 		{
 			return false;
 		}
@@ -544,13 +622,7 @@ public class OptionDetailImpl
 		{
 			return false;
 		}
-		if (this.side == null)
-		{
-			if (other.side != null)
-			{
-				return false;
-			}
-		} else if (!this.side.equals(other.side))
+		if (this.side != other.side)
 		{
 			return false;
 		}
@@ -581,6 +653,16 @@ public class OptionDetailImpl
 				return false;
 			}
 		} else if (!this.theta.equals(other.theta))
+		{
+			return false;
+		}
+		if (this.timeValue == null)
+		{
+			if (other.timeValue != null)
+			{
+				return false;
+			}
+		} else if (!this.timeValue.equals(other.timeValue))
 		{
 			return false;
 		}
@@ -646,5 +728,6 @@ public class OptionDetailImpl
 		}
 		return true;
 	}
+
 
 	}

@@ -14,9 +14,9 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.leon.rfq.common.OptionConstants;
 import com.leon.rfq.products.BlackScholesModelImpl;
-import com.leon.rfq.products.CalculationEngineImpl;
 import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
+import com.leon.rfq.services.CalculationServiceImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
@@ -28,7 +28,7 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 		// Arrange
 		PricingModel modelMock = mock(BlackScholesModelImpl.class);
 		// Acts
-		CalculationEngineImpl.calculate(modelMock, inputs);
+		CalculationServiceImpl.calculate(modelMock, inputs);
 		// Assert
 		verify(modelMock).configure(inputs);
 		verify(modelMock).calculate();
@@ -43,7 +43,7 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 		// Arrange
 		PricingModel modelMock = mock(BlackScholesModelImpl.class);
 		// Acts
-		CalculationEngineImpl.calculateRange(modelMock, inputs, params);
+		CalculationServiceImpl.calculateRange(modelMock, inputs, params);
 		// Assert
 		verify(modelMock, times(11)).configure(inputs);
 		verify(modelMock, times(11)).calculate(params.getListOfRequiredOutput());
