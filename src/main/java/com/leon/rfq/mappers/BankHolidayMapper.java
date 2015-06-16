@@ -1,6 +1,5 @@
 package com.leon.rfq.mappers;
 
-import java.time.LocalDate;
 import java.util.Set;
 
 import com.leon.rfq.common.EnumTypes.LocationEnum;
@@ -20,5 +19,5 @@ public interface BankHolidayMapper
 
 	int updateValidity(BankHolidayDetailImpl bankHoliday);
 	
-	BankHolidayDetailImpl bankHolidayExists(LocationEnum location, LocalDate dateToCheck);
+	BankHolidayDetailImpl bankHolidayExists(BankHolidayDetailImpl bankHoliday);
 }

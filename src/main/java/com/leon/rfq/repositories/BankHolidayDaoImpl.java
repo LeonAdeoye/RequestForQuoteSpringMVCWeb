@@ -132,6 +132,7 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	@Override
 	public boolean bankHolidayExists(LocationEnum location,	LocalDate dateToCheck)
 	{
-		return this.bankHolidayMapper.bankHolidayExists(location, dateToCheck) != null;
+		BankHolidayDetailImpl bankHoliday = new BankHolidayDetailImpl(location, dateToCheck);
+		return this.bankHolidayMapper.bankHolidayExists(bankHoliday) != null;
 	}
 }

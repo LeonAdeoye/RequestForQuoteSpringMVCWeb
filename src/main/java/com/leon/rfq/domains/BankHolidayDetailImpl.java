@@ -41,6 +41,12 @@ public final class BankHolidayDetailImpl
 		this.lastUpdatedBy = lastUpdatedBy;
 		this.identifier = -1;
 	}
+	
+	public BankHolidayDetailImpl(LocationEnum location,	LocalDate bankHolidayDate)
+	{
+		this.location = location;
+		this.bankHolidayDate = bankHolidayDate;
+	}
 
 	public LocationEnum getLocation()
 	{
