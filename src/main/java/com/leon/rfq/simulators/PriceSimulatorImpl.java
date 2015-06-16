@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationListener;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
 import com.leon.rfq.events.PriceUpdateEvent;
 
-public final class PriceSimulatorImpl extends Thread implements PriceSimulator,
+public final class PriceSimulatorImpl implements PriceSimulator, Runnable,
 ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceSimulatorImpl.class);
@@ -120,7 +120,6 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	@Override
 	public void initialize()
 	{
-		this.start();
 	}
 
 	@Override
@@ -306,7 +305,7 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 
 			try
 			{
-				sleep(this.getNextSleepDuration());
+				Thread.sleep(this.getNextSleepDuration());
 			}
 			catch(InterruptedException ie)
 			{
