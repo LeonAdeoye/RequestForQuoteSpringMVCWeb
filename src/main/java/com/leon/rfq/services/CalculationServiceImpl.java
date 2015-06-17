@@ -5,26 +5,23 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.springframework.context.ApplicationListener;
-
 import com.leon.rfq.common.OptionConstants;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
 
-public class CalculationServiceImpl implements ApplicationListener<NewRequestEvent>
+public class CalculationServiceImpl
 {
 	private CalculationServiceImpl() {}
 	
-	public static Map<String, BigDecimal> calculate(PricingModel model, Map<String, BigDecimal> inputs)
+	public synchronized static Map<String, BigDecimal> calculate(PricingModel model, Map<String, BigDecimal> inputs)
 	{
 		model.configure(inputs);
 		return model.calculate();
 	}
 	
-	public static void calculate(PricingModel model, RequestDetailImpl request)
+	public synchronized static void calculate(PricingModel model, RequestDetailImpl request)
 	{
 		for(OptionDetailImpl leg : request.getLegs())
 		{
@@ -33,13 +30,13 @@ public class CalculationServiceImpl implements ApplicationListener<NewRequestEve
 		}
 	}
 	
-	public static void calculate(PricingModel model, OptionDetailImpl leg)
+	public synchronized static void calculate(PricingModel model, OptionDetailImpl leg)
 	{
 		model.configure(extractModelInputs(leg));
 		extractModelOutputs(model.calculate(), leg);
 	}
 	
-	public static Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg)
+	public synchronized static Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg)
 	{
 		Map<String, BigDecimal> inputs = new HashMap<>();
 		inputs.put(OptionConstants.UNDERLYING_PRICE, leg.getUnderlyingPrice());
@@ -52,7 +49,7 @@ public class CalculationServiceImpl implements ApplicationListener<NewRequestEve
 		return inputs;
 	}
 	
-	public static void extractModelOutputs(Map<String, BigDecimal> outputs, OptionDetailImpl leg)
+	public synchronized static void extractModelOutputs(Map<String, BigDecimal> outputs, OptionDetailImpl leg)
 	{
 		leg.setPremium(outputs.get(OptionConstants.THEORETICAL_VALUE));
 		leg.setDelta(outputs.get(OptionConstants.DELTA));
@@ -66,7 +63,7 @@ public class CalculationServiceImpl implements ApplicationListener<NewRequestEve
 	}
 	
 	
-	public static Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model, Map<String, BigDecimal> inputs,
+	public synchronized static Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model, Map<String, BigDecimal> inputs,
 			RangeParameters params)
 	{
 		Map<BigDecimal, Map<String, BigDecimal>> result = new TreeMap<>();
@@ -80,11 +77,5 @@ public class CalculationServiceImpl implements ApplicationListener<NewRequestEve
 			result.put(value, model.calculate(params.getListOfRequiredOutput()));
 		}
 		return result;
-	}
-
-	@Override
-	public void onApplicationEvent(NewRequestEvent event)
-	{
-		
 	}
 }

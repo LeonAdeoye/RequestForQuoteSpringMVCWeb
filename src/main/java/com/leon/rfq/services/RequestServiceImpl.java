@@ -15,8 +15,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Component;
 
+import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
+import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
+import com.leon.rfq.events.PriceSimulatorRequestEvent;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
@@ -193,6 +196,12 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			if((newRequest != null) && this.requestDao.insert(newRequest))
 			{
 				this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest));
+				
+				for(OptionDetailImpl leg :  newRequest.getLegs())
+				{
+					this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
+				}
+				
 				this.requests.put(newRequest.getIdentifier(), newRequest);
 				return true;
 			}

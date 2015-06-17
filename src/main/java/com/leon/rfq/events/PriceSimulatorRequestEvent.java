@@ -41,7 +41,7 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 	{
 		super(source);
 
-		if(requestType == PriceSimulatorRequestEnum.ADD_UNDERLYING)
+		if((requestType == PriceSimulatorRequestEnum.SUSPEND_ALL) || (requestType == PriceSimulatorRequestEnum.AWAKEN_ALL))
 			throw new IllegalStateException();
 
 		this.requestType = requestType;
