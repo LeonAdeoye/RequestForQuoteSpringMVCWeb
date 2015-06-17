@@ -120,7 +120,13 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			
 			// Could use a more complicated lambda expression here but below is far simpler
 			for(RequestDetailImpl request : result)
+			{
 				this.requests.put(request.getIdentifier(), request);
+			
+				for(OptionDetailImpl leg :  request.getLegs())
+					this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
+							(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
+			}
 			
 			return result;
 		}
