@@ -1,10 +1,11 @@
 package com.leon.rfq.services;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 {
 	private static Logger logger = LoggerFactory.getLogger(RequestServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	private final Map<Integer, RequestDetailImpl> requests = new HashMap<>();
+	private final Map<Integer, RequestDetailImpl> requests = new ConcurrentSkipListMap<>();
 	
 	@Autowired(required=true)
 	private RequestDao requestDao;
@@ -80,18 +81,33 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 	{
 		RequestDetailImpl request;
 		
-		if(isRequestCached(requestId))
-		{
-			request = this.requests.get(requestId);
-		}
-		else
-		{
-			request = this.requestDao.get(requestId);
-			if(request != null)
-				this.requests.put(requestId, request);
-		}
+		ReentrantLock lock = new ReentrantLock();
 		
-		return request;
+		if(logger.isDebugEnabled())
+			logger.debug("Getting the request with request ID: " + requestId);
+		
+		try
+		{
+			lock.lock();
+		
+			if(isRequestCached(requestId))
+			{
+				request = this.requests.get(requestId);
+			}
+			else
+			{
+				request = this.requestDao.get(requestId);
+				
+				if(request != null)
+					this.requests.putIfAbsent(requestId, request);
+			}
+			
+			return request;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 	
 	/**
@@ -112,26 +128,40 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 	@Override
 	public List<RequestDetailImpl> getAll()
 	{
-		List<RequestDetailImpl> result = this.requestDao.getAll();
+		if(logger.isDebugEnabled())
+			logger.debug("Getting all the requests");
 		
-		if(result!= null)
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
 		{
-			this.requests.clear();
+			lock.lock();
+		
+			List<RequestDetailImpl> result = this.requestDao.getAll();
 			
-			// Could use a more complicated lambda expression here but below is far simpler
-			for(RequestDetailImpl request : result)
+			if(result!= null)
 			{
-				this.requests.put(request.getIdentifier(), request);
-			
-				for(OptionDetailImpl leg :  request.getLegs())
-					this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
-							(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
+				this.requests.clear();
+				
+				// Could use a more complicated lambda expression here but below is far simpler
+				for(RequestDetailImpl request : result)
+				{
+					this.requests.put(request.getIdentifier(), request);
+				
+					for(OptionDetailImpl leg :  request.getLegs())
+						this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
+								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
+				}
+				
+				return result;
 			}
-			
-			return result;
+			else
+				return new LinkedList<RequestDetailImpl>();
 		}
-		else
-			return new LinkedList<RequestDetailImpl>();
+		finally
+		{
+			lock.unlock();
+		}
 	}
 	
 	/**
@@ -142,21 +172,43 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 	@Override
 	public List<RequestDetailImpl> getAllFromTodayOnly()
 	{
-		List<RequestDetailImpl> result = this.requestDao.getAll();
+		if(logger.isDebugEnabled())
+			logger.debug("Getting all the requests from today");
 		
-		if(result!= null)
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
 		{
-			this.requests.clear();
+			lock.lock();
 			
-			// Could use a more complicated lambda expression here but below is far simpler
-			for(RequestDetailImpl request : result)
-				this.requests.put(request.getIdentifier(), request);
+			List<RequestDetailImpl> result = this.requestDao.getAll().stream()
+					.filter(request -> request.getTradeDate().compareTo(LocalDate.now()) <= 0)
+					.collect(Collectors.toList());
 			
-			// TODO - change back top "== 0"
-			return result.stream().filter(request -> request.getTradeDate().compareTo(LocalDate.now()) <= 0).collect(Collectors.toList());
+			if(result!= null)
+			{
+				this.requests.clear();
+				
+				// Could use a more complicated lambda expression here but below is far simpler
+				for(RequestDetailImpl request : result)
+				{
+					this.requests.put(request.getIdentifier(), request);
+					
+					for(OptionDetailImpl leg :  request.getLegs())
+						this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
+								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
+				}
+				
+				// TODO - change back top "== 0"
+				return result;
+			}
+			else
+				return new LinkedList<RequestDetailImpl>();
 		}
-		else
-			return new LinkedList<RequestDetailImpl>();
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -195,8 +247,15 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
 		
+		if(logger.isDebugEnabled())
+			logger.debug("Insert request with snippet: " + requestSnippet);
+		
+		ReentrantLock lock = new ReentrantLock();
+		
 		try
 		{
+			lock.lock();
+			
 			RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
 			
 			if((newRequest != null) && this.requestDao.insert(newRequest))
@@ -209,15 +268,20 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 				}
 				
 				this.requests.put(newRequest.getIdentifier(), newRequest);
+				
 				return true;
 			}
+			
+			return false;
 		}
 		catch(IllegalArgumentException iae)
 		{
 			throw iae;
 		}
-
-		return false;
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	/**
@@ -229,14 +293,28 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 	@Override
 	public boolean delete(int requestId)
 	{
-		if(isRequestCached(requestId))
-		{
-			this.requests.remove(requestId);
-			
-			return this.requestDao.delete(requestId);
-		}
+		if(logger.isDebugEnabled())
+			logger.debug("Insert request with ID: " + requestId);
 		
-		return false;
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
+		
+			if(isRequestCached(requestId))
+			{
+				this.requests.remove(requestId);
+				
+				return this.requestDao.delete(requestId);
+			}
+		
+			return false;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 	/**
 	 * Used for unit testing mock.

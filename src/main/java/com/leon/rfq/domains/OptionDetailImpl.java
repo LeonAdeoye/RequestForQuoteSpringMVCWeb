@@ -56,6 +56,14 @@ public class OptionDetailImpl
 		this.isCall = isCall;
 		this.quantity = quantity;
 		this.isEuropean = isEuropean;
+		this.delta = BigDecimal.ZERO;
+		this.gamma = BigDecimal.ZERO;
+		this.vega = BigDecimal.ZERO;
+		this.theta = BigDecimal.ZERO;
+		this.rho = BigDecimal.ZERO;
+		this.premium = BigDecimal.ZERO;
+		this.intrinsicValue = BigDecimal.ZERO;
+		this.timeValue = BigDecimal.ZERO;
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Constructor instantiation of OptionDetailImpl: " + this.toString());

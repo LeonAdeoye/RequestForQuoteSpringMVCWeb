@@ -9,9 +9,9 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import com.leon.rfq.common.RegexConstants;
 import com.leon.rfq.common.EnumTypes.HedgeTypeEnum;
 import com.leon.rfq.common.EnumTypes.StatusEnum;
+import com.leon.rfq.common.RegexConstants;
 
 @XmlRootElement(name="RequestDetailImpl", namespace = "com.leon.rfq.domains")
 public final class RequestDetailImpl
@@ -46,6 +46,9 @@ public final class RequestDetailImpl
 	private BigDecimal theta;
 	private BigDecimal vega;
 	private BigDecimal rho;
+	private BigDecimal timeValue;
+	private BigDecimal intrinsicValue;
+	private BigDecimal lambda;
 
 	private BigDecimal deltaNotional;
 	private BigDecimal gammaNotional;
@@ -102,9 +105,64 @@ public final class RequestDetailImpl
 
 	public RequestDetailImpl() {}
 	
+	private void aggregate()
+	{
+		if((this.getLegs() != null) || (this.getLegs().size() != 0))
+		{
+			this.delta = this.getLegs().stream().map(OptionDetailImpl::getDelta)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+			
+			this.gamma = this.getLegs().stream().map(OptionDetailImpl::getGamma)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+			
+			this.vega = this.getLegs().stream().map(OptionDetailImpl::getVega)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+			
+			this.theta = this.getLegs().stream().map(OptionDetailImpl::getTheta)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+			
+			this.rho = this.getLegs().stream().map(OptionDetailImpl::getRho)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+			
+			this.premiumAmount = this.getLegs().stream().map(OptionDetailImpl::getPremium)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+		}
+	}
+	
 	public void setLegs(List<OptionDetailImpl> legs)
 	{
 		this.legs = legs;
+		aggregate();
+	}
+
+	public BigDecimal getTimeValue()
+	{
+		return this.timeValue;
+	}
+
+	public void setTimeValue(BigDecimal timeValue)
+	{
+		this.timeValue = timeValue;
+	}
+
+	public BigDecimal getIntrinsicValue()
+	{
+		return this.intrinsicValue;
+	}
+
+	public void setIntrinsicValue(BigDecimal intrinsicValue)
+	{
+		this.intrinsicValue = intrinsicValue;
+	}
+
+	public BigDecimal getLambda()
+	{
+		return this.lambda;
+	}
+
+	public void setLambda(BigDecimal lambda)
+	{
+		this.lambda = lambda;
 	}
 
 	public void setLastUpdatedBy(String lastUpdatedBy)
@@ -720,101 +778,137 @@ public final class RequestDetailImpl
 	@Override
 	public String toString()
 	{
-		StringBuilder buf = new StringBuilder("Request: ");
-		buf.append(this.request);
-		buf.append(", RequestId: ");
-		buf.append(this.identifier);
-		buf.append(", Book code: ");
-		buf.append(this.bookCode);
-
-		buf.append(", Delta: ");
-		buf.append(this.delta);
-		buf.append(", Gamma: ");
-		buf.append(this.gamma);
-		buf.append(", Vega: ");
-		buf.append(this.vega);
-		buf.append(", Theta: ");
-		buf.append(this.theta);
-		buf.append(", Rho: ");
-		buf.append(this.rho);
-		buf.append(", LastUpdatedBy: ");
-		buf.append(this.lastUpdatedBy);
-
-		buf.append(", Delta notional: ");
-		buf.append(this.deltaNotional);
-		buf.append(", Gamma notional: ");
-		buf.append(this.gammaNotional);
-		buf.append(", Vega notional: ");
-		buf.append(this.vegaNotional);
-		buf.append(", Theta notional: ");
-		buf.append(this.thetaNotional);
-		buf.append(", Rho notional: ");
-		buf.append(this.rhoNotional);
-
-		buf.append(", Delta Shares: ");
-		buf.append(this.deltaShares);
-		buf.append(", Gamma shares: ");
-		buf.append(this.gammaShares);
-		buf.append(", Vega shares: ");
-		buf.append(this.vegaShares);
-		buf.append(", Theta shares: ");
-		buf.append(this.thetaShares);
-		buf.append(", Rho shares: ");
-		buf.append(this.rhoShares);
-		
-		buf.append(", Day count convention: ");
-		buf.append(this.dayCountConvention);
-
-		buf.append(", Bid final amount: ");
-		buf.append(this.bidFinalAmount);
-		buf.append(", Bid final percentage: ");
-		buf.append(this.bidFinalPercentage);
-		buf.append(", Bid implied vol: ");
-		buf.append(this.bidImpliedVol);
-		buf.append(", Bid premium amount: ");
-		buf.append(this.bidPremiumAmount);
-		buf.append(", Bid premium percentage: ");
-		buf.append(this.bidPremiumPercentage);
-
-		buf.append(", Ask final amount: ");
-		buf.append(this.askFinalAmount);
-		buf.append(", Ask final percentage: ");
-		buf.append(this.askFinalPercentage);
-		buf.append(", Ask implied vol: ");
-		buf.append(this.askImpliedVol);
-		buf.append(", Ask premium amount: ");
-		buf.append(this.askPremiumAmount);
-		buf.append(", Ask premium percentage: ");
-		buf.append(this.askPremiumPercentage);
-
-		buf.append(", Is OTC: ");
-		buf.append(this.isOTC);
-		buf.append(", ClientId: ");
-		buf.append(this.clientId);
-		buf.append(", Status: ");
-		buf.append(this.status);
-
-		if((this.legs != null) && (this.legs.size() > 0))
-		{
-			buf.append(", Legs: \n");
-			for(OptionDetailImpl leg : this.legs)
-			{
-				if(leg != null)
-					buf.append(leg.toString() + " \n");
-			}
-		}
-
-		return buf.toString();
-	}
-
-	public OptionDetailImpl getLeg(int legId)
-	{
-		for(OptionDetailImpl leg : this.legs)
-		{
-			if(leg.getLegId() == legId)
-				return leg;
-		}
-		return null;
+		StringBuilder builder = new StringBuilder();
+		builder.append("RequestDetailImpl [request=");
+		builder.append(this.request);
+		builder.append(", bookCode=");
+		builder.append(this.bookCode);
+		builder.append(", identifier=");
+		builder.append(this.identifier);
+		builder.append(", clientId=");
+		builder.append(this.clientId);
+		builder.append(", isOTC=");
+		builder.append(this.isOTC);
+		builder.append(", status=");
+		builder.append(this.status);
+		builder.append(", lastUpdatedBy=");
+		builder.append(this.lastUpdatedBy);
+		builder.append(", lotSize=");
+		builder.append(this.lotSize);
+		builder.append(", multiplier=");
+		builder.append(this.multiplier);
+		builder.append(", contracts=");
+		builder.append(this.contracts);
+		builder.append(", quantity=");
+		builder.append(this.quantity);
+		builder.append(", tradeDate=");
+		builder.append(this.tradeDate);
+		builder.append(", expiryDate=");
+		builder.append(this.expiryDate);
+		builder.append(", dayCountConvention=");
+		builder.append(this.dayCountConvention);
+		builder.append(", notionalMillions=");
+		builder.append(this.notionalMillions);
+		builder.append(", notionalFXRate=");
+		builder.append(this.notionalFXRate);
+		builder.append(", notionalCurrency=");
+		builder.append(this.notionalCurrency);
+		builder.append(", delta=");
+		builder.append(this.delta);
+		builder.append(", gamma=");
+		builder.append(this.gamma);
+		builder.append(", theta=");
+		builder.append(this.theta);
+		builder.append(", vega=");
+		builder.append(this.vega);
+		builder.append(", rho=");
+		builder.append(this.rho);
+		builder.append(", timeValue=");
+		builder.append(this.timeValue);
+		builder.append(", intrinsicValue=");
+		builder.append(this.intrinsicValue);
+		builder.append(", lambda=");
+		builder.append(this.lambda);
+		builder.append(", deltaNotional=");
+		builder.append(this.deltaNotional);
+		builder.append(", gammaNotional=");
+		builder.append(this.gammaNotional);
+		builder.append(", thetaNotional=");
+		builder.append(this.thetaNotional);
+		builder.append(", vegaNotional=");
+		builder.append(this.vegaNotional);
+		builder.append(", rhoNotional=");
+		builder.append(this.rhoNotional);
+		builder.append(", deltaShares=");
+		builder.append(this.deltaShares);
+		builder.append(", gammaShares=");
+		builder.append(this.gammaShares);
+		builder.append(", thetaShares=");
+		builder.append(this.thetaShares);
+		builder.append(", vegaShares=");
+		builder.append(this.vegaShares);
+		builder.append(", rhoShares=");
+		builder.append(this.rhoShares);
+		builder.append(", premiumSettlementCurrency=");
+		builder.append(this.premiumSettlementCurrency);
+		builder.append(", premiumSettlementDate=");
+		builder.append(this.premiumSettlementDate);
+		builder.append(", premiumSettlementDaysOverride=");
+		builder.append(this.premiumSettlementDaysOverride);
+		builder.append(", premiumSettlementFXRate=");
+		builder.append(this.premiumSettlementFXRate);
+		builder.append(", salesCreditAmount=");
+		builder.append(this.salesCreditAmount);
+		builder.append(", salesCreditPercentage=");
+		builder.append(this.salesCreditPercentage);
+		builder.append(", salesCreditFXRate=");
+		builder.append(this.salesCreditFXRate);
+		builder.append(", salesCreditCurrency=");
+		builder.append(this.salesCreditCurrency);
+		builder.append(", bidImpliedVol=");
+		builder.append(this.bidImpliedVol);
+		builder.append(", bidPremiumPercentage=");
+		builder.append(this.bidPremiumPercentage);
+		builder.append(", bidPremiumAmount=");
+		builder.append(this.bidPremiumAmount);
+		builder.append(", bidFinalAmount=");
+		builder.append(this.bidFinalAmount);
+		builder.append(", bidFinalPercentage=");
+		builder.append(this.bidFinalPercentage);
+		builder.append(", impliedVol=");
+		builder.append(this.impliedVol);
+		builder.append(", premiumAmount=");
+		builder.append(this.premiumAmount);
+		builder.append(", premiumPercentage=");
+		builder.append(this.premiumPercentage);
+		builder.append(", askImpliedVol=");
+		builder.append(this.askImpliedVol);
+		builder.append(", askPremiumPercentage=");
+		builder.append(this.askPremiumPercentage);
+		builder.append(", askPremiumAmount=");
+		builder.append(this.askPremiumAmount);
+		builder.append(", askFinalAmount=");
+		builder.append(this.askFinalAmount);
+		builder.append(", askFinalPercentage=");
+		builder.append(this.askFinalPercentage);
+		builder.append(", salesComment=");
+		builder.append(this.salesComment);
+		builder.append(", traderComment=");
+		builder.append(this.traderComment);
+		builder.append(", clientComment=");
+		builder.append(this.clientComment);
+		builder.append(", pickedUpBy=");
+		builder.append(this.pickedUpBy);
+		builder.append(", hedgeType=");
+		builder.append(this.hedgeType);
+		builder.append(", hedgePrice=");
+		builder.append(this.hedgePrice);
+		builder.append(", totalPremium=");
+		builder.append(this.totalPremium);
+		builder.append(", legs=");
+		builder.append(this.legs);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	@Override
@@ -881,7 +975,10 @@ public final class RequestDetailImpl
 		result = (prime * result) + this.identifier;
 		result = (prime * result)
 				+ ((this.impliedVol == null) ? 0 : this.impliedVol.hashCode());
+		result = (prime * result)
+				+ ((this.intrinsicValue == null) ? 0 : this.intrinsicValue.hashCode());
 		result = (prime * result) + (this.isOTC ? 1231 : 1237);
+		result = (prime * result) + ((this.lambda == null) ? 0 : this.lambda.hashCode());
 		result = (prime * result)
 				+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
 		result = (prime * result) + ((this.legs == null) ? 0 : this.legs.hashCode());
@@ -947,6 +1044,8 @@ public final class RequestDetailImpl
 				+ ((this.thetaNotional == null) ? 0 : this.thetaNotional.hashCode());
 		result = (prime * result)
 				+ ((this.thetaShares == null) ? 0 : this.thetaShares.hashCode());
+		result = (prime * result)
+				+ ((this.timeValue == null) ? 0 : this.timeValue.hashCode());
 		result = (prime * result)
 				+ ((this.totalPremium == null) ? 0 : this.totalPremium.hashCode());
 		result = (prime * result)
@@ -1195,13 +1294,7 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
-		if (this.hedgeType == null)
-		{
-			if (other.hedgeType != null)
-			{
-				return false;
-			}
-		} else if (!this.hedgeType.equals(other.hedgeType))
+		if (this.hedgeType != other.hedgeType)
 		{
 			return false;
 		}
@@ -1219,7 +1312,27 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
+		if (this.intrinsicValue == null)
+		{
+			if (other.intrinsicValue != null)
+			{
+				return false;
+			}
+		} else if (!this.intrinsicValue.equals(other.intrinsicValue))
+		{
+			return false;
+		}
 		if (this.isOTC != other.isOTC)
+		{
+			return false;
+		}
+		if (this.lambda == null)
+		{
+			if (other.lambda != null)
+			{
+				return false;
+			}
+		} else if (!this.lambda.equals(other.lambda))
 		{
 			return false;
 		}
@@ -1441,13 +1554,7 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
-		if (this.status == null)
-		{
-			if (other.status != null)
-			{
-				return false;
-			}
-		} else if (!this.status.equals(other.status))
+		if (this.status != other.status)
 		{
 			return false;
 		}
@@ -1478,6 +1585,16 @@ public final class RequestDetailImpl
 				return false;
 			}
 		} else if (!this.thetaShares.equals(other.thetaShares))
+		{
+			return false;
+		}
+		if (this.timeValue == null)
+		{
+			if (other.timeValue != null)
+			{
+				return false;
+			}
+		} else if (!this.timeValue.equals(other.timeValue))
 		{
 			return false;
 		}
@@ -1543,6 +1660,5 @@ public final class RequestDetailImpl
 		}
 		return true;
 	}
-	
 	
 }
