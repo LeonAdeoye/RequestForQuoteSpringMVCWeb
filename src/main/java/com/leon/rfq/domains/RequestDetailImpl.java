@@ -105,7 +105,7 @@ public final class RequestDetailImpl
 
 	public RequestDetailImpl() {}
 	
-	private void aggregate()
+	public void aggregate()
 	{
 		if((this.getLegs() != null) || (this.getLegs().size() != 0))
 		{

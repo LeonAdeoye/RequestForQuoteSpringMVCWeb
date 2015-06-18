@@ -1,5 +1,6 @@
 package com.leon.rfq.services;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
@@ -21,12 +23,14 @@ import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
+import com.leon.rfq.events.PriceUpdateEvent;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
 @Component
 @Configurable
-public final class RequestServiceImpl implements RequestService, ApplicationEventPublisherAware
+public final class RequestServiceImpl implements RequestService, ApplicationEventPublisherAware,
+ApplicationListener<PriceUpdateEvent>
 {
 	private static Logger logger = LoggerFactory.getLogger(RequestServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
@@ -340,5 +344,28 @@ public final class RequestServiceImpl implements RequestService, ApplicationEven
 			return true;
 		else
 			return this.requestDao.requestExistsWithRequestId(requestId);
+	}
+
+	@Override
+	public void onApplicationEvent(PriceUpdateEvent event)
+	{
+		boolean isImpacted = false;
+		for(RequestDetailImpl request : this.requests.values())
+		{
+			for(OptionDetailImpl leg : request.getLegs())
+			{
+				if(leg.getUnderlyingRIC().equals(event.getUnderlyingRIC()))
+				{
+					leg.setUnderlyingPrice(BigDecimal.valueOf(event.getPriceUpdate()));
+					isImpacted = true;
+				}
+			}
+			
+			if(isImpacted)
+			{
+				request.aggregate();
+				isImpacted = false;
+			}
+		}
 	}
 }
