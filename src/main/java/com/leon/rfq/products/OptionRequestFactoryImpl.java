@@ -18,7 +18,6 @@ import com.leon.rfq.common.RegexConstants;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BankHolidayService;
-import com.leon.rfq.services.CalculationServiceImpl;
 import com.leon.rfq.services.DefaultConfigurationService;
 import com.leon.rfq.services.InterestRateService;
 import com.leon.rfq.services.PriceService;
@@ -104,9 +103,6 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         newRequest.setSalesCreditPercentage(new BigDecimal("2"));
         newRequest.setPremiumSettlementDaysOverride(1);
         newRequest.setPremiumSettlementDate(LocalDate.now().plusDays(newRequest.getPremiumSettlementDaysOverride()));
-        
-        // TODO select model depending on certain criteria
-        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), newRequest);
 		
         return newRequest;
 	}

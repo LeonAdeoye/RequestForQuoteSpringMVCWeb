@@ -24,6 +24,7 @@ import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
 import com.leon.rfq.events.PriceUpdateEvent;
+import com.leon.rfq.products.BlackScholesModelImpl;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
@@ -198,6 +199,9 @@ ApplicationListener<PriceUpdateEvent>
 				{
 					this.requests.put(request.getIdentifier(), request);
 					
+					if(request.getLegs() == null)
+						continue;
+					
 					for(OptionDetailImpl leg :  request.getLegs())
 						this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
 								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
@@ -261,6 +265,9 @@ ApplicationListener<PriceUpdateEvent>
 			lock.lock();
 			
 			RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
+			
+	        // TODO select model depending on certain criteria
+	        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), newRequest);
 			
 			if((newRequest != null) && this.requestDao.insert(newRequest))
 			{
@@ -346,6 +353,7 @@ ApplicationListener<PriceUpdateEvent>
 			return this.requestDao.requestExistsWithRequestId(requestId);
 	}
 
+	// TODO need to revisit - can this be simplified using streams?
 	@Override
 	public void onApplicationEvent(PriceUpdateEvent event)
 	{
@@ -363,7 +371,11 @@ ApplicationListener<PriceUpdateEvent>
 			
 			if(isImpacted)
 			{
+		        // TODO select model depending on certain criteria
+		        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), request);
+		        
 				request.aggregate();
+				
 				isImpacted = false;
 			}
 		}

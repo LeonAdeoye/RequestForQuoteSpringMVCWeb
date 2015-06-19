@@ -26,6 +26,9 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 	
 	public synchronized static void calculate(PricingModel model, RequestDetailImpl request)
 	{
+		if((request == null) || (request.getLegs() == null))
+			return;
+		
 		for(OptionDetailImpl leg : request.getLegs())
 		{
 			model.configure(extractModelInputs(leg));
