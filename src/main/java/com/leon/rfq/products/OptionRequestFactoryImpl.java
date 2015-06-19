@@ -181,7 +181,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             	optionLeg.setMaturityDate(LocalDate.parse(dates[0], formatter));
             	optionLeg.setTradeDate(LocalDate.now());
                 
-                optionLeg.setDaysToExpiry(new BigDecimal(this.bankHolidayService.calculateBusinessDaysToExpiry(
+                optionLeg.setDaysToExpiry(BigDecimal.valueOf(this.bankHolidayService.calculateBusinessDaysToExpiry(
                 		optionLeg.getTradeDate(),
                 		optionLeg.getMaturityDate(),
                 		this.defaultConfigurationService.getDefaultLocation())));
@@ -195,7 +195,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             	optionLeg.setMaturityDate(LocalDate.parse(dates[count++], formatter));
             	optionLeg.setTradeDate(LocalDate.now());
             	
-                optionLeg.setDaysToExpiry(new BigDecimal(this.bankHolidayService.calculateBusinessDaysToExpiry(
+                optionLeg.setDaysToExpiry(BigDecimal.valueOf(this.bankHolidayService.calculateBusinessDaysToExpiry(
                 		optionLeg.getTradeDate(),
                 		optionLeg.getMaturityDate(),
                 		this.defaultConfigurationService.getDefaultLocation())));
@@ -261,6 +261,10 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	        parseOptionMaturityDates(partsOfTheRequest[2], optionLegs);
 	        parseOptionUnderlyings(partsOfTheRequest[3], optionLegs);
 	        parent.setLegs(optionLegs);
+	        
+	        if(logger.isDebugEnabled())
+	        	logger.debug("Post parsing leg details: " + optionLegs.toString());
+	        
 	        return true;
     	}
     	catch(Exception e)

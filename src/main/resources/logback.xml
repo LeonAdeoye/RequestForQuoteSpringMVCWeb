@@ -130,6 +130,14 @@
 	
 	<logger name="com.leon.rfq.services.ClientServiceImpl" level="TRACE">
 		<appender-ref ref="SERVICES_LOG_FILE" />           
+	</logger>
+	
+	<logger name="com.leon.rfq.services.CalculationServiceImpl" level="TRACE">
+		<appender-ref ref="SERVICES_LOG_FILE" />           
+	</logger>
+	
+	<logger name="com.leon.rfq.services.BankHolidayServiceImpl" level="TRACE">
+		<appender-ref ref="SERVICES_LOG_FILE" />           
 	</logger>	
 	   
 	<root level="info">

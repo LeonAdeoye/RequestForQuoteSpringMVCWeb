@@ -312,8 +312,16 @@ public class BlackScholesModelImpl implements PricingModel
 			StringBuilder builder = new StringBuilder();
 			builder.append("BlackScholesModelImpl [isCallOption=");
 			builder.append(this.isCallOption);
+			builder.append(", scale=");
+			builder.append(this.scale);
+			builder.append(", piCalcVal=");
+			builder.append(this.piCalcVal);
+			builder.append(", timeToExpirySquareRoot=");
+			builder.append(this.timeToExpirySquareRoot);
 			builder.append(", timeToExpiryInYears=");
 			builder.append(this.timeToExpiryInYears);
+			builder.append(", expInterestRate=");
+			builder.append(this.expInterestRate);
 			builder.append(", interestRate=");
 			builder.append(this.interestRate);
 			builder.append(", underlyingPrice=");
@@ -322,9 +330,30 @@ public class BlackScholesModelImpl implements PricingModel
 			builder.append(this.strike);
 			builder.append(", volatility=");
 			builder.append(this.volatility);
+			builder.append(", d1=");
+			builder.append(this.d1);
+			builder.append(", d2=");
+			builder.append(this.d2);
+			builder.append(", theoreticalValue=");
+			builder.append(this.theoreticalValue);
+			builder.append(", intrinsicValue=");
+			builder.append(this.intrinsicValue);
+			builder.append(", timeValue=");
+			builder.append(this.timeValue);
+			builder.append(", delta=");
+			builder.append(this.delta);
+			builder.append(", gamma=");
+			builder.append(this.gamma);
+			builder.append(", vega=");
+			builder.append(this.vega);
+			builder.append(", theta=");
+			builder.append(this.theta);
+			builder.append(", rho=");
+			builder.append(this.rho);
+			builder.append(", lambda=");
+			builder.append(this.lambda);
 			builder.append("]");
 			return builder.toString();
 		}
-		
-		
+				
 }

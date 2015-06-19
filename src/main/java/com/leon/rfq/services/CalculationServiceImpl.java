@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 
 import com.leon.rfq.common.OptionConstants;
@@ -16,6 +18,8 @@ import com.leon.rfq.products.RangeParameters;
 
 public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEvent>
 {
+	private static final Logger logger = LoggerFactory.getLogger(CalculationServiceImpl.class);
+	
 	private CalculationServiceImpl() {}
 	
 	public synchronized static Map<String, BigDecimal> calculate(PricingModel model, Map<String, BigDecimal> inputs)
@@ -34,6 +38,9 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 			model.configure(extractModelInputs(leg));
 			extractModelOutputs(model.calculate(), leg);
 		}
+		
+		if(logger.isDebugEnabled())
+			logger.debug(model.toString());
 	}
 	
 	public synchronized static void calculate(PricingModel model, OptionDetailImpl leg)
@@ -52,6 +59,10 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 		inputs.put(OptionConstants.TIME_TO_EXPIRY, leg.getYearsToExpiry());
 		inputs.put(OptionConstants.IS_CALL_OPTION, leg.getIsCall() ? BigDecimal.valueOf(1) : BigDecimal.valueOf(0));
 		inputs.put(OptionConstants.IS_EUROPEAN_OPTION, leg.getIsEuropean() ? BigDecimal.valueOf(1) : BigDecimal.valueOf(0));
+		
+		if(logger.isDebugEnabled())
+			logger.debug(inputs.toString());
+		
 		return inputs;
 	}
 	
@@ -66,6 +77,10 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 		leg.setIntrinsicValue(outputs.get(OptionConstants.INTRINSIC_VALUE));
 		leg.setLambda(outputs.get(OptionConstants.LAMBDA));
 		leg.setTimeValue(outputs.get(OptionConstants.TIME_VALUE));
+		
+		if(logger.isDebugEnabled())
+			logger.debug(outputs.toString());
+		
 	}
 	
 	

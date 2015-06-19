@@ -67,13 +67,26 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	@Override
 	public long calculateBusinessDaysToExpiry(LocalDate startDate, LocalDate endDate, LocationEnum location)
 	{
+		if(logger.isDebugEnabled())
+			logger.debug("Start date: " + startDate + ", endDate: " + endDate + ", location: " + location);
+		
+		
 		long allDays = calculateAllDaysToExpiry(startDate, endDate);
 		
 		if(isLocationCached(location))
 		{
-			return Stream.iterate(startDate, nextDate -> startDate.plusDays(1)).limit(allDays)
+			
+			long count = Stream.iterate(startDate, nextDate -> startDate.plusDays(1)).limit(allDays)
 					.filter(theDate -> !isBankHolidayCached(location, theDate)).count();
+			
+			if(logger.isDebugEnabled())
+				logger.debug("Count: " + count);
+
+			return count;
 		}
+		
+		if(logger.isDebugEnabled())
+			logger.debug("All days: " + allDays);
 		
 		return allDays;
 	}
