@@ -1,5 +1,6 @@
 package com.leon.rfq.products;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
@@ -224,6 +225,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
                 optionLeg.setUnderlyingPrice(this.priceService.getMidPrice(ric));
                 optionLeg.setInterestRate(this.interestRateService.getInterestRate(ric));
                 optionLeg.setDayCountConvention(this.defaultConfigurationService.getDefaultDayCountConvention());
+                optionLeg.setYearsToExpiry(optionLeg.getDaysToExpiry().divide(optionLeg.getDayCountConvention(), 4, RoundingMode.HALF_UP));
             }
         }
         else
@@ -238,6 +240,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
                 optionLeg.setUnderlyingPrice(this.priceService.getMidPrice(ric));
                 optionLeg.setInterestRate(this.interestRateService.getInterestRate(ric));
                 optionLeg.setDayCountConvention(this.defaultConfigurationService.getDefaultDayCountConvention());
+                optionLeg.setYearsToExpiry(optionLeg.getDaysToExpiry().divide(optionLeg.getDayCountConvention(), 4, RoundingMode.HALF_UP));
             }
         }
     }
@@ -263,7 +266,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	        parent.setLegs(optionLegs);
 	        
 	        if(logger.isDebugEnabled())
-	        	logger.debug("Post parsing leg details: " + optionLegs.toString());
+	        	logger.debug(("Post parsing leg details: " + optionLegs) != null ? optionLegs.toString() : "{NULL}");
 	        
 	        return true;
     	}
@@ -319,7 +322,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             snippet = snippet.replaceFirst(leg, "");
             
             if (logger.isDebugEnabled())
-                logger.debug("Remaining snippet after processing leg: " + (legCount++) + "is: "+ snippet);
+                logger.debug("Remaining snippet after processing leg: " + (legCount++) + " is: "+ snippet);
             
             matcher = optionLegRegex.matcher(snippet);
         }

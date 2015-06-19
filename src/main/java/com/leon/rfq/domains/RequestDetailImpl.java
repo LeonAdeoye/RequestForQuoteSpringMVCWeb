@@ -905,8 +905,6 @@ public final class RequestDetailImpl
 		builder.append(this.hedgePrice);
 		builder.append(", totalPremium=");
 		builder.append(this.totalPremium);
-		builder.append(", legs=");
-		builder.append(this.legs);
 		builder.append("]");
 		return builder.toString();
 	}
