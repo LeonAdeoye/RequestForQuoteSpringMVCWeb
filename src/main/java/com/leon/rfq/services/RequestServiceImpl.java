@@ -373,8 +373,6 @@ ApplicationListener<PriceUpdateEvent>
 			{
 		        // TODO select model depending on certain criteria
 		        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), request);
-		        
-				request.aggregate();
 				
 				isImpacted = false;
 			}
