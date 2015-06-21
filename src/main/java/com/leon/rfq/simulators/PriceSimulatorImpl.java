@@ -33,8 +33,10 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 		private final double priceVariance;
 		private final double priceSpread;
 		private boolean isAwake = true;
+		private double midPrice;
 		private final Random priceGenerator = new Random();
 		private final Random changeGenerator = new Random();
+		private final Random lastPriceGenerator = new Random();
 
 		/**
 		 * Constructor
@@ -89,27 +91,38 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 			return this.isAwake;
 		}
 
-		private double getLatestPrice()
+		private double getLastPrice()
 		{
-			return this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
+			if(this.lastPriceGenerator.nextInt(1) == 0)
+				return getAskPrice();
+			else
+				return getBidPrice();
+		}
+		
+		private void generate()
+		{
+			this.midPrice = this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
 		}
 		
 		private double getMidPrice()
 		{
-			return this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
+			// TODO test
+			if(this.midPrice == 0)
+				generate();
+			
+			return this.midPrice;
 		}
 		
 		private double getAskPrice()
 		{
-			return this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
+			return getMidPrice() + (this.priceSpread/2);
 		}
 		
 		private double getBidPrice()
 		{
-			return this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
+			return getMidPrice() - (this.priceSpread/2);
 		}
 		
-
 		private boolean hasChanged()
 		{
 			return this.changeGenerator.nextInt(3) == 2;
@@ -175,11 +188,14 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 				{
 					for(Map.Entry<String, PriceGenerator> item : this.priceMap.entrySet())
 					{
-						PriceGenerator underlying = item.getValue();
+						PriceGenerator priceGenerator = item.getValue();
 	
-						if(underlying.isAwake() && underlying.hasChanged())
+						if(priceGenerator.isAwake() && priceGenerator.hasChanged())
 						{
-							double price = underlying.getLatestPrice();
+							priceGenerator.generate();
+							
+							//TODO mid, ask, bid
+							double price = priceGenerator.getLastPrice();
 	
 							if(logger.isDebugEnabled())
 								logger.debug("Publishing price: " + price + " for underlying: " + item.getKey());
