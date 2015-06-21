@@ -124,6 +124,12 @@ public final class RequestDetailImpl
 			this.rho = this.getLegs().stream().map(OptionDetailImpl::getRho)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
 			
+			this.intrinsicValue = this.getLegs().stream().map(OptionDetailImpl::getIntrinsicValue)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+			
+			this.timeValue = this.getLegs().stream().map(OptionDetailImpl::getTimeValue)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+			
 			this.premiumAmount = this.getLegs().stream().map(OptionDetailImpl::getPremium)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
 		}

@@ -11,6 +11,7 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 	private double priceMean = 0.0;
 	private double priceVariance = 0.0;
 	private String underlyingRIC = "";
+	private double priceSpread = 0.0;
 
 	/**
 	 * Constructor.
@@ -56,9 +57,10 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 	 * @param  underlyingRIC	the underlyingRIC associated with the request.
 	 * @param  priceMean		the normal distribution mean price to be used by price generator.
 	 * @param  priceVariance	the normal distribution price variance to be used by price generator.
+	 * @param  priceSpread		the spread between the bid and ask.
 	 */
 	public PriceSimulatorRequestEvent(Object source, PriceSimulatorRequestEnum requestType,
-			String underlyingRIC, double priceMean, double priceVariance)
+			String underlyingRIC, double priceMean, double priceVariance, double priceSpread)
 	{
 		super(source);
 
@@ -66,6 +68,12 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 		this.underlyingRIC = underlyingRIC;
 		this.priceMean = priceMean;
 		this.priceVariance = priceVariance;
+		this.priceSpread = priceSpread;
+	}
+
+	public double getPriceSpread()
+	{
+		return this.priceSpread;
 	}
 
 	public PriceSimulatorRequestEnum getRequestType()
@@ -99,6 +107,8 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 		buffer.append(this.priceMean);
 		buffer.append(", price variance: ");
 		buffer.append(this.priceVariance);
+		buffer.append(", price spread: ");
+		buffer.append(this.priceSpread);
 		return buffer.toString();
 	}
 }

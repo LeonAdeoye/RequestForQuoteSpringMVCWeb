@@ -31,6 +31,7 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	{
 		private final double priceMean;
 		private final double priceVariance;
+		private final double priceSpread;
 		private boolean isAwake = true;
 		private final Random priceGenerator = new Random();
 		private final Random changeGenerator = new Random();
@@ -42,7 +43,7 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 		 * @param priceVariance						the price variance used for the ND random number generator
 		 * @throws IllegalArgumentException			if priceMean <= 0 || priceVariance <= 0.
 		 */
-		private PriceGenerator(double priceMean, double priceVariance)
+		private PriceGenerator(double priceMean, double priceVariance, double priceSpread)
 		{
 			if(priceMean <= 0.0)
 			{
@@ -59,9 +60,18 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 				
 				throw new IllegalArgumentException("priceVariance argument is invalid");
 			}
+			
+			if(priceSpread <= 0.0)
+			{
+				if(logger.isErrorEnabled())
+					logger.error("priceSpread argument is invalid");
+				
+				throw new IllegalArgumentException("priceSpread argument is invalid");
+			}
 
 			this.priceMean = priceMean;
 			this.priceVariance = priceVariance;
+			this.priceSpread = priceSpread;
 		}
 
 		private void suspend()
@@ -83,6 +93,22 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 		{
 			return this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
 		}
+		
+		private double getMidPrice()
+		{
+			return this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
+		}
+		
+		private double getAskPrice()
+		{
+			return this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
+		}
+		
+		private double getBidPrice()
+		{
+			return this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
+		}
+		
 
 		private boolean hasChanged()
 		{
@@ -185,7 +211,7 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 		switch(requestEvent.getRequestType())
 		{
 		case ADD_UNDERLYING:
-			add(requestEvent.getUnderlyingRIC(), requestEvent.getPriceMean(), requestEvent.getPriceVariance());
+			add(requestEvent.getUnderlyingRIC(), requestEvent.getPriceMean(), requestEvent.getPriceVariance(), requestEvent.getPriceSpread());
 			break;
 		case REMOVE_UNDERLYING:
 			remove(requestEvent.getUnderlyingRIC());
@@ -227,7 +253,7 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	 * 							priceMean <= 0 || priceVariance <= 0.
 	 */
 	@Override
-	public void add(String underlyingRIC, double priceMean, double priceVariance)
+	public void add(String underlyingRIC, double priceMean, double priceVariance, double priceSpread)
 	{
 		if((underlyingRIC == null) || underlyingRIC.isEmpty())
 			throw new IllegalArgumentException("underlyingRIC");
@@ -236,6 +262,9 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 			throw new IllegalArgumentException("priceMean");
 
 		if(priceVariance <= 0.0)
+			throw new IllegalArgumentException("priceVariance");
+		
+		if(priceSpread <= 0.0)
 			throw new IllegalArgumentException("priceVariance");
 
 		if(this.priceMap.containsKey(underlyingRIC))
@@ -246,7 +275,7 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 			return;
 		}
 
-		this.priceMap.put(underlyingRIC, new PriceGenerator(priceMean, priceVariance));
+		this.priceMap.put(underlyingRIC, new PriceGenerator(priceMean, priceVariance, priceSpread));
 
 		if(logger.isInfoEnabled())
 			logger.info("Added underlying " + underlyingRIC + " to the price publishing map");
