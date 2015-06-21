@@ -288,10 +288,20 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 		}
 
 		if(priceVariance <= 0.0)
-			throw new IllegalArgumentException("priceVariance");
+		{
+			if(logger.isErrorEnabled())
+				logger.error("priceVariance argument is invalid");
+			
+			throw new IllegalArgumentException("priceVariance argument is invalid");
+		}
 		
 		if(priceSpread <= 0.0)
-			throw new IllegalArgumentException("priceVariance");
+		{
+			if(logger.isErrorEnabled())
+				logger.error("priceSpread argument is invalid");
+			
+			throw new IllegalArgumentException("priceSpread argument is invalid");
+		}
 
 		if(this.priceMap.containsKey(underlyingRIC))
 		{
@@ -317,7 +327,12 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	public void remove(String underlyingRIC)
 	{
 		if((underlyingRIC == null) || underlyingRIC.isEmpty())
-			throw new IllegalArgumentException("underlyingRIC");
+		{
+			if(logger.isErrorEnabled())
+				logger.error("underlyingRIC argument is invalid");
+			
+			throw new IllegalArgumentException("underlyingRIC argument is invalid");
+		}
 
 		if(!this.priceMap.containsKey(underlyingRIC))
 			return;
@@ -350,7 +365,12 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	public void suspend(String underlyingRIC)
 	{
 		if((underlyingRIC == null) || underlyingRIC.isEmpty())
-			throw new IllegalArgumentException("underlyingRIC");
+		{
+			if(logger.isErrorEnabled())
+				logger.error("underlyingRIC argument is invalid");
+			
+			throw new IllegalArgumentException("underlyingRIC argument is invalid");
+		}
 
 		if(!this.priceMap.containsKey(underlyingRIC))
 			return;
@@ -386,7 +406,12 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	public void awaken(String underlyingRIC)
 	{
 		if((underlyingRIC == null) || underlyingRIC.isEmpty())
-			throw new IllegalArgumentException("underlyingRIC");
+		{
+			if(logger.isErrorEnabled())
+				logger.error("underlyingRIC argument is invalid");
+			
+			throw new IllegalArgumentException("underlyingRIC argument is invalid");
+		}
 
 		if(!this.priceMap.containsKey(underlyingRIC))
 			return;
