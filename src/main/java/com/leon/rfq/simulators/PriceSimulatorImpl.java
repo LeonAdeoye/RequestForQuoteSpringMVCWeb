@@ -272,10 +272,20 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	public void add(String underlyingRIC, double priceMean, double priceVariance, double priceSpread)
 	{
 		if((underlyingRIC == null) || underlyingRIC.isEmpty())
-			throw new IllegalArgumentException("underlyingRIC");
+		{
+			if(logger.isErrorEnabled())
+				logger.error("underlyingRIC argument is invalid");
+			
+			throw new IllegalArgumentException("underlyingRIC argument is invalid");
+		}
 
 		if(priceMean <= 0.0)
-			throw new IllegalArgumentException("priceMean");
+		{
+			if(logger.isErrorEnabled())
+				logger.error("priceMean argument is invalid");
+			
+			throw new IllegalArgumentException("priceMean argument is invalid");
+		}
 
 		if(priceVariance <= 0.0)
 			throw new IllegalArgumentException("priceVariance");
