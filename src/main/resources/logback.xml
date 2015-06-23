@@ -151,7 +151,9 @@
 		<appender-ref ref="SIMULATORS_LOG_FILE" />           
 	</logger>
 	
-	OptionRequestFactoryImpl	
+	<logger name="com.leon.rfq.simulators.PriceGeneratrImpl" level="TRACE">
+		<appender-ref ref="SIMULATORS_LOG_FILE" />           
+	</logger>
 	   
 	<root level="info">
 		<appender-ref ref="STDOUT" />

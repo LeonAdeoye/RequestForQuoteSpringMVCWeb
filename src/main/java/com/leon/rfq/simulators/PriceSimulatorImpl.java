@@ -1,8 +1,10 @@
 package com.leon.rfq.simulators;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 
@@ -19,114 +21,57 @@ public final class PriceSimulatorImpl implements PriceSimulator,
 ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceSimulatorImpl.class);
-	private final Map<String, PriceGenerator> priceMap  = new HashMap<>();
+	private final Map<String, PriceGeneratorImpl> priceMap  = new ConcurrentSkipListMap<>();
+	
 	private ApplicationEventPublisher applicationEventPublisher;
 	private final int sleepDurationMin;
 	private final int sleepDurationIncrement;
 	private final Random sleepDurationGenerator = new Random();
 	private boolean isRunning = true;
 	private boolean isSuspended = false;
-
-	private class PriceGenerator
+	
+	private class Simulation implements Runnable
 	{
-		private final double priceMean;
-		private final double priceVariance;
-		private final double priceSpread;
-		private boolean isAwake = true;
-		private double midPrice;
-		private final Random priceGenerator = new Random();
-		private final Random changeGenerator = new Random();
-		private final Random lastPriceGenerator = new Random();
-
-		/**
-		 * Constructor
-		 * 
-		 * @param priceMean							the mean price used for the ND random number generator
-		 * @param priceVariance						the price variance used for the ND random number generator
-		 * @throws IllegalArgumentException			if priceMean <= 0 || priceVariance <= 0.
-		 */
-		private PriceGenerator(double priceMean, double priceVariance, double priceSpread)
+		@Override
+		public void run()
 		{
-			if(priceMean <= 0.0)
+			try
 			{
-				if(logger.isErrorEnabled())
-					logger.error("priceMean argument is invalid");
-				
-				throw new IllegalArgumentException("priceMean argument is invalid");
+				while(PriceSimulatorImpl.this.isRunning)
+				{
+					if(PriceSimulatorImpl.this.isSuspended)
+					{
+						for(Map.Entry<String, PriceGeneratorImpl> item : PriceSimulatorImpl.this.priceMap.entrySet())
+						{
+							PriceGeneratorImpl priceGenerator = item.getValue();
+		
+							if(priceGenerator.isAwake())
+							{
+								priceGenerator.generate();
+								
+								double price = priceGenerator.getLastPrice();
+		
+								if(logger.isDebugEnabled())
+									logger.debug("Publishing price: " + price + " for underlying: " + item.getKey());
+		
+								PriceSimulatorImpl.this.applicationEventPublisher.publishEvent(new PriceUpdateEvent(this, item.getKey(), price));
+								
+								Thread.sleep(getNextSleepDuration());
+							}
+						}
+					}
+					Thread.sleep(PriceSimulatorImpl.this.getNextSleepDuration());
+				}
 			}
-
-			if(priceVariance <= 0.0)
+			catch(InterruptedException ie)
 			{
-				if(logger.isErrorEnabled())
-					logger.error("priceVariance argument is invalid");
+				if(logger.isInfoEnabled())
+					logger.info("Interruption exception raised. Terminating simulation...");
 				
-				throw new IllegalArgumentException("priceVariance argument is invalid");
+				PriceSimulatorImpl.this.priceMap.clear();
 			}
-			
-			if(priceSpread <= 0.0)
-			{
-				if(logger.isErrorEnabled())
-					logger.error("priceSpread argument is invalid");
-				
-				throw new IllegalArgumentException("priceSpread argument is invalid");
-			}
-
-			this.priceMean = priceMean;
-			this.priceVariance = priceVariance;
-			this.priceSpread = priceSpread;
-		}
-
-		private void suspend()
-		{
-			this.isAwake = false;
-		}
-
-		private void awaken()
-		{
-			this.isAwake = true;
-		}
-
-		private boolean isAwake()
-		{
-			return this.isAwake;
-		}
-
-		private double getLastPrice()
-		{
-			if(this.lastPriceGenerator.nextInt(1) == 0)
-				return getAskPrice();
-			else
-				return getBidPrice();
 		}
 		
-		private void generate()
-		{
-			this.midPrice = this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance);
-		}
-		
-		private double getMidPrice()
-		{
-			// TODO test
-			if(this.midPrice == 0)
-				generate();
-			
-			return this.midPrice;
-		}
-		
-		private double getAskPrice()
-		{
-			return getMidPrice() + (this.priceSpread/2);
-		}
-		
-		private double getBidPrice()
-		{
-			return getMidPrice() - (this.priceSpread/2);
-		}
-		
-		private boolean hasChanged()
-		{
-			return this.changeGenerator.nextInt(3) == 2;
-		}
 	}
 
 	/**
@@ -180,45 +125,55 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 		if(logger.isInfoEnabled())
 			logger.info("Price simulator starting continuous publishing...");
 		
-		try
+		Executors.newSingleThreadExecutor().submit(() ->
 		{
-			while(this.isRunning)
+			try
 			{
-				if(!this.isSuspended)
+				while(this.isRunning)
 				{
-					for(Map.Entry<String, PriceGenerator> item : this.priceMap.entrySet())
+					if(this.isSuspended)
 					{
-						PriceGenerator priceGenerator = item.getValue();
-	
-						if(priceGenerator.isAwake() && priceGenerator.hasChanged())
+						ReentrantLock lock = new ReentrantLock();
+						
+						try
 						{
-							priceGenerator.generate();
-							
-							//TODO mid, ask, bid
-							double price = priceGenerator.getLastPrice();
-	
-							if(logger.isDebugEnabled())
-								logger.debug("Publishing price: " + price + " for underlying: " + item.getKey());
-	
-							this.applicationEventPublisher.publishEvent(new PriceUpdateEvent(this, item.getKey(), price));
-							
-							Thread.sleep(this.getNextSleepDuration());
+							lock.lock();
+						
+							for(Map.Entry<String, PriceGeneratorImpl> item : this.priceMap.entrySet())
+							{
+								PriceGeneratorImpl priceGenerator = item.getValue();
+			
+								if(priceGenerator.isAwake())
+								{
+									priceGenerator.generate();
+									
+									double price = priceGenerator.getLastPrice();
+			
+									if(logger.isDebugEnabled())
+										logger.debug("Publishing price: " + price + " for underlying: " + item.getKey());
+			
+									this.applicationEventPublisher.publishEvent(new PriceUpdateEvent(this, item.getKey(), price));
+									
+									Thread.sleep(getNextSleepDuration());
+								}
+							}
+						}
+						finally
+						{
+							lock.unlock();
 						}
 					}
+					Thread.sleep(PriceSimulatorImpl.this.getNextSleepDuration());
 				}
-				Thread.sleep(this.getNextSleepDuration());
 			}
-		}
-		catch(InterruptedException ie)
-		{
-			if(logger.isInfoEnabled())
-				logger.info("Interruption exception raised. Terminating price simulator...");
-
-			this.isRunning = false;
-		}
-		
-		if(logger.isInfoEnabled())
-			logger.info("Price simulator activity terminated!");
+			catch(InterruptedException ie)
+			{
+				if(logger.isInfoEnabled())
+					logger.info("Interruption exception raised. Terminating simulation...");
+				
+				this.priceMap.clear();
+			}
+		});
 	}
 
 	@Override
@@ -302,16 +257,27 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 			
 			throw new IllegalArgumentException("priceSpread argument is invalid");
 		}
-
-		if(this.priceMap.containsKey(underlyingRIC))
+		
+		ReentrantLock lock = new ReentrantLock();
+				
+		try
 		{
-			if(!this.priceMap.get(underlyingRIC).isAwake())
-				this.priceMap.get(underlyingRIC).awaken();
-			
-			return;
-		}
+			lock.lock();
 
-		this.priceMap.put(underlyingRIC, new PriceGenerator(priceMean, priceVariance, priceSpread));
+			if(this.priceMap.containsKey(underlyingRIC))
+			{
+				if(!this.priceMap.get(underlyingRIC).isAwake())
+					this.priceMap.get(underlyingRIC).awaken();
+				
+				return;
+			}
+	
+			this.priceMap.putIfAbsent(underlyingRIC, new PriceGeneratorImpl(priceMean, priceVariance, priceSpread));
+		}
+		finally
+		{
+			lock.unlock();
+		}
 
 		if(logger.isInfoEnabled())
 			logger.info("Added underlying " + underlyingRIC + " to the price publishing map");
@@ -333,12 +299,23 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 			
 			throw new IllegalArgumentException("underlyingRIC argument is invalid");
 		}
+		
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
 
-		if(!this.priceMap.containsKey(underlyingRIC))
-			return;
-
-		this.priceMap.remove(underlyingRIC);
-
+			if(!this.priceMap.containsKey(underlyingRIC))
+				return;
+	
+			this.priceMap.remove(underlyingRIC);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+		
 		if(logger.isInfoEnabled())
 			logger.info("Removed underlying " + underlyingRIC + " from the price publishing map");
 	}
@@ -371,11 +348,22 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 			
 			throw new IllegalArgumentException("underlyingRIC argument is invalid");
 		}
+		
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
 
-		if(!this.priceMap.containsKey(underlyingRIC))
-			return;
-
-		this.priceMap.get(underlyingRIC).suspend();
+			if(!this.priceMap.containsKey(underlyingRIC))
+				return;
+	
+			this.priceMap.get(underlyingRIC).suspend();
+		}
+		finally
+		{
+			lock.unlock();
+		}
 
 		if(logger.isInfoEnabled())
 			logger.info("Underlying " + underlyingRIC + " has been suspended.");
@@ -387,8 +375,7 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	@Override
 	public void awakenAll()
 	{
-		for(Map.Entry<String, PriceGenerator> entry : this.priceMap.entrySet())
-			entry.getValue().awaken();
+		this.priceMap.values().stream().forEach(PriceGeneratorImpl::awaken);
 		
 		this.isSuspended = false;
 
@@ -412,11 +399,22 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 			
 			throw new IllegalArgumentException("underlyingRIC argument is invalid");
 		}
+		
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
 
-		if(!this.priceMap.containsKey(underlyingRIC))
-			return;
-
-		this.priceMap.get(underlyingRIC).awaken();
+			if(!this.priceMap.containsKey(underlyingRIC))
+				return;
+	
+			this.priceMap.get(underlyingRIC).awaken();
+		}
+		finally
+		{
+			lock.unlock();
+		}
 
 		if(logger.isInfoEnabled())
 			logger.info("Underlying " + underlyingRIC + " has been awoken.");

@@ -188,7 +188,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			{
 				this.underlyings.remove(ric);
 			
-				this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, isValid,updatedByUser));
+				this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, isValid, updatedByUser));
 				
 				UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, isValid, updatedByUser);
 				
