@@ -20,7 +20,8 @@ import com.leon.rfq.events.PriceSimulatorRequestEvent;
 public final class PriceSimulatorImpl implements PriceSimulator, ApplicationListener<PriceSimulatorRequestEvent>
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceSimulatorImpl.class);
-	private final Map<String, PriceGeneratorImpl> priceMap  = new ConcurrentHashMap<>();
+	// Only two threads should be using this concurrent map
+	private final Map<String, PriceGeneratorImpl> priceMap  = new ConcurrentHashMap<>(20, 0.9f, 2);
 	
 	private final int sleepDurationMin;
 	private final int sleepDurationIncrement;
@@ -28,8 +29,8 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	private boolean isRunning = true;
 	private boolean isSuspended = false;
 	
-	  @Resource(name="priceUpdateBlockingQueue")
-	  private BlockingQueue<PriceDetailImpl> priceUpdateBlockingQueue;
+	@Resource(name="priceUpdateBlockingQueue")
+	private BlockingQueue<PriceDetailImpl> priceUpdateBlockingQueue;
 	
 	/**
 	 * Returns the next sleeping duration.
@@ -84,37 +85,27 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 				{
 					if(this.isSuspended)
 					{
-						ReentrantLock lock = new ReentrantLock();
-						
-						try
+						this.priceMap.forEach((underlyingRIC, priceGenerator) ->
 						{
-							lock.lock();
-							
-							this.priceMap.forEach((underlyingRIC, priceGenerator) ->
+							if(priceGenerator.isAwake())
 							{
-								if(priceGenerator.isAwake())
+								try
 								{
-									try
-									{
-										this.priceUpdateBlockingQueue.put(priceGenerator.generate(underlyingRIC));
-										
-										Thread.sleep(PriceSimulatorImpl.this.getNextSleepDuration());
-									}
-									catch (Exception e)
-									{
-										if(logger.isInfoEnabled())
-											logger.info("Interruption exception raised.");
-
-										e.printStackTrace();
-									}
+									this.priceUpdateBlockingQueue.put(priceGenerator.generate(underlyingRIC));
+									
+									Thread.sleep(PriceSimulatorImpl.this.getNextSleepDuration());
 								}
-							});
-						}
-						finally
-						{
-							lock.unlock();
-						}
+								catch (Exception e)
+								{
+									if(logger.isInfoEnabled())
+										logger.info("Interruption exception raised.");
+
+									e.printStackTrace();
+								}
+							}
+						});
 					}
+					
 					Thread.sleep(PriceSimulatorImpl.this.getNextSleepDuration());
 				}
 			}
@@ -215,16 +206,8 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		try
 		{
 			lock.lock();
-
-			if(this.priceMap.containsKey(underlyingRIC))
-			{
-				if(!this.priceMap.get(underlyingRIC).isAwake())
-					this.priceMap.get(underlyingRIC).awaken();
-				
-				return;
-			}
 	
-			this.priceMap.putIfAbsent(underlyingRIC, new PriceGeneratorImpl(priceMean, priceVariance, priceSpread));
+			this.priceMap.put(underlyingRIC, new PriceGeneratorImpl(priceMean, priceVariance, priceSpread));
 		}
 		finally
 		{
@@ -252,21 +235,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			throw new IllegalArgumentException("underlyingRIC argument is invalid");
 		}
 		
-		ReentrantLock lock = new ReentrantLock();
-		
-		try
-		{
-			lock.lock();
-
-			if(!this.priceMap.containsKey(underlyingRIC))
-				return;
-	
-			this.priceMap.remove(underlyingRIC);
-		}
-		finally
-		{
-			lock.unlock();
-		}
+		this.priceMap.remove(underlyingRIC);
 		
 		if(logger.isInfoEnabled())
 			logger.info("Removed underlying " + underlyingRIC + " from the price publishing map");
@@ -307,10 +276,8 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		{
 			lock.lock();
 
-			if(!this.priceMap.containsKey(underlyingRIC))
-				return;
-	
-			this.priceMap.get(underlyingRIC).suspend();
+			if(this.priceMap.containsKey(underlyingRIC))
+				this.priceMap.get(underlyingRIC).suspend();
 		}
 		finally
 		{
@@ -358,10 +325,8 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		{
 			lock.lock();
 
-			if(!this.priceMap.containsKey(underlyingRIC))
-				return;
-	
-			this.priceMap.get(underlyingRIC).awaken();
+			if(this.priceMap.containsKey(underlyingRIC))
+				this.priceMap.get(underlyingRIC).awaken();
 		}
 		finally
 		{
