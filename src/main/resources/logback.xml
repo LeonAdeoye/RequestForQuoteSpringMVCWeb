@@ -50,6 +50,17 @@
 			<Pattern>%d{HH:mm:ss.SSS} %-5level %thread  %logger - %msg%n</Pattern>    
 		</encoder>
 	</appender>
+	
+	<appender name="PRICES_LOG_FILE" class="ch.qos.logback.core.FileAppender">
+		<file>c:\development\git\RequestForQuoteSpringMVCWeb\logs\prices.log</file>      
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">    
+			<Pattern>%d{HH:mm:ss.SSS} %-5level %thread  %logger - %msg%n</Pattern>    
+		</encoder>
+	</appender>	
+	
+	<logger name="com.leon.rfq.services.PriceServiceImpl" level="TRACE">
+		<appender-ref ref="PRICES_LOG_FILE" />           
+	</logger>	
 
 	<logger name="com.leon.rfq.products.OptionRequestFactoryImpl" level="TRACE">
 		<appender-ref ref="PRODUCTS_LOG_FILE" />           

@@ -1,10 +1,9 @@
 package com.leon.rfq.services;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
@@ -25,7 +24,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 {
 	private static Logger logger = LoggerFactory.getLogger(UnderlyingServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
-	private final Map<String, UnderlyingDetailImpl> underlyings = new ConcurrentSkipListMap<>();
+	private final Map<String, UnderlyingDetailImpl> underlyings = new ConcurrentHashMap<>(20, 0.9f, 4);
 			
 	@Autowired(required=true)
 	private UnderlyingDao underlyingDao;
@@ -113,30 +112,17 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user: " + savedByUser + " to save underlying with RIC: " + ric);
 		
-		ReentrantLock lock = new ReentrantLock();
-				
-		try
+		if(null == this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, isValid, savedByUser)))
 		{
-			lock.lock();
+			UnderlyingDetailImpl newUnderlying = this.underlyingDao.insert(ric, description, isValid, savedByUser);
+		
+			if(newUnderlying != null)
+				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
 			
-			if(!isUnderlyingCached(ric))
-			{
-				this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, isValid, savedByUser));
-				
-				UnderlyingDetailImpl newUnderlying = this.underlyingDao.insert(ric, description, isValid, savedByUser);
-				
-				if(newUnderlying != null)
-					this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
-				
-				return newUnderlying != null;
-			}
-	
-			return false;
+			return newUnderlying != null;
 		}
-		finally
-		{
-			lock.unlock();
-		}
+		
+		return false;
 	}
 	
 	/**
@@ -177,33 +163,18 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user: " + updatedByUser + " to update underlying with RIC: " + ric);
-		
-		ReentrantLock lock = new ReentrantLock();
-		
-		try
+						
+		if(null != this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, isValid, updatedByUser)))
 		{
-			lock.lock();
-			
-			if(isUnderlyingCached(ric))
-			{
-				this.underlyings.remove(ric);
-			
-				this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, isValid, updatedByUser));
+			UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, isValid, updatedByUser);
 				
-				UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, isValid, updatedByUser);
-				
-				if(updatedUnderlying != null)
-					this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, updatedUnderlying));
+			if(updatedUnderlying != null)
+				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, updatedUnderlying));
 	
-				return updatedUnderlying != null;
-			}
+			return updatedUnderlying != null;
+		}
 			
-			return false;
-		}
-		finally
-		{
-			lock.unlock();
-		}
+		return false;
 	}
 
 	/**
@@ -252,15 +223,14 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		{
 			lock.lock();
 							
-			Set<UnderlyingDetailImpl> underlyings =  Collections.synchronizedSet(this.underlyingDao.getAll());
+			Set<UnderlyingDetailImpl> underlyings = this.underlyingDao.getAll();
 			
 			if(underlyings!= null)
 			{
 				this.underlyings.clear();
 				
-				for(UnderlyingDetailImpl underlying : underlyings)
-					this.underlyings.putIfAbsent(underlying.getRic(), underlying);
-				
+				underlyings.forEach(underlying -> this.underlyings.put(underlying.getRic(), underlying));
+								
 				return underlyings;
 			}
 			else
@@ -291,22 +261,21 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Get underlying with RIC: " + ric);
-		
+				
 		ReentrantLock lock = new ReentrantLock();
 		
 		try
 		{
 			lock.lock();
-							
-			UnderlyingDetailImpl underlying;
+		
+			UnderlyingDetailImpl underlying = this.underlyings.get(ric);
 			
-			if(this.isUnderlyingCached(ric))
-				underlying = this.underlyings.get(ric);
-			else
+			if(underlying == null)
 			{
 				underlying = this.underlyingDao.get(ric);
+				
 				if(underlying != null)
-					this.underlyings.putIfAbsent(ric, underlying);
+					this.underlyings.put(ric, underlying);
 			}
 			
 			return underlying;
@@ -333,29 +302,14 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			
 			throw new IllegalArgumentException("ric argument is invalid");
 		}
-
-		ReentrantLock lock = new ReentrantLock();
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Delete underlying with RIC: " + ric);
-		
-		try
-		{
-			lock.lock();
 							
-			if(isUnderlyingCached(ric))
-			{
-				this.underlyings.remove(ric);
-				
-				return this.underlyingDao.delete(ric);
-			}
+		if(null != this.underlyings.remove(ric))
+			return this.underlyingDao.delete(ric);
 			
-			return false;
-		}
-		finally
-		{
-			lock.unlock();
-		}
+		return false;
 	}
 
 	/**

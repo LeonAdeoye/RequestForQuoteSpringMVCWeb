@@ -75,7 +75,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	public void initialize()
 	{
 		if(logger.isInfoEnabled())
-			logger.info("Price simulator starting continuous publishing...");
+			logger.info("Starting price simulator...");
 		
 		Executors.newSingleThreadExecutor().submit(() ->
 		{
