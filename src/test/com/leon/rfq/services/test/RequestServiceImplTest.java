@@ -123,9 +123,6 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		// Act
 		catchException(this.requestService).insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
-		System.out.println("---------------->" + caughtException().getClass().toString());
-		System.out.println("---------------->" + caughtException().getLocalizedMessage());
-		caughtException().printStackTrace();
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
 	}
