@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -59,24 +60,76 @@ public final class PriceServiceImpl implements PriceService
 	@Override
 	public BigDecimal getLastPrice(String ric)
 	{
-		return this.priceMap.get(ric).getLastPrice();
+		ReentrantLock lock = new ReentrantLock();
+		try
+		{
+			lock.lock();
+			
+			if(this.priceMap.containsKey(ric))
+				return this.priceMap.get(ric).getLastPrice();
+			
+			return BigDecimal.ZERO;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public BigDecimal getMidPrice(String ric)
 	{
-		return this.priceMap.get(ric).getMidPrice();
+		ReentrantLock lock = new ReentrantLock();
+		try
+		{
+			lock.lock();
+			
+			if(this.priceMap.containsKey(ric))
+				return this.priceMap.get(ric).getMidPrice();
+			
+			return BigDecimal.ZERO;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public BigDecimal getAskPrice(String ric)
 	{
-		return this.priceMap.get(ric).getAskPrice();
+		ReentrantLock lock = new ReentrantLock();
+		try
+		{
+			lock.lock();
+			
+			if(this.priceMap.containsKey(ric))
+				return this.priceMap.get(ric).getAskPrice();
+			
+			return BigDecimal.ZERO;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 
 	@Override
 	public BigDecimal getBidPrice(String ric)
 	{
-		return this.priceMap.get(ric).getBidPrice();
+		ReentrantLock lock = new ReentrantLock();
+		try
+		{
+			lock.lock();
+			
+			if(this.priceMap.containsKey(ric))
+				return this.priceMap.get(ric).getBidPrice();
+			
+			return BigDecimal.ZERO;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 }

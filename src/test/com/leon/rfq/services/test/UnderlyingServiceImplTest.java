@@ -46,7 +46,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).get(null);
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -55,7 +55,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).get("");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -113,7 +113,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).insert(null, "description", BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -122,7 +122,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).insert("", "description" , BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue(caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -131,7 +131,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).insert("ric", null , BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "description argument is invalid");
+		assertEquals("Exception message should match", "description argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -140,7 +140,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).insert("ric", "", BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "description argument is invalid");
+		assertEquals("Exception message should match", "description argument is invalid", caughtException().getMessage());
 	}
 		
 	@Test
@@ -149,7 +149,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).insert("ric", "description", BigDecimal.TEN,  BigDecimal.ONE, true, null);
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "savedByUser argument is invalid");
+		assertEquals("Exception message should match", "savedByUser argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -158,7 +158,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).insert("ric", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "savedByUser argument is invalid");
+		assertEquals("Exception message should match", "savedByUser argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -167,7 +167,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).insert("ric", "description", BigDecimal.ZERO,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "referencePrice argument is invalid");
+		assertEquals("Exception message should match", "referencePrice argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -176,7 +176,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).insert("ric", "description", BigDecimal.TEN,  BigDecimal.ZERO, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "simulationPriceVariance argument is invalid");
+		assertEquals("Exception message should match", "simulationPriceVariance argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -185,7 +185,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).delete(null);
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -194,7 +194,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).delete("");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -203,7 +203,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).underlyingExistsWithRic("");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -212,7 +212,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).underlyingExistsWithRic(null);
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -231,10 +231,10 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void update_InvalidReferencePrice_ThrowsIllegalArgumentException()
 	{
-		catchException(this.underlyingService).update(null, "description", BigDecimal.ZERO,  BigDecimal.ONE, true, "tester");
+		catchException(this.underlyingService).update("ric", "description", BigDecimal.ZERO,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "referencePrice argument is invalid");
+		assertEquals("Exception message should match", "referencePrice argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -243,16 +243,16 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).update("ric", "description", BigDecimal.TEN,  BigDecimal.ZERO, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "simulationPriceVariance argument is invalid");
+		assertEquals("Exception message should match", "simulationPriceVariance argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
     public void update_NullRic_ThrowsIllegalArgumentException()
 	{
-		catchException(this.underlyingService).update("ric", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
+		catchException(this.underlyingService).update(null, "description", BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -261,7 +261,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).update("", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "ric argument is invalid");
+		assertEquals("Exception message should match", "ric argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -270,7 +270,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).update("ric", null, BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "description argument is invalid");
+		assertEquals("Exception message should match", "description argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -279,7 +279,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).update("ric", "", BigDecimal.TEN,  BigDecimal.ONE, true, "tester");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "description argument is invalid");
+		assertEquals("Exception message should match", "description argument is invalid", caughtException().getMessage());
 	}
 		
 	@Test
@@ -288,7 +288,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).update("ric", "description", BigDecimal.TEN,  BigDecimal.ONE, true, null);
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "updatedByUser argument is invalid");
+		assertEquals("Exception message should match", "updatedByUser argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -297,7 +297,7 @@ public class UnderlyingServiceImplTest extends AbstractJUnit4SpringContextTests
 		catchException(this.underlyingService).update("ric", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "");
 		
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "updatedByUser argument is invalid");
+		assertEquals("Exception message should match", "updatedByUser argument is invalid", caughtException().getMessage());
 	}
 	
 }

@@ -116,7 +116,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
 		
-		if(referencePrice.compareTo(BigDecimal.ZERO) > 0)
+		if(referencePrice.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("referencePrice argument is invalid");
@@ -124,7 +124,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("referencePrice argument is invalid");
 		}
 		
-		if(simulationPriceVariance.compareTo(BigDecimal.ZERO) > 0)
+		if(simulationPriceVariance.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("simulationPriceVariance argument is invalid");
@@ -190,7 +190,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("updatedByUser argument is invalid");
 		}
 		
-		if(referencePrice.compareTo(BigDecimal.ZERO) > 0)
+		if(referencePrice.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("referencePrice argument is invalid");
@@ -198,7 +198,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("referencePrice argument is invalid");
 		}
 		
-		if(simulationPriceVariance.compareTo(BigDecimal.ZERO) > 0)
+		if(simulationPriceVariance.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("simulationPriceVariance argument is invalid");

@@ -83,8 +83,6 @@ public class OptionDetailImpl
 	{
 		this.strikePercentage = strikePercentage;
 	}
-	
-	
 
 	public BigDecimal getIntrinsicValue()
 	{

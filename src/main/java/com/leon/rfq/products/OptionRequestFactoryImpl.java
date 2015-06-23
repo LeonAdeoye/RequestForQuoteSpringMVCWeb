@@ -71,9 +71,9 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 		if(!parseRequest(requestSnippet, newRequest))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("requestSnippet argument is invalid");
+				logger.error("failed to parse snippet and create new request");
 			
-			throw new IllegalArgumentException("requestSnippet argument is invalid");
+			throw new IllegalArgumentException("failed to parse snippet and create new request");
 		}
 		
 		newRequest.setBookCode(bookCode);
@@ -322,7 +322,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             snippet = snippet.replaceFirst(leg, "");
             
             if (logger.isDebugEnabled())
-                logger.debug("Remaining snippet after processing leg: " + (legCount++) + " is: "+ snippet);
+                logger.debug("Remaining snippet after processing leg: " + (legCount++) + " is [" + snippet + "]");
             
             matcher = optionLegRegex.matcher(snippet);
         }

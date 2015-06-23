@@ -84,10 +84,14 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
     public void insert_ValidSnippet_CallsDaoInsertMethod()
 	{
 		// Arrange
+		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
-		this.requestService.setRequestDao(requestDaoMock);
+		requestService.setRequestDao(requestDaoMock);
+		OptionRequestFactory factoryMock = mock(OptionRequestFactoryImpl.class);
+		requestService.setOptionRequestFactory(factoryMock);
+		when(factoryMock.getNewInstance("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(new RequestDetailImpl());
 		// Act
-		this.requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		verify(requestDaoMock).insert(any(RequestDetailImpl.class));
 	}
@@ -119,6 +123,9 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		// Act
 		catchException(this.requestService).insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
+		System.out.println("---------------->" + caughtException().getClass().toString());
+		System.out.println("---------------->" + caughtException().getLocalizedMessage());
+		caughtException().printStackTrace();
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
 	}
@@ -127,10 +134,11 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
     public void insert_EmptySnippet_ThrowsIllegalArgumentException()
 	{
 		// Arrange
+		RequestService requestService = new RequestServiceImpl();
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
-		this.requestService.setRequestDao(requestDaoMock);
+		requestService.setRequestDao(requestDaoMock);
 		// Act
-		catchException(this.requestService).insert("", Integer.MAX_VALUE, "testBook", "tester");
+		catchException(requestService).insert("", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
