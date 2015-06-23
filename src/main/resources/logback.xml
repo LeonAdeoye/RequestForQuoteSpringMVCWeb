@@ -82,6 +82,10 @@
 	<logger name="com.leon.rfq.domains.OptionDetailImpl" level="TRACE">
 		<appender-ref ref="DOMAINS_LOG_FILE" />           
 	</logger>
+
+	<logger name="com.leon.rfq.domains.PriceDetailImpl" level="TRACE">
+		<appender-ref ref="DOMAINS_LOG_FILE" />           
+	</logger>
 	
 	<logger name="com.leon.rfq.domains.RequestDetailImpl" level="TRACE">
 		<appender-ref ref="DOMAINS_LOG_FILE" />           

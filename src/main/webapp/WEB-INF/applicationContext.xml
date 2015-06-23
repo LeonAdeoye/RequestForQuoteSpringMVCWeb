@@ -21,6 +21,10 @@
     	</bean>
     </mvc:interceptors>
     
+    <bean id="priceUpdateBlockingQueue" class="java.util.concurrent.ArrayBlockingQueue">
+    	<constructor-arg value ="50"/>
+    </bean>
+    
     <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
     	<property name="validationMessageSource" ref="messageSource"/>
     </bean>

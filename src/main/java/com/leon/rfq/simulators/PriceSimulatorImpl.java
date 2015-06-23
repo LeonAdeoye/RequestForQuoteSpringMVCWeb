@@ -2,78 +2,35 @@ package com.leon.rfq.simulators;
 
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ApplicationListener;
 
+import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
-import com.leon.rfq.events.PriceUpdateEvent;
 
-public final class PriceSimulatorImpl implements PriceSimulator,
-ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
+public final class PriceSimulatorImpl implements PriceSimulator, ApplicationListener<PriceSimulatorRequestEvent>
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceSimulatorImpl.class);
-	private final Map<String, PriceGeneratorImpl> priceMap  = new ConcurrentSkipListMap<>();
+	private final Map<String, PriceGeneratorImpl> priceMap  = new ConcurrentHashMap<>();
 	
-	private ApplicationEventPublisher applicationEventPublisher;
 	private final int sleepDurationMin;
 	private final int sleepDurationIncrement;
 	private final Random sleepDurationGenerator = new Random();
 	private boolean isRunning = true;
 	private boolean isSuspended = false;
 	
-	private class Simulation implements Runnable
-	{
-		@Override
-		public void run()
-		{
-			try
-			{
-				while(PriceSimulatorImpl.this.isRunning)
-				{
-					if(PriceSimulatorImpl.this.isSuspended)
-					{
-						for(Map.Entry<String, PriceGeneratorImpl> item : PriceSimulatorImpl.this.priceMap.entrySet())
-						{
-							PriceGeneratorImpl priceGenerator = item.getValue();
-		
-							if(priceGenerator.isAwake())
-							{
-								priceGenerator.generate();
-								
-								double price = priceGenerator.getLastPrice();
-		
-								if(logger.isDebugEnabled())
-									logger.debug("Publishing price: " + price + " for underlying: " + item.getKey());
-		
-								PriceSimulatorImpl.this.applicationEventPublisher.publishEvent(new PriceUpdateEvent(this, item.getKey(), price));
-								
-								Thread.sleep(getNextSleepDuration());
-							}
-						}
-					}
-					Thread.sleep(PriceSimulatorImpl.this.getNextSleepDuration());
-				}
-			}
-			catch(InterruptedException ie)
-			{
-				if(logger.isInfoEnabled())
-					logger.info("Interruption exception raised. Terminating simulation...");
-				
-				PriceSimulatorImpl.this.priceMap.clear();
-			}
-		}
-		
-	}
-
+	  @Resource(name="priceUpdateBlockingQueue")
+	  private BlockingQueue<PriceDetailImpl> priceUpdateBlockingQueue;
+	
 	/**
 	 * Returns the next sleeping duration.
 	 *
@@ -113,12 +70,6 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 	}
 
 	@Override
-	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
-	{
-		this.applicationEventPublisher = applicationEventPublisher;
-	}
-
-	@Override
 	@PostConstruct
 	public void initialize()
 	{
@@ -138,25 +89,26 @@ ApplicationListener<PriceSimulatorRequestEvent>, ApplicationEventPublisherAware
 						try
 						{
 							lock.lock();
-						
-							for(Map.Entry<String, PriceGeneratorImpl> item : this.priceMap.entrySet())
+							
+							this.priceMap.forEach((underlyingRIC, priceGenerator) ->
 							{
-								PriceGeneratorImpl priceGenerator = item.getValue();
-			
 								if(priceGenerator.isAwake())
 								{
-									priceGenerator.generate();
-									
-									double price = priceGenerator.getLastPrice();
-			
-									if(logger.isDebugEnabled())
-										logger.debug("Publishing price: " + price + " for underlying: " + item.getKey());
-			
-									this.applicationEventPublisher.publishEvent(new PriceUpdateEvent(this, item.getKey(), price));
-									
-									Thread.sleep(getNextSleepDuration());
+									try
+									{
+										this.priceUpdateBlockingQueue.put(priceGenerator.generate(underlyingRIC));
+										
+										Thread.sleep(PriceSimulatorImpl.this.getNextSleepDuration());
+									}
+									catch (Exception e)
+									{
+										if(logger.isInfoEnabled())
+											logger.info("Interruption exception raised.");
+
+										e.printStackTrace();
+									}
 								}
-							}
+							});
 						}
 						finally
 						{

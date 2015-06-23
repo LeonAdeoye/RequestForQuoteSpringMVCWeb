@@ -3,64 +3,59 @@ package com.leon.rfq.domains;
 import java.math.BigDecimal;
 import java.util.Optional;
 
-public class PriceDetailImpl
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public final class PriceDetailImpl
 {
-	private Optional<BigDecimal> askPrice;
-	private Optional<BigDecimal> bidPrice;
-	private Optional<BigDecimal> midPrice;
-	private Optional<BigDecimal> closePrice;
-	private Optional<BigDecimal> openPrice;
+	private static final Logger logger = LoggerFactory.getLogger(PriceDetailImpl.class);
 	
-	public PriceDetailImpl() {}
+	private final Optional<BigDecimal> askPrice;
+	private final Optional<BigDecimal> bidPrice;
+	private final Optional<BigDecimal> midPrice;
+	private final Optional<BigDecimal> lastPrice;
+	private final String underlyingRIC;
 	
-	public Optional<BigDecimal> getAskPrice()
+	public PriceDetailImpl(String underlyingRIC, BigDecimal askPrice, BigDecimal bidPrice, BigDecimal midPrice, BigDecimal lastPrice)
 	{
-		return this.askPrice;
+		if((underlyingRIC == null) || underlyingRIC.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("underlyingRIC argument is invalid");
+			
+			throw new IllegalArgumentException("underlyingRIC argument is invalid");
+		}
+		
+		this.underlyingRIC = underlyingRIC;
+		this.askPrice = Optional.ofNullable(askPrice);
+		this.bidPrice = Optional.ofNullable(bidPrice);
+		this.midPrice = Optional.ofNullable(midPrice);
+		this.lastPrice = Optional.ofNullable(lastPrice);
 	}
 
-	public void setAskPrice(Optional<BigDecimal> askPrice)
+	public BigDecimal getAskPrice()
 	{
-		this.askPrice = askPrice;
-	}
-	
-	public Optional<BigDecimal> getBidPrice()
-	{
-		return this.bidPrice;
+		return this.askPrice.orElse(BigDecimal.ZERO);
 	}
 
-	public void setBidPrice(Optional<BigDecimal> bidPrice)
+	public BigDecimal getBidPrice()
 	{
-		this.bidPrice = bidPrice;
+		return this.bidPrice.orElse(BigDecimal.ZERO);
 	}
 
-	public Optional<BigDecimal> getMidPrice()
+	public BigDecimal getMidPrice()
 	{
-		return this.midPrice;
+		return this.midPrice.orElse(BigDecimal.ZERO);
 	}
 
-	public void setMidPrice(Optional<BigDecimal> midPrice)
+	public BigDecimal getLastPrice()
 	{
-		this.midPrice = midPrice;
+		return this.lastPrice.orElse(BigDecimal.ZERO);
 	}
 
-	public Optional<BigDecimal> getClosePrice()
+	public String getUnderlyingRIC()
 	{
-		return this.closePrice;
-	}
-
-	public void setClosePrice(Optional<BigDecimal> closePrice)
-	{
-		this.closePrice = closePrice;
-	}
-
-	public Optional<BigDecimal> getOpenPrice()
-	{
-		return this.openPrice;
-	}
-
-	public void setOpenPrice(Optional<BigDecimal> openPrice)
-	{
-		this.openPrice = openPrice;
+		return this.underlyingRIC;
 	}
 
 	@Override
@@ -68,15 +63,15 @@ public class PriceDetailImpl
 	{
 		StringBuilder builder = new StringBuilder();
 		builder.append("PriceDetailImpl [askPrice=");
-		builder.append(this.askPrice);
+		builder.append(this.askPrice.orElse(BigDecimal.ZERO));
 		builder.append(", bidPrice=");
-		builder.append(this.bidPrice);
+		builder.append(this.bidPrice.orElse(BigDecimal.ZERO));
 		builder.append(", midPrice=");
-		builder.append(this.midPrice);
-		builder.append(", closePrice=");
-		builder.append(this.closePrice);
-		builder.append(", openPrice=");
-		builder.append(this.openPrice);
+		builder.append(this.midPrice.orElse(BigDecimal.ZERO));
+		builder.append(", lastPrice=");
+		builder.append(this.lastPrice.orElse(BigDecimal.ZERO));
+		builder.append(", underlyingRIC=");
+		builder.append(this.underlyingRIC);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -91,11 +86,11 @@ public class PriceDetailImpl
 		result = (prime * result)
 				+ ((this.bidPrice == null) ? 0 : this.bidPrice.hashCode());
 		result = (prime * result)
-				+ ((this.closePrice == null) ? 0 : this.closePrice.hashCode());
+				+ ((this.lastPrice == null) ? 0 : this.lastPrice.hashCode());
 		result = (prime * result)
 				+ ((this.midPrice == null) ? 0 : this.midPrice.hashCode());
 		result = (prime * result)
-				+ ((this.openPrice == null) ? 0 : this.openPrice.hashCode());
+				+ ((this.underlyingRIC == null) ? 0 : this.underlyingRIC.hashCode());
 		return result;
 	}
 
@@ -135,13 +130,13 @@ public class PriceDetailImpl
 		{
 			return false;
 		}
-		if (this.closePrice == null)
+		if (this.lastPrice == null)
 		{
-			if (other.closePrice != null)
+			if (other.lastPrice != null)
 			{
 				return false;
 			}
-		} else if (!this.closePrice.equals(other.closePrice))
+		} else if (!this.lastPrice.equals(other.lastPrice))
 		{
 			return false;
 		}
@@ -155,18 +150,17 @@ public class PriceDetailImpl
 		{
 			return false;
 		}
-		if (this.openPrice == null)
+		if (this.underlyingRIC == null)
 		{
-			if (other.openPrice != null)
+			if (other.underlyingRIC != null)
 			{
 				return false;
 			}
-		} else if (!this.openPrice.equals(other.openPrice))
+		} else if (!this.underlyingRIC.equals(other.underlyingRIC))
 		{
 			return false;
 		}
 		return true;
-	};
-	
+	}
 	
 }
