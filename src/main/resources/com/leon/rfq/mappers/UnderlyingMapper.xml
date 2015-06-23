@@ -9,10 +9,12 @@
 		<id 	property="ric" column="ric"/>
 		<result property="description" column="description"/>
 		<result property="isValid" column="isValid"/>
+		<result property="referencePrice" column="referencePrice"/>
+		<result property="simulationPriceVariance" column="simulationPriceVariance"/>		
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
-		SELECT ric, description, isValid 
+		SELECT ric, description, referencePrice, simulationPriceVariance, isValid 
 		FROM underlyings WHERE ric=#{ric}
 	</select>
 	
@@ -23,7 +25,9 @@
 	
 	<update id="update" parameterType="UnderlyingDetailImpl">
 		UPDATE underlyings 
-		SET description = #{description}, 
+		SET description = #{description},
+		referencePrice = #{referencePrice},
+		simulationPriceVariance = #{simulationPriceVariance}, 
 		isValid = #{isValid}, 
 		lastUpdatedBy = #{lastUpdatedBy}, 
 		lastUpdated = now() 
@@ -31,8 +35,9 @@
 	</update>	
 	
 	<insert id="insert" parameterType="UnderlyingDetailImpl">
-		INSERT INTO underlyings (ric, description, isValid, lastUpdatedBy, lastUpdated)
-		VALUES(#{ric}, #{description}, #{isValid}, #{lastUpdatedBy}, now() )
+		INSERT INTO 
+		underlyings (ric, description, referencePrice, simulationPriceVariance, isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{ric}, #{description}, #{referencePrice}, #{simulationPriceVariance}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.String">
@@ -41,7 +46,7 @@
 	</delete>
 	
 	<select id="underlyingExistsWithRic" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
-		SELECT ric, description, isValid 
+		SELECT ric, description, referencePrice, simulationPriceVariance, isValid 
 		FROM underlyings WHERE ric=#{ric}
 	</select>
 			

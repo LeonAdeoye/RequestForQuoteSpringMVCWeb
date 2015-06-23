@@ -1,5 +1,6 @@
 package com.leon.rfq.services;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +29,9 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			
 	@Autowired(required=true)
 	private UnderlyingDao underlyingDao;
+	
+	@Autowired(required=true)
+	private DefaultConfigurationService defaultConfigurationService;
 	
 	public UnderlyingServiceImpl() {}
 	
@@ -77,13 +81,16 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	 * 
 	 * @param ric 							the RIC of the underlying to be saved.
 	 * @param description					the description of the underlying to be saved.
+	 * @param referencePrice				the reference price of the underlying to be saved.
+	 * @param simulationPriceVariance		the simulation price variance of the underlying to be saved.
 	 * @param isValid						the validity flag
 	 * @param savedByUser					the user who is saving the underlying.
 	 * @returns	true if the save was successful; false otherwise.
 	 * @throws IllegalArgumentException 	if the RIC or description or savedByUser parameter is an empty string.
 	 */
 	@Override
-	public boolean insert(String ric, String description, boolean isValid, String savedByUser)
+	public boolean insert(String ric, String description, BigDecimal referencePrice,
+			BigDecimal simulationPriceVariance, boolean isValid, String savedByUser)
 	{
 		if((ric == null) || ric.isEmpty())
 		{
@@ -108,13 +115,31 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			
 			throw new IllegalArgumentException("savedByUser argument is invalid");
 		}
+		
+		if(referencePrice.compareTo(BigDecimal.ZERO) > 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("referencePrice argument is invalid");
+			
+			throw new IllegalArgumentException("referencePrice argument is invalid");
+		}
+		
+		if(simulationPriceVariance.compareTo(BigDecimal.ZERO) > 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("simulationPriceVariance argument is invalid");
+			
+			throw new IllegalArgumentException("simulationPriceVariance argument is invalid");
+		}
 
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user: " + savedByUser + " to save underlying with RIC: " + ric);
 		
-		if(null == this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, isValid, savedByUser)))
+		if(null == this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, referencePrice,
+				simulationPriceVariance, isValid, savedByUser)))
 		{
-			UnderlyingDetailImpl newUnderlying = this.underlyingDao.insert(ric, description, isValid, savedByUser);
+			UnderlyingDetailImpl newUnderlying = this.underlyingDao.insert(ric, description, referencePrice,
+					simulationPriceVariance, isValid, savedByUser);
 		
 			if(newUnderlying != null)
 				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
@@ -130,12 +155,16 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	 * 
 	 * @param ric 							the RIC of the underlying to be saved.
 	 * @param description					the description of the underlying to be saved.
-	 * @param savedBy						the user who is saving the underlying.
+	 * @param referencePrice				the reference price of the underlying to be saved.
+	 * @param simulationPriceVariance		the simulation price variance of the underlying to be saved.
+	 * @param isValid						the validity flag of the underlying to be saved.
+	 * @param savedByUser					the user who is saving the underlying.
 	 * @returns	true if the save was successful; false otherwise.
 	 * @throws IllegalArgumentException 	if the RIC or description or savedBy parameter is an empty string.
 	 */
 	@Override
-	public boolean update(String ric, String description, boolean isValid, String updatedByUser)
+	public boolean update(String ric, String description, BigDecimal referencePrice,
+			BigDecimal simulationPriceVariance, boolean isValid, String updatedByUser)
 	{
 		if((ric == null) || ric.isEmpty())
 		{
@@ -161,12 +190,30 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("updatedByUser argument is invalid");
 		}
 		
+		if(referencePrice.compareTo(BigDecimal.ZERO) > 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("referencePrice argument is invalid");
+			
+			throw new IllegalArgumentException("referencePrice argument is invalid");
+		}
+		
+		if(simulationPriceVariance.compareTo(BigDecimal.ZERO) > 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("simulationPriceVariance argument is invalid");
+			
+			throw new IllegalArgumentException("simulationPriceVariance argument is invalid");
+		}
+		
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user: " + updatedByUser + " to update underlying with RIC: " + ric);
 						
-		if(null != this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, isValid, updatedByUser)))
+		if(null != this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, referencePrice,
+				simulationPriceVariance, isValid, updatedByUser)))
 		{
-			UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, isValid, updatedByUser);
+			UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, referencePrice,
+					simulationPriceVariance, isValid, updatedByUser);
 				
 			if(updatedUnderlying != null)
 				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, updatedUnderlying));

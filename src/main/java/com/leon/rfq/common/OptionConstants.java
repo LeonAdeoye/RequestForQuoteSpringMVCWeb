@@ -1,6 +1,6 @@
 package com.leon.rfq.common;
 
-public class OptionConstants
+public final class OptionConstants
 {
 	public static final String DELTA = "DELTA";
 	public static final String GAMMA = "GAMMA";

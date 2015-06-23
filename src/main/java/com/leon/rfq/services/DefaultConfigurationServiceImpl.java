@@ -5,12 +5,14 @@ import java.math.BigDecimal;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.common.EnumTypes.LocationEnum;
+import com.leon.rfq.common.InstrumentConstants;
 
 @Service
 public final class DefaultConfigurationServiceImpl implements DefaultConfigurationService
 {
-	private BigDecimal defaultDayCountConvention = DefaultConfigurationService.DAY_COUNT_CONVENTION_250;
+	private BigDecimal defaultDayCountConvention = InstrumentConstants.DAY_COUNT_CONVENTION_250;
 	private LocationEnum defaultLocation = LocationEnum.TOKYO;
+	private BigDecimal defaultPriceVariance = BigDecimal.ONE;
 	
 	@Override
 	public LocationEnum getDefaultLocation()
@@ -34,6 +36,18 @@ public final class DefaultConfigurationServiceImpl implements DefaultConfigurati
 	public BigDecimal getDefaultDayCountConvention()
 	{
 		return this.defaultDayCountConvention;
+	}
+
+	@Override
+	public void setDefaultPriceVariance(BigDecimal defaultPriceVariance)
+	{
+		this.defaultPriceVariance = defaultPriceVariance;
+	}
+
+	@Override
+	public BigDecimal getDefaultPriceVariance()
+	{
+		return this.defaultPriceVariance;
 	}
 
 }

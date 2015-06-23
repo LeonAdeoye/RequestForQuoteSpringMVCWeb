@@ -25,8 +25,8 @@ public class UnderlyingDetailImpl
 	private String description;
 	
 	private BigDecimal spread;
-	private BigDecimal priceMean;
-	private BigDecimal priceVariance;
+	private BigDecimal referencePrice;
+	private BigDecimal simulationPriceVariance;
 	private BigDecimal dividendYield;
 	
 	private boolean isValid;
@@ -49,16 +49,21 @@ public class UnderlyingDetailImpl
 		this.description = "";
 		this.isValid = true;
 		this.lastUpdatedBy = "";
+		this.referencePrice = BigDecimal.ONE;
+		this.simulationPriceVariance = BigDecimal.ONE;
 
 		logger.debug("underlying instantiated = > " +  this);
 	}
 	
-	public UnderlyingDetailImpl(String ric, String description, Boolean isValid, String lastUpdatedBy)
+	public UnderlyingDetailImpl(String ric, String description, BigDecimal referencePrice,
+			BigDecimal simulationPriceVariance, Boolean isValid, String lastUpdatedBy)
 	{
 		this.ric = ric;
 		this.description = description;
 		this.isValid = isValid;
 		this.lastUpdatedBy = lastUpdatedBy;
+		this.referencePrice = referencePrice;
+		this.simulationPriceVariance = simulationPriceVariance;
 
 		logger.debug("underlying instantiated = > " +  this);
 	}
@@ -103,24 +108,24 @@ public class UnderlyingDetailImpl
 		this.spread = spread;
 	}
 
-	public BigDecimal getPriceMean()
+	public BigDecimal getReferencePrice()
 	{
-		return this.priceMean;
+		return this.referencePrice;
 	}
 
-	public void setPriceMean(BigDecimal priceMean)
+	public void setReferencePrice(BigDecimal referencePrice)
 	{
-		this.priceMean = priceMean;
+		this.referencePrice = referencePrice;
 	}
 
-	public BigDecimal getPriceVariance()
+	public BigDecimal getSimulationPriceVariance()
 	{
-		return this.priceVariance;
+		return this.simulationPriceVariance;
 	}
 
-	public void setPriceVariance(BigDecimal priceVariance)
+	public void setSimulationPriceVariance(BigDecimal simulationPriceVariance)
 	{
-		this.priceVariance = priceVariance;
+		this.simulationPriceVariance = simulationPriceVariance;
 	}
 
 	public BigDecimal getDividendYield()
@@ -143,10 +148,10 @@ public class UnderlyingDetailImpl
 		builder.append(this.description);
 		builder.append(", spread=");
 		builder.append(this.spread);
-		builder.append(", priceMean=");
-		builder.append(this.priceMean);
-		builder.append(", priceVariance=");
-		builder.append(this.priceVariance);
+		builder.append(", referencePrice=");
+		builder.append(this.referencePrice);
+		builder.append(", simulationPriceVariance=");
+		builder.append(this.simulationPriceVariance);
 		builder.append(", dividendYield=");
 		builder.append(this.dividendYield);
 		builder.append(", isValid=");
@@ -170,9 +175,9 @@ public class UnderlyingDetailImpl
 		result = (prime * result)
 				+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
 		result = (prime * result)
-				+ ((this.priceMean == null) ? 0 : this.priceMean.hashCode());
+				+ ((this.referencePrice == null) ? 0 : this.referencePrice.hashCode());
 		result = (prime * result)
-				+ ((this.priceVariance == null) ? 0 : this.priceVariance.hashCode());
+				+ ((this.simulationPriceVariance == null) ? 0 : this.simulationPriceVariance.hashCode());
 		result = (prime * result) + ((this.ric == null) ? 0 : this.ric.hashCode());
 		result = (prime * result) + ((this.spread == null) ? 0 : this.spread.hashCode());
 		return result;
@@ -228,23 +233,23 @@ public class UnderlyingDetailImpl
 		{
 			return false;
 		}
-		if (this.priceMean == null)
+		if (this.referencePrice == null)
 		{
-			if (other.priceMean != null)
+			if (other.referencePrice != null)
 			{
 				return false;
 			}
-		} else if (!this.priceMean.equals(other.priceMean))
+		} else if (!this.referencePrice.equals(other.referencePrice))
 		{
 			return false;
 		}
-		if (this.priceVariance == null)
+		if (this.simulationPriceVariance == null)
 		{
-			if (other.priceVariance != null)
+			if (other.simulationPriceVariance != null)
 			{
 				return false;
 			}
-		} else if (!this.priceVariance.equals(other.priceVariance))
+		} else if (!this.simulationPriceVariance.equals(other.simulationPriceVariance))
 		{
 			return false;
 		}

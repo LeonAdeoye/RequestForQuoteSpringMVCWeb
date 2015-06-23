@@ -1,5 +1,6 @@
 package com.leon.rfq.repositories;
 
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,14 +23,16 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 	public UnderlyingDaoImpl() {}
 
 	@Override
-	public UnderlyingDetailImpl insert(String ric, String description, boolean isValid, String savedByUser)
+	public UnderlyingDetailImpl insert(String ric, String description, BigDecimal referencePrice,
+			BigDecimal simulationPriceVariance, boolean isValid, String savedByUser)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Inserting underlying with ric " + ric);
 		
 		try
 		{
-			UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description, isValid, savedByUser);
+			UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description,
+					referencePrice, simulationPriceVariance, isValid, savedByUser);
 			
 			if(this.underlyingMapper.insert(underlying) == 1)
 				return underlying;
@@ -44,14 +47,16 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 	}
 
 	@Override
-	public UnderlyingDetailImpl update(String ric, String description, boolean isValid, String updatedByUser)
+	public UnderlyingDetailImpl update(String ric, String description, BigDecimal referencePrice,
+			BigDecimal simulationPriceVariance, boolean isValid, String updatedByUser)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Updating underlying with ric " + ric);
 		
 		try
 		{
-			UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description, isValid, updatedByUser);
+			UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description,
+					referencePrice, simulationPriceVariance, isValid, updatedByUser);
 			
 			if(this.underlyingMapper.update(underlying) == 1)
 				return underlying;

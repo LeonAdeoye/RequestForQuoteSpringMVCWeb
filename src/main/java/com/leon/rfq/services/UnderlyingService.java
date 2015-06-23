@@ -1,5 +1,6 @@
 package com.leon.rfq.services;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import com.leon.rfq.domains.UnderlyingDetailImpl;
@@ -8,11 +9,7 @@ import com.leon.rfq.repositories.UnderlyingDao;
 public interface UnderlyingService
 {
 	void setUnderlyingDao(UnderlyingDao underlyingDao);
-
-	boolean insert(String RIC, String description, boolean isValid,	String savedBy);
 	
-	boolean update(String RIC, String description, boolean isValid,	String savedBy);
-
 	Set<UnderlyingDetailImpl> getAll();
 	
 	UnderlyingDetailImpl get(String ric);
@@ -26,4 +23,10 @@ public interface UnderlyingService
 	void initialise();
 
 	Set<UnderlyingDetailImpl> getAllFromCacheOnly();
+
+	boolean insert(String ric, String description, BigDecimal referencePrice,
+			BigDecimal simulationPriceVariance, boolean isValid, String savedByUser);
+	
+	boolean update(String RIC, String description, BigDecimal referencePrice,
+			BigDecimal simulationPriceVariance, boolean isValid, String updatedByUser);
 }

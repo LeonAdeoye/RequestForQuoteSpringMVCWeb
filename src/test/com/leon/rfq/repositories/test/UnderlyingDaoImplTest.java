@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.math.BigDecimal;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -62,7 +64,7 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
     public void getAll_ValidScenario_ReturnsValidListOfAllUnderlyings()
 	{
 		int beforeCount = this.underlyingDao.getAll().size();
-		this.underlyingDao.insert("testRic", "description", true, "me");
+		this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "me");
 		assertNotNull("getAll method should return a non-null list of underlyings", this.underlyingDao.getAll());
 		assertEquals("count of underlyings should have been incremented ", beforeCount + 1, this.underlyingDao.getAll().size());
 	}
@@ -70,7 +72,7 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void get_ValidRic_ReturnsValidUnderlyingMatchingRic()
 	{
-		this.underlyingDao.insert("testRic", "description", true, "me");
+		this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "me");
 		assertEquals("get method should return the underlying when a valid ric is provided", "testRic", this.underlyingDao.get("testRic").getRic());
 	}
 	
@@ -83,22 +85,22 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void insert_ValidParameters_InsertsUnderlyingAndReturnsIt()
 	{
-		assertNotNull("insert method should insert a valid underlying and return it", this.underlyingDao.insert("testRic", "description", true, "me"));
+		assertNotNull("insert method should insert a valid underlying and return it", this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "me"));
 		assertTrue("previously saved underlying should exist", this.underlyingDao.get("testRic").getRic().equals("testRic"));
 	}
 	
 	@Test
     public void insert_duplicatedRic_InsertFailsAndReturnsNull()
 	{
-		this.underlyingDao.insert("testRic", "description", true, "me");
-		assertNull("second insert should return false because ric already exists", this.underlyingDao.insert("testRic", "description", true, "me"));
+		this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "me");
+		assertNull("second insert should return false because ric already exists", this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "me"));
 	}
 	
 	@Test
     public void update_updateWithValidDescription_DescriptionUpdated()
 	{
-		this.underlyingDao.insert("testRic", "description", true, "me");
-		assertNotNull("Update should return true", this.underlyingDao.update("testRic", "updated description", true, "me"));
+		this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "me");
+		assertNotNull("Update should return true", this.underlyingDao.update("testRic", "updated description", BigDecimal.TEN,  BigDecimal.ONE, true, "me"));
 		UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.get("testRic");
 		assertEquals("Updated underlying's description should be updated to new value", updatedUnderlying.getDescription(), "updated description");
 	}
@@ -106,7 +108,7 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void delete_ValidRic_DeleteSucceedsAndReturnsTrue()
 	{
-		this.underlyingDao.insert("testRic", "description", true, "me");
+		this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "me");
 		assertTrue("previously saved underlying should exist", this.underlyingDao.get("testRic").getRic().equals("testRic"));
 		assertTrue("delete method should return true", this.underlyingDao.delete("testRic"));
 		assertNull("deleted unerlying should not longer exist", this.underlyingDao.get("testRic"));
@@ -121,7 +123,7 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void underlyingExistsWithRic_ExistingRic_ReturnsTrue()
 	{
-		this.underlyingDao.insert("testRic", "description", true, "me");
+		this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,  BigDecimal.ONE, true, "me");
 		
 		assertTrue("underlyingExistsWithRic should return true because ric exists", this.underlyingDao.underlyingExistsWithRic("testRic"));
 	}

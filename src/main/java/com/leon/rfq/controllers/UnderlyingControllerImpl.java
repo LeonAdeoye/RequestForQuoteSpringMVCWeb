@@ -1,5 +1,7 @@
 package com.leon.rfq.controllers;
 
+import java.math.BigDecimal;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -77,7 +79,8 @@ public class UnderlyingControllerImpl
 		if(result.hasErrors())
 			return "addUnderlying";
 		
-		this.underlyingService.insert(newUnderlying.getRic(), newUnderlying.getDescription(), newUnderlying.getIsValid(), "ladeoye"); //TODO
+		this.underlyingService.insert(newUnderlying.getRic(), newUnderlying.getDescription(), newUnderlying.getReferencePrice(),
+				newUnderlying.getSimulationPriceVariance(), newUnderlying.getIsValid(), "ladeoye"); //TODO
 		
 		return "redirect:/underlyings";
 	}
@@ -86,13 +89,16 @@ public class UnderlyingControllerImpl
 	public String delete(@RequestParam String ric, Model model)
 	{
 		this.underlyingService.delete(ric);
+		
 		return "redirect:/underlyings";
 	}
 
 	@RequestMapping("/update")
-	public String update(@RequestParam String ric, @RequestParam String description, @RequestParam boolean isValid, @RequestParam String updatedByUser, Model model)
+	public String update(@RequestParam String ric, @RequestParam String description, @RequestParam double referencePrice, @RequestParam double simulationPriceVariance, @RequestParam boolean isValid, @RequestParam String updatedByUser, Model model)
 	{
-		this.underlyingService.update(ric, description, isValid, updatedByUser);
+		this.underlyingService.update(ric, description, BigDecimal.valueOf(referencePrice),
+				BigDecimal.valueOf(simulationPriceVariance), isValid, updatedByUser);
+		
 		return "redirect:/underlyings";
 	}
 
