@@ -15,11 +15,13 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
+import com.leon.rfq.services.UnderlyingService;
 
 @Service
 public final class PriceSimulatorImpl implements PriceSimulator, ApplicationListener<PriceSimulatorRequestEvent>
@@ -37,6 +39,9 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	
 	@Resource(name="priceUpdateBlockingQueue")
 	private BlockingQueue<PriceDetailImpl> priceUpdateBlockingQueue;
+	
+	@Autowired(required=true)
+	private UnderlyingService underlyingService;
 	
 	/**
 	 * Returns the next sleeping duration.
@@ -81,6 +86,16 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		this.sleepDurationMin = sleepDurationMin;
 		this.sleepDurationIncrement = sleepDurationIncrement;
 	}
+	
+	private void prime()
+	{
+
+		if(logger.isInfoEnabled())
+			logger.info("Priming price simulator cache...");
+		
+		this.underlyingService.getAllFromCacheOnly().forEach(underlying -> add(underlying.getRic(),
+				underlying.getReferencePrice(), underlying.getSimulationPriceVariance(), underlying.getSpread()));
+	}
 
 	@Override
 	@PostConstruct
@@ -88,6 +103,8 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	{
 		if(logger.isInfoEnabled())
 			logger.info("Starting price simulator...");
+		
+		prime();
 		
 		this.executorService.submit(() ->
 		{

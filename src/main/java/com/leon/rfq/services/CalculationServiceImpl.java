@@ -24,6 +24,7 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 	
 	private CalculationServiceImpl() {}
 	
+	// TODO - should all of these methods be synchronized
 	public synchronized static Map<String, BigDecimal> calculate(PricingModel model, Map<String, BigDecimal> inputs)
 	{
 		model.configure(inputs);

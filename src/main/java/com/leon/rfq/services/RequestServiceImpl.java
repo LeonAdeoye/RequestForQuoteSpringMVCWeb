@@ -298,23 +298,32 @@ ApplicationListener<PriceUpdateEvent>
 			
 			RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
 			
-	        // TODO select model depending on certain criteria
-	        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), newRequest);
-			
-			if((newRequest != null) && this.requestDao.insert(newRequest))
+			if(newRequest != null)
 			{
-				this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest));
-				
 				for(OptionDetailImpl leg :  newRequest.getLegs())
 				{
-					this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
+					UnderlyingDetailImpl underlying = this.underlyingService.get(leg.getUnderlyingRIC());
+					
+					this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
+							(this, PriceSimulatorRequestEnum.ADD_UNDERLYING,
+									leg.getUnderlyingRIC(),
+									underlying.getReferencePrice(),
+									underlying.getSimulationPriceVariance(),
+									underlying.getSpread()));
 				}
 				
-				this.requests.put(newRequest.getIdentifier(), newRequest);
+		        // TODO select model depending on certain criteria
+		        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), newRequest);
 				
-				return true;
+				if(this.requestDao.insert(newRequest))
+				{
+					this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest));
+										
+					this.requests.put(newRequest.getIdentifier(), newRequest);
+					
+					return true;
+				}
 			}
-			
 			return false;
 		}
 		catch(IllegalArgumentException iae)
