@@ -12,12 +12,16 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
+import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.products.OptionRequestFactoryImpl;
@@ -89,7 +93,12 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		requestService.setRequestDao(requestDaoMock);
 		OptionRequestFactory factoryMock = mock(OptionRequestFactoryImpl.class);
 		requestService.setOptionRequestFactory(factoryMock);
-		when(factoryMock.getNewInstance("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(new RequestDetailImpl());
+		
+		RequestDetailImpl request = new RequestDetailImpl();
+		List<OptionDetailImpl> legs = new ArrayList<>(2);
+		request.setLegs(legs);
+		
+		when(factoryMock.getNewInstance("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(request);
 		// Act
 		requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert

@@ -78,7 +78,7 @@ class PriceGeneratorImpl
 	
 	private boolean isAskPriceLast()
 	{
-		return this.lastPriceGenerator.nextInt(1) == 0;
+		return this.lastPriceGenerator.nextInt(2) == 0;
 	}
 	
 	private boolean hasPriceChanged()
@@ -91,9 +91,12 @@ class PriceGeneratorImpl
 		if(hasPriceChanged())
 			this.midPrice = BigDecimal.valueOf(this.priceMean.doubleValue() + (this.priceGenerator.nextGaussian() * this.priceVariance.doubleValue()));
 		
-		return new PriceDetailImpl(underlyingRIC, this.midPrice.add(this.halfOfSpread),
-				this.midPrice.subtract(this.halfOfSpread), this.midPrice,
-				isAskPriceLast() ?	this.midPrice.add(this.halfOfSpread) : this.midPrice.subtract(this.halfOfSpread));
+		return new PriceDetailImpl(underlyingRIC,
+				this.midPrice.add(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP),
+				this.midPrice.subtract(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP),
+				this.midPrice.setScale(2, RoundingMode.HALF_UP),
+				isAskPriceLast() ?	this.midPrice.add(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP)
+						: this.midPrice.subtract(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP));
 	}
 
 	@Override

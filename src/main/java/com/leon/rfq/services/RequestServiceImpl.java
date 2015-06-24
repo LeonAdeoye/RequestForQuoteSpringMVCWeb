@@ -298,7 +298,7 @@ ApplicationListener<PriceUpdateEvent>
 			
 			RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance(requestSnippet, clientId, bookCode, savedByUser);
 			
-			if(newRequest != null)
+			if((newRequest != null) && (newRequest.getLegs() != null))
 			{
 				for(OptionDetailImpl leg :  newRequest.getLegs())
 				{

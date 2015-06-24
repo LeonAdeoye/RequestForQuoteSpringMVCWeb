@@ -138,7 +138,6 @@ public final class RequestDetailImpl
 	public void setLegs(List<OptionDetailImpl> legs)
 	{
 		this.legs = legs;
-		aggregate();
 	}
 
 	public BigDecimal getTimeValue()
