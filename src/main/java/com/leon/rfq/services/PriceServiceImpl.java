@@ -4,10 +4,12 @@ import java.math.BigDecimal;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
@@ -21,7 +23,8 @@ public final class PriceServiceImpl implements PriceService
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
 	private final Map<String, PriceDetailImpl> priceMap = new ConcurrentHashMap<>(20, 0.9f, 5);
-	private final boolean isRunning = true;
+	private boolean isRunning = true;
+	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	
 	@Resource(name="priceUpdateBlockingQueue")
 	private BlockingQueue<PriceDetailImpl> priceUpdateBlockingQueue;
@@ -31,9 +34,9 @@ public final class PriceServiceImpl implements PriceService
 	public void initialize()
 	{
 		if(logger.isInfoEnabled())
-			logger.info("Starting price service..");
+			logger.info("Starting price service...");
 		
-		Executors.newSingleThreadExecutor().submit(() ->
+		this.executorService.submit(() ->
 		{
 			try
 			{
@@ -50,11 +53,28 @@ public final class PriceServiceImpl implements PriceService
 			catch(InterruptedException ie)
 			{
 				if(logger.isInfoEnabled())
-					logger.info("Interruption exception raised. Terminating price service...");
+					logger.info("Interruption exception raised.");
 				
-				this.priceMap.clear();
+				terminate();
 			}
 		});
+	}
+	
+	/**
+	 * Terminates the price service.
+	 */
+	@PreDestroy
+	@Override
+	public void terminate()
+	{
+		if(logger.isInfoEnabled())
+			logger.info("Terminating price service...");
+
+		this.isRunning = false;
+		this.priceMap.clear();
+		this.priceUpdateBlockingQueue.clear();
+		this.priceUpdateBlockingQueue = null;
+		this.executorService.shutdownNow();
 	}
 	
 	@Override

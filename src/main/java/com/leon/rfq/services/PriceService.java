@@ -9,4 +9,5 @@ public interface PriceService
 	BigDecimal getBidPrice(String ric);
 	BigDecimal getMidPrice(String ric);
 	void initialize();
+	void terminate();
 }

@@ -8,6 +8,7 @@ import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
 import com.leon.rfq.common.OptionConstants;
 import com.leon.rfq.domains.OptionDetailImpl;
@@ -16,6 +17,7 @@ import com.leon.rfq.events.PriceUpdateEvent;
 import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
 
+@Component
 public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEvent>
 {
 	private static final Logger logger = LoggerFactory.getLogger(CalculationServiceImpl.class);

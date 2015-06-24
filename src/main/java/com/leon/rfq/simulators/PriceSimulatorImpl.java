@@ -5,19 +5,23 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Service;
 
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
 
+@Service
 public final class PriceSimulatorImpl implements PriceSimulator, ApplicationListener<PriceSimulatorRequestEvent>
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceSimulatorImpl.class);
@@ -29,6 +33,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	private final Random sleepDurationGenerator = new Random();
 	private boolean isRunning = true;
 	private boolean isSuspended = false;
+	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	
 	@Resource(name="priceUpdateBlockingQueue")
 	private BlockingQueue<PriceDetailImpl> priceUpdateBlockingQueue;
@@ -41,6 +46,12 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	private int getNextSleepDuration()
 	{
 		return this.sleepDurationMin + this.sleepDurationGenerator.nextInt(this.sleepDurationIncrement);
+	}
+	
+	public PriceSimulatorImpl()
+	{
+		this.sleepDurationMin = 500;
+		this.sleepDurationIncrement = 1000;
 	}
 
 	/**
@@ -73,12 +84,12 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 
 	@Override
 	@PostConstruct
-	public void initialize()
+	public final void initialize()
 	{
 		if(logger.isInfoEnabled())
 			logger.info("Starting price simulator...");
 		
-		Executors.newSingleThreadExecutor().submit(() ->
+		this.executorService.submit(() ->
 		{
 			try
 			{
@@ -125,34 +136,34 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	{
 		switch(requestEvent.getRequestType())
 		{
-		case ADD_UNDERLYING:
-			add(requestEvent.getUnderlyingRIC(), requestEvent.getPriceMean(), requestEvent.getPriceVariance(), requestEvent.getPriceSpread());
-			break;
-		case REMOVE_UNDERLYING:
-			remove(requestEvent.getUnderlyingRIC());
-			break;
-		case SUSPEND_UNDERLYING:
-			suspend(requestEvent.getUnderlyingRIC());
-			break;
-		case AWAKEN_UNDERLYING:
-			awaken(requestEvent.getUnderlyingRIC());
-			break;
-		case SUSPEND_ALL:
-			suspendAll();
-			break;
-		case REMOVE_ALL:
-			removeAll();
-			break;
-		case AWAKEN_ALL:
-			awakenAll();
-			break;
+			case ADD_UNDERLYING:
+				add(requestEvent.getUnderlyingRIC(), requestEvent.getPriceMean(), requestEvent.getPriceVariance(), requestEvent.getPriceSpread());
+				break;
+			case REMOVE_UNDERLYING:
+				remove(requestEvent.getUnderlyingRIC());
+				break;
+			case SUSPEND_UNDERLYING:
+				suspend(requestEvent.getUnderlyingRIC());
+				break;
+			case AWAKEN_UNDERLYING:
+				awaken(requestEvent.getUnderlyingRIC());
+				break;
+			case SUSPEND_ALL:
+				suspendAll();
+				break;
+			case REMOVE_ALL:
+				removeAll();
+				break;
+			case AWAKEN_ALL:
+				awakenAll();
+				break;
 		}
 	}
-
 
 	/**
 	 * Terminates the price simulator stopping all price generation.
 	 */
+	@PreDestroy
 	@Override
 	public void terminate()
 	{
@@ -160,6 +171,10 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			logger.info("Terminating price simulator...");
 
 		this.isRunning = false;
+		this.priceMap.clear();
+		this.priceUpdateBlockingQueue.clear();
+		this.priceUpdateBlockingQueue = null;
+		this.executorService.shutdownNow();
 	}
 
 	/**
