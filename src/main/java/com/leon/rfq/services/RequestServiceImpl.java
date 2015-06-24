@@ -229,9 +229,16 @@ ApplicationListener<PriceUpdateEvent>
 						continue;
 					
 					for(OptionDetailImpl leg :  request.getLegs())
+					{
+						UnderlyingDetailImpl underlying = this.underlyingService.get(leg.getUnderlyingRIC());
+						
 						this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
-								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
-				}
+								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING,
+										leg.getUnderlyingRIC(),
+										underlying.getReferencePrice(),
+										underlying.getSimulationPriceVariance(),
+										underlying.getSpread()));
+					}
 				
 				// TODO - change back top "== 0"
 				return result;

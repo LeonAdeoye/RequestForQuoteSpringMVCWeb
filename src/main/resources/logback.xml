@@ -166,7 +166,7 @@
 		<appender-ref ref="SIMULATORS_LOG_FILE" />           
 	</logger>
 	
-	<logger name="com.leon.rfq.simulators.PriceGeneratrImpl" level="TRACE">
+	<logger name="com.leon.rfq.simulators.PriceGeneratorImpl" level="TRACE">
 		<appender-ref ref="SIMULATORS_LOG_FILE" />           
 	</logger>
 	   
