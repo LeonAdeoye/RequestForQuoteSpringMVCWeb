@@ -83,7 +83,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			{
 				while(this.isRunning)
 				{
-					if(this.isSuspended)
+					if(!this.isSuspended)
 					{
 						this.priceMap.forEach((underlyingRIC, priceGenerator) ->
 						{
@@ -139,11 +139,15 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		case SUSPEND_ALL:
 			suspendAll();
 			break;
+		case REMOVE_ALL:
+			removeAll();
+			break;
 		case AWAKEN_ALL:
 			awakenAll();
 			break;
 		}
 	}
+
 
 	/**
 	 * Terminates the price simulator stopping all price generation.
@@ -287,6 +291,22 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		if(logger.isInfoEnabled())
 			logger.info("Underlying " + underlyingRIC + " has been suspended.");
 	}
+	
+	/**
+	 * Removes all underlyings from the price generation map.
+	 */
+	@Override
+	public void removeAll()
+	{
+		this.isSuspended = true;
+		
+		this.priceMap.clear();
+		
+		this.isSuspended = false;
+		
+		if(logger.isInfoEnabled())
+			logger.info("All underlyings have been removed.");
+	}
 
 	/**
 	 * Restart all price generation by all underlyings.
@@ -294,12 +314,23 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	@Override
 	public void awakenAll()
 	{
-		this.priceMap.values().stream().forEach(PriceGeneratorImpl::awaken);
+		ReentrantLock lock = new ReentrantLock();
 		
-		this.isSuspended = false;
+		try
+		{
+			lock.lock();
+		
+			this.priceMap.values().stream().forEach(PriceGeneratorImpl::awaken);
+			
+			this.isSuspended = false;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 
 		if(logger.isInfoEnabled())
-			logger.info("All underlyings have been awoken.");
+			logger.info("All underlyings in the price generation map have been awoken.");
 	}
 
 	/**

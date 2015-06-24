@@ -43,6 +43,9 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			logger.debug("Initializing underlying service by getting all existing underlyings...");
 		
 		this.getAll();
+		
+		if(logger.isDebugEnabled())
+			this.underlyings.values().forEach(underlying -> logger.debug(underlying.toString()));
 	}
 	
 	/**
@@ -230,6 +233,8 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	 * @param applicationEventPublisher 	the applicationEventPublisher for publishing events.
 	 * @throws NullPointerException 		if the applicationEventPublisher parameter is null.
 	 */
+	
+	//TODO - remove if not needed
 	@Override
 	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher)
 	{

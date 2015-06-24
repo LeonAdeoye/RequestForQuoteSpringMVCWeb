@@ -28,7 +28,7 @@ public final class EnumTypes
 	{
 		ADD_UNDERLYING,	REMOVE_UNDERLYING,
 		SUSPEND_UNDERLYING,	AWAKEN_UNDERLYING,
-		SUSPEND_ALL, AWAKEN_ALL
+		SUSPEND_ALL, AWAKEN_ALL, REMOVE_ALL
 	}
 	
 	public static enum ClientTierEnum
