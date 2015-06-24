@@ -25,7 +25,7 @@ public class UnderlyingValidatorTest extends AbstractJUnit4SpringContextTests
 	public void Underlying_ValidParameters_ShouldBeValidated()
 	{
 		// Arrange
-		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl("testRic", "test description", BigDecimal.TEN,  BigDecimal.ONE, true, "testUser");
+		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl("testRic", "test description", BigDecimal.TEN, BigDecimal.ONE, BigDecimal.ONE, true, "testUser");
 		
 		BindException bindException = new BindException(underlying, "underlying");
 		
@@ -40,7 +40,7 @@ public class UnderlyingValidatorTest extends AbstractJUnit4SpringContextTests
 	public void Underlying_EmptyDescription_ShouldBeInvalidated()
 	{
 		// Arrange
-		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl("testRic", "", BigDecimal.TEN,  BigDecimal.ONE, true, "testUser");
+		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl("testRic", "", BigDecimal.TEN,  BigDecimal.ONE, BigDecimal.ONE, true, "testUser");
 		
 		BindException bindException = new BindException(underlying, "underlying");
 		
@@ -56,7 +56,7 @@ public class UnderlyingValidatorTest extends AbstractJUnit4SpringContextTests
 	public void Underlying_RicTooLong_ShouldBeInvalidated()
 	{
 		// Arrange
-		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl("012345678901234567890", "test description" , BigDecimal.TEN, BigDecimal.ONE,  true, "testUser");
+		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl("012345678901234567890", "test description" , BigDecimal.TEN, BigDecimal.ONE, BigDecimal.ONE, true, "testUser");
 		
 		BindException bindException = new BindException(underlying, "underlying");
 		
@@ -73,7 +73,7 @@ public class UnderlyingValidatorTest extends AbstractJUnit4SpringContextTests
 	{
 		// Arrange
 		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl("testRic",
-				"012345678901234567890123456789012345678901234567890", BigDecimal.TEN,  BigDecimal.ONE, true, "testUser");
+				"012345678901234567890123456789012345678901234567890", BigDecimal.TEN,  BigDecimal.ONE, BigDecimal.ONE, true, "testUser");
 		
 		BindException bindException = new BindException(underlying, "underlying");
 		

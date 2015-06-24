@@ -49,14 +49,15 @@ public class UnderlyingDetailImpl
 		this.description = "";
 		this.isValid = true;
 		this.lastUpdatedBy = "";
-		this.referencePrice = BigDecimal.ONE;
+		this.referencePrice = BigDecimal.TEN;
 		this.simulationPriceVariance = BigDecimal.ONE;
+		this.spread = BigDecimal.ONE;
 
 		logger.debug("underlying instantiated = > " +  this);
 	}
 	
 	public UnderlyingDetailImpl(String ric, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, Boolean isValid, String lastUpdatedBy)
+			BigDecimal simulationPriceVariance, BigDecimal spread, Boolean isValid, String lastUpdatedBy)
 	{
 		this.ric = ric;
 		this.description = description;
@@ -64,6 +65,7 @@ public class UnderlyingDetailImpl
 		this.lastUpdatedBy = lastUpdatedBy;
 		this.referencePrice = referencePrice;
 		this.simulationPriceVariance = simulationPriceVariance;
+		this.spread = spread;
 
 		logger.debug("underlying instantiated = > " +  this);
 	}

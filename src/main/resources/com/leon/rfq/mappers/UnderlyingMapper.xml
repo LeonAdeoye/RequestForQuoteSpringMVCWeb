@@ -10,16 +10,18 @@
 		<result property="description" column="description"/>
 		<result property="isValid" column="isValid"/>
 		<result property="referencePrice" column="referencePrice"/>
-		<result property="simulationPriceVariance" column="simulationPriceVariance"/>		
+		<result property="simulationPriceVariance" column="simulationPriceVariance"/>
+		<result property="spread" column="spread"/>
+		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
-		SELECT ric, description, referencePrice, simulationPriceVariance, isValid 
+		SELECT * 
 		FROM underlyings WHERE ric=#{ric}
 	</select>
 	
 	<select id="getAll" resultMap="UnderlyingResultSet">
-		SELECT ric, description, isValid 
+		SELECT * 
 		FROM underlyings
 	</select>
 	
@@ -27,7 +29,8 @@
 		UPDATE underlyings 
 		SET description = #{description},
 		referencePrice = #{referencePrice},
-		simulationPriceVariance = #{simulationPriceVariance}, 
+		simulationPriceVariance = #{simulationPriceVariance},
+		spread = #{spread},
 		isValid = #{isValid}, 
 		lastUpdatedBy = #{lastUpdatedBy}, 
 		lastUpdated = now() 
@@ -36,8 +39,8 @@
 	
 	<insert id="insert" parameterType="UnderlyingDetailImpl">
 		INSERT INTO 
-		underlyings (ric, description, referencePrice, simulationPriceVariance, isValid, lastUpdatedBy, lastUpdated)
-		VALUES(#{ric}, #{description}, #{referencePrice}, #{simulationPriceVariance}, #{isValid}, #{lastUpdatedBy}, now() )
+		underlyings (ric, description, referencePrice, simulationPriceVariance, spread, isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{ric}, #{description}, #{referencePrice}, #{simulationPriceVariance}, #{spread}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.String">
@@ -46,7 +49,7 @@
 	</delete>
 	
 	<select id="underlyingExistsWithRic" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
-		SELECT ric, description, referencePrice, simulationPriceVariance, isValid 
+		SELECT * 
 		FROM underlyings WHERE ric=#{ric}
 	</select>
 			

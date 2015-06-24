@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
 import com.leon.rfq.events.PriceUpdateEvent;
@@ -35,6 +36,7 @@ ApplicationListener<PriceUpdateEvent>
 {
 	private static Logger logger = LoggerFactory.getLogger(RequestServiceImpl.class);
 	private ApplicationEventPublisher applicationEventPublisher;
+	// TODO need a map for each user
 	private final Map<Integer, RequestDetailImpl> requests = new ConcurrentSkipListMap<>();
 	
 	@Autowired(required=true)
@@ -42,6 +44,9 @@ ApplicationListener<PriceUpdateEvent>
 	
 	@Autowired(required=true)
 	private OptionRequestFactory optionRequestFactory;
+	
+	@Autowired(required=true)
+	private UnderlyingService underlyingService;
 	
 	@Override
 	public void setRequestDao(RequestDao requestDao)
@@ -122,7 +127,20 @@ ApplicationListener<PriceUpdateEvent>
 	@Override
 	public List<RequestDetailImpl> getAllFromCacheOnly()
 	{
+	
 		return new LinkedList<RequestDetailImpl>(this.requests.values());
+	}
+	
+	/**
+	 * Clears the cache of its contents and publishes a remove all price simulator event
+	 * Once retrieved the map is cleared and the requests re-inserted.
+	 */
+	private void clearCache()
+	{
+		this.requests.clear();
+		
+		this.applicationEventPublisher.publishEvent(
+				new PriceSimulatorRequestEvent(this, PriceSimulatorRequestEnum.REMOVE_ALL));
 	}
 
 	/**
@@ -141,21 +159,29 @@ ApplicationListener<PriceUpdateEvent>
 		try
 		{
 			lock.lock();
+			
+			clearCache();
 		
 			List<RequestDetailImpl> result = this.requestDao.getAll();
 			
 			if(result!= null)
 			{
-				this.requests.clear();
-				
 				// Could use a more complicated lambda expression here but below is far simpler
 				for(RequestDetailImpl request : result)
 				{
 					this.requests.put(request.getIdentifier(), request);
-				
+					
 					for(OptionDetailImpl leg :  request.getLegs())
+					{
+						UnderlyingDetailImpl underlying = this.underlyingService.get(leg.getUnderlyingRIC());
+						
 						this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
-								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
+								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING,
+										leg.getUnderlyingRIC(),
+										underlying.getReferencePrice(),
+										underlying.getSimulationPriceVariance(),
+										underlying.getSpread()));
+					}
 				}
 				
 				return result;
@@ -182,6 +208,8 @@ ApplicationListener<PriceUpdateEvent>
 		
 		ReentrantLock lock = new ReentrantLock();
 		
+		clearCache();
+		
 		try
 		{
 			lock.lock();
@@ -192,8 +220,6 @@ ApplicationListener<PriceUpdateEvent>
 			
 			if(result!= null)
 			{
-				this.requests.clear();
-				
 				// Could use a more complicated lambda expression here but below is far simpler
 				for(RequestDetailImpl request : result)
 				{

@@ -1,5 +1,6 @@
 package com.leon.rfq.simulators;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
@@ -171,7 +172,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	 * 							priceMean <= 0 || priceVariance <= 0.
 	 */
 	@Override
-	public void add(String underlyingRIC, double priceMean, double priceVariance, double priceSpread)
+	public void add(String underlyingRIC, BigDecimal priceMean, BigDecimal priceVariance, BigDecimal priceSpread)
 	{
 		if((underlyingRIC == null) || underlyingRIC.isEmpty())
 		{
@@ -181,7 +182,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			throw new IllegalArgumentException("underlyingRIC argument is invalid");
 		}
 
-		if(priceMean <= 0.0)
+		if(priceMean.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("priceMean argument is invalid");
@@ -189,7 +190,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			throw new IllegalArgumentException("priceMean argument is invalid");
 		}
 
-		if(priceVariance <= 0.0)
+		if(priceVariance.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("priceVariance argument is invalid");
@@ -197,7 +198,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			throw new IllegalArgumentException("priceVariance argument is invalid");
 		}
 		
-		if(priceSpread <= 0.0)
+		if(priceSpread.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("priceSpread argument is invalid");
@@ -219,7 +220,8 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		}
 
 		if(logger.isInfoEnabled())
-			logger.info("Added underlying " + underlyingRIC + " to the price publishing map");
+			logger.info("Added underlying " + underlyingRIC + " to the price publishing map with price mean: " +
+					priceMean + ", priceVariance: " + priceVariance + ", and priceSpread: " + priceSpread);
 	}
 
 	/**

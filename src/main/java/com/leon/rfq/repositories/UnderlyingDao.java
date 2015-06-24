@@ -16,10 +16,10 @@ public interface UnderlyingDao
 	boolean underlyingExistsWithRic(String ric);
 
 	UnderlyingDetailImpl insert(String ric, String description,	BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, boolean isValid, String savedByUser);
+			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String savedByUser);
 	
 	UnderlyingDetailImpl update(String ric, String description,	BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, boolean isValid, String updatedByUser);
+			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String updatedByUser);
 	
 }
 

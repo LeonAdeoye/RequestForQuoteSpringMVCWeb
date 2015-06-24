@@ -13,8 +13,8 @@ import com.leon.rfq.domains.PriceDetailImpl;
 class PriceGeneratorImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceGeneratorImpl.class);
-	private final double priceMean;
-	private final double priceVariance;
+	private final BigDecimal priceMean;
+	private final BigDecimal priceVariance;
 	private final BigDecimal halfOfSpread;
 	private boolean isAwake = true;
 	private BigDecimal midPrice;
@@ -30,9 +30,9 @@ class PriceGeneratorImpl
 	 * @param priceSpread						the price spread between the ask and bid price.
 	 * @throws IllegalArgumentException			if priceMean <= 0 || priceVariance <= 0.
 	 */
-	public PriceGeneratorImpl(double priceMean, double priceVariance, double priceSpread)
+	public PriceGeneratorImpl(BigDecimal priceMean, BigDecimal priceVariance, BigDecimal priceSpread)
 	{
-		if(priceMean <= 0.0)
+		if(priceMean.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("priceMean argument is invalid");
@@ -40,7 +40,7 @@ class PriceGeneratorImpl
 			throw new IllegalArgumentException("priceMean argument is invalid");
 		}
 
-		if(priceVariance <= 0.0)
+		if(priceVariance.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("priceVariance argument is invalid");
@@ -48,7 +48,7 @@ class PriceGeneratorImpl
 			throw new IllegalArgumentException("priceVariance argument is invalid");
 		}
 		
-		if(priceSpread <= 0.0)
+		if(priceSpread.compareTo(BigDecimal.ZERO) <= 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("priceSpread argument is invalid");
@@ -58,7 +58,7 @@ class PriceGeneratorImpl
 		
 		this.priceMean = priceMean;
 		this.priceVariance = priceVariance;
-		this.halfOfSpread = BigDecimal.valueOf(priceSpread).divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP);
+		this.halfOfSpread = priceSpread.divide(BigDecimal.valueOf(2), 2, RoundingMode.HALF_UP);
 	}
 
 	public void suspend()
@@ -89,7 +89,7 @@ class PriceGeneratorImpl
 	public PriceDetailImpl generate(String underlyingRIC)
 	{
 		if(hasPriceChanged())
-			this.midPrice = BigDecimal.valueOf(this.priceMean + (this.priceGenerator.nextGaussian() * this.priceVariance));
+			this.midPrice = BigDecimal.valueOf(this.priceMean.doubleValue() + (this.priceGenerator.nextGaussian() * this.priceVariance.doubleValue()));
 		
 		return new PriceDetailImpl(underlyingRIC, this.midPrice.add(this.halfOfSpread),
 				this.midPrice.subtract(this.halfOfSpread), this.midPrice,
@@ -113,7 +113,7 @@ class PriceGeneratorImpl
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
@@ -124,11 +124,10 @@ class PriceGeneratorImpl
 		result = (prime * result) + (this.isAwake ? 1231 : 1237);
 		result = (prime * result)
 				+ ((this.midPrice == null) ? 0 : this.midPrice.hashCode());
-		long temp;
-		temp = Double.doubleToLongBits(this.priceMean);
-		result = (prime * result) + (int) (temp ^ (temp >>> 32));
-		temp = Double.doubleToLongBits(this.priceVariance);
-		result = (prime * result) + (int) (temp ^ (temp >>> 32));
+		result = (prime * result)
+				+ ((this.priceMean == null) ? 0 : this.priceMean.hashCode());
+		result = (prime * result)
+				+ ((this.priceVariance == null) ? 0 : this.priceVariance.hashCode());
 		return result;
 	}
 
@@ -172,13 +171,23 @@ class PriceGeneratorImpl
 		{
 			return false;
 		}
-		if (Double.doubleToLongBits(this.priceMean) != Double
-				.doubleToLongBits(other.priceMean))
+		if (this.priceMean == null)
+		{
+			if (other.priceMean != null)
+			{
+				return false;
+			}
+		} else if (!this.priceMean.equals(other.priceMean))
 		{
 			return false;
 		}
-		if (Double.doubleToLongBits(this.priceVariance) != Double
-				.doubleToLongBits(other.priceVariance))
+		if (this.priceVariance == null)
+		{
+			if (other.priceVariance != null)
+			{
+				return false;
+			}
+		} else if (!this.priceVariance.equals(other.priceVariance))
 		{
 			return false;
 		}

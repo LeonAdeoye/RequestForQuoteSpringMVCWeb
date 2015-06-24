@@ -80,7 +80,7 @@ public class UnderlyingControllerImpl
 			return "addUnderlying";
 		
 		this.underlyingService.insert(newUnderlying.getRic(), newUnderlying.getDescription(), newUnderlying.getReferencePrice(),
-				newUnderlying.getSimulationPriceVariance(), newUnderlying.getIsValid(), "ladeoye"); //TODO
+				newUnderlying.getSimulationPriceVariance(), newUnderlying.getSpread(), newUnderlying.getIsValid(), "ladeoye"); //TODO
 		
 		return "redirect:/underlyings";
 	}
@@ -94,10 +94,10 @@ public class UnderlyingControllerImpl
 	}
 
 	@RequestMapping("/update")
-	public String update(@RequestParam String ric, @RequestParam String description, @RequestParam double referencePrice, @RequestParam double simulationPriceVariance, @RequestParam boolean isValid, @RequestParam String updatedByUser, Model model)
+	public String update(@RequestParam String ric, @RequestParam String description, @RequestParam double referencePrice, @RequestParam double simulationPriceVariance, @RequestParam double spread, @RequestParam boolean isValid, @RequestParam String updatedByUser, Model model)
 	{
 		this.underlyingService.update(ric, description, BigDecimal.valueOf(referencePrice),
-				BigDecimal.valueOf(simulationPriceVariance), isValid, updatedByUser);
+				BigDecimal.valueOf(simulationPriceVariance), BigDecimal.valueOf(spread), isValid, updatedByUser);
 		
 		return "redirect:/underlyings";
 	}

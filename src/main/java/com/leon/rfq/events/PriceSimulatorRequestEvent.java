@@ -1,5 +1,7 @@
 package com.leon.rfq.events;
 
+import java.math.BigDecimal;
+
 import org.springframework.context.ApplicationEvent;
 
 import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
@@ -8,24 +10,24 @@ import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
 public final class PriceSimulatorRequestEvent extends ApplicationEvent
 {
 	private final PriceSimulatorRequestEnum requestType;
-	private double priceMean = 0.0;
-	private double priceVariance = 0.0;
+	private BigDecimal priceMean = BigDecimal.ZERO;
+	private BigDecimal priceVariance = BigDecimal.ZERO;
+	private BigDecimal priceSpread = BigDecimal.ZERO;
 	private String underlyingRIC = "";
-	private double priceSpread = 0.0;
-
+	
 	/**
 	 * Constructor.
 	 *
 	 * @param  source			the object publishing this event to the price simulator.
 	 * @param  requestType		the type of request to be sent to the price simulator.
-	 * @throws					IllegalStateException if requestType != SUSPEND_ALL && requestType != AWAKEN_ALL.
+	 * @throws					IllegalStateException if requestType != SUSPEND_ALL && requestType != AWAKEN_ALL && requestType != REMOVE_ALL.
 	 */
 	public PriceSimulatorRequestEvent(Object source, PriceSimulatorRequestEnum requestType)
 	{
 		super(source);
 
-		if((requestType != PriceSimulatorRequestEnum.SUSPEND_ALL) && (requestType != PriceSimulatorRequestEnum.AWAKEN_ALL))
-			throw new IllegalStateException();
+		if((requestType != PriceSimulatorRequestEnum.REMOVE_ALL) && (requestType != PriceSimulatorRequestEnum.SUSPEND_ALL) && (requestType != PriceSimulatorRequestEnum.AWAKEN_ALL))
+			throw new IllegalArgumentException("requestType is an invalid argument");
 
 		this.requestType = requestType;
 	}
@@ -36,14 +38,14 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 	 * @param  source			the object publishing this event to the price simulator.
 	 * @param  requestType		the type of request to be sent to the price simulator.
 	 * @param  underlyingRIC	the underlyingRIC associated with the request.
-	 * @throws					IllegalStateException if requestType == ADD_UNDERLYING.
+	 * @throws					IllegalStateException if requestType == SUSPEND_ALL/AWAKEN_ALL/REMOVE_ALL.
 	 */
 	public PriceSimulatorRequestEvent(Object source, PriceSimulatorRequestEnum requestType, String underlyingRIC)
 	{
 		super(source);
 
-		if((requestType == PriceSimulatorRequestEnum.SUSPEND_ALL) || (requestType == PriceSimulatorRequestEnum.AWAKEN_ALL))
-			throw new IllegalStateException();
+		if((requestType == PriceSimulatorRequestEnum.REMOVE_ALL) || (requestType == PriceSimulatorRequestEnum.SUSPEND_ALL) || (requestType == PriceSimulatorRequestEnum.AWAKEN_ALL))
+			throw new IllegalArgumentException("requestType is an invalid argument");
 
 		this.requestType = requestType;
 		this.underlyingRIC = underlyingRIC;
@@ -60,10 +62,14 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 	 * @param  priceSpread		the spread between the bid and ask.
 	 */
 	public PriceSimulatorRequestEvent(Object source, PriceSimulatorRequestEnum requestType,
-			String underlyingRIC, double priceMean, double priceVariance, double priceSpread)
+			String underlyingRIC, BigDecimal priceMean, BigDecimal priceVariance, BigDecimal priceSpread)
 	{
 		super(source);
 
+		if(requestType != PriceSimulatorRequestEnum.ADD_UNDERLYING)
+			throw new IllegalArgumentException("requestType is an invalid argument");
+			
+		
 		this.requestType = requestType;
 		this.underlyingRIC = underlyingRIC;
 		this.priceMean = priceMean;
@@ -71,7 +77,7 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 		this.priceSpread = priceSpread;
 	}
 
-	public double getPriceSpread()
+	public BigDecimal getPriceSpread()
 	{
 		return this.priceSpread;
 	}
@@ -86,12 +92,12 @@ public final class PriceSimulatorRequestEvent extends ApplicationEvent
 		return this.underlyingRIC;
 	}
 
-	public double getPriceMean()
+	public BigDecimal getPriceMean()
 	{
 		return this.priceMean;
 	}
 
-	public double getPriceVariance()
+	public BigDecimal getPriceVariance()
 	{
 		return this.priceVariance;
 	}

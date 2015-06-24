@@ -93,7 +93,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	 */
 	@Override
 	public boolean insert(String ric, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, boolean isValid, String savedByUser)
+			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String savedByUser)
 	{
 		if((ric == null) || ric.isEmpty())
 		{
@@ -134,15 +134,23 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			
 			throw new IllegalArgumentException("simulationPriceVariance argument is invalid");
 		}
+		
+		if(spread.compareTo(BigDecimal.ZERO) <= 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("spread argument is invalid");
+			
+			throw new IllegalArgumentException("spread argument is invalid");
+		}
 
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user: " + savedByUser + " to save underlying with RIC: " + ric);
 		
 		if(null == this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, referencePrice,
-				simulationPriceVariance, isValid, savedByUser)))
+				simulationPriceVariance, spread, isValid, savedByUser)))
 		{
 			UnderlyingDetailImpl newUnderlying = this.underlyingDao.insert(ric, description, referencePrice,
-					simulationPriceVariance, isValid, savedByUser);
+					simulationPriceVariance, spread, isValid, savedByUser);
 		
 			if(newUnderlying != null)
 				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
@@ -167,7 +175,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	 */
 	@Override
 	public boolean update(String ric, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, boolean isValid, String updatedByUser)
+			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String updatedByUser)
 	{
 		if((ric == null) || ric.isEmpty())
 		{
@@ -209,14 +217,22 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("simulationPriceVariance argument is invalid");
 		}
 		
+		if(spread.compareTo(BigDecimal.ZERO) <= 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("spread argument is invalid");
+			
+			throw new IllegalArgumentException("spread argument is invalid");
+		}
+		
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user: " + updatedByUser + " to update underlying with RIC: " + ric);
 						
 		if(null != this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, referencePrice,
-				simulationPriceVariance, isValid, updatedByUser)))
+				simulationPriceVariance, spread, isValid, updatedByUser)))
 		{
 			UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, referencePrice,
-					simulationPriceVariance, isValid, updatedByUser);
+					simulationPriceVariance, spread, isValid, updatedByUser);
 				
 			if(updatedUnderlying != null)
 				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, updatedUnderlying));
