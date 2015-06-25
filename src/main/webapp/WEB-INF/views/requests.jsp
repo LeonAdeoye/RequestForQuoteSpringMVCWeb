@@ -68,7 +68,7 @@
 					<th><spring:message code="request.rho.label"/></th>
 					<th><spring:message code="request.timeValue.label"/></th>
 					<th><spring:message code="request.intrinsicValue.label"/></th>
-					<th><spring:message code="request.underlyingsDetails.label"/></th>
+					<th><spring:message code="request.underlyingDetails.label"/></th>
 				</tr>					
 				<div class="row">
 					<c:forEach items="${requests}" var="request">

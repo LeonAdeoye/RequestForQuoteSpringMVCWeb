@@ -144,9 +144,11 @@ public final class RequestDetailImpl
 			
 			this.premiumAmount = this.getLegs().stream().map(OptionDetailImpl::getPremium)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
-			
-			this.lambda = this.getLegs().stream().map(OptionDetailImpl::getLambda)
-			.reduce(BigDecimal.ZERO, BigDecimal::add);
+		}
+		
+		if((this.getLegs() != null) && (this.getLegs().size() == 1))
+		{
+			this.lambda = this.getLegs().get(0).getLambda();
 		}
 	}
 	

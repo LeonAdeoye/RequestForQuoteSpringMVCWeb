@@ -64,6 +64,7 @@ public class OptionDetailImpl
 		this.premium = BigDecimal.ZERO;
 		this.intrinsicValue = BigDecimal.ZERO;
 		this.timeValue = BigDecimal.ZERO;
+		this.lambda = BigDecimal.ZERO;
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Constructor instantiation of OptionDetailImpl: " + this.toString());

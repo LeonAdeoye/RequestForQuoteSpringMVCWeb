@@ -216,35 +216,31 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     private void parseOptionMaturityDates(String delimitedDates, List<OptionDetailImpl> optionLegs)
     {
         String[] dates = delimitedDates.split(",");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy");
         
         if (dates.length == 1)
         {
             for (OptionDetailImpl optionLeg : optionLegs)
-            {
-            	optionLeg.setMaturityDate(LocalDate.parse(dates[0], formatter));
-            	optionLeg.setTradeDate(LocalDate.now());
-                
-                optionLeg.setDaysToExpiry(BigDecimal.valueOf(this.bankHolidayService.calculateBusinessDaysToExpiry(
-                		optionLeg.getTradeDate(),
-                		optionLeg.getMaturityDate(),
-                		this.defaultConfigurationService.getDefaultLocation())));
-            }
+            	setDateData(optionLeg, dates[0]);
         }
         else
         {
             int count = 0;
             for (OptionDetailImpl optionLeg : optionLegs)
-            {
-            	optionLeg.setMaturityDate(LocalDate.parse(dates[count++], formatter));
-            	optionLeg.setTradeDate(LocalDate.now());
-            	
-                optionLeg.setDaysToExpiry(BigDecimal.valueOf(this.bankHolidayService.calculateBusinessDaysToExpiry(
-                		optionLeg.getTradeDate(),
-                		optionLeg.getMaturityDate(),
-                		this.defaultConfigurationService.getDefaultLocation())));
-            }
+            	setDateData(optionLeg, dates[count++]);
         }
+    }
+    
+    private void setDateData(OptionDetailImpl optionLeg, String dateToBeAssigned)
+    {
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy");
+    	
+    	optionLeg.setMaturityDate(LocalDate.parse(dateToBeAssigned, formatter));
+    	optionLeg.setTradeDate(LocalDate.now());
+    	
+        optionLeg.setDaysToExpiry(BigDecimal.valueOf(this.bankHolidayService.calculateBusinessDaysToExpiry(
+        		optionLeg.getTradeDate(),
+        		optionLeg.getMaturityDate(),
+        		this.defaultConfigurationService.getDefaultLocation())));
     }
 
 	/**
@@ -256,46 +252,38 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     private void parseOptionUnderlyings(String delimitedUnderlyings, List<OptionDetailImpl> optionLegs)
     {
     	String[] underlyings = delimitedUnderlyings.split(",");
-    	String ric;
     	
         if (underlyings.length == 1)
         {
             for (OptionDetailImpl optionLeg : optionLegs)
-            {
-            	ric = underlyings[0];
-            	UnderlyingDetailImpl underlying = this.underlyingService.get(ric);
-            	if(underlying == null)
-            	{
-            		if(logger.isErrorEnabled())
-            			logger.error("Underlying with RIC=[" + ric + "] does NOT exist");
-            		
-            		throw new RuntimeException("The underlying with RIC=[" + ric + "] does NOT exist in the underlying service cache.");
-            	}
-            	
-                optionLeg.setUnderlyingRIC(ric);
-                optionLeg.setVolatility(this.volatilityService.getVolatility(ric));
-                optionLeg.setUnderlyingPrice(this.priceService.getMidPrice(ric));
-                optionLeg.setInterestRate(this.interestRateService.getInterestRate(ric));
-                optionLeg.setDayCountConvention(this.defaultConfigurationService.getDefaultDayCountConvention());
-                optionLeg.setYearsToExpiry(optionLeg.getDaysToExpiry().divide(optionLeg.getDayCountConvention(), 4, RoundingMode.HALF_UP));
-            }
+            	setParametericData(optionLeg, underlyings[0]);
         }
         else
         {
             int count = 0;
             for (OptionDetailImpl optionLeg : optionLegs)
-            {
-                ric = underlyings[count++];
-                // TODO Add to underlying manager new RICs if they don't exist.
-                optionLeg.setUnderlyingRIC(ric);
-                optionLeg.setVolatility(this.volatilityService.getVolatility(ric));
-                optionLeg.setUnderlyingPrice(this.priceService.getMidPrice(ric));
-                optionLeg.setInterestRate(this.interestRateService.getInterestRate(ric));
-                optionLeg.setDayCountConvention(this.defaultConfigurationService.getDefaultDayCountConvention());
-                optionLeg.setYearsToExpiry(optionLeg.getDaysToExpiry().divide(optionLeg.getDayCountConvention(), 4, RoundingMode.HALF_UP));
-            }
+                setParametericData(optionLeg, underlyings[count++]);
         }
     }
+    
+    private void setParametericData(OptionDetailImpl optionLeg, String ric)
+	{
+    	UnderlyingDetailImpl underlying = this.underlyingService.get(ric);
+    	if(underlying == null)
+    	{
+    		if(logger.isErrorEnabled())
+    			logger.error("Underlying with RIC=[" + ric + "] does NOT exist");
+    		
+    		throw new RuntimeException("The underlying with RIC=[" + ric + "] does NOT exist in the underlying service cache.");
+    	}
+    	
+        optionLeg.setUnderlyingRIC(ric);
+        optionLeg.setVolatility(this.volatilityService.getVolatility(ric));
+        optionLeg.setUnderlyingPrice(this.priceService.getMidPrice(ric));
+        optionLeg.setInterestRate(this.interestRateService.getInterestRate(ric));
+        optionLeg.setDayCountConvention(this.defaultConfigurationService.getDefaultDayCountConvention());
+        optionLeg.setYearsToExpiry(optionLeg.getDaysToExpiry().divide(optionLeg.getDayCountConvention(), 4, RoundingMode.HALF_UP));
+	}
 
 	/**
 	 * Parses the request snippet containing other option characteristics and assigns them to each option leg.
