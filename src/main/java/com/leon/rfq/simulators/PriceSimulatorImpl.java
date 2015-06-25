@@ -1,6 +1,7 @@
 package com.leon.rfq.simulators;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
@@ -104,6 +105,17 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		if(logger.isInfoEnabled())
 			logger.info("Starting price simulator...");
 		
+		if(this.priceUpdateBlockingQueue == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("The resource blocking queue has NOT been initialised properly. Terminating price simulator.");
+			
+			return;
+		}
+		
+		if(logger.isDebugEnabled())
+			logger.debug("The resource blocking queue has been initialised properly.");
+		
 		prime();
 		
 		this.executorService.submit(() ->
@@ -116,7 +128,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 					{
 						this.priceMap.forEach((underlyingRIC, priceGenerator) ->
 						{
-							if(priceGenerator.isAwake())
+							if(priceGenerator.isAwake() && priceGenerator.hasPriceChanged())
 							{
 								try
 								{
@@ -126,10 +138,9 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 								}
 								catch (Exception e)
 								{
-									if(logger.isInfoEnabled())
-										logger.info("Interruption exception raised.");
-
-									e.printStackTrace();
+									if(logger.isErrorEnabled())
+										logger.error("Exception raised: " + e + ", message: " + e.getLocalizedMessage()
+												+ ", stack trace: " + Arrays.toString(e.getStackTrace()));
 								}
 							}
 						});
@@ -140,14 +151,16 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			}
 			catch(InterruptedException ie)
 			{
-				if(logger.isInfoEnabled())
-					logger.info("Interruption exception raised. Terminating simulation...");
-				
-				this.priceMap.clear();
+				if(logger.isErrorEnabled())
+					logger.error("Terminating simulation because an interruption exception has been raised.");
 			}
 		});
 	}
 
+	/**
+	 * Dispatches event to appropriate handler method.
+	 * @param  requestEvent			the event to be dispatched.
+	 */
 	@Override
 	public void onApplicationEvent(PriceSimulatorRequestEvent requestEvent)
 	{
@@ -184,14 +197,14 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	@Override
 	public void terminate()
 	{
-		if(logger.isInfoEnabled())
-			logger.info("Terminating price simulator...");
-
 		this.isRunning = false;
 		this.priceMap.clear();
 		this.priceUpdateBlockingQueue.clear();
 		this.priceUpdateBlockingQueue = null;
 		this.executorService.shutdownNow();
+		
+		if(logger.isInfoEnabled())
+			logger.info("Termination of price simulator has been completed successfully.");
 	}
 
 	/**
@@ -200,8 +213,9 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	 * @param  underlyingRIC	the RIC of the underlying product used as key to add it.
 	 * @param  priceMean		the mean price used random price generator with normal distribution.
 	 * @param  priceVariance	the variance used random price generator with normal distribution.
+	 * @param  priceSpread		the spread between the ask and bid prices.
 	 * @throws					IllegalArgumentException if underlyingRIC parameter is an empty or null string ||
-	 * 							priceMean <= 0 || priceVariance <= 0.
+	 * 							priceMean <= 0 || priceVariance <= 0 || priceSpread <= 0.
 	 */
 	@Override
 	public void add(String underlyingRIC, BigDecimal priceMean, BigDecimal priceVariance, BigDecimal priceSpread)
@@ -238,18 +252,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			throw new IllegalArgumentException("priceSpread argument is invalid");
 		}
 		
-		ReentrantLock lock = new ReentrantLock();
-				
-		try
-		{
-			lock.lock();
-	
-			this.priceMap.put(underlyingRIC, new PriceGeneratorImpl(priceMean, priceVariance, priceSpread));
-		}
-		finally
-		{
-			lock.unlock();
-		}
+		this.priceMap.put(underlyingRIC, new PriceGeneratorImpl(priceMean, priceVariance, priceSpread));
 
 		if(logger.isInfoEnabled())
 			logger.info("Added underlying " + underlyingRIC + " to the price publishing map with price mean: " +

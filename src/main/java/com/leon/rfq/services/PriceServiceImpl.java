@@ -36,26 +36,36 @@ public final class PriceServiceImpl implements PriceService
 		if(logger.isInfoEnabled())
 			logger.info("Starting price service...");
 		
+		if(this.priceUpdateBlockingQueue == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("The resource blocking queue has NOT been initialised properly. Terminating price service.");
+			
+			return;
+		}
+		
+		if(logger.isDebugEnabled())
+			logger.debug("The resource blocking queue has been initialised properly.");
+		
 		this.executorService.submit(() ->
 		{
+			int count = 0;
 			try
 			{
 				while(this.isRunning)
 				{
 					PriceDetailImpl priceUpdate = this.priceUpdateBlockingQueue.take();
 					
-					if(logger.isDebugEnabled())
-						logger.debug("New price update: "  + priceUpdate);
+					if(logger.isDebugEnabled() && ((++count%200)==0))
+						logger.debug("Mudulo 200th price update taken from head of blocking queue: "  + priceUpdate);
 					
 					this.priceMap.put(priceUpdate.getUnderlyingRIC(), priceUpdate);
 				}
 			}
 			catch(InterruptedException ie)
 			{
-				if(logger.isInfoEnabled())
-					logger.info("Interruption exception raised.");
-				
-				terminate();
+				if(logger.isErrorEnabled())
+					logger.error("Terminating price service because an interruption exception has been raised");
 			}
 		});
 	}
@@ -67,14 +77,14 @@ public final class PriceServiceImpl implements PriceService
 	@Override
 	public void terminate()
 	{
-		if(logger.isInfoEnabled())
-			logger.info("Terminating price service...");
-
 		this.isRunning = false;
 		this.priceMap.clear();
 		this.priceUpdateBlockingQueue.clear();
 		this.priceUpdateBlockingQueue = null;
 		this.executorService.shutdownNow();
+		
+		if(logger.isInfoEnabled())
+			logger.info("Termination of price service has been completed successfully.");
 	}
 	
 	@Override

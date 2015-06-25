@@ -81,22 +81,31 @@ class PriceGeneratorImpl
 		return this.lastPriceGenerator.nextInt(2) == 0;
 	}
 	
-	private boolean hasPriceChanged()
+	public boolean hasPriceChanged()
 	{
 		return this.changeGenerator.nextInt(3) == 2;
 	}
 	
 	public PriceDetailImpl generate(String underlyingRIC)
 	{
-		if(hasPriceChanged())
-			this.midPrice = BigDecimal.valueOf(this.priceMean.doubleValue() + (this.priceGenerator.nextGaussian() * this.priceVariance.doubleValue()));
+		if((underlyingRIC == null) || underlyingRIC.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("underlyingRIC is an invalid argument");
+			
+			throw new IllegalArgumentException("underlyingRIC is an invalid argument");
+		}
 		
+		this.midPrice = BigDecimal.valueOf(this.priceMean.doubleValue()
+				+ (this.priceGenerator.nextGaussian()
+				* this.priceVariance.doubleValue()));
+			
 		return new PriceDetailImpl(underlyingRIC,
-				this.midPrice.add(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP),
-				this.midPrice.subtract(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP),
-				this.midPrice.setScale(2, RoundingMode.HALF_UP),
-				isAskPriceLast() ?	this.midPrice.add(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP)
-						: this.midPrice.subtract(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP));
+			this.midPrice.add(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP),
+			this.midPrice.subtract(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP),
+			this.midPrice.setScale(2, RoundingMode.HALF_UP),
+			isAskPriceLast() ?	this.midPrice.add(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP)
+			: this.midPrice.subtract(this.halfOfSpread).setScale(2, RoundingMode.HALF_UP));
 	}
 
 	@Override
