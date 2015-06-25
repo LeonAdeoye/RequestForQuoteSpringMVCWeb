@@ -300,18 +300,6 @@ ApplicationListener<PriceUpdateEvent>
 			
 			if((newRequest != null) && (newRequest.getLegs() != null))
 			{
-				for(OptionDetailImpl leg :  newRequest.getLegs())
-				{
-					UnderlyingDetailImpl underlying = this.underlyingService.get(leg.getUnderlyingRIC());
-					
-					this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
-							(this, PriceSimulatorRequestEnum.ADD_UNDERLYING,
-									leg.getUnderlyingRIC(),
-									underlying.getReferencePrice(),
-									underlying.getSimulationPriceVariance(),
-									underlying.getSpread()));
-				}
-				
 		        // TODO select model depending on certain criteria
 		        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), newRequest);
 				
@@ -324,6 +312,7 @@ ApplicationListener<PriceUpdateEvent>
 					return true;
 				}
 			}
+			
 			return false;
 		}
 		catch(IllegalArgumentException iae)

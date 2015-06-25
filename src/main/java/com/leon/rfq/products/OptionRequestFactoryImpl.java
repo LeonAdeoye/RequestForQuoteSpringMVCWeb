@@ -3,6 +3,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,10 +19,12 @@ import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.common.RegexConstants;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.services.BankHolidayService;
 import com.leon.rfq.services.DefaultConfigurationService;
 import com.leon.rfq.services.InterestRateService;
 import com.leon.rfq.services.PriceService;
+import com.leon.rfq.services.UnderlyingService;
 import com.leon.rfq.services.VolatilityService;
 
 @Component
@@ -43,6 +46,9 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	
 	@Autowired(required=true)
 	private InterestRateService interestRateService;
+	
+	@Autowired(required=true)
+	private UnderlyingService underlyingService;
 	
 	public OptionRequestFactoryImpl() {}
 	
@@ -125,6 +131,36 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
        
         return matcher.matches();
     }
+	
+	/**
+	 * Determines if underlyings in the request snippet exist or not.
+	 * 
+	 * @param snippet		the be parsed and checked against the underlying service.
+	 * @return	true if the underlyings exist otherwise false;
+	 */
+	// TODO write test cases
+	public boolean doesUnderlyingExist(String snippet)
+	{
+    	String[] underlyings = snippet.split(" ")[3].split(",");
+    	
+    	if(logger.isDebugEnabled())
+    		logger.debug("Validating if the following underlyings exist: " + Arrays.toString(underlyings));
+    	
+    	boolean exists = true;
+    	int length = underlyings.length;
+    	for(int count = 0; count < length; ++count)
+        {
+        	if(this.underlyingService.get(underlyings[count]) == null)
+        	{
+        		if(logger.isErrorEnabled())
+        			logger.error("The underlying with RIC=[" + underlyings[count] + "] does NOT exist in the underlying service cache.");
+        		
+        		exists = false;
+        	}
+        }
+        
+    	return exists;
+	}
     
 	/**
 	 * Determines if an option is American or European depending on the capitalization of the initial part of snippet.
@@ -220,6 +256,15 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             for (OptionDetailImpl optionLeg : optionLegs)
             {
             	ric = underlyings[0];
+            	UnderlyingDetailImpl underlying = this.underlyingService.get(ric);
+            	if(underlying == null)
+            	{
+            		if(logger.isErrorEnabled())
+            			logger.error("Underlying with RIC=[" + ric + "] does NOT exist");
+            		
+            		throw new RuntimeException("The underlying with RIC=[" + ric + "] does NOT exist in the underlying service cache.");
+            	}
+            	
                 optionLeg.setUnderlyingRIC(ric);
                 optionLeg.setVolatility(this.volatilityService.getVolatility(ric));
                 optionLeg.setUnderlyingPrice(this.priceService.getMidPrice(ric));
@@ -273,7 +318,8 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     	catch(Exception e)
     	{
     		if(logger.isErrorEnabled())
-    			logger.error("Failed to parse option request. Exception thrown: "+ e);
+    			logger.error("Failed to parse option request. Exception thrown: " + e);
+    		
     		return false;
     	}
     }

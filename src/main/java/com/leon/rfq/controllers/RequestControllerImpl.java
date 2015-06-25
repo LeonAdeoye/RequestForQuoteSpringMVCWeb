@@ -86,7 +86,7 @@ public class RequestControllerImpl
 	}
 
 	@RequestMapping(value = "/requests/add", method = RequestMethod.GET)
-	public String getNewUserForm(Model model)
+	public String getNewRequestForm(Model model)
 	{
 		model.addAttribute("newRequest", new RequestDetailImpl());
 		
@@ -95,7 +95,7 @@ public class RequestControllerImpl
 	
 	@RequestMapping(value = "/requests/add", method = RequestMethod.POST)
 	public String processNewRequestForm(@ModelAttribute("newRequest") @Valid RequestDetailImpl newRequest,
-			BindingResult result, HttpServletRequest request)
+			BindingResult result, HttpServletRequest request, Model model)
 	{
 		String[] suppressedFields = result.getSuppressedFields();
 		if(suppressedFields.length > 0)
@@ -105,10 +105,12 @@ public class RequestControllerImpl
 		}
 		
 		if(result.hasErrors())
-			return "requestUser";
+			return "requestsError";
 		
-		this.requestService.insert(newRequest.getRequest(), newRequest.getClientId(), newRequest.getBookCode(),  "ladeoye"); //TODO
-		
+		//TODO ladeoye - should get correct user name
+		if(!this.requestService.insert(newRequest.getRequest(), newRequest.getClientId(), newRequest.getBookCode(),  "ladeoye"))
+			model.addAttribute("error", "Failed to insert new request");
+
 		return "redirect:/requests";
 	}
 	

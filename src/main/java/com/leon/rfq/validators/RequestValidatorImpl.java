@@ -10,15 +10,19 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.products.OptionRequestFactoryImpl;
 import com.leon.rfq.services.RequestService;
 
 @Component
 public class RequestValidatorImpl implements Validator
 {
-	@Autowired
+	@Autowired(required=true)
 	private RequestService requestService;
 	
-	@Autowired
+	@Autowired(required=true)
+	private OptionRequestFactoryImpl factory;
+	
+	@Autowired(required=true)
 	private javax.validation.Validator beanValidator;
 	
 	@Override
@@ -40,6 +44,14 @@ public class RequestValidatorImpl implements Validator
 		}
 		
 		RequestDetailImpl request = (RequestDetailImpl) target;
-		// TODO
+		
+		if(!OptionRequestFactoryImpl.isValidOptionRequestSnippet(request.getRequest()))
+		{
+			errors.rejectValue("request", "request.validation.snippet.pattern");
+			return;
+		}
+		
+		if(!this.factory.doesUnderlyingExist(request.getRequest()))
+			errors.rejectValue("request", "request.validation.underlying.Absent");
 	}
 }

@@ -66,6 +66,8 @@
 					<th><spring:message code="request.theta.label"/></th>
 					<th><spring:message code="request.vega.label"/></th>
 					<th><spring:message code="request.rho.label"/></th>
+					<th><spring:message code="request.timeValue.label"/></th>
+					<th><spring:message code="request.intrinsicValue.label"/></th>
 				</tr>					
 				<div class="row">
 					<c:forEach items="${requests}" var="request">
@@ -84,6 +86,8 @@
 						  		<td>${request.theta}</td>
 						  		<td>${request.vega}</td>
 						  		<td>${request.rho}</td>
+						  		<td>${request.intrinsicValue}</td>
+						  		<td>${request.timeValue}</td>
 							</tr>
 						</div>
 					</c:forEach>
