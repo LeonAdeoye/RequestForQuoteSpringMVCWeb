@@ -4,9 +4,10 @@ import com.leon.rfq.domains.RequestDetailImpl;
 
 public interface OptionRequestFactory
 {
-	RequestDetailImpl getNewInstance(String requestSnippet, int clientId,
+	RequestDetailImpl getNewInstance(String snippet, int clientId,
 			String bookCode, String savedByUser);
 
 	boolean parseRequest(String snippet, RequestDetailImpl parent);
-
+	
+	boolean doesUnderlyingExist(String snippet);
 }

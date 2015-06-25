@@ -27,6 +27,7 @@ public final class RequestDetailImpl
 	private boolean isOTC;
 	private StatusEnum status;
 	private String lastUpdatedBy;
+	private String underlyingDetails;
 
 	private int lotSize;
 	private int multiplier;
@@ -103,7 +104,18 @@ public final class RequestDetailImpl
 
 	private List<OptionDetailImpl> legs;
 
-	public RequestDetailImpl() {}
+	public RequestDetailImpl()
+	{
+		this.delta = BigDecimal.ZERO;
+		this.gamma = BigDecimal.ZERO;
+		this.vega = BigDecimal.ZERO;
+		this.theta = BigDecimal.ZERO;
+		this.premiumAmount = BigDecimal.ZERO;
+		this.intrinsicValue = BigDecimal.ZERO;
+		this.timeValue = BigDecimal.ZERO;
+		this.lambda = BigDecimal.ZERO;
+		this.rho = BigDecimal.ZERO;
+	}
 	
 	public void aggregate()
 	{
@@ -132,9 +144,27 @@ public final class RequestDetailImpl
 			
 			this.premiumAmount = this.getLegs().stream().map(OptionDetailImpl::getPremium)
 			.reduce(BigDecimal.ZERO, BigDecimal::add);
+			
+			this.lambda = this.getLegs().stream().map(OptionDetailImpl::getLambda)
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
 		}
 	}
 	
+	public String getUnderlyingDetails()
+	{
+		return this.underlyingDetails;
+	}
+
+	public void setUnderlyingDetails(String underlyingDetails)
+	{
+		this.underlyingDetails = underlyingDetails;
+	}
+
+	public void setOTC(boolean isOTC)
+	{
+		this.isOTC = isOTC;
+	}
+
 	public void setLegs(List<OptionDetailImpl> legs)
 	{
 		this.legs = legs;
@@ -798,6 +828,8 @@ public final class RequestDetailImpl
 		builder.append(this.status);
 		builder.append(", lastUpdatedBy=");
 		builder.append(this.lastUpdatedBy);
+		builder.append(", underlyingDetails=");
+		builder.append(this.underlyingDetails);
 		builder.append(", lotSize=");
 		builder.append(this.lotSize);
 		builder.append(", multiplier=");
@@ -984,7 +1016,6 @@ public final class RequestDetailImpl
 		result = (prime * result) + ((this.lambda == null) ? 0 : this.lambda.hashCode());
 		result = (prime * result)
 				+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
-		result = (prime * result) + ((this.legs == null) ? 0 : this.legs.hashCode());
 		result = (prime * result) + this.lotSize;
 		result = (prime * result) + this.multiplier;
 		result = (prime
@@ -1055,6 +1086,10 @@ public final class RequestDetailImpl
 				+ ((this.tradeDate == null) ? 0 : this.tradeDate.hashCode());
 		result = (prime * result)
 				+ ((this.traderComment == null) ? 0 : this.traderComment.hashCode());
+		result = (prime
+				* result)
+				+ ((this.underlyingDetails == null) ? 0 : this.underlyingDetails
+						.hashCode());
 		result = (prime * result) + ((this.vega == null) ? 0 : this.vega.hashCode());
 		result = (prime * result)
 				+ ((this.vegaNotional == null) ? 0 : this.vegaNotional.hashCode());
@@ -1349,16 +1384,6 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
-		if (this.legs == null)
-		{
-			if (other.legs != null)
-			{
-				return false;
-			}
-		} else if (!this.legs.equals(other.legs))
-		{
-			return false;
-		}
 		if (this.lotSize != other.lotSize)
 		{
 			return false;
@@ -1628,6 +1653,16 @@ public final class RequestDetailImpl
 				return false;
 			}
 		} else if (!this.traderComment.equals(other.traderComment))
+		{
+			return false;
+		}
+		if (this.underlyingDetails == null)
+		{
+			if (other.underlyingDetails != null)
+			{
+				return false;
+			}
+		} else if (!this.underlyingDetails.equals(other.underlyingDetails))
 		{
 			return false;
 		}

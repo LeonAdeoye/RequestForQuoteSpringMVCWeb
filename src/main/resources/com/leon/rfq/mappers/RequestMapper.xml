@@ -66,6 +66,10 @@
 		<result property="expiryDate" column="expiryDate"/>
 		<result property="pickedUpBy" column="pickedUpBy"/>		
 		<result property="lastUpdatedBy" column="savedBy"/>
+		<result property="timeValue" column="timeValue"/>
+		<result property="intrinsicValue" column="intrinsicValue"/>
+		<result property="lambda" column="lambda"/>
+		<result property="underlyingDetails" column="underlyingDetails"/>
 	</resultMap>
 		
  	<insert id="insert" parameterType="RequestDetailImpl" useGeneratedKeys="true" keyProperty="identifier" >
@@ -128,7 +132,11 @@
 	    bidPremiumPercentage,				
 		tradeDate,
 		expiryDate, 
-		pickedUpBy, 
+		pickedUpBy,
+		timeValue,
+		intrinsicValue,
+		lambda,
+		underlyingDetails, 
 		savedBy)
 		
 		VALUES(
@@ -189,7 +197,11 @@
 		#{bidPremiumPercentage},																		
 		#{tradeDate},
 		#{expiryDate},		 
-		#{pickedUpBy}, 
+		#{pickedUpBy},
+		#{timeValue},
+		#{intrinsicValue},
+		#{lambda},
+		#{underlyingDetails},
 		#{lastUpdatedBy})
 	</insert>
 	

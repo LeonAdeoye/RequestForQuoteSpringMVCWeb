@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,26 +56,26 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	/**
 	 * Creates an instance of RequestDetailImpl using the parameters passed.
 	 * 
-	 * @param requestSnippet 	the snippet to be used to create the RequestDetailImpl instance.
+	 * @param snippet 		the snippet to be used to create the RequestDetailImpl instance.
 	 * @param clientId			the client ID of the RequestDetailImpl instance to be created.
 	 * @param bookCode			the book code of the RequestDetailImpl instance to be created.
 	 * @param savedByUser		the user saving the new instance.
 	 * @return	the new instance.
 	 */
 	@Override
-	public RequestDetailImpl getNewInstance(String requestSnippet, int clientId, String bookCode, String savedByUser)
+	public RequestDetailImpl getNewInstance(String snippet, int clientId, String bookCode, String savedByUser)
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
 		
-		if(!isValidOptionRequestSnippet(requestSnippet))
+		if(!isValidOptionRequestSnippet(snippet))
 		{
 			if(logger.isErrorEnabled())
-				logger.error("requestSnippet argument is invalid");
+				logger.error("snippet argument is invalid");
 			
-			throw new IllegalArgumentException("requestSnippet argument is invalid");
+			throw new IllegalArgumentException("snippet argument is invalid");
 		}
 		
-		if(!parseRequest(requestSnippet, newRequest))
+		if(!parseRequest(snippet, newRequest))
 		{
 			if(logger.isErrorEnabled())
 				logger.error("failed to parse snippet and create new request");
@@ -85,7 +86,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 		newRequest.setBookCode(bookCode);
 		newRequest.setClientId(clientId);
 		newRequest.setLastUpdatedBy(savedByUser);
-        newRequest.setRequest(requestSnippet);
+        newRequest.setRequest(snippet);
         newRequest.setStatus(StatusEnum.PENDING);
         newRequest.setIdentifier(-1);
         newRequest.setClientId(clientId);
@@ -110,6 +111,11 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         newRequest.setSalesCreditPercentage(new BigDecimal("2"));
         newRequest.setPremiumSettlementDaysOverride(1);
         newRequest.setPremiumSettlementDate(LocalDate.now().plusDays(newRequest.getPremiumSettlementDaysOverride()));
+        
+        if(newRequest.getLegs() !=null)
+	        newRequest.setUnderlyingDetails(newRequest.getLegs().stream().map(leg ->
+	        leg.getUnderlyingRIC() + ":" + leg.getUnderlyingPrice())
+	        .distinct().sorted().collect(Collectors.joining(",", "[", "]")));
 		
         return newRequest;
 	}
@@ -139,6 +145,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 * @return	true if the underlyings exist otherwise false;
 	 */
 	// TODO write test cases
+	@Override
 	public boolean doesUnderlyingExist(String snippet)
 	{
     	String[] underlyings = snippet.split(" ")[3].split(",");

@@ -109,7 +109,7 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 	{
 		catchException(this.optionRequestFactory).getNewInstance("invalidSnippet", 1, "AB01", "testuser");
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
+		assertEquals("Exception message should match", caughtException().getMessage(), "snippet argument is invalid");
 	}
 }
 

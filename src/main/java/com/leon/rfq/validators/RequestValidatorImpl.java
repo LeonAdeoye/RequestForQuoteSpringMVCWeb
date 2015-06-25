@@ -10,6 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.products.OptionRequestFactoryImpl;
 import com.leon.rfq.services.RequestService;
 
@@ -20,7 +21,7 @@ public class RequestValidatorImpl implements Validator
 	private RequestService requestService;
 	
 	@Autowired(required=true)
-	private OptionRequestFactoryImpl factory;
+	private OptionRequestFactory factory;
 	
 	@Autowired(required=true)
 	private javax.validation.Validator beanValidator;
@@ -52,6 +53,6 @@ public class RequestValidatorImpl implements Validator
 		}
 		
 		if(!this.factory.doesUnderlyingExist(request.getRequest()))
-			errors.rejectValue("request", "request.validation.underlying.Absent");
+			errors.rejectValue("request", "request.validation.underlying.absent");
 	}
 }

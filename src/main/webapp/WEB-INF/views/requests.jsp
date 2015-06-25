@@ -68,6 +68,7 @@
 					<th><spring:message code="request.rho.label"/></th>
 					<th><spring:message code="request.timeValue.label"/></th>
 					<th><spring:message code="request.intrinsicValue.label"/></th>
+					<th><spring:message code="request.underlyingsDetails.label"/></th>
 				</tr>					
 				<div class="row">
 					<c:forEach items="${requests}" var="request">
@@ -88,6 +89,7 @@
 						  		<td>${request.rho}</td>
 						  		<td>${request.intrinsicValue}</td>
 						  		<td>${request.timeValue}</td>
+						  		<td>${request.underlyingDetails}</td>
 							</tr>
 						</div>
 					</c:forEach>

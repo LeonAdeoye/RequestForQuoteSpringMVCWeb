@@ -41,6 +41,7 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 			model.configure(extractModelInputs(leg));
 			extractModelOutputs(model.calculate(), leg);
 		}
+		
 		request.aggregate();
 	}
 	
