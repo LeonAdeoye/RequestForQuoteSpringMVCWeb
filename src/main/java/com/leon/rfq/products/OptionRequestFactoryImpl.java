@@ -177,7 +177,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 */
     public static boolean isEuropeanOption(String snippet)
     {
-        Pattern euRegex = Pattern.compile(RegexConstants.REQUEST_PATTERN);
+        Pattern euRegex = Pattern.compile(RegexConstants.EUROPEAN_OPTION_PATTERN);
         Matcher euMatcher = euRegex.matcher(snippet);
        
         return euMatcher.matches();
@@ -353,7 +353,7 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             String quantityGroup = detailMatcher.group("quantity");
             int quantity = (quantityGroup != null) ? Integer.parseInt(detailMatcher.group("quantity")) : 1;
             
-            boolean isCall = detailMatcher.group("type").equals("C");
+            boolean isCall = detailMatcher.group("type").toUpperCase().equals("C");
 
             optionTypes.add(new OptionDetailImpl(side, quantity, isCall, ++legCount, isEuropean, parent));
 

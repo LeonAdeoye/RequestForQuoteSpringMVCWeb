@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
@@ -28,16 +29,16 @@ public class BlackScholesModelImplTest extends AbstractJUnit4SpringContextTests
 		inputs.put(OptionConstants.TIME_TO_EXPIRY, BigDecimal.valueOf(1));
 		inputs.put(OptionConstants.IS_CALL_OPTION, BigDecimal.valueOf(1));
 		
-		Map<String, BigDecimal> outputs = new HashMap<>();
-		outputs.put(OptionConstants.DELTA, BigDecimal.valueOf(0.4299));
-		outputs.put(OptionConstants.GAMMA, BigDecimal.valueOf(0.0218));
-		outputs.put(OptionConstants.VEGA, BigDecimal.valueOf(0.3535));
-		outputs.put(OptionConstants.TIME_VALUE, BigDecimal.valueOf(5.1007));
-		outputs.put(OptionConstants.THEORETICAL_VALUE, BigDecimal.valueOf(5.1007));
-		outputs.put(OptionConstants.INTRINSIC_VALUE, BigDecimal.valueOf(0.0000).setScale(4));
-		outputs.put(OptionConstants.THETA, BigDecimal.valueOf(-0.0521));
-		outputs.put(OptionConstants.RHO, BigDecimal.valueOf(0.3359));
-		outputs.put(OptionConstants.LAMBDA, BigDecimal.valueOf(7.5848));
+		Map<String, Optional<BigDecimal>> outputs = new HashMap<>();
+		outputs.put(OptionConstants.DELTA, Optional.of(BigDecimal.valueOf(0.4299)));
+		outputs.put(OptionConstants.GAMMA, Optional.of(BigDecimal.valueOf(0.0218)));
+		outputs.put(OptionConstants.VEGA, Optional.of(BigDecimal.valueOf(0.3535)));
+		outputs.put(OptionConstants.TIME_VALUE, Optional.of(BigDecimal.valueOf(5.1007)));
+		outputs.put(OptionConstants.THEORETICAL_VALUE, Optional.of(BigDecimal.valueOf(5.1007)));
+		outputs.put(OptionConstants.INTRINSIC_VALUE, Optional.of(BigDecimal.valueOf(0.0000).setScale(4)));
+		outputs.put(OptionConstants.THETA, Optional.of(BigDecimal.valueOf(-0.0521)));
+		outputs.put(OptionConstants.RHO, Optional.of(BigDecimal.valueOf(0.3359)));
+		outputs.put(OptionConstants.LAMBDA, Optional.of(BigDecimal.valueOf(7.5848)));
 				
 		PricingModel model = new BlackScholesModelImpl();
 		model.configure(inputs);

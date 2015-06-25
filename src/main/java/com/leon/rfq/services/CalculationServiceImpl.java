@@ -3,6 +3,7 @@ package com.leon.rfq.services;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 	private CalculationServiceImpl() {}
 	
 	// TODO - should all of these methods be synchronized
-	public synchronized static Map<String, BigDecimal> calculate(PricingModel model, Map<String, BigDecimal> inputs)
+	public synchronized static Map<String, Optional<BigDecimal>> calculate(PricingModel model, Map<String, BigDecimal> inputs)
 	{
 		model.configure(inputs);
 		return model.calculate();
@@ -63,26 +64,25 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 		inputs.put(OptionConstants.IS_EUROPEAN_OPTION, leg.getIsEuropean() ? BigDecimal.valueOf(1) : BigDecimal.valueOf(0));
 		
 		if(logger.isDebugEnabled())
-			logger.debug(inputs.toString());
+			logger.debug("Option model input: " + inputs.toString());
 		
 		return inputs;
 	}
 	
-	public synchronized static void extractModelOutputs(Map<String, BigDecimal> outputs, OptionDetailImpl leg)
+	public synchronized static void extractModelOutputs(Map<String, Optional<BigDecimal>> outputs, OptionDetailImpl leg)
 	{
-		leg.setPremium(outputs.get(OptionConstants.THEORETICAL_VALUE));
-		leg.setDelta(outputs.get(OptionConstants.DELTA));
-		leg.setGamma(outputs.get(OptionConstants.GAMMA));
-		leg.setVega(outputs.get(OptionConstants.VEGA));
-		leg.setTheta(outputs.get(OptionConstants.THETA));
-		leg.setRho(outputs.get(OptionConstants.RHO));
-		leg.setIntrinsicValue(outputs.get(OptionConstants.INTRINSIC_VALUE));
-		leg.setLambda(outputs.get(OptionConstants.LAMBDA));
-		leg.setTimeValue(outputs.get(OptionConstants.TIME_VALUE));
+		leg.setPremium(outputs.get(OptionConstants.THEORETICAL_VALUE).orElse(BigDecimal.ZERO));
+		leg.setDelta(outputs.get(OptionConstants.DELTA).orElse(BigDecimal.ZERO));
+		leg.setGamma(outputs.get(OptionConstants.GAMMA).orElse(BigDecimal.ZERO));
+		leg.setVega(outputs.get(OptionConstants.VEGA).orElse(BigDecimal.ZERO));
+		leg.setTheta(outputs.get(OptionConstants.THETA).orElse(BigDecimal.ZERO));
+		leg.setRho(outputs.get(OptionConstants.RHO).orElse(BigDecimal.ZERO));
+		leg.setIntrinsicValue(outputs.get(OptionConstants.INTRINSIC_VALUE).orElse(BigDecimal.ZERO));
+		leg.setLambda(outputs.get(OptionConstants.LAMBDA).orElse(BigDecimal.ZERO));
+		leg.setTimeValue(outputs.get(OptionConstants.TIME_VALUE).orElse(BigDecimal.ZERO));
 		
 		if(logger.isDebugEnabled())
-			logger.debug(outputs.toString());
-		
+			logger.debug("Option model outputs: " + outputs.toString());
 	}
 	
 	

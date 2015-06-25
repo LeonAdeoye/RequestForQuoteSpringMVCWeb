@@ -4,6 +4,7 @@ import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,23 +201,23 @@ public class BlackScholesModelImpl implements PricingModel
 		}
 
 		@Override
-		public Map<String, BigDecimal> calculate()
+		public Map<String, Optional<BigDecimal>> calculate()
 		{
 			try
 			{
-				Map<String, BigDecimal> result = new HashMap<>();
+				Map<String, Optional<BigDecimal>> result = new HashMap<>();
 				
 				calculateSeedValues();
 				
-				result.put(OptionConstants.THEORETICAL_VALUE, calculateTheoreticalValue());
-				result.put(OptionConstants.INTRINSIC_VALUE, calculateIntrinsicValue());
-				result.put(OptionConstants.TIME_VALUE, calculateTimeValue());
-				result.put(OptionConstants.DELTA, calculateDelta());
-				result.put(OptionConstants.GAMMA, calculateGamma());
-				result.put(OptionConstants.VEGA, calculateVega());
-				result.put(OptionConstants.THETA, calculateTheta());
-				result.put(OptionConstants.RHO, calculateRho());
-				result.put(OptionConstants.LAMBDA, calculateLambda());
+				result.put(OptionConstants.THEORETICAL_VALUE, Optional.ofNullable(calculateTheoreticalValue()));
+				result.put(OptionConstants.INTRINSIC_VALUE, Optional.ofNullable(calculateIntrinsicValue()));
+				result.put(OptionConstants.TIME_VALUE, Optional.ofNullable(calculateTimeValue()));
+				result.put(OptionConstants.DELTA, Optional.ofNullable(calculateDelta()));
+				result.put(OptionConstants.GAMMA, Optional.ofNullable(calculateGamma()));
+				result.put(OptionConstants.VEGA, Optional.ofNullable(calculateVega()));
+				result.put(OptionConstants.THETA, Optional.ofNullable(calculateTheta()));
+				result.put(OptionConstants.RHO, Optional.ofNullable(calculateRho()));
+				result.put(OptionConstants.LAMBDA, Optional.ofNullable(calculateLambda()));
 				
 				return result;
 			}
@@ -225,7 +226,7 @@ public class BlackScholesModelImpl implements PricingModel
 				logger.isErrorEnabled();
 					logger.error("Failed to complete Black and Scholes calculation using following inputs: " + this);
 				
-				return new HashMap<String, BigDecimal>();
+				return new HashMap<String, Optional<BigDecimal>>();
 			}
 		}
 
