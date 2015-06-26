@@ -1,7 +1,5 @@
 package com.leon.rfq.simulators;
 
-import java.math.BigDecimal;
-
 public interface PriceSimulator
 {
 	void initialize();
@@ -16,5 +14,5 @@ public interface PriceSimulator
 	void awakenAll();
 	void awaken(String underlyingRIC);
 	
-	void add(String underlyingRIC, BigDecimal priceMean, BigDecimal priceVariance, BigDecimal priceSpread);
+	void add(String underlyingRIC);
 }

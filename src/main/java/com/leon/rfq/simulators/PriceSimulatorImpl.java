@@ -21,6 +21,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.domains.PriceDetailImpl;
+import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
 import com.leon.rfq.services.UnderlyingService;
 
@@ -90,12 +91,10 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	
 	private void prime()
 	{
-
 		if(logger.isInfoEnabled())
 			logger.info("Priming price simulator cache...");
 		
-		this.underlyingService.getAllFromCacheOnly().forEach(underlying -> add(underlying.getRic(),
-				underlying.getReferencePrice(), underlying.getSimulationPriceVariance(), underlying.getSpread()));
+		this.underlyingService.getAllFromCacheOnly().forEach(underlying -> add(underlying.getRic()));
 	}
 
 	@Override
@@ -167,7 +166,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		switch(requestEvent.getRequestType())
 		{
 			case ADD_UNDERLYING:
-				add(requestEvent.getUnderlyingRIC(), requestEvent.getPriceMean(), requestEvent.getPriceVariance(), requestEvent.getPriceSpread());
+				add(requestEvent.getUnderlyingRIC());
 				break;
 			case REMOVE_UNDERLYING:
 				remove(requestEvent.getUnderlyingRIC());
@@ -211,14 +210,10 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	 * Adds the underlying product using the underlying RIC as the lookup key to the price publishing map.
 	 *
 	 * @param  underlyingRIC	the RIC of the underlying product used as key to add it.
-	 * @param  priceMean		the mean price used random price generator with normal distribution.
-	 * @param  priceVariance	the variance used random price generator with normal distribution.
-	 * @param  priceSpread		the spread between the ask and bid prices.
-	 * @throws					IllegalArgumentException if underlyingRIC parameter is an empty or null string ||
-	 * 							priceMean <= 0 || priceVariance <= 0 || priceSpread <= 0.
+	 * @throws					IllegalArgumentException if underlyingRIC parameter is an empty or null string.
 	 */
 	@Override
-	public void add(String underlyingRIC, BigDecimal priceMean, BigDecimal priceVariance, BigDecimal priceSpread)
+	public void add(String underlyingRIC)
 	{
 		if((underlyingRIC == null) || underlyingRIC.isEmpty())
 		{
@@ -227,36 +222,20 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			
 			throw new IllegalArgumentException("underlyingRIC argument is invalid");
 		}
-
-		if(priceMean.compareTo(BigDecimal.ZERO) <= 0)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("priceMean argument is invalid");
-			
-			throw new IllegalArgumentException("priceMean argument is invalid");
-		}
-
-		if(priceVariance.compareTo(BigDecimal.ZERO) <= 0)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("priceVariance argument is invalid");
-			
-			throw new IllegalArgumentException("priceVariance argument is invalid");
-		}
 		
-		if(priceSpread.compareTo(BigDecimal.ZERO) <= 0)
+		UnderlyingDetailImpl underlying = this.underlyingService.get(underlyingRIC);
+		if(underlying != null)
 		{
-			if(logger.isErrorEnabled())
-				logger.error("priceSpread argument is invalid");
+			BigDecimal priceMean = underlying.getReferencePrice();
+			BigDecimal priceVariance = underlying.getSimulationPriceVariance();
+			BigDecimal priceSpread = underlying.getSpread();
 			
-			throw new IllegalArgumentException("priceSpread argument is invalid");
+			this.priceMap.put(underlyingRIC, new PriceGeneratorImpl(priceMean, priceVariance, priceSpread));
+			
+			if(logger.isInfoEnabled())
+				logger.info("Added underlying " + underlyingRIC + " to the price publishing map with price mean: " +
+						priceMean + ", priceVariance: " + priceVariance + ", and priceSpread: " + priceSpread);
 		}
-		
-		this.priceMap.put(underlyingRIC, new PriceGeneratorImpl(priceMean, priceVariance, priceSpread));
-
-		if(logger.isInfoEnabled())
-			logger.info("Added underlying " + underlyingRIC + " to the price publishing map with price mean: " +
-					priceMean + ", priceVariance: " + priceVariance + ", and priceSpread: " + priceSpread);
 	}
 
 	/**

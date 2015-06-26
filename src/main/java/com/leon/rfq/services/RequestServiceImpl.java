@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
 import com.leon.rfq.events.PriceUpdateEvent;
@@ -136,9 +135,6 @@ ApplicationListener<PriceUpdateEvent>
 	private void clearCache()
 	{
 		this.requests.clear();
-		
-		this.applicationEventPublisher.publishEvent(
-				new PriceSimulatorRequestEvent(this, PriceSimulatorRequestEnum.REMOVE_ALL));
 	}
 
 	/**
@@ -170,16 +166,8 @@ ApplicationListener<PriceUpdateEvent>
 					this.requests.put(request.getIdentifier(), request);
 					
 					for(OptionDetailImpl leg :  request.getLegs())
-					{
-						UnderlyingDetailImpl underlying = this.underlyingService.get(leg.getUnderlyingRIC());
-						
 						this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
-								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING,
-										leg.getUnderlyingRIC(),
-										underlying.getReferencePrice(),
-										underlying.getSimulationPriceVariance(),
-										underlying.getSpread()));
-					}
+								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
 				}
 				
 				return result;
@@ -228,16 +216,8 @@ ApplicationListener<PriceUpdateEvent>
 						continue;
 					
 					for(OptionDetailImpl leg :  request.getLegs())
-					{
-						UnderlyingDetailImpl underlying = this.underlyingService.get(leg.getUnderlyingRIC());
-						
 						this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
-								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING,
-										leg.getUnderlyingRIC(),
-										underlying.getReferencePrice(),
-										underlying.getSimulationPriceVariance(),
-										underlying.getSpread()));
-					}
+								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
 				}
 				// TODO - change back top "== 0"
 				return result;
