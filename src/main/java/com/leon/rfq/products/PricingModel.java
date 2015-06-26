@@ -9,5 +9,5 @@ public interface PricingModel
 {
 	void configure(Map<String, BigDecimal> inputs);
 	Map<String, Optional<BigDecimal>> calculate();
-	Map<String, BigDecimal> calculate(List<String> listOfRequiredOutputs);
+	Map<String, Optional<BigDecimal>> calculate(List<String> listOfRequiredOutputs);
 }

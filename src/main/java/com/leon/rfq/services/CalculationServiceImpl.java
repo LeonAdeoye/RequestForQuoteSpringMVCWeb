@@ -28,14 +28,43 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 	// TODO - should all of these methods be synchronized
 	public synchronized static Map<String, Optional<BigDecimal>> calculate(PricingModel model, Map<String, BigDecimal> inputs)
 	{
+		if(model == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("model is an invalid argument");
+			
+			throw new NullPointerException("model is an invalid argument");
+		}
+		
+		if(inputs == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("inputs is an invalid argument");
+			
+			throw new NullPointerException("inputs is an invalid argument");
+		}
+		
 		model.configure(inputs);
 		return model.calculate();
 	}
 	
 	public synchronized static void calculate(PricingModel model, RequestDetailImpl request)
 	{
-		if((request == null) || (request.getLegs() == null))
-			return;
+		if(request == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("request is an invalid argument");
+			
+			throw new NullPointerException("request is an invalid argument");
+		}
+		
+		if(model == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("model is an invalid argument");
+			
+			throw new IllegalArgumentException("model is an invalid argument");
+		}
 		
 		for(OptionDetailImpl leg : request.getLegs())
 		{
@@ -43,17 +72,85 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 			extractModelOutputs(model.calculate(), leg);
 		}
 		
-		request.aggregate();
+		aggregate(request);
 	}
+	
+	public synchronized static void aggregate(RequestDetailImpl request)
+	{
+		if(request == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("request is an invalid argument");
+			
+			throw new NullPointerException("request is an invalid argument");
+		}
+		
+		if((request.getLegs() != null) || (request.getLegs().size() != 0))
+		{
+			request.setDelta(request.getLegs().stream().map(OptionDetailImpl::getDelta)
+			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			
+			request.setGamma(request.getLegs().stream().map(OptionDetailImpl::getGamma)
+			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			
+			request.setVega(request.getLegs().stream().map(OptionDetailImpl::getVega)
+			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			
+			request.setTheta(request.getLegs().stream().map(OptionDetailImpl::getTheta)
+			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			
+			request.setRho(request.getLegs().stream().map(OptionDetailImpl::getRho)
+			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			
+			request.setIntrinsicValue(request.getLegs().stream().map(OptionDetailImpl::getIntrinsicValue)
+			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			
+			request.setTimeValue(request.getLegs().stream().map(OptionDetailImpl::getTimeValue)
+			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			
+			request.setPremiumAmount(request.getLegs().stream().map(OptionDetailImpl::getPremium)
+			.reduce(BigDecimal.ZERO, BigDecimal::add));
+		}
+		
+		if((request.getLegs() != null) && (request.getLegs().size() == 1))
+		{
+			request.setLambda(request.getLegs().get(0).getLambda());
+		}
+	}
+	
 	
 	public synchronized static void calculate(PricingModel model, OptionDetailImpl leg)
 	{
+		if(model == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("model is an invalid argument");
+			
+			throw new NullPointerException("model is an invalid argument");
+		}
+		
+		if(leg == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("leg is an invalid argument");
+			
+			throw new NullPointerException("leg is an invalid argument");
+		}
+		
 		model.configure(extractModelInputs(leg));
 		extractModelOutputs(model.calculate(), leg);
 	}
 	
 	public synchronized static Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg)
 	{
+		if(leg == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("leg is an invalid argument");
+			
+			throw new NullPointerException("leg is an invalid argument");
+		}
+		
 		Map<String, BigDecimal> inputs = new HashMap<>();
 		inputs.put(OptionConstants.UNDERLYING_PRICE, leg.getUnderlyingPrice());
 		inputs.put(OptionConstants.STRIKE, leg.getStrike());
@@ -71,6 +168,22 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 	
 	public synchronized static void extractModelOutputs(Map<String, Optional<BigDecimal>> outputs, OptionDetailImpl leg)
 	{
+		if(leg == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("leg is an invalid argument");
+			
+			throw new NullPointerException("leg is an invalid argument");
+		}
+		
+		if(outputs == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("outputs is an invalid argument");
+			
+			throw new NullPointerException("outputs is an invalid argument");
+		}
+		
 		leg.setPremium(outputs.get(OptionConstants.THEORETICAL_VALUE).orElse(BigDecimal.ZERO));
 		leg.setDelta(outputs.get(OptionConstants.DELTA).orElse(BigDecimal.ZERO));
 		leg.setGamma(outputs.get(OptionConstants.GAMMA).orElse(BigDecimal.ZERO));
@@ -86,18 +199,42 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 	}
 	
 	
-	public synchronized static Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model, Map<String, BigDecimal> inputs,
-			RangeParameters params)
+	public synchronized static Map<BigDecimal, Map<String, Optional<BigDecimal>>> calculateRange(PricingModel model,
+			Map<String, BigDecimal> inputs, RangeParameters rangeParameters)
 	{
-		Map<BigDecimal, Map<String, BigDecimal>> result = new TreeMap<>();
-		
-		for(BigDecimal value = params.getStartValue();
-				value.compareTo(params.getEndValue()) <= 0;
-				value = value.add(params.getIncrement()))
+		if(model == null)
 		{
-			inputs.put(params.getRangeVariableName(), value);
+			if(logger.isErrorEnabled())
+				logger.error("model is an invalid argument");
+			
+			throw new NullPointerException("model is an invalid argument");
+		}
+		
+		if(inputs == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("inputs is an invalid argument");
+			
+			throw new NullPointerException("inputs is an invalid argument");
+		}
+		
+		if(rangeParameters == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("rangeParameters is an invalid argument");
+			
+			throw new NullPointerException("rangeParameters is an invalid argument");
+		}
+		
+		Map<BigDecimal, Map<String, Optional<BigDecimal>>> result = new TreeMap<>();
+		
+		for(BigDecimal rangeValue = rangeParameters.getStartValue();
+				rangeValue.compareTo(rangeParameters.getEndValue()) <= 0;
+				rangeValue = rangeValue.add(rangeParameters.getIncrement()))
+		{
+			inputs.put(rangeParameters.getRangeVariableName(), rangeValue);
 			model.configure(inputs);
-			result.put(value, model.calculate(params.getListOfRequiredOutput()));
+			result.put(rangeValue, model.calculate(rangeParameters.getListOfRequiredOutput()));
 		}
 		return result;
 	}

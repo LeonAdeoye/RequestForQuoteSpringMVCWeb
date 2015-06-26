@@ -231,11 +231,11 @@ public class BlackScholesModelImpl implements PricingModel
 		}
 
 		@Override
-		public Map<String, BigDecimal> calculate(List<String> listOfRequiredOutputs)
+		public Map<String, Optional<BigDecimal>> calculate(List<String> listOfRequiredOutputs)
 		{
 			try
 			{
-				Map<String, BigDecimal> result = new HashMap<>();
+				Map<String, Optional<BigDecimal>> result = new HashMap<>();
 				
 				calculateSeedValues();
 				
@@ -243,55 +243,55 @@ public class BlackScholesModelImpl implements PricingModel
 				{
 					if(output.equals(OptionConstants.THEORETICAL_VALUE))
 					{
-						result.put(OptionConstants.THEORETICAL_VALUE, calculateTheoreticalValue());
+						result.put(OptionConstants.THEORETICAL_VALUE, Optional.ofNullable(calculateTheoreticalValue()));
 						continue;
 					}
 					
 					if(output.equals(OptionConstants.INTRINSIC_VALUE))
 					{
-						result.put(OptionConstants.INTRINSIC_VALUE, calculateIntrinsicValue());
+						result.put(OptionConstants.INTRINSIC_VALUE, Optional.ofNullable(calculateIntrinsicValue()));
 						continue;
 					}
 					
 					if(output.equals(OptionConstants.TIME_VALUE))
 					{
-						result.put(OptionConstants.TIME_VALUE, calculateTimeValue());
+						result.put(OptionConstants.TIME_VALUE, Optional.ofNullable(calculateTimeValue()));
 						continue;
 					}
 					
 					if(output.equals(OptionConstants.DELTA))
 					{
-						result.put(OptionConstants.DELTA, calculateDelta());
+						result.put(OptionConstants.DELTA, Optional.ofNullable(calculateDelta()));
 						continue;
 					}
 
 					if(output.equals(OptionConstants.GAMMA))
 					{
-						result.put(OptionConstants.GAMMA, calculateGamma());
+						result.put(OptionConstants.GAMMA, Optional.ofNullable(calculateGamma()));
 						continue;
 					}
 					
 					if(output.equals(OptionConstants.VEGA))
 					{
-						result.put(OptionConstants.VEGA, calculateVega());
+						result.put(OptionConstants.VEGA, Optional.ofNullable(calculateVega()));
 						continue;
 					}
 					
 					if(output.equals(OptionConstants.THETA))
 					{
-						result.put(OptionConstants.THETA, calculateTheta());
+						result.put(OptionConstants.THETA, Optional.ofNullable(calculateTheta()));
 						continue;
 					}
 					
 					if(output.equals(OptionConstants.RHO))
 					{
-						result.put(OptionConstants.RHO, calculateRho());
+						result.put(OptionConstants.RHO, Optional.ofNullable(calculateRho()));
 						continue;
 					}
 										
 					if(output.equals(OptionConstants.LAMBDA))
 					{
-						result.put(OptionConstants.LAMBDA, calculateLambda());
+						result.put(OptionConstants.LAMBDA, Optional.ofNullable(calculateLambda()));
 						continue;
 					}
 				}
@@ -303,7 +303,7 @@ public class BlackScholesModelImpl implements PricingModel
 				logger.isErrorEnabled();
 					logger.error("Failed to complete Black and Scholes calculation using following inputs: " + this);
 				
-				return new HashMap<String, BigDecimal>();
+				return new HashMap<String, Optional<BigDecimal>>();
 			}
 		}
 

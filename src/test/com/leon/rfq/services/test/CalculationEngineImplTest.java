@@ -1,4 +1,4 @@
-package com.leon.rfq.product.test;
+package com.leon.rfq.services.test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
