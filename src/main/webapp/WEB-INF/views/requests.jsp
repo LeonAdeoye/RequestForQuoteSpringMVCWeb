@@ -87,8 +87,8 @@
 						  		<td>${request.theta}</td>
 						  		<td>${request.vega}</td>
 						  		<td>${request.rho}</td>
-						  		<td>${request.intrinsicValue}</td>
 						  		<td>${request.timeValue}</td>
+						  		<td>${request.intrinsicValue}</td>						  		
 						  		<td>${request.underlyingDetails}</td>
 							</tr>
 						</div>

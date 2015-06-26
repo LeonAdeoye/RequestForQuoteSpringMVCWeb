@@ -21,6 +21,7 @@ public class BlackScholesModelImplTest extends AbstractJUnit4SpringContextTests
 	@Test
 	public void calculate_ValidInputs_ValidOutputs() throws Exception
 	{
+		// Arrange
 		Map<String, BigDecimal> inputs = new HashMap<>();
 		inputs.put(OptionConstants.UNDERLYING_PRICE, BigDecimal.valueOf(90));
 		inputs.put(OptionConstants.STRIKE, BigDecimal.valueOf(100));
@@ -29,26 +30,40 @@ public class BlackScholesModelImplTest extends AbstractJUnit4SpringContextTests
 		inputs.put(OptionConstants.TIME_TO_EXPIRY, BigDecimal.valueOf(1));
 		inputs.put(OptionConstants.IS_CALL_OPTION, BigDecimal.valueOf(1));
 		
-		Map<String, Optional<BigDecimal>> outputs = new HashMap<>();
-		outputs.put(OptionConstants.DELTA, Optional.of(BigDecimal.valueOf(0.4299)));
-		outputs.put(OptionConstants.GAMMA, Optional.of(BigDecimal.valueOf(0.0218)));
-		outputs.put(OptionConstants.VEGA, Optional.of(BigDecimal.valueOf(0.3535)));
-		outputs.put(OptionConstants.TIME_VALUE, Optional.of(BigDecimal.valueOf(5.1007)));
-		outputs.put(OptionConstants.THEORETICAL_VALUE, Optional.of(BigDecimal.valueOf(5.1007)));
-		outputs.put(OptionConstants.INTRINSIC_VALUE, Optional.of(BigDecimal.valueOf(0.0000).setScale(4)));
-		outputs.put(OptionConstants.THETA, Optional.of(BigDecimal.valueOf(-0.0521)));
-		outputs.put(OptionConstants.RHO, Optional.of(BigDecimal.valueOf(0.3359)));
-		outputs.put(OptionConstants.LAMBDA, Optional.of(BigDecimal.valueOf(7.5848)));
-				
-		PricingModel model = new BlackScholesModelImpl();
-		model.configure(inputs);
+		Map<String, Optional<BigDecimal>> expectedOutput = new HashMap<>();
+		expectedOutput.put(OptionConstants.DELTA, Optional.of(BigDecimal.valueOf(0.4299)));
+		expectedOutput.put(OptionConstants.GAMMA, Optional.of(BigDecimal.valueOf(0.0218)));
+		expectedOutput.put(OptionConstants.VEGA, Optional.of(BigDecimal.valueOf(0.3535)));
+		expectedOutput.put(OptionConstants.TIME_VALUE, Optional.of(BigDecimal.valueOf(5.1007)));
+		expectedOutput.put(OptionConstants.THEORETICAL_VALUE, Optional.of(BigDecimal.valueOf(5.1007)));
+		expectedOutput.put(OptionConstants.INTRINSIC_VALUE, Optional.of(BigDecimal.valueOf(0).setScale(4)));
+		expectedOutput.put(OptionConstants.THETA, Optional.of(BigDecimal.valueOf(-0.0521)));
+		expectedOutput.put(OptionConstants.RHO, Optional.of(BigDecimal.valueOf(0.3359)));
+		expectedOutput.put(OptionConstants.LAMBDA, Optional.of(BigDecimal.valueOf(7.5854)));
 		
-		assertEquals("Output should match expectations", outputs, model.calculate());
+		PricingModel model = new BlackScholesModelImpl();
+		
+		//Act
+		model.configure(inputs);
+		Map<String, Optional<BigDecimal>> actualOutput = model.calculate();
+		
+		// Assert
+		assertEquals("Delta calculated from model should match expectations", expectedOutput.get(OptionConstants.DELTA), actualOutput.get(OptionConstants.DELTA));
+		assertEquals("Gamma calculated from model should match expectations", expectedOutput.get(OptionConstants.GAMMA), actualOutput.get(OptionConstants.GAMMA));
+		assertEquals("Vega calculated from model should match expectations", expectedOutput.get(OptionConstants.VEGA), actualOutput.get(OptionConstants.VEGA));
+		assertEquals("Theta calculated from model should match expectations", expectedOutput.get(OptionConstants.THETA), actualOutput.get(OptionConstants.THETA));
+		assertEquals("Rho calculated from model should match expectations", expectedOutput.get(OptionConstants.RHO), actualOutput.get(OptionConstants.RHO));
+		assertEquals("Theoretical value calculated from model should match expectations", expectedOutput.get(OptionConstants.THEORETICAL_VALUE), actualOutput.get(OptionConstants.THEORETICAL_VALUE));
+		assertEquals("Time value calculated from model should match expectations", expectedOutput.get(OptionConstants.TIME_VALUE), actualOutput.get(OptionConstants.TIME_VALUE));
+		assertEquals("Intrinsic value calculated from model should match expectations", expectedOutput.get(OptionConstants.INTRINSIC_VALUE), actualOutput.get(OptionConstants.INTRINSIC_VALUE));
+		assertEquals("Lambda calculated from model should match expectations", expectedOutput.get(OptionConstants.LAMBDA), actualOutput.get(OptionConstants.LAMBDA));
+		assertEquals("Output calculated from model should match expectations", expectedOutput, actualOutput);
 	}
 	
 	@Test
 	public void calculate_InvalidInputs_InvalidOutputs() throws Exception
 	{
+		// Arrange
 		Map<String, BigDecimal> inputs = new HashMap<>();
 		inputs.put(OptionConstants.UNDERLYING_PRICE, BigDecimal.valueOf(0));
 		inputs.put(OptionConstants.STRIKE, BigDecimal.valueOf(0));
@@ -59,8 +74,8 @@ public class BlackScholesModelImplTest extends AbstractJUnit4SpringContextTests
 		
 		Map<String, BigDecimal> outputs = new HashMap<>();
 		PricingModel model = new BlackScholesModelImpl();
+		// Act and Assert
 		model.configure(inputs);
-		
 		assertEquals("Output should match expectations", outputs, model.calculate());
 	}
 }

@@ -76,20 +76,20 @@ public class BlackScholesModelImpl implements PricingModel
         private BigDecimal calculateTheoreticalValue() throws Exception
         {
             if (this.isCallOption)
-            	this.theoreticalValue = this.underlyingPrice.multiply(cummulativeNormalDensity(this.d1))
-            	.subtract(this.strike.multiply(this.expInterestRate.multiply(cummulativeNormalDensity(this.d2))));
+            	this.theoreticalValue = scale(this.underlyingPrice.multiply(cummulativeNormalDensity(this.d1))
+            	.subtract(this.strike.multiply(this.expInterestRate.multiply(cummulativeNormalDensity(this.d2)))));
             else
-            	this.theoreticalValue = this.strike.multiply(this.expInterestRate).multiply(cummulativeNormalDensity(negate(this.d2)))
-            	.subtract(this.underlyingPrice.multiply(cummulativeNormalDensity(negate(this.d1))));
+            	this.theoreticalValue = scale(this.strike.multiply(this.expInterestRate).multiply(cummulativeNormalDensity(negate(this.d2)))
+            	.subtract(this.underlyingPrice.multiply(cummulativeNormalDensity(negate(this.d1)))));
             
-            return scale(this.theoreticalValue);
+            return this.theoreticalValue;
         }
        
         private BigDecimal calculateDelta() throws Exception
         {
-        	this.delta = this.isCallOption ? cummulativeNormalDensity(this.d1) : negate(cummulativeNormalDensity(negate(this.d1)));
+        	this.delta = scale(this.isCallOption ? cummulativeNormalDensity(this.d1) : negate(cummulativeNormalDensity(negate(this.d1))));
         	
-        	return scale(this.delta);
+        	return this.delta;
         }
        
         private BigDecimal calculateGamma() throws Exception
@@ -140,19 +140,24 @@ public class BlackScholesModelImpl implements PricingModel
         private BigDecimal calculateLambda() throws Exception
         {
         	this.lambda = this.underlyingPrice.multiply(this.delta).divide(this.theoreticalValue, this.scale, RoundingMode.HALF_DOWN);
-        	return scale(this.lambda);
+        	
+        	return this.lambda;
         }
         
         private BigDecimal calculateIntrinsicValue() throws Exception
         {
         	this.intrinsicValue = this.isCallOption ? this.underlyingPrice.subtract(this.strike) : this.strike.subtract(this.underlyingPrice);
-        	return scale(this.intrinsicValue.compareTo(BigDecimal.ZERO) > 0 ? this.intrinsicValue : BigDecimal.ZERO);
+        	this.intrinsicValue = scale(this.intrinsicValue.compareTo(BigDecimal.ZERO) > 0 ? this.intrinsicValue : BigDecimal.ZERO);
+        	
+        	return this.intrinsicValue;
         }
         
         private BigDecimal calculateTimeValue() throws Exception
         {
         	this.timeValue = calculateTheoreticalValue().subtract(calculateIntrinsicValue());
-        	return scale(this.timeValue.compareTo(BigDecimal.ZERO) > 0 ? this.timeValue : BigDecimal.ZERO);
+        	this.timeValue =  scale(this.timeValue.compareTo(BigDecimal.ZERO) > 0 ? this.timeValue : BigDecimal.ZERO);
+        	
+        	return this.timeValue;
         }
         
         private BigDecimal scale(BigDecimal initialValue)
