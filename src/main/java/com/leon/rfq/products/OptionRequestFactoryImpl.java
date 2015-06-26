@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,33 +88,26 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         newRequest.setRequest(snippet);
         newRequest.setStatus(StatusEnum.PENDING);
         newRequest.setIdentifier(-1);
-        newRequest.setClientId(clientId);
         newRequest.setTradeDate(LocalDate.now());
-        
-        if(newRequest.getLegs() !=null)
-            newRequest.setExpiryDate(newRequest.getLegs().get(0).getMaturityDate());
-        
         newRequest.setLotSize(100);
         newRequest.setMultiplier(10);
         newRequest.setContracts(100);
-        newRequest.setNotionalFXRate(new BigDecimal("1"));
-        newRequest.setNotionalMillions(new BigDecimal("1"));
-        newRequest.setBookCode(bookCode);
-
-        if(newRequest.getLegs() !=null)
-            newRequest.setDayCountConvention(newRequest.getLegs().get(0).getDayCountConvention());
-
-        newRequest.setPremiumSettlementFXRate(new BigDecimal("1"));
-        newRequest.setSalesCreditFXRate(new BigDecimal("1"));
+        newRequest.setNotionalFXRate(BigDecimal.ONE);
+        newRequest.setNotionalMillions(BigDecimal.ONE);
+        newRequest.setPremiumSettlementFXRate(BigDecimal.ONE);
+        newRequest.setSalesCreditFXRate(BigDecimal.ONE);
         newRequest.setIsOTC(true);
-        newRequest.setSalesCreditPercentage(new BigDecimal("2"));
+        newRequest.setSalesCreditPercentage(BigDecimal.valueOf(2));
         newRequest.setPremiumSettlementDaysOverride(1);
         newRequest.setPremiumSettlementDate(LocalDate.now().plusDays(newRequest.getPremiumSettlementDaysOverride()));
         
         if(newRequest.getLegs() !=null)
-	        newRequest.setUnderlyingDetails(newRequest.getLegs().stream().map(leg ->
-	        leg.getUnderlyingRIC() + ":" + leg.getUnderlyingPrice())
-	        .distinct().sorted().collect(Collectors.joining(",", "[", "]")));
+        {
+        	newRequest.setExpiryDate(newRequest.getLegs().get(0).getMaturityDate());
+            newRequest.setDayCountConvention(newRequest.getLegs().get(0).getDayCountConvention());
+            newRequest.setUnderlyingDetails(newRequest.getLegs().get(0).getUnderlyingRIC()
+            		+ ":" + newRequest.getLegs().get(0).getUnderlyingPrice());
+        }
 		
         return newRequest;
 	}
@@ -244,30 +236,21 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     }
 
 	/**
-	 * Parses the delimited string containing underlying RICs and assigns them to each option leg.
+	 * Assigns the underlying RIC and the same parametric data value (vol, IR, price) to each option leg.
 	 * 
-	 * @param delimitedUnderlyings 	the delimited string containing the underlying RICs.
+	 * @param underlying 		the underlying RIC associated with all legs of the spread
 	 * @param optionLegs 		the list of option legs that the underlying RICs are to be applied to.
 	 */
-    private void parseOptionUnderlyings(String delimitedUnderlyings, List<OptionDetailImpl> optionLegs)
+    private void parseOptionUnderlyings(String ric, List<OptionDetailImpl> optionLegs)
     {
-    	String[] underlyings = delimitedUnderlyings.split(",");
+    	if((ric == null) || ric.isEmpty())
+    	{
+    		if(logger.isErrorEnabled())
+    			logger.error("ric is an invalid argument");
+    		
+    		throw new IllegalArgumentException("ric is an invalid argument");
+    	}
     	
-        if (underlyings.length == 1)
-        {
-            for (OptionDetailImpl optionLeg : optionLegs)
-            	setParametericData(optionLeg, underlyings[0]);
-        }
-        else
-        {
-            int count = 0;
-            for (OptionDetailImpl optionLeg : optionLegs)
-                setParametericData(optionLeg, underlyings[count++]);
-        }
-    }
-    
-    private void setParametericData(OptionDetailImpl optionLeg, String ric)
-	{
     	UnderlyingDetailImpl underlying = this.underlyingService.get(ric);
     	if(underlying == null)
     	{
@@ -277,13 +260,20 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     		throw new RuntimeException("The underlying with RIC=[" + ric + "] does NOT exist in the underlying service cache.");
     	}
     	
-        optionLeg.setUnderlyingRIC(ric);
-        optionLeg.setVolatility(this.volatilityService.getVolatility(ric));
-        optionLeg.setUnderlyingPrice(this.priceService.getMidPrice(ric));
-        optionLeg.setInterestRate(this.interestRateService.getInterestRate(ric));
-        optionLeg.setDayCountConvention(this.defaultConfigurationService.getDefaultDayCountConvention());
-        optionLeg.setYearsToExpiry(optionLeg.getDaysToExpiry().divide(optionLeg.getDayCountConvention(), 4, RoundingMode.HALF_UP));
-	}
+    	BigDecimal underlyingPrice = this.priceService.getLastPrice(ric);
+    	BigDecimal volatility = this.volatilityService.getVolatility(ric);
+    	BigDecimal interestRate = this.interestRateService.getInterestRate(ric);
+    	
+        for (OptionDetailImpl optionLeg : optionLegs)
+        {
+        	optionLeg.setUnderlyingRIC(ric);
+        	optionLeg.setUnderlyingPrice(underlyingPrice);
+        	optionLeg.setVolatility(volatility);
+        	optionLeg.setInterestRate(interestRate);
+            optionLeg.setDayCountConvention(this.defaultConfigurationService.getDefaultDayCountConvention());
+            optionLeg.setYearsToExpiry(optionLeg.getDaysToExpiry().divide(optionLeg.getDayCountConvention(), 4, RoundingMode.HALF_UP));
+        }
+    }
 
 	/**
 	 * Parses the request snippet containing other option characteristics and assigns them to each option leg.
@@ -330,8 +320,6 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
     {
     	List<OptionDetailImpl> optionTypes = new LinkedList<>();
     	
-    	boolean isEuropean = isEuropeanOption(snippet);
-    	
         Pattern optionDetailRegex = Pattern.compile(RegexConstants.DETAIL_PATTERN);
         Matcher detailMatcher = optionDetailRegex.matcher(snippet);
         
@@ -354,18 +342,21 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
             int quantity = (quantityGroup != null) ? Integer.parseInt(detailMatcher.group("quantity")) : 1;
             
             boolean isCall = detailMatcher.group("type").toUpperCase().equals("C");
+            
+            boolean isEuropean = detailMatcher.group("type").equals("C") || detailMatcher.group("type").equals("P");
 
             optionTypes.add(new OptionDetailImpl(side, quantity, isCall, ++legCount, isEuropean, parent));
 
             if (logger.isDebugEnabled())
                 logger.debug("leg #" + legCount + ": " + leg + ", side: " + side + ", quantity: " + quantity + ", Type: " + (isCall ? "CALL" : "PUT"));
 
-            snippet = snippet.replaceFirst(leg, "");
+            snippet = snippet.replaceFirst(Pattern.quote(leg), "");
             
             if (logger.isDebugEnabled())
-                logger.debug("Remaining snippet after processing leg: " + (legCount++) + " is [" + snippet + "]");
+                logger.debug("Remaining snippet after processing leg: " + (legCount) + " is [" + snippet + "]");
             
             matcher = optionLegRegex.matcher(snippet);
+            detailMatcher = optionDetailRegex.matcher(snippet);
         }
         
         return optionTypes;
