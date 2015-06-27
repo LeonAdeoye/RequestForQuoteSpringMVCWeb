@@ -40,6 +40,35 @@ function myTrim(x)
 
 $(document).ready(function()
 {	
+	  var columns = [
+ 	    {id: "requestId", name: "Request ID", field: "identifier"},
+	    {id: "snippet", name: "Snippet", field: "snippet"},
+	    {id: "status", name: "Status", field: "status"},
+	    {id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy"},
+	    {id: "clientId", name: "Client ID", field: "clientId"},
+	    {id: "bookCode", name: "Book Code", field: "bookCode"},
+	    {id: "tradeDate", name: "Trade Date", field: "tradeDate"},
+	    {id: "premiumAmount", name: "Theoretical Value", field: "thereticalValue"},
+	    {id: "timeValue", name: "Time Value", field: "timeValue"},
+	    {id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue"},	    
+	    {id: "delta", name: "Delta", field: "delta"},
+	    {id: "gamma", name: "Gamma", field: "gamma"},
+	    {id: "vega", name: "Vega", field: "vega"},
+	    {id: "theta", name: "Theta", field: "theta"},
+	    {id: "rho", name: "Rho", field: "rho"},
+	    {id: "underlyingDetails", name: "Underlying Price", field: "underlyingDetails"}
+	  ];
+
+	  var options = {
+	    enableCellNavigation: true,
+	    enableColumnReorder: false
+	  };
+
+	  $(function () // Do we need this? 
+	  { 
+		  var grid = new Slick.Grid("#myGrid", requestsArray, columns, options);
+	  })	
+	
 	$("input#requests_bookCode").autocomplete(
 	{
 		minLength:3,

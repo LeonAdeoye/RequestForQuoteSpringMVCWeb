@@ -5,21 +5,56 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">		
+
 		<link href="<c:url value="/resources/css/requests.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/jquery-ui.min.css" />" rel="stylesheet" type="text/css">
+		<link href="<c:url value="/resources/slickGrid/slick.grid.css" />" rel="stylesheet" type="text/css">
+		<link href="<c:url value="/resources/slickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" />" rel="stylesheet" type="text/css">
+
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.event.drag-2.2.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.core.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.grid.js" />"></script>				
 		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/js/knockout-3.3.0.js" />"></script>		
+				
 		<script type="text/javascript">
 			var contextPath='<%=request.getContextPath()%>' /* needed for autocomplete */
-			if (typeof jQuery == 'undefined')				 
-			    alert("WARNING: jQuery library is NOT loaded!");
-		</script>		
-		<title><spring:message code="requests.title.label"/></title>
+			
+			var requestsArray = [];
+			
+			<c:forEach items="${requests}" var="request">
+			  
+				  var requestItem = 
+				  {
+					  identifier : "<c:out value="${request.identifier}" />",
+					  snippet : "<c:out value="${request.request}" />",
+					  status : "<c:out value="${request.status}" />",
+					  clientId : "<c:out value="${request.clientId}" />",
+					  bookCode : "<c:out value="${request.bookCode}" />",
+					  pickedUpBy : "<c:out value="${request.pickedUpBy}" />",
+					  tradeDate : "<c:out value="${request.tradeDate}" />",
+					  theoreticalValue : "<c:out value="${request.premiumAmount}" />",
+					  intrinsicValue : "<c:out value="${request.intrinsicValue}" />",
+					  timeValue : "<c:out value="${request.timeValue}" />",
+					  delta : "<c:out value="${request.delta}" />",
+					  gamma : "<c:out value="${request.gamma}" />",
+					  vega : "<c:out value="${request.vega}" />",
+					  theta : "<c:out value="${request.theta}" />",
+					  rho : "<c:out value="${request.rho}" />",
+					  underlyingDetails : "<c:out value="${request.underlyingDetails}" />"
+				  };
+				  			
+				  requestsArray.push(requestItem);
+			  
+			</c:forEach>								 			    
+		</script>
+					
+	<title><spring:message code="requests.title.label"/></title>
 	</head>
 	<body>
-				<div id="requests_bar">
+				<div id="myGrid" style="width:1200px;height:500px;"></div>
+<%-- 				<div id="requests_bar">
 					<div id="requests_title">
 						<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
 					</div>
@@ -95,6 +130,6 @@
 					</c:forEach>
 				</div>
 			</table>		
-		</section>
+		</section> --%>
 	</body>
 </html>

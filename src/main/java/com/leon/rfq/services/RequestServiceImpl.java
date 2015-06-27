@@ -1,11 +1,13 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -200,14 +202,13 @@ ApplicationListener<PriceUpdateEvent>
 		{
 			lock.lock();
 			
-			List<RequestDetailImpl> result = this.requestDao.getAll();
-					//.stream() //TODO
-					//.filter(request -> request.getTradeDate().compareTo(LocalDate.now()) <= 0)
-					//.collect(Collectors.toList());
+			List<RequestDetailImpl> result = this.requestDao.getAll()
+					.stream()
+					.filter(request -> request.getTradeDate().compareTo(LocalDate.now()) <= 0)
+					.collect(Collectors.toList());
 			
 			if(result!= null)
 			{
-				// Could use a more complicated lambda expression here but below is far simpler
 				for(RequestDetailImpl request : result)
 				{
 					this.requests.put(request.getIdentifier(), request);
