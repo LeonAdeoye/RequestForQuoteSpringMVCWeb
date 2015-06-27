@@ -40,35 +40,53 @@ function myTrim(x)
 
 $(document).ready(function()
 {	
-	  var columns = [
- 	    {id: "requestId", name: "Request ID", field: "identifier"},
-	    {id: "snippet", name: "Snippet", field: "snippet"},
-	    {id: "status", name: "Status", field: "status"},
-	    {id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy"},
-	    {id: "clientId", name: "Client ID", field: "clientId"},
-	    {id: "bookCode", name: "Book Code", field: "bookCode"},
-	    {id: "tradeDate", name: "Trade Date", field: "tradeDate"},
-	    {id: "premiumAmount", name: "Theoretical Value", field: "thereticalValue"},
-	    {id: "timeValue", name: "Time Value", field: "timeValue"},
-	    {id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue"},	    
-	    {id: "delta", name: "Delta", field: "delta"},
-	    {id: "gamma", name: "Gamma", field: "gamma"},
-	    {id: "vega", name: "Vega", field: "vega"},
-	    {id: "theta", name: "Theta", field: "theta"},
-	    {id: "rho", name: "Rho", field: "rho"},
-	    {id: "underlyingDetails", name: "Underlying Price", field: "underlyingDetails"}
-	  ];
+	var columns = 
+	[
+	 	{id: "requestId", name: "Request ID", field: "identifier"},
+		{id: "snippet", name: "Snippet", field: "request"},
+		{id: "status", name: "Status", field: "status"},
+		{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy"},
+		{id: "clientId", name: "Client ID", field: "clientId"},
+		{id: "bookCode", name: "Book Code", field: "bookCode"},
+		{id: "tradeDate", name: "Trade Date", field: "tradeDate"},
+		{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount"},
+		{id: "timeValue", name: "Time Value", field: "timeValue"},
+		{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue"},	    
+		{id: "delta", name: "Delta", field: "delta"},
+		{id: "gamma", name: "Gamma", field: "gamma"},
+		{id: "vega", name: "Vega", field: "vega"},
+		{id: "theta", name: "Theta", field: "theta"},
+		{id: "rho", name: "Rho", field: "rho"},
+		{id: "underlyingDetails", name: "Underlying Price", field: "underlyingDetails"}
+	];
 
-	  var options = {
-	    enableCellNavigation: true,
-	    enableColumnReorder: false
-	  };
-
-	  $(function () // Do we need this? 
-	  { 
-		  var grid = new Slick.Grid("#myGrid", requestsArray, columns, options);
-	  })	
+	var options = 
+	{
+		enableCellNavigation: true,
+		enableColumnReorder: false
+	};
 	
+	function getRequestsFromTodayOnly() 
+	{		 
+		$.ajax({
+		    url: contextPath + "/requests/today", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    success: function(requests) 
+		    {
+		    	var grid = new Slick.Grid("#requestsGrid", requests, columns, options);		    	
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+                alert('Error: ' + xhr.responseText);
+            }
+		});
+	}
+	
+	getRequestsFromTodayOnly();
+		
 	$("input#requests_bookCode").autocomplete(
 	{
 		minLength:3,
@@ -132,28 +150,6 @@ $(document).ready(function()
             });
         }
     });
-	
-/*	$("input#requests_add_button").click(function()
-	{		
-	    var request = 
-	    {
-	    	request:$("input#requests_snippet").val(), 
-			bookCode:$("input#requests_bookCode").val(), 
-			ClientId:$("input#requests_clientId").val()
-	    };
-	    
-	    $.ajax(
-	    {
-	        url: contextPath + "/requests/add,
-	        dataType : 'json',
-	        type : 'POST',
-	        data: JSON.stringify(request),
-	        success: function(response)
-	        {
-	            alert('Load was performed.');
-	        }
-	    });		
-	});	*/
 	
 	$(".btn").button(); // TODO disable does not work yet. find disabled attribute and add it.
 	

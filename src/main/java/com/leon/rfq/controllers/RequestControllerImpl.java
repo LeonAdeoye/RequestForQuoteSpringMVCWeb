@@ -1,11 +1,14 @@
 package com.leon.rfq.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -47,15 +50,20 @@ public class RequestControllerImpl
 		binder.setAllowedFields("request", "bookCode", "clientId", "language");
 		binder.setValidator(this.requestValidator);
 	}
+	
+	 @RequestMapping(value="/requests/today",
+			 method=RequestMethod.GET,
+			 produces = MediaType.APPLICATION_JSON_VALUE,
+			 consumes = MediaType.APPLICATION_JSON_VALUE)
+     public @ResponseBody List<RequestDetailImpl> getAllRequestsFromTodayOnly()
+     {
+         return this.requestService.getAllFromTodayOnly();
+     }
 		
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
 	public String getAll(Model model)
 	{
-		model.addAttribute("requests", this.requestService.getAllFromTodayOnly());
 		model.addAttribute("newRequest", new RequestDetailImpl());
-		model.addAttribute("books", this.bookService.getAllFromCacheOnly());
-		model.addAttribute("clients", this.clientService.getAllFromCacheOnly());
-		
 		return "requests";
 	}
 	
@@ -126,12 +134,12 @@ public class RequestControllerImpl
 	@RequestMapping(value = "/requests/matchingBookTags", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody Object getBookMatches(@RequestParam String pattern)
 	{
-		return this.bookService.getMatchingBookTags(pattern);
+		return this.bookService.getMatchingBookTags(pattern.toUpperCase());
 	}
 	
 	@RequestMapping(value = "/requests/matchingClientTags", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody Object getClientMatches(@RequestParam String pattern)
 	{
-		return this.clientService.getMatchingClientTags(pattern);
+		return this.clientService.getMatchingClientTags(pattern.toUpperCase());
 	}
 }

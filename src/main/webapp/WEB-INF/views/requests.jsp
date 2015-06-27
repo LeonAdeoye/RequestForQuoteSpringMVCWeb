@@ -19,117 +19,42 @@
 		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>
 				
 		<script type="text/javascript">
-			var contextPath='<%=request.getContextPath()%>' /* needed for autocomplete */
-			
-			var requestsArray = [];
-			
-			<c:forEach items="${requests}" var="request">
-			  
-				  var requestItem = 
-				  {
-					  identifier : "<c:out value="${request.identifier}" />",
-					  snippet : "<c:out value="${request.request}" />",
-					  status : "<c:out value="${request.status}" />",
-					  clientId : "<c:out value="${request.clientId}" />",
-					  bookCode : "<c:out value="${request.bookCode}" />",
-					  pickedUpBy : "<c:out value="${request.pickedUpBy}" />",
-					  tradeDate : "<c:out value="${request.tradeDate}" />",
-					  theoreticalValue : "<c:out value="${request.premiumAmount}" />",
-					  intrinsicValue : "<c:out value="${request.intrinsicValue}" />",
-					  timeValue : "<c:out value="${request.timeValue}" />",
-					  delta : "<c:out value="${request.delta}" />",
-					  gamma : "<c:out value="${request.gamma}" />",
-					  vega : "<c:out value="${request.vega}" />",
-					  theta : "<c:out value="${request.theta}" />",
-					  rho : "<c:out value="${request.rho}" />",
-					  underlyingDetails : "<c:out value="${request.underlyingDetails}" />"
-				  };
-				  			
-				  requestsArray.push(requestItem);
-			  
-			</c:forEach>								 			    
+			var contextPath='<%=request.getContextPath()%>' /* needed for all ajax calls */			
 		</script>
 					
 	<title><spring:message code="requests.title.label"/></title>
 	</head>
 	<body>
-				<div id="myGrid" style="width:1200px;height:500px;"></div>
-<%-- 				<div id="requests_bar">
-					<div id="requests_title">
-						<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
-					</div>
-					<div class="addNew" id="requests_add_new">
-						<form:form modelAttribute="newRequest" class="form-horizontal">
-							<form:errors path="*" cssClass="alert alert-danger" element="div"/>			
-							<fieldSet>
-								<div class="form-group">
-									<form:input id="requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
-								</div>
-								<div class="form-group">
-									<form:input id="requests_client" class="new_request" path="clientId" value="Select client name..." type="text" default_value="Select client name..." />
-								</div>
-								<div class="form-group">
-									<form:input id="requests_bookCode" class="new_request" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />
-								</div>
-								<div class="form-group">
-									<input type="submit" id="requests_add_button" class="btn" value="<spring:message code="requests.addRequest.button.label"/>"/>
-								</div>
-								<div class="form-group">
-									<button id="requests_clear_button" value="Clear" class="btn"><spring:message code="requests.clearRequest.button.label"/></button>									
-								</div>																							
-							</fieldSet>
-						</form:form>
-					</div>
-					<div class="pull-right" id="requests_language_link">
-						<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
-					</div>								
-				</div>
-
-		<section>
-			<table style="width:100%" border="1">
-				<tr>
-					<th><spring:message code="request.requestId.label"/></th>
-					<th><spring:message code="request.snippet.label"/></th>
-					<th><spring:message code="request.status.label"/></th> 
-					<th><spring:message code="request.pickedUpBy.label"/></th>
-					<th><spring:message code="request.client.label"/></th>
-					<th><spring:message code="request.bookCode.label"/></th>
-					<th><spring:message code="request.tradeDate.label"/></th>
-					<th><spring:message code="request.premiumAmount.label"/></th>
-					<th><spring:message code="request.delta.label"/></th>
-					<th><spring:message code="request.gamma.label"/></th>
-					<th><spring:message code="request.theta.label"/></th>
-					<th><spring:message code="request.vega.label"/></th>
-					<th><spring:message code="request.rho.label"/></th>
-					<th><spring:message code="request.timeValue.label"/></th>
-					<th><spring:message code="request.intrinsicValue.label"/></th>
-					<th><spring:message code="request.underlyingDetails.label"/></th>
-				</tr>					
-				<div class="row">
-					<c:forEach items="${requests}" var="request">
-						<div class="caption">
-							<tr>
-						  		<td><a href="<spring:url value="/requests/request?requestId=${request.identifier}"/>">${request.identifier}</a></td>
-						  		<td>${request.request}</td> 
-						  		<td>${request.status}</td>
-						  		<td>${request.pickedUpBy}</td>
-						  		<td>${request.clientId}</td>
-						  		<td>${request.bookCode}</td>
-						  		<td>${request.tradeDate}</td>
-						  		<td>${request.premiumAmount}</td>
-						  		<td>${request.delta}</td>
-						  		<td>${request.gamma}</td>
-						  		<td>${request.theta}</td>
-						  		<td>${request.vega}</td>
-						  		<td>${request.rho}</td>
-						  		<td>${request.timeValue}</td>
-						  		<td>${request.intrinsicValue}</td>						  		
-						  		<td>${request.underlyingDetails}</td>
-							</tr>
+		<div id="requests_bar">
+			<div id="requests_title">
+				<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
+			</div>
+			<div class="addNew" id="requests_add_new">
+				<form:form modelAttribute="newRequest" class="form-horizontal">
+					<form:errors path="*" cssClass="alert alert-danger" element="div"/>			
+					<fieldSet>
+						<div class="form-group">
+							<form:input id="requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
 						</div>
-					</c:forEach>
-				</div>
-			</table>		
-		</section> --%>
+						<div class="form-group">
+							<form:input id="requests_client" class="new_request" path="clientId" value="Select client name..." type="text" default_value="Select client name..." />
+						</div>
+						<div class="form-group">
+							<form:input id="requests_bookCode" class="new_request" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />
+						</div>
+						<div class="form-group">
+							<input type="submit" id="requests_add_button" class="btn" value="<spring:message code="requests.addRequest.button.label"/>"/>
+						</div>
+						<div class="form-group">
+							<button id="requests_clear_button" value="Clear" class="btn"><spring:message code="requests.clearRequest.button.label"/></button>									
+						</div>																							
+					</fieldSet>
+				</form:form>
+			</div>
+			<div class="pull-right" id="requests_language_link">
+				<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
+			</div>								
+		</div>
+		<div id="requestsGrid" style="width:1340px;height:700px;"></div>
 	</body>
 </html>
