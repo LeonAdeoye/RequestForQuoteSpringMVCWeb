@@ -70,6 +70,13 @@
 	height:35px;
 }
 
+.gridColumn
+{
+	font-size:14px;
+	background-color:rgb(59, 170, 227);
+	color::rgb(0, 170, 0);
+}
+
 fieldset
 {
 	border:0;

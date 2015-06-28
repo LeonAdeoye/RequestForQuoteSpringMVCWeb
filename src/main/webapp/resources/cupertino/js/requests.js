@@ -38,32 +38,66 @@ function myTrim(x)
 	return x.replace(/^\s+|\s+$/gm,'');
 }
 
+String.prototype.toPascalCase = function()
+{
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
+function displayDate(row, cell, value, columnDef, dataContext)
+{
+    if (value == null)
+    {
+        return "";
+    }
+    else
+    {
+    	var displayValue = new String(value.dayOfMonth);
+    	displayValue = displayValue.concat(" ");
+    	displayValue = displayValue.concat(((value.month).substr(0,3)).toPascalCase());
+    	displayValue = displayValue.concat(" ");
+    	displayValue = displayValue.concat(value.year);
+    	return displayValue;
+    }        
+}
+
+function displayDecimal(row, cell, value, columnDef, dataContext)
+{
+    if (value == null)
+    {
+        return "0.000";
+    }
+    else
+    {
+    	return value.toFixed(3);
+    }        
+}
+
 $(document).ready(function()
 {	
 	var columns = 
 	[
 	 	{id: "requestId", name: "Request ID", field: "identifier"},
-		{id: "snippet", name: "Snippet", field: "request"},
-		{id: "status", name: "Status", field: "status"},
-		{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy"},
-		{id: "clientId", name: "Client ID", field: "clientId"},
-		{id: "bookCode", name: "Book Code", field: "bookCode"},
-		{id: "tradeDate", name: "Trade Date", field: "tradeDate"},
-		{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount"},
-		{id: "timeValue", name: "Time Value", field: "timeValue"},
-		{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue"},	    
-		{id: "delta", name: "Delta", field: "delta"},
-		{id: "gamma", name: "Gamma", field: "gamma"},
-		{id: "vega", name: "Vega", field: "vega"},
-		{id: "theta", name: "Theta", field: "theta"},
-		{id: "rho", name: "Rho", field: "rho"},
+		{id: "snippet", name: "Snippet", field: "request", minWidth: 300},
+		{id: "status", name: "Status", field: "status", sortable: true},
+		{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true},
+		{id: "clientId", name: "Client ID", field: "clientId", sortable: true},
+		{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true},
+		{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: displayDate, editor: "DateEditor", sortable: true},
+		{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: displayDecimal},
+		{id: "timeValue", name: "Time Value", field: "timeValue", formatter: displayDecimal},
+		{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: displayDecimal},	    
+		{id: "delta", name: "Delta", field: "delta", formatter: displayDecimal},
+		{id: "gamma", name: "Gamma", field: "gamma", formatter: displayDecimal},
+		{id: "vega", name: "Vega", field: "vega", formatter: displayDecimal},
+		{id: "theta", name: "Theta", field: "theta", formatter: displayDecimal},
+		{id: "rho", name: "Rho", field: "rho", formatter: displayDecimal},
 		{id: "underlyingDetails", name: "Underlying Price", field: "underlyingDetails"}
 	];
 
 	var options = 
 	{
 		enableCellNavigation: true,
-		enableColumnReorder: false
+		enableColumnReorder: true
 	};
 	
 	function getRequestsFromTodayOnly() 
