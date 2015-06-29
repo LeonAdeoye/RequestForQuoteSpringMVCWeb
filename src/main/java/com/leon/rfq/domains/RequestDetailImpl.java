@@ -261,6 +261,11 @@ public final class RequestDetailImpl
 	{
 		return this.tradeDate;
 	}
+	
+	public String getTradeDateString()
+	{
+		return this.tradeDate.toString();
+	}
 
 	public void setTradeDate(LocalDate tradeDate)
 	{

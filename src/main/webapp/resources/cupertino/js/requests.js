@@ -43,16 +43,28 @@ String.prototype.toPascalCase = function()
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
 
+function RequestDate(dayOfMonth, month, year) 
+{
+	  this.dayOfMonth = dayOfMonth;
+	  this.month = month;
+	  this.year = year;
+}
+
+RequestDate.prototype.toString = function dateToString() 
+{
+	var displayValue = new String(this.dayOfMonth);
+	displayValue = displayValue.concat(((this.month).substr(0,3)).toPascalCase());
+	displayValue = displayValue.concat(this.year);
+	return displayValue;
+}
+
 function dateFormatter(row, cell, value, columnDef, dataContext)
 {
     if (value != null)
-    {
-    	var displayValue = new String(value.dayOfMonth);
-    	displayValue = displayValue.concat(((value.month).substr(0,3)).toPascalCase());
-    	displayValue = displayValue.concat(value.year);
-    	return displayValue;
+    {	
+    	var theRequestDate = new RequestDate(value.dayOfMonth, value.month, value.year);
     	
-    	//return value.monthValue + '/' + value.dayOfMonth + '/' + value.year;
+    	return theRequestDate;
     }
     else
         return "";
