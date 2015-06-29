@@ -75,7 +75,7 @@ function pascalCaseFormatter(row, cell, value, columnDef, dataContext)
     if (value == null)
         return "";
     else
-    	return value; //.toPascalCase();
+    	return value.toPascalCase();
 }
 
 function decimalFormatter(row, cell, value, columnDef, dataContext)
