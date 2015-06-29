@@ -89,11 +89,11 @@ public final class RequestDetailImpl
 	private BigDecimal askFinalAmount;
 	private BigDecimal askFinalPercentage;
 
-	@Size(min=1, max=300, message="{request.validation.salesComment.size}")
+	@Size(max=300, message="{request.validation.salesComment.size}")
 	private String salesComment;
-	@Size(min=1, max=300, message="{request.validation.traderComment.size}")
+	@Size(max=300, message="{request.validation.traderComment.size}")
 	private String traderComment;
-	@Size(min=1, max=300, message="{request.validation.clientComment.size}")
+	@Size(max=300, message="{request.validation.clientComment.size}")
 	private String clientComment;
 
 	@Size(min=1, max=20, message="{request.validation.pickedUpBy.size}")

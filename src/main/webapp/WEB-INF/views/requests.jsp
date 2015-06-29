@@ -14,9 +14,15 @@
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.event.drag-2.2.js" />"></script>
+						
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.core.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.grid.js" />"></script>				
-		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.formatters.js" />"></script>	
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.editors.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/plugins/slick.rowselectionmodel.js" />"></script>	
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.grid.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.dataview.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/controls/slick.columnpicker.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>		
 				
 		<script type="text/javascript">
 			var contextPath='<%=request.getContextPath()%>' /* needed for all ajax calls */			
@@ -25,6 +31,16 @@
 	<title><spring:message code="requests.title.label"/></title>
 	</head>
 	<body>
+		<ul id="contextMenu" style="display:none;position:absolute">
+		  <b>Set current status:</b>
+		  <li data="Pending">Pending</li>
+		  <li data="Traded Away">Traded Away</li>
+		  <li data="Traded Away Ask">Traded Away Ask</li>
+		  <li data="Traded Away Bid">Traded Away Bid</li>
+		  <li data="Traded Ask">Traded Ask</li>
+		  <li data="Traded Bid">Traded Bid</li>
+		  <li data="Passed">Passed</li>
+		</ul>	
 		<div id="requests_bar">
 			<div id="requests_title">
 				<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
@@ -55,6 +71,14 @@
 				<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>
 			</div>								
 		</div>
-		<div id="requestsGrid" style="width:1340px;height:700px;"></div>
+		
+		<div style="width:1340px;">
+		    <div class="grid-header" style="width:100%">
+		      <label>Requests for quote:</label>
+		      <span style="float:right" class="ui-icon ui-icon-search toggleSearchPanel" title="Toggle search panel"></span>
+		    </div>
+    		<div id="requestsGrid" style="width:1340px;height:700px;"></div>
+		</div>
+
 	</body>
 </html>
