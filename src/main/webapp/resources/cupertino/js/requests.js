@@ -124,17 +124,12 @@ function requiredFieldValidator(value)
 	}
 }
 
+var dataView = new Slick.Data.DataView();
 var priceUpdatesAjaxLock = false;
 var calculationUpdatesAjaxLock = false;
 var priceUpdateIntervalTime = 1000;
 var calculationUpdateIntervalTime = 1000;
 var count = 0
-
-function processPriceUpdates(prices)
-{
-	if(count++ < 5)
-		alert(prices);
-}
 
 function processCalculationUpdates(calculations)
 {
@@ -211,12 +206,35 @@ function getCalculationUpdates()
 
 $(document).ready(function()
 {
-	var dataView = new Slick.Data.DataView();	
+		
 	sortColumn = "requestId";	
 	var requestsGrid = new Slick.Grid("#requestsGrid", dataView, columns, options);
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
 	getRequestsFromTodayOnly();
+	
+	function processPriceUpdates(prices)
+	{
+	    requestsGrid.setCellCssStyles("highlight", changes);
+		dataView.beginUpdate();
+		
+		for(var i = 0, size = dataView.getLength(); i < size; i++)
+		{	
+			var item = dataView.getItemByIdx(i);
+			if(prices[item["underlyingRIC"]] !== undefined)
+			{
+				if(item["underlyingPrice"] != prices[item["underlyingRIC"]].lastPrice)
+				{
+					item["underlyingPrice"] = prices[item["underlyingRIC"]].lastPrice; 
+					dataView.updateItem(item["identifier"], item);
+					requestsGrid.flashCell(i, grid.getColumnIndex("underlyingPrice"), 100);
+				}
+			}
+		}
+		
+		dataView.endUpdate();
+		requestsGrid.render();
+	}	
 	
 	requestsGrid.onSort.subscribe(function(e, args)
 	{
