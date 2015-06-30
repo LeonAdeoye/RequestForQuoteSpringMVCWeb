@@ -7,6 +7,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -250,9 +251,6 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		PriceService priceServiceMock = mock(PriceServiceImpl.class);
 		requestService.setPriceService(priceServiceMock);
 		when(priceServiceMock.getAllPrices("0001.HK")).thenReturn(new PriceDetailImpl("0001.HK"));
-		when(priceServiceMock.getAllPrices("0002.HK")).thenReturn(new PriceDetailImpl("0002.HK"));
-		when(priceServiceMock.getAllPrices("0003.HK")).thenReturn(new PriceDetailImpl("0003.HK"));
-		when(priceServiceMock.getAllPrices("0004.HK")).thenReturn(new PriceDetailImpl("0004.HK"));
 		when(priceServiceMock.getAllPrices("0005.HK")).thenReturn(new PriceDetailImpl("0005.HK"));
 		
 		RequestDetailImpl requestA = new RequestDetailImpl();
@@ -260,9 +258,9 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		OptionDetailImpl legA1 = new OptionDetailImpl();
 		legA1.setUnderlyingRIC("0001.HK");
 		OptionDetailImpl legA2 = new OptionDetailImpl();
-		legA2.setUnderlyingRIC("0002.HK");
+		legA2.setUnderlyingRIC("0001.HK");
 		OptionDetailImpl legA3 = new OptionDetailImpl();
-		legA3.setUnderlyingRIC("0003.HK");
+		legA3.setUnderlyingRIC("0001.HK");
 		legsA.add(legA1);
 		legsA.add(legA2);
 		legsA.add(legA3);
@@ -275,39 +273,42 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		legB1.setUnderlyingRIC("0001.HK");
 		OptionDetailImpl legB2 = new OptionDetailImpl();
 		legB2.setUnderlyingRIC("0001.HK");
-		OptionDetailImpl legB3 = new OptionDetailImpl();
-		legB3.setUnderlyingRIC("0004.HK");
-		OptionDetailImpl legB4 = new OptionDetailImpl();
-		legB4.setUnderlyingRIC("0005.HK");
 		legsB.add(legB1);
 		legsB.add(legB2);
-		legsB.add(legB3);
-		legsB.add(legB4);
 		requestB.setLegs(legsB);
 		requestB.setIdentifier(Integer.MAX_VALUE);
+		
+		RequestDetailImpl requestC = new RequestDetailImpl();
+		List<OptionDetailImpl> legsC = new ArrayList<>(3);
+		OptionDetailImpl legC1 = new OptionDetailImpl();
+		legC1.setUnderlyingRIC("0005.HK");
+		legsC.add(legC1);
+		requestC.setLegs(legsC);
+		requestC.setIdentifier(Integer.MAX_VALUE/2);
 		
 		OptionRequestFactory factoryMock = mock(OptionRequestFactoryImpl.class);
 		requestService.setOptionRequestFactory(factoryMock);
 		when(factoryMock.getNewInstance("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestA);
 		when(factoryMock.getNewInstance("P 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestB);
+		when(factoryMock.getNewInstance("C 100 20Jan2016 0005.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestC);
 		
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
 		requestService.setRequestDao(requestDaoMock);
-		when(requestDaoMock.insert(requestA)).thenReturn(true);
-		when(requestDaoMock.insert(requestB)).thenReturn(true);
+		when(requestDaoMock.insert(any(RequestDetailImpl.class))).thenReturn(true);
 		
 		CalculationService calculationServiceMock = mock(CalculationServiceImpl.class);
 		requestService.setCalculationService(calculationServiceMock);
-		PricingModel modelMock = mock(BlackScholesModelImpl.class);
-		Mockito.doNothing().when(calculationServiceMock).calculate(modelMock, requestA);
-		Mockito.doNothing().when(calculationServiceMock).calculate(modelMock, requestB);
+		doNothing().when(calculationServiceMock).calculate(any(BlackScholesModelImpl.class), any(RequestDetailImpl.class));
 		
 		// Act
 		requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
 		requestService.insert("P 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		requestService.insert("C 100 20Jan2016 0005.HK", Integer.MAX_VALUE, "testBook", "tester");
 		
 		Map<String, PriceDetailImpl> prices = requestService.getPriceUpdates();
-		assertEquals(5, prices.keySet().size());
+		assertEquals("should return only two underlyings", 2, prices.keySet().size());
+		assertEquals("should return only two underlyings", new PriceDetailImpl("0001.HK"), prices.get("0001.HK"));
+		assertEquals("should return only two underlyings", new PriceDetailImpl("0005.HK"), prices.get("0005.HK"));
 	}
 	
 	@Test
@@ -315,7 +316,6 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 	{
 		// Arrange
 		RequestService requestService = new RequestServiceImpl();
-		
 		PriceService priceServiceMock = mock(PriceServiceImpl.class);
 		requestService.setPriceService(priceServiceMock);
 		

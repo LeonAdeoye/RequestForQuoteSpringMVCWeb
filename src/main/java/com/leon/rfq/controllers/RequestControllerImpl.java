@@ -62,7 +62,7 @@ public class RequestControllerImpl
          return this.requestService.getAllFromTodayOnly();
      }
 	 
-	 @RequestMapping(value="/requests/pricesUpdates",
+	 @RequestMapping(value="/requests/priceUpdates",
 			 method=RequestMethod.GET,
 			 produces = MediaType.APPLICATION_JSON_VALUE,
 			 consumes = MediaType.APPLICATION_JSON_VALUE)

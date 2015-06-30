@@ -1,5 +1,6 @@
 package com.leon.rfq.repositories;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -7,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.mappers.RequestMapper;
 
@@ -36,10 +38,19 @@ public class RequestDaoImpl implements RequestDao
 		return this.requestMapper.update(requestId, bookCode, clientId, isValid, updatedByUser) == 1;
 	}
 
+	@SuppressWarnings("serial")
 	@Override
 	public List<RequestDetailImpl> getAll()
 	{
-		return this.requestMapper.getAll();
+		List<RequestDetailImpl> result = this.requestMapper.getAll();
+		
+		// TODO - remove once OptionDetailImpl DB persistance is implemented.
+		result.forEach(request -> request.setLegs(new ArrayList<OptionDetailImpl>(){{
+			   add(new OptionDetailImpl("0001.HK", request));
+			   add(new OptionDetailImpl("0005.HK", request));
+			}}));
+		
+		return result;
 	}
 
 	@Override

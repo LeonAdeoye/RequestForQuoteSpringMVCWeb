@@ -2,7 +2,6 @@ package com.leon.rfq.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -421,15 +420,13 @@ ApplicationListener<PriceUpdateEvent>
 	@Override
 	public Map<String, PriceDetailImpl> getPriceUpdates()
 	{
-		if(this.requests.size() > 0)
-		{
-			Set<String> underlyings = this.requests.values().stream().map(RequestDetailImpl::getLegs)
-			.flatMap(List::stream).map(OptionDetailImpl::getUnderlyingRIC).distinct().collect(Collectors.toSet());
+		Set<String> underlyings = this.requests.values().stream().map(RequestDetailImpl::getLegs)
+		.flatMap(List::stream).map(OptionDetailImpl::getUnderlyingRIC).distinct().collect(Collectors.toSet());
+	
+		if(logger.isDebugEnabled())
+			logger.debug("Price updates will be retrived for the following underlyings: " + underlyings);
 		
-			return getPriceUpdates(underlyings);
-		}
-		
-		return new HashMap<>();
+		return getPriceUpdates(underlyings);
 	}
 	
 	/**
@@ -451,10 +448,7 @@ ApplicationListener<PriceUpdateEvent>
 			throw new NullPointerException("underlyings argument is invalid");
 		}
 		
-		if(underlyings.size() > 0)
-			return underlyings.stream().collect(Collectors
+		return underlyings.stream().collect(Collectors
 				.toMap(underlying -> underlying, underlying -> this.priceService.getAllPrices(underlying)));
-		else
-			return new HashMap<>();
 	}
 }

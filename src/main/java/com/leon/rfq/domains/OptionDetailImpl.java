@@ -70,6 +70,22 @@ public class OptionDetailImpl
 			logger.debug("Constructor instantiation of OptionDetailImpl: " + this.toString());
 	}
 	
+	// TODO remove once optionDetailImpl DB persistance is complete
+	public OptionDetailImpl(String ric, RequestDetailImpl parentRequest)
+	{
+		this.underlyingRIC = ric;
+		this.parentRequest = parentRequest;
+		this.delta = BigDecimal.ZERO;
+		this.gamma = BigDecimal.ZERO;
+		this.vega = BigDecimal.ZERO;
+		this.theta = BigDecimal.ZERO;
+		this.rho = BigDecimal.ZERO;
+		this.premium = BigDecimal.ZERO;
+		this.intrinsicValue = BigDecimal.ZERO;
+		this.timeValue = BigDecimal.ZERO;
+		this.lambda = BigDecimal.ZERO;
+	}
+	
 	RequestDetailImpl getParent()
 	{
 		return this.parentRequest;
