@@ -105,8 +105,8 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         {
         	newRequest.setExpiryDate(newRequest.getLegs().get(0).getMaturityDate());
             newRequest.setDayCountConvention(newRequest.getLegs().get(0).getDayCountConvention());
-            newRequest.setUnderlyingDetails(newRequest.getLegs().get(0).getUnderlyingRIC()
-            		+ ":" + newRequest.getLegs().get(0).getUnderlyingPrice());
+            newRequest.setUnderlyingPrice(newRequest.getLegs().get(0).getUnderlyingPrice());
+            newRequest.setUnderlyingRIC(newRequest.getLegs().get(0).getUnderlyingRIC());
         }
 		
         return newRequest;

@@ -69,7 +69,8 @@
 		<result property="timeValue" column="timeValue"/>
 		<result property="intrinsicValue" column="intrinsicValue"/>
 		<result property="lambda" column="lambda"/>
-		<result property="underlyingDetails" column="underlyingDetails"/>
+		<result property="underlyingRIC" column="underlyingRIC"/>
+		<result property="underlyingPrice" column="underlyingPrice"/>
 	</resultMap>
 		
  	<insert id="insert" parameterType="RequestDetailImpl" useGeneratedKeys="true" keyProperty="identifier" >
@@ -136,7 +137,8 @@
 		timeValue,
 		intrinsicValue,
 		lambda,
-		underlyingDetails, 
+		underlyingRIC,
+		underlyingPrice,
 		savedBy)
 		
 		VALUES(
@@ -201,7 +203,8 @@
 		#{timeValue},
 		#{intrinsicValue},
 		#{lambda},
-		#{underlyingDetails},
+		#{underlyingRIC},
+		#{underlyingPrice},
 		#{lastUpdatedBy})
 	</insert>
 	

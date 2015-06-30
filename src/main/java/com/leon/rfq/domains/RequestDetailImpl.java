@@ -27,7 +27,8 @@ public final class RequestDetailImpl
 	private boolean isOTC;
 	private StatusEnum status;
 	private String lastUpdatedBy;
-	private String underlyingDetails;
+	private BigDecimal underlyingPrice;
+	private String underlyingRIC;
 
 	private int lotSize;
 	private int multiplier;
@@ -115,16 +116,6 @@ public final class RequestDetailImpl
 		this.timeValue = BigDecimal.ZERO;
 		this.lambda = BigDecimal.ZERO;
 		this.rho = BigDecimal.ZERO;
-	}
-	
-	public String getUnderlyingDetails()
-	{
-		return this.underlyingDetails;
-	}
-
-	public void setUnderlyingDetails(String underlyingDetails)
-	{
-		this.underlyingDetails = underlyingDetails;
 	}
 
 	public void setOTC(boolean isOTC)
@@ -782,6 +773,26 @@ public final class RequestDetailImpl
 		this.hedgeType = hedgeType;
 	}
 
+	public BigDecimal getUnderlyingPrice()
+	{
+		return this.underlyingPrice;
+	}
+
+	public void setUnderlyingPrice(BigDecimal underlyingPrice)
+	{
+		this.underlyingPrice = underlyingPrice;
+	}
+
+	public String getUnderlyingRIC()
+	{
+		return this.underlyingRIC;
+	}
+
+	public void setUnderlyingRIC(String underlyingRIC)
+	{
+		this.underlyingRIC = underlyingRIC;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -800,8 +811,10 @@ public final class RequestDetailImpl
 		builder.append(this.status);
 		builder.append(", lastUpdatedBy=");
 		builder.append(this.lastUpdatedBy);
-		builder.append(", underlyingDetails=");
-		builder.append(this.underlyingDetails);
+		builder.append(", underlyingPrice=");
+		builder.append(this.underlyingPrice);
+		builder.append(", underlyingRIC=");
+		builder.append(this.underlyingRIC);
 		builder.append(", lotSize=");
 		builder.append(this.lotSize);
 		builder.append(", multiplier=");
@@ -1058,10 +1071,10 @@ public final class RequestDetailImpl
 				+ ((this.tradeDate == null) ? 0 : this.tradeDate.hashCode());
 		result = (prime * result)
 				+ ((this.traderComment == null) ? 0 : this.traderComment.hashCode());
-		result = (prime
-				* result)
-				+ ((this.underlyingDetails == null) ? 0 : this.underlyingDetails
-						.hashCode());
+		result = (prime * result)
+				+ ((this.underlyingPrice == null) ? 0 : this.underlyingPrice.hashCode());
+		result = (prime * result)
+				+ ((this.underlyingRIC == null) ? 0 : this.underlyingRIC.hashCode());
 		result = (prime * result) + ((this.vega == null) ? 0 : this.vega.hashCode());
 		result = (prime * result)
 				+ ((this.vegaNotional == null) ? 0 : this.vegaNotional.hashCode());
@@ -1628,13 +1641,23 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
-		if (this.underlyingDetails == null)
+		if (this.underlyingPrice == null)
 		{
-			if (other.underlyingDetails != null)
+			if (other.underlyingPrice != null)
 			{
 				return false;
 			}
-		} else if (!this.underlyingDetails.equals(other.underlyingDetails))
+		} else if (!this.underlyingPrice.equals(other.underlyingPrice))
+		{
+			return false;
+		}
+		if (this.underlyingRIC == null)
+		{
+			if (other.underlyingRIC != null)
+			{
+				return false;
+			}
+		} else if (!this.underlyingRIC.equals(other.underlyingRIC))
 		{
 			return false;
 		}

@@ -76,29 +76,25 @@ function decimalFormatter(row, cell, value, columnDef, dataContext)
     	return value.toFixed(3);     
 }
 
-function processPriceUpdates(prices)
-{
-	alert(prices);
-}
-
 var columns = 
 [
  	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
 	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 300, validator: requiredFieldValidator, toolTip: "Request snippet"},
 	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: pascalCaseFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "Request picked up by user:"},
-	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},
-	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book code"},
+	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},	
 	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
 	{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: decimalFormatter, toolTip: "Theoretical value"},
 	{id: "timeValue", name: "Time Value", field: "timeValue", formatter: decimalFormatter, toolTip: "Time value"},
-	{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},	    
+	{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
+	{id: "underlyingPrice", name: "Spot", field: "underlyingPrice", toolTip: "Underlying Spot price"},
 	{id: "delta", name: "Delta", field: "delta", formatter: decimalFormatter, toolTip: "Delta"},
 	{id: "gamma", name: "Gamma", field: "gamma", formatter: decimalFormatter, toolTip: "Gamma"},
 	{id: "vega", name: "Vega", field: "vega", formatter: decimalFormatter, toolTip: "Vega"},
 	{id: "theta", name: "Theta", field: "theta", formatter: decimalFormatter, toolTip: "Theta"},
 	{id: "rho", name: "Rho", field: "rho", formatter: decimalFormatter, toolTip: "Rho"},
-	{id: "underlyingDetails", name: "Underlying Price", field: "underlyingDetails", toolTip: "Underlying Price"},
+	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book code"},	
+	{id: "underlyingRIC", name: "Underlying RIC", field: "underlyingRIC", toolTip: "Underlying RIC"},
 	{id: "salesComment", name: "Sales Comment", field: "salesComment", editor: Slick.Editors.LongText, toolTip: "Comments made by sales."},
 	{id: "traderComment", name: "Trader Comment", field: "traderComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the traders."},
 	{id: "clientComment", name: "Client Comment", field: "clientComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the client."}		
@@ -126,6 +122,91 @@ function requiredFieldValidator(value)
 	{
 		return {valid: true, msg: null};
 	}
+}
+
+var priceUpdatesAjaxLock = false;
+var calculationUpdatesAjaxLock = false;
+var priceUpdateIntervalTime = 1000;
+var calculationUpdateIntervalTime = 1000;
+var count = 0
+
+function processPriceUpdates(prices)
+{
+	if(count++ < 5)
+		alert(prices);
+}
+
+function processCalculationUpdates(calculations)
+{
+	if(count++ < 5)
+		alert(calculations);
+}
+
+function getPriceUpdates() 
+{
+	if(!priceUpdatesAjaxLock)
+	{
+		priceUpdatesAjaxLock = true;
+		
+		$.ajax({
+		    url: contextPath + "/requests/priceUpdates", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    async : true, // the default but I want to be explicit for later reference. 
+		    mimeType: 'application/json',
+		    timeout: 3000,
+		    cache: false,
+		    success: function(prices) 
+		    {
+		    	processPriceUpdates(prices);		    	
+		    	priceUpdatesAjaxLock = false;
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	if(textStatus != "timeout")
+            		alert('Price update timed-out after three seconds');
+            	else
+                	alert('Error: ' + xhr.responseText);                	
+            	
+            	priceUpdatesAjaxLock = false;
+            }
+		});			
+	}		
+}
+
+function getCalculationUpdates() 
+{
+	if(!calculationUpdatesAjaxLock)
+	{
+		calculationUpdatesAjaxLock = true;
+		
+		$.ajax({
+		    url: contextPath + "/requests/calculationUpdates", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    async : true, // the default but I want to be explicit for later reference. 
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(prices) 
+		    {
+		    	processCalculationUpdates(calculations);		    	
+		    	calculationUpdatesAjaxLock = false;
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	if(textStatus != "timeout")
+            		alert('Calculation update timed-out after five seconds');
+            	else
+                	alert('Error: ' + xhr.responseText);                	
+                
+            	calculationUpdatesAjaxLock = false;            		
+ 
+            }
+		});			
+	}		
 }
 
 $(document).ready(function()
@@ -184,13 +265,36 @@ $(document).ready(function()
 	
 	requestsGrid.render();
 	
-	$("<Button class='toggleSearchPanel'>Close</Button>").appendTo(requestsGrid.getTopPanel());
+	$("<Button id='startPriceUpdates'>Start price updates</Button>").appendTo(requestsGrid.getTopPanel());
+	$("<Button id='stopPriceUpdates'>Stop price updates</Button>").appendTo(requestsGrid.getTopPanel());
 	
 	$('.toggleSearchPanel').bind('click', function(event) 
 	{
 		toggleSearchPanel();
-		getPriceUpdates();
 	});
+	
+	var priceUpdateInterval;
+	$('#startPriceUpdates').bind('click', function(event) 
+	{
+		priceUpdateInterval = setInterval(getPriceUpdates, priceUpdateIntervalTime);
+	});
+	
+	$('#stopPriceUpdates').bind('click', function(event) 
+	{
+		window.clearInterval(priceUpdateInterval);
+	});
+	
+	var calculationUpdateInterval;
+	$('#startCalculationUpdates').bind('click', function(event) 
+	{
+		calculationUpdateInterval = setInterval(getCalculationUpdates, calculationUpdateIntervalTime);
+	});
+	
+	$('#stopCalculationUpdates').bind('click', function(event) 
+	{
+		window.clearInterval(calculationUpdateInterval);
+	});		
+	
 	
 	requestsGrid.onContextMenu.subscribe(function (e) 
 	{
@@ -226,27 +330,6 @@ $(document).ready(function()
 		    success: function(requests) 
 		    {
 		    	dataView.setItems(requests, "identifier");
-		    },
-            error: function (xhr, textStatus, errorThrown) 
-            {
-                alert('Error: ' + xhr.responseText);
-            }
-		});
-	}
-	
-	function getPriceUpdates() 
-	{		
-		$.ajax({
-		    url: contextPath + "/requests/priceUpdates", 
-		    type: 'GET', 
-		    dataType: 'json',  
-		    contentType: 'application/json',
-		    mimeType: 'application/json',
-		    timeout: 5000,
-		    cache: false,
-		    success: function(prices) 
-		    {
-		    	alert(prices);
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
