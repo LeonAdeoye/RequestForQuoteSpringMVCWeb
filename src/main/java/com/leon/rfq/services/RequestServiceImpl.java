@@ -2,9 +2,11 @@ package com.leon.rfq.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
+import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
@@ -47,6 +50,12 @@ ApplicationListener<PriceUpdateEvent>
 	@Autowired(required=true)
 	private UnderlyingService underlyingService;
 	
+	@Autowired(required=true)
+	private PriceService priceService;
+	
+	@Autowired(required=true)
+	private CalculationService calculationService;
+	
 	@Override
 	public void setRequestDao(RequestDao requestDao)
 	{
@@ -57,6 +66,18 @@ ApplicationListener<PriceUpdateEvent>
 	public void setOptionRequestFactory(OptionRequestFactory factory)
 	{
 		this.optionRequestFactory = factory;
+	}
+	
+	@Override
+	public void setPriceService(PriceService priceService)
+	{
+		this.priceService = priceService;
+	}
+	
+	@Override
+	public void setCalculationService(CalculationService calculationService)
+	{
+		this.calculationService = calculationService;
 	}
 	
 	public RequestServiceImpl() {}
@@ -282,11 +303,12 @@ ApplicationListener<PriceUpdateEvent>
 			if((newRequest != null) && (newRequest.getLegs() != null))
 			{
 		        // TODO select model depending on certain criteria
-		        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), newRequest);
+		        this.calculationService.calculate(new BlackScholesModelImpl(), newRequest);
 				
 				if(this.requestDao.insert(newRequest))
 				{
-					this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest));
+					if(this.applicationEventPublisher != null)
+						this.applicationEventPublisher.publishEvent(new NewRequestEvent(this, newRequest));
 										
 					this.requests.put(newRequest.getIdentifier(), newRequest);
 					
@@ -383,10 +405,56 @@ ApplicationListener<PriceUpdateEvent>
 			if(isImpacted)
 			{
 		        // TODO select model depending on certain criteria
-		        CalculationServiceImpl.calculate(new BlackScholesModelImpl(), request);
+		        this.calculationService.calculate(new BlackScholesModelImpl(), request);
 				
 				isImpacted = false;
 			}
 		}
+	}
+
+	/**
+	 * Retrieves the price details from the price server for those underlying RICs
+	 * that currently exist in the requests map's legs.
+	 * 
+	 * @returns a map of price details keyed by the underlying ric.
+	 */
+	@Override
+	public Map<String, PriceDetailImpl> getPriceUpdates()
+	{
+		if(this.requests.size() > 0)
+		{
+			Set<String> underlyings = this.requests.values().stream().map(RequestDetailImpl::getLegs)
+			.flatMap(List::stream).map(OptionDetailImpl::getUnderlyingRIC).distinct().collect(Collectors.toSet());
+		
+			return getPriceUpdates(underlyings);
+		}
+		
+		return new HashMap<>();
+	}
+	
+	/**
+	 * Retrieves the price details from the price server for those set of underlying RICs
+	 * passed in as a parameter.
+	 * 
+	 * @param 	underlyings 	the set of underlying that prices are required for.
+	 * @returns a map of price details keyed by the underlying ric.
+	 * @throws NullPointerException if the set of underlyings is invalid.
+	 */
+	@Override
+	public Map<String, PriceDetailImpl> getPriceUpdates(Set<String> underlyings)
+	{
+		if(underlyings == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("underlyings argument is invalid");
+			
+			throw new NullPointerException("underlyings argument is invalid");
+		}
+		
+		if(underlyings.size() > 0)
+			return underlyings.stream().collect(Collectors
+				.toMap(underlying -> underlying, underlying -> this.priceService.getAllPrices(underlying)));
+		else
+			return new HashMap<>();
 	}
 }

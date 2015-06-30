@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import com.leon.rfq.domains.PriceDetailImpl;
 
 @Service
-public final class PriceServiceImpl implements PriceService
+public class PriceServiceImpl implements PriceService
 {
 	private static final Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
 	private final Map<String, PriceDetailImpl> priceMap = new ConcurrentHashMap<>(20, 0.9f, 5);
@@ -28,6 +28,9 @@ public final class PriceServiceImpl implements PriceService
 	
 	@Resource(name="priceUpdateBlockingQueue")
 	private BlockingQueue<PriceDetailImpl> priceUpdateBlockingQueue;
+	private boolean cleanUpDone = false;
+	
+	//public PriceServiceImpl() {}
 	
 	@Override
 	@PostConstruct
@@ -46,6 +49,9 @@ public final class PriceServiceImpl implements PriceService
 		
 		if(logger.isDebugEnabled())
 			logger.debug("The resource blocking queue has been initialised properly.");
+		
+		this.cleanUpDone = false;
+		this.isRunning = true;
 		
 		this.executorService.submit(() ->
 		{
@@ -77,19 +83,37 @@ public final class PriceServiceImpl implements PriceService
 	@Override
 	public void terminate()
 	{
+		this.cleanUpDone = true;
 		this.isRunning = false;
 		this.priceMap.clear();
 		this.priceUpdateBlockingQueue.clear();
-		this.priceUpdateBlockingQueue = null;
 		this.executorService.shutdownNow();
 		
 		if(logger.isInfoEnabled())
 			logger.info("Termination of price service has been completed successfully.");
 	}
 	
+	/**
+	 * Calls terminate method if not called previously.
+	 */
+	@Override
+	protected void finalize() throws Exception
+	{
+		if(!this.cleanUpDone )
+			this.terminate();
+	}
+	
 	@Override
 	public BigDecimal getLastPrice(String ric)
 	{
+		if((ric == null) || ric.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
+		}
+		
 		ReentrantLock lock = new ReentrantLock();
 		try
 		{
@@ -109,6 +133,14 @@ public final class PriceServiceImpl implements PriceService
 	@Override
 	public BigDecimal getMidPrice(String ric)
 	{
+		if((ric == null) || ric.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
+		}
+		
 		ReentrantLock lock = new ReentrantLock();
 		try
 		{
@@ -128,6 +160,14 @@ public final class PriceServiceImpl implements PriceService
 	@Override
 	public BigDecimal getAskPrice(String ric)
 	{
+		if((ric == null) || ric.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
+		}
+		
 		ReentrantLock lock = new ReentrantLock();
 		try
 		{
@@ -147,6 +187,14 @@ public final class PriceServiceImpl implements PriceService
 	@Override
 	public BigDecimal getBidPrice(String ric)
 	{
+		if((ric == null) || ric.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
+		}
+		
 		ReentrantLock lock = new ReentrantLock();
 		try
 		{
@@ -156,6 +204,33 @@ public final class PriceServiceImpl implements PriceService
 				return this.priceMap.get(ric).getBidPrice();
 			
 			return BigDecimal.ZERO;
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+
+	@Override
+	public PriceDetailImpl getAllPrices(String ric)
+	{
+		if((ric == null) || ric.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("ric argument is invalid");
+			
+			throw new IllegalArgumentException("ric argument is invalid");
+		}
+		
+		ReentrantLock lock = new ReentrantLock();
+		try
+		{
+			lock.lock();
+			
+			if(this.priceMap.containsKey(ric))
+				return this.priceMap.get(ric);
+			
+			return new PriceDetailImpl(ric);
 		}
 		finally
 		{

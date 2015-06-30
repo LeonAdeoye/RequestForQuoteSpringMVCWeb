@@ -33,6 +33,15 @@ public final class PriceDetailImpl
 		this.lastPrice = Optional.ofNullable(lastPrice);
 	}
 
+	public PriceDetailImpl(String underlyingRIC)
+	{
+		this.underlyingRIC = underlyingRIC;
+		this.askPrice = Optional.empty();
+		this.bidPrice = Optional.empty();
+		this.midPrice = Optional.empty();
+		this.lastPrice = Optional.empty();
+	}
+
 	public BigDecimal getAskPrice()
 	{
 		return this.askPrice.orElse(BigDecimal.ZERO);

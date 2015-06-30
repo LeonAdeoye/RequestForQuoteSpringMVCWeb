@@ -44,6 +44,7 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 	
 	@Autowired(required=true)
 	private UnderlyingService underlyingService;
+	private boolean cleanUpDone = false;
 	
 	/**
 	 * Returns the next sleeping duration.
@@ -114,6 +115,9 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		
 		if(logger.isDebugEnabled())
 			logger.debug("The resource blocking queue has been initialised properly.");
+		
+		this.cleanUpDone = false;
+		this.isRunning = true;
 		
 		prime();
 		
@@ -199,11 +203,21 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 		this.isRunning = false;
 		this.priceMap.clear();
 		this.priceUpdateBlockingQueue.clear();
-		this.priceUpdateBlockingQueue = null;
 		this.executorService.shutdownNow();
+		this.cleanUpDone = true;
 		
 		if(logger.isInfoEnabled())
 			logger.info("Termination of price simulator has been completed successfully.");
+	}
+
+	/**
+	 * Calls terminate method if not called previously.
+	 */
+	@Override
+	protected void finalize() throws Exception
+	{
+		if(!this.cleanUpDone)
+			this.terminate();
 	}
 
 	/**

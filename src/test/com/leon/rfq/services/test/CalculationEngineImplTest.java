@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
@@ -16,11 +17,13 @@ import com.leon.rfq.common.OptionConstants;
 import com.leon.rfq.products.BlackScholesModelImpl;
 import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
-import com.leon.rfq.services.CalculationServiceImpl;
+import com.leon.rfq.services.CalculationService;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 {
+	@Autowired(required=true)
+	CalculationService calculationService;
 	@Test
 	public void calculate_ValidInputs_CorrectModelMethodsCalled() throws Exception
 	{
@@ -28,7 +31,7 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 		// Arrange
 		PricingModel modelMock = mock(BlackScholesModelImpl.class);
 		// Acts
-		CalculationServiceImpl.calculate(modelMock, inputs);
+		this.calculationService.calculate(modelMock, inputs);
 		// Assert
 		verify(modelMock).configure(inputs);
 		verify(modelMock).calculate();
@@ -43,7 +46,7 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 		// Arrange
 		PricingModel modelMock = mock(BlackScholesModelImpl.class);
 		// Acts
-		CalculationServiceImpl.calculateRange(modelMock, inputs, params);
+		this.calculationService.calculateRange(modelMock, inputs, params);
 		// Assert
 		verify(modelMock, times(11)).configure(inputs);
 		verify(modelMock, times(11)).calculate(params.getListOfRequiredOutput());

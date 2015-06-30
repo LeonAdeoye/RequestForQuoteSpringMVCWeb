@@ -19,14 +19,15 @@ import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
 
 @Component
-public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEvent>
+public class CalculationServiceImpl implements CalculationService, ApplicationListener<PriceUpdateEvent>
 {
 	private static final Logger logger = LoggerFactory.getLogger(CalculationServiceImpl.class);
 	
 	private CalculationServiceImpl() {}
 	
 	// TODO - should all of these methods be synchronized
-	public synchronized static Map<String, Optional<BigDecimal>> calculate(PricingModel model, Map<String, BigDecimal> inputs)
+	@Override
+	public synchronized Map<String, Optional<BigDecimal>> calculate(PricingModel model, Map<String, BigDecimal> inputs)
 	{
 		if(model == null)
 		{
@@ -48,7 +49,8 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 		return model.calculate();
 	}
 	
-	public synchronized static void calculate(PricingModel model, RequestDetailImpl request)
+	@Override
+	public synchronized void calculate(PricingModel model, RequestDetailImpl request)
 	{
 		if(request == null)
 		{
@@ -75,7 +77,8 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 		aggregate(request);
 	}
 	
-	public synchronized static void aggregate(RequestDetailImpl request)
+	@Override
+	public synchronized void aggregate(RequestDetailImpl request)
 	{
 		if(request == null)
 		{
@@ -119,7 +122,8 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 	}
 	
 	
-	public synchronized static void calculate(PricingModel model, OptionDetailImpl leg)
+	@Override
+	public synchronized void calculate(PricingModel model, OptionDetailImpl leg)
 	{
 		if(model == null)
 		{
@@ -141,7 +145,8 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 		extractModelOutputs(model.calculate(), leg);
 	}
 	
-	public synchronized static Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg)
+	@Override
+	public synchronized Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg)
 	{
 		if(leg == null)
 		{
@@ -166,7 +171,8 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 		return inputs;
 	}
 	
-	public synchronized static void extractModelOutputs(Map<String, Optional<BigDecimal>> outputs, OptionDetailImpl leg)
+	@Override
+	public synchronized void extractModelOutputs(Map<String, Optional<BigDecimal>> outputs, OptionDetailImpl leg)
 	{
 		if(leg == null)
 		{
@@ -199,7 +205,8 @@ public class CalculationServiceImpl implements ApplicationListener<PriceUpdateEv
 	}
 	
 	
-	public synchronized static Map<BigDecimal, Map<String, Optional<BigDecimal>>> calculateRange(PricingModel model,
+	@Override
+	public synchronized Map<BigDecimal, Map<String, Optional<BigDecimal>>> calculateRange(PricingModel model,
 			Map<String, BigDecimal> inputs, RangeParameters rangeParameters)
 	{
 		if(model == null)

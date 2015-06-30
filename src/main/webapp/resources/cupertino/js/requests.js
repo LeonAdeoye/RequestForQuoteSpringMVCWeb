@@ -33,16 +33,6 @@ function toggleAddButtonState()
 		disableAddButton();
 }
 
-function myTrim(x)
-{
-	return x.replace(/^\s+|\s+$/gm,'');
-}
-
-String.prototype.toPascalCase = function()
-{
-    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
-};
-
 function RequestDate(dayOfMonth, month, year) 
 {
 	  this.dayOfMonth = dayOfMonth;
@@ -86,8 +76,10 @@ function decimalFormatter(row, cell, value, columnDef, dataContext)
     	return value.toFixed(3);     
 }
 
-var requestsGrid;
-var dataView = new Slick.Data.DataView();
+function processPriceUpdates(prices)
+{
+	alert(prices);
+}
 
 var columns = 
 [
@@ -138,6 +130,7 @@ function requiredFieldValidator(value)
 
 $(document).ready(function()
 {
+	var dataView = new Slick.Data.DataView();	
 	sortColumn = "requestId";	
 	var requestsGrid = new Slick.Grid("#requestsGrid", dataView, columns, options);
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
@@ -196,6 +189,7 @@ $(document).ready(function()
 	$('.toggleSearchPanel').bind('click', function(event) 
 	{
 		toggleSearchPanel();
+		getPriceUpdates();
 	});
 	
 	requestsGrid.onContextMenu.subscribe(function (e) 
@@ -227,6 +221,8 @@ $(document).ready(function()
 		    dataType: 'json',  
 		    contentType: 'application/json',
 		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
 		    success: function(requests) 
 		    {
 		    	dataView.setItems(requests, "identifier");
@@ -237,6 +233,27 @@ $(document).ready(function()
             }
 		});
 	}
+	
+	function getPriceUpdates() 
+	{		
+		$.ajax({
+		    url: contextPath + "/requests/priceUpdates", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(prices) 
+		    {
+		    	alert(prices);
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+                alert('Error: ' + xhr.responseText);
+            }
+		});
+	}	
 	
 	getRequestsFromTodayOnly();
 		
@@ -336,7 +353,7 @@ $(document).ready(function()
 
 	$("input.new_request").focusout(function()
 	{
-		if(myTrim($(this).val()) == "")
+		if(trimSpaces($(this).val()) == "")
 			$(this).val($(this).attr("default_value"));
 	});
 

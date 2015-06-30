@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.grid.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.dataview.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/controls/slick.columnpicker.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>		
 				
 		<script type="text/javascript">

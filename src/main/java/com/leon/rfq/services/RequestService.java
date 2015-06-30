@@ -1,7 +1,10 @@
 package com.leon.rfq.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
@@ -22,6 +25,10 @@ public interface RequestService
 	
 	void setRequestDao(RequestDao requestDao); // For unit test mocking
 	
+	void setPriceService(PriceService priceService); // For unit test mocking.
+	
+	void setCalculationService(CalculationService calculationService); // For unit test mocking.
+	
 	void setOptionRequestFactory(OptionRequestFactory factory); // For unit test mocking
 	
 	List<RequestDetailImpl> getAll();
@@ -29,4 +36,8 @@ public interface RequestService
 	List<RequestDetailImpl> getAllFromCacheOnly();
 
 	List<RequestDetailImpl> getAllFromTodayOnly();
+
+	Map<String, PriceDetailImpl> getPriceUpdates();
+
+	Map<String, PriceDetailImpl> getPriceUpdates(Set<String> underlyings);
 }

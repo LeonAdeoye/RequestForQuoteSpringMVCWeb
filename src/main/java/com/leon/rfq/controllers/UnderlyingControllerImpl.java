@@ -29,10 +29,10 @@ public class UnderlyingControllerImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(UnderlyingControllerImpl.class);
 	
-	@Autowired
+	@Autowired(required=true)
 	UnderlyingService underlyingService;
 	
-	@Autowired
+	@Autowired(required=true)
 	private UnderlyingValidatorImpl underlyingValidator;
 	
 	@InitBinder

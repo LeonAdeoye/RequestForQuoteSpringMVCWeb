@@ -1,6 +1,7 @@
 package com.leon.rfq.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BookService;
 import com.leon.rfq.services.ClientService;
@@ -58,6 +60,15 @@ public class RequestControllerImpl
      public @ResponseBody List<RequestDetailImpl> getAllRequestsFromTodayOnly()
      {
          return this.requestService.getAllFromTodayOnly();
+     }
+	 
+	 @RequestMapping(value="/requests/pricesUpdates",
+			 method=RequestMethod.GET,
+			 produces = MediaType.APPLICATION_JSON_VALUE,
+			 consumes = MediaType.APPLICATION_JSON_VALUE)
+     public @ResponseBody Map<String, PriceDetailImpl> getPriceUpdates()
+     {
+         return this.requestService.getPriceUpdates();
      }
 		
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
