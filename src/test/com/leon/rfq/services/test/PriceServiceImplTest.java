@@ -4,6 +4,7 @@ import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
 import java.util.concurrent.BlockingQueue;
@@ -136,7 +137,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 	
 	//TODO - fail because price server terminates
 	
-	/*
+	
 	@Test
     public void getAllPrices_ricWithPrices_ValidPricesAreReturned()
 	{
@@ -157,9 +158,13 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 			this.priceService.terminate();
 		}
 		
+		this.priceService.initialize();
+		
 		// Act & Assert
 		assertEquals("Non-zero prices should be returned", this.nonZeroPrice,
 				this.priceService.getAllPrices("ric_with_prices"));
+		
+		this.priceService.terminate();
 	}
 		
 	@Test
@@ -169,6 +174,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.zeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.zeroPrice))
 			{
@@ -185,6 +191,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("zero prices should be returned", this.zeroPrice,
 				this.priceService.getAllPrices("ric_without_prices"));
+		
+		this.priceService.terminate();
 	}
 	
 	@Test
@@ -194,6 +202,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.zeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.zeroPrice))
 			{
@@ -210,6 +219,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("Zero last price should be returned", BigDecimal.ZERO,
 				this.priceService.getLastPrice("ric_without_prices"));
+		
+		this.priceService.terminate();
 	}
 	
 	@Test
@@ -219,6 +230,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.nonZeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.nonZeroPrice))
 			{
@@ -235,6 +247,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("Non-zero last price should be returned", BigDecimal.TEN,
 				this.priceService.getLastPrice("ric_with_prices"));
+		
+		this.priceService.terminate();
 	}
 	
 	@Test
@@ -244,6 +258,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.zeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.zeroPrice))
 			{
@@ -260,6 +275,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("Zero mid price should be returned", BigDecimal.ZERO,
 				this.priceService.getMidPrice("ric_without_prices"));
+		
+		this.priceService.terminate();
 	}
 	
 	@Test
@@ -269,6 +286,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.nonZeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.nonZeroPrice))
 			{
@@ -285,6 +303,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("Non-zero mid price should be returned", BigDecimal.TEN,
 				this.priceService.getMidPrice("ric_with_prices"));
+		
+		this.priceService.terminate();
 	}
 	
 	@Test
@@ -294,6 +314,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.zeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.zeroPrice))
 			{
@@ -310,6 +331,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("Zero ask price should be returned", BigDecimal.ZERO,
 				this.priceService.getAskPrice("ric_without_prices"));
+		
+		this.priceService.terminate();
 	}
 	
 	@Test
@@ -319,6 +342,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.nonZeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.nonZeroPrice))
 			{
@@ -335,6 +359,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("Non-zero ask price should be returned", BigDecimal.TEN,
 				this.priceService.getAskPrice("ric_with_prices"));
+		
+		this.priceService.terminate();
 	}
 	
 	@Test
@@ -344,6 +370,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.zeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.zeroPrice))
 			{
@@ -360,6 +387,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("Zero bid price should be returned", BigDecimal.ZERO,
 				this.priceService.getBidPrice("ric_without_prices"));
+		
+		this.priceService.terminate();
 	}
 	
 	@Test
@@ -369,6 +398,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		try
 		{
 			int count = 0;
+			this.priceService.initialize();
 			this.priceUpdateBlockingQueue.put(this.nonZeroPrice);
 			while(this.priceUpdateBlockingQueue.contains(this.nonZeroPrice))
 			{
@@ -385,6 +415,8 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Act & Assert
 		assertEquals("Non-zero bid price should be returned", BigDecimal.TEN,
 				this.priceService.getBidPrice("ric_with_prices"));
+		
+		this.priceService.terminate();
 	}
-	*/
+	
 }

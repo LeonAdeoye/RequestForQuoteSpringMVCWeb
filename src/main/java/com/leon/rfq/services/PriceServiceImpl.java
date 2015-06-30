@@ -24,13 +24,11 @@ public class PriceServiceImpl implements PriceService
 	private static final Logger logger = LoggerFactory.getLogger(PriceServiceImpl.class);
 	private final Map<String, PriceDetailImpl> priceMap = new ConcurrentHashMap<>(20, 0.9f, 5);
 	private boolean isRunning = true;
-	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+	private ExecutorService executorService;
 	
 	@Resource(name="priceUpdateBlockingQueue")
 	private BlockingQueue<PriceDetailImpl> priceUpdateBlockingQueue;
 	private boolean cleanUpDone = false;
-	
-	//public PriceServiceImpl() {}
 	
 	@Override
 	@PostConstruct
@@ -50,6 +48,7 @@ public class PriceServiceImpl implements PriceService
 		if(logger.isDebugEnabled())
 			logger.debug("The resource blocking queue has been initialised properly.");
 		
+		this.executorService = Executors.newSingleThreadExecutor();
 		this.cleanUpDone = false;
 		this.isRunning = true;
 		

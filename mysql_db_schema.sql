@@ -77,7 +77,7 @@ CREATE TABLE `clients` (
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `id_UNIQUE` (`identifier`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `course_enrollment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -132,7 +132,7 @@ CREATE TABLE `holidays` (
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `location_date_index` (`location`,`bankHolidayDate`),
   UNIQUE KEY `identifier_UNIQUE` (`identifier`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `optionleg`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -231,9 +231,14 @@ CREATE TABLE `requestforquotemain` (
   `bidPremiumPercentage` decimal(13,3) DEFAULT NULL,
   `savedBy` varchar(20) DEFAULT 'anonymous',
   `dayCountConvention` decimal(13,3) DEFAULT '250.000',
+  `intrinsicValue` decimal(13,3) NOT NULL DEFAULT '0.000',
+  `timeValue` decimal(13,3) NOT NULL DEFAULT '0.000',
+  `lambda` decimal(13,3) NOT NULL DEFAULT '0.000',
+  `underlyingRIC` varchar(10) NOT NULL DEFAULT 'NONE',
+  `underlyingPrice` decimal(13,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `identifier_UNIQUE` (`identifier`)
-) ENGINE=InnoDB AUTO_INCREMENT=741 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1014 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `searches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;

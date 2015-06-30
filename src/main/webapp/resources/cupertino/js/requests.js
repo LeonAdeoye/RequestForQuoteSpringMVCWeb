@@ -447,6 +447,3 @@ $(document).ready(function()
 		disableAddButton();		
 	});	
 });
-
-
-
