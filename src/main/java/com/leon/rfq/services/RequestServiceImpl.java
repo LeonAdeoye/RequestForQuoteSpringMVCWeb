@@ -422,10 +422,7 @@ ApplicationListener<PriceUpdateEvent>
 	{
 		Set<String> underlyings = this.requests.values().stream().map(RequestDetailImpl::getLegs)
 		.flatMap(List::stream).map(OptionDetailImpl::getUnderlyingRIC).distinct().collect(Collectors.toSet());
-	
-		if(logger.isDebugEnabled())
-			logger.debug("Price updates will be retrived for the following underlyings: " + underlyings);
-		
+			
 		return getPriceUpdates(underlyings);
 	}
 	

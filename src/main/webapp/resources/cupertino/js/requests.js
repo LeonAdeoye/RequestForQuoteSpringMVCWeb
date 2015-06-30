@@ -131,79 +131,6 @@ var priceUpdateIntervalTime = 1000;
 var calculationUpdateIntervalTime = 1000;
 var count = 0
 
-function processCalculationUpdates(calculations)
-{
-	if(count++ < 5)
-		alert(calculations);
-}
-
-function getPriceUpdates() 
-{
-	if(!priceUpdatesAjaxLock)
-	{
-		priceUpdatesAjaxLock = true;
-		
-		$.ajax({
-		    url: contextPath + "/requests/priceUpdates", 
-		    type: 'GET', 
-		    dataType: 'json',  
-		    contentType: 'application/json',
-		    async : true, // the default but I want to be explicit for later reference. 
-		    mimeType: 'application/json',
-		    timeout: 3000,
-		    cache: false,
-		    success: function(prices) 
-		    {
-		    	processPriceUpdates(prices);		    	
-		    	priceUpdatesAjaxLock = false;
-		    },
-            error: function (xhr, textStatus, errorThrown) 
-            {
-            	if(textStatus != "timeout")
-            		alert('Price update timed-out after three seconds');
-            	else
-                	alert('Error: ' + xhr.responseText);                	
-            	
-            	priceUpdatesAjaxLock = false;
-            }
-		});			
-	}		
-}
-
-function getCalculationUpdates() 
-{
-	if(!calculationUpdatesAjaxLock)
-	{
-		calculationUpdatesAjaxLock = true;
-		
-		$.ajax({
-		    url: contextPath + "/requests/calculationUpdates", 
-		    type: 'GET', 
-		    dataType: 'json',  
-		    contentType: 'application/json',
-		    async : true, // the default but I want to be explicit for later reference. 
-		    mimeType: 'application/json',
-		    timeout: 5000,
-		    cache: false,
-		    success: function(prices) 
-		    {
-		    	processCalculationUpdates(calculations);		    	
-		    	calculationUpdatesAjaxLock = false;
-		    },
-            error: function (xhr, textStatus, errorThrown) 
-            {
-            	if(textStatus != "timeout")
-            		alert('Calculation update timed-out after five seconds');
-            	else
-                	alert('Error: ' + xhr.responseText);                	
-                
-            	calculationUpdatesAjaxLock = false;            		
- 
-            }
-		});			
-	}		
-}
-
 $(document).ready(function()
 {
 		
@@ -211,15 +138,14 @@ $(document).ready(function()
 	var requestsGrid = new Slick.Grid("#requestsGrid", dataView, columns, options);
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
-	getRequestsFromTodayOnly();
+	getRequestsFromTodayOnly();	
 	
 	function processPriceUpdates(prices)
 	{
-	    requestsGrid.setCellCssStyles("highlight", changes);
-		dataView.beginUpdate();
+		//dataView.beginUpdate();
 		
 		for(var i = 0, size = dataView.getLength(); i < size; i++)
-		{	
+		{
 			var item = dataView.getItemByIdx(i);
 			if(prices[item["underlyingRIC"]] !== undefined)
 			{
@@ -227,14 +153,95 @@ $(document).ready(function()
 				{
 					item["underlyingPrice"] = prices[item["underlyingRIC"]].lastPrice; 
 					dataView.updateItem(item["identifier"], item);
-					requestsGrid.flashCell(i, grid.getColumnIndex("underlyingPrice"), 100);
+					
+					var changes = {};
+					if (!changes[i])
+					{
+						changes[i] = { underlyingPrice: "changed" };
+					}
+					
+					requestsGrid.setCellCssStyles("highlight", changes);					
+					requestsGrid.flashCell(i, requestsGrid.getColumnIndex("underlyingPrice"), 100);
+					requestsGrid.render();
 				}
 			}
 		}
 		
-		dataView.endUpdate();
-		requestsGrid.render();
+		//dataView.endUpdate();
+	}
+	
+	function getPriceUpdates() 
+	{
+		if(!priceUpdatesAjaxLock)
+		{
+			priceUpdatesAjaxLock = true;
+			
+			$.ajax({
+			    url: contextPath + "/requests/priceUpdates", 
+			    type: 'GET', 
+			    dataType: 'json',  
+			    contentType: 'application/json',
+			    async : true, // the default but I want to be explicit for later reference. 
+			    mimeType: 'application/json',
+			    timeout: 3000,
+			    cache: false,
+			    success: function(prices) 
+			    {
+			    	processPriceUpdates(prices);		    	
+			    	priceUpdatesAjaxLock = false;
+			    },
+	            error: function (xhr, textStatus, errorThrown) 
+	            {
+	            	if(textStatus != "timeout")
+	            		alert('Price update timed-out after three seconds');
+	            	else
+	                	alert('Error: ' + xhr.responseText);                	
+	            	
+	            	priceUpdatesAjaxLock = false;
+	            }
+			});			
+		}		
+	}
+	
+	function processCalculationUpdates(calculations)
+	{
+		if(count++ < 5)
+			alert(calculations);
 	}	
+	
+	function getCalculationUpdates() 
+	{
+		if(!calculationUpdatesAjaxLock)
+		{
+			calculationUpdatesAjaxLock = true;
+			
+			$.ajax({
+			    url: contextPath + "/requests/calculationUpdates", 
+			    type: 'GET', 
+			    dataType: 'json',  
+			    contentType: 'application/json',
+			    async : true, // the default but I want to be explicit for later reference. 
+			    mimeType: 'application/json',
+			    timeout: 5000,
+			    cache: false,
+			    success: function(prices) 
+			    {
+			    	processCalculationUpdates(calculations);		    	
+			    	calculationUpdatesAjaxLock = false;
+			    },
+	            error: function (xhr, textStatus, errorThrown) 
+	            {
+	            	if(textStatus != "timeout")
+	            		alert('Calculation update timed-out after five seconds');
+	            	else
+	                	alert('Error: ' + xhr.responseText);                	
+	                
+	            	calculationUpdatesAjaxLock = false;            		
+	 
+	            }
+			});			
+		}		
+	}
 	
 	requestsGrid.onSort.subscribe(function(e, args)
 	{
