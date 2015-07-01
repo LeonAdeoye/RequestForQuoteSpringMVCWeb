@@ -53,26 +53,11 @@
 				<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
 			</div>
 			<div class="addNew" id="requests_add_new">
-				<form:form modelAttribute="newRequest" class="form-horizontal">
-					<form:errors path="*" cssClass="alert alert-danger" element="div"/>			
-					<fieldSet>
-						<div class="form-group">
-							<form:input id="requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
-						</div>
-						<div class="form-group">
-							<form:input id="requests_client" class="new_request" path="clientId" value="Select client name..." type="text" default_value="Select client name..." />
-						</div>
-						<div class="form-group">
-							<form:input id="requests_bookCode" class="new_request" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />
-						</div>
-						<div class="form-group">
-							<input id="requests_add_button" class="btn" value="<spring:message code="requests.addRequest.button.label"/>"/>
-						</div>
-						<div class="form-group">
-							<button id="requests_clear_button" value="Clear" class="btn"><spring:message code="requests.clearRequest.button.label"/></button>									
-						</div>																							
-					</fieldSet>
-				</form:form>
+				<input id="requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
+				<input id="requests_client" class="new_request" path="clientId" value="Select client name..." type="text" default_value="Select client name..." />
+				<input id="requests_bookCode" class="new_request" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />
+				<button id="requests_add_button" class="btn"><spring:message code="requests.addRequest.button.label"/></Button>
+				<button id="requests_clear_button" class="btn"><spring:message code="requests.clearRequest.button.label"/></Button>																		
 			</div>
 			<div class="pull-right" id="requests_language_link">
 				<a href="?language=en">English</a>|<a href="?language=jp">Japanese</a>

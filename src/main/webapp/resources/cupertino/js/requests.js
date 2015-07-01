@@ -2,22 +2,29 @@ var SNIPPET_REGEX = /^([+-]?[1-9]*[C|c|P|p]{1}){1}([-+]{1}[1-9]*[C|c|P|p]{1})* (
 
 function enableAddButton()
 {
-	$("input#requests_add_button").removeAttr('disabled');
+	$("#requests_add_button").removeAttr('disabled');
 }
 
 function enableClearButton()
 {
-	$("input#requests_clear_button").removeAttr('disabled');
+	$("#requests_clear_button").removeAttr('disabled');
 }
 
 function disableAddButton()
 {
-	$("input#requests_add_button").attr('disabled', 'disabled');
+	$("#requests_add_button").attr('disabled', 'disabled');
 }
 
 function disableClearButton()
 {
-	$("input#requests_clear_button").attr('disabled', 'disabled');
+	$("#requests_clear_button").attr('disabled', 'disabled');
+}
+
+function clearNewRequestInputFields()
+{
+	$("#requests_snippet").val($("#requests_snippet").attr("default_value"));
+	$("#requests_client").val($("#requests_client").attr("default_value"));
+	$("#requests_bookCode").val($("#requests_bookCode").attr("default_value"));	
 }
 
 function snippetMatches(snippet)
@@ -27,7 +34,7 @@ function snippetMatches(snippet)
 
 function toggleAddButtonState()
 {
-	if(snippetMatches($("input#requests_snippet").val()))
+	if(snippetMatches($("#requests_snippet").val()))
 		enableAddButton();
 	else
 		disableAddButton();
@@ -118,11 +125,17 @@ $("#requests_add_button").click(function(event)
 {
 	disableAddButton();
 	disableClearButton();
-	$("input.new_request").val($(this).attr("default_value"));
+	
+	var snippet = $('#requests_snippet').val();
+    var bookCode = $('#requests_bookCode').val();
+    var client = $('#requests_client').val();
+    var json = { "requestSnippet" : snippet, "bookCode" : bookCode, "clientId": client };		
+    clearNewRequestInputFields();
 	
 	$.ajax({
 	    url: contextPath + "/requests/createNewRequest", 
-	    type: 'POST', 
+	    type: 'POST',
+	    data: JSON.stringify(json),
 	    dataType: 'json',  
 	    contentType: 'application/json',
 	    async : true, // the default but I want to be explicit for later reference. 
@@ -362,8 +375,7 @@ $(document).ready(function()
 	{
 		window.clearInterval(calculationUpdateInterval);
 	});		
-	
-	
+		
 	requestsGrid.onContextMenu.subscribe(function (e) 
 	{
         var cell = requestsGrid.getCellFromEvent(e);
@@ -427,7 +439,7 @@ $(document).ready(function()
 	
 	getRequestsFromTodayOnly();
 		
-	$("input#requests_bookCode").autocomplete(
+	$("#requests_bookCode").autocomplete(
 	{
 		minLength:3,
         source: function (request, response) 
@@ -459,7 +471,7 @@ $(document).ready(function()
         }
     });
 	
-	$("input#requests_client").autocomplete(
+	$("#requests_client").autocomplete(
 	{
 		minLength:2,
         source: function (request, response) 
@@ -519,30 +531,29 @@ $(document).ready(function()
 	$(".btn").button(); // TODO disable does not work yet. find disabled attribute and add it.
 	
 	disableAddButton();	
-	$("input#requests_snippet").keyup(toggleAddButtonState);
-	$("input#requests_snippet").focusout(toggleAddButtonState);
+	$("#requests_snippet").keyup(toggleAddButtonState);
+	$("#requests_snippet").focusout(toggleAddButtonState);
 
-	$("input.new_request").click(function()
+	$(".new_request").click(function()
 	{
 		if($(this).val() == $(this).attr("default_value"))
 		{
 			$(this).val("");
 			
-			if($(this).is("input#requests_snippet"))
+			if($(this).is("#requests_snippet"))
 				disableAddButton();
 		}
 	});
 
-	$("input.new_request").focusout(function()
+	$(".new_request").focusout(function()
 	{
 		if(trimSpaces($(this).val()) == "")
 			$(this).val($(this).attr("default_value"));
 	});
 
-	$("input#requests_clear_button").click(function()
+	$("#requests_clear_button").click(function()
 	{
-		$("input.new_request").val($(this).attr("default_value"));
-		
+		clearNewRequestInputFields();		
 		disableAddButton();		
 	});	
 });

@@ -82,27 +82,7 @@ public class RequestControllerImpl
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
 	public String getAll(Model model)
 	{
-		model.addAttribute("newRequest", new RequestDetailImpl());
 		return "requests";
-	}
-	
-	@RequestMapping(value = "/requests", method = RequestMethod.POST)
-	public String getAll(@ModelAttribute("newRequest") @Valid RequestDetailImpl newRequest,
-			BindingResult result, HttpServletRequest request)
-	{
-		String[] suppressedFields = result.getSuppressedFields();
-		if(suppressedFields.length > 0)
-		{
-			throw new RuntimeException("Attempting to bind disallowed fields: " +
-					StringUtils.arrayToCommaDelimitedString(suppressedFields));
-		}
-		
-		if(result.hasErrors())
-			return "requests";
-		
-		this.requestService.insert(newRequest.getRequest(), newRequest.getClientId(), newRequest.getBookCode(),  "ladeoye"); //TODO
-		
-		return "redirect:/requests";
 	}
 	
 	@RequestMapping("/requests/request")
