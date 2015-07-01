@@ -109,6 +109,8 @@ var options =
     asyncEditorLoading: false,
     autoEdit: false,
     forceFitColumns: false,
+    cellHighlightCssClass: "priceUpdateIncrease",
+    cellFlashingCssClass: "cellFlash",
     topPanelHeight:250	    
 };
 
@@ -132,8 +134,7 @@ var calculationUpdateIntervalTime = 1000;
 var count = 0
 
 $(document).ready(function()
-{
-		
+{	
 	sortColumn = "requestId";	
 	var requestsGrid = new Slick.Grid("#requestsGrid", dataView, columns, options);
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
@@ -142,7 +143,9 @@ $(document).ready(function()
 	
 	function processPriceUpdates(prices)
 	{
-		//dataView.beginUpdate();
+		dataView.beginUpdate();
+		var changes = {};
+		var increaseInPrice = false;
 		
 		for(var i = 0, size = dataView.getLength(); i < size; i++)
 		{
@@ -151,23 +154,26 @@ $(document).ready(function()
 			{
 				if(item["underlyingPrice"] != prices[item["underlyingRIC"]].lastPrice)
 				{
+					if(prices[item["underlyingRIC"]].lastPrice > item["underlyingPrice"])
+						increaseInPrice = true;
+												
 					item["underlyingPrice"] = prices[item["underlyingRIC"]].lastPrice; 
 					dataView.updateItem(item["identifier"], item);
 					
-					var changes = {};
 					if (!changes[i])
-					{
-						changes[i] = { underlyingPrice: "changed" };
-					}
+						changes[i] = { underlyingPrice: (increaseInPrice ? "priceUpdateIncrease" : "priceUpdateDecrease") };
 					
-					requestsGrid.setCellCssStyles("highlight", changes);					
-					requestsGrid.flashCell(i, requestsGrid.getColumnIndex("underlyingPrice"), 100);
-					requestsGrid.render();
+					requestsGrid.setCellCssStyles("highlight", changes);
+					
+					setTimeout(function() { 
+						requestsGrid.setCellCssStyles("highlight", {});
+					}, 300);
 				}
 			}
 		}
 		
-		//dataView.endUpdate();
+		dataView.endUpdate();
+		requestsGrid.render();
 	}
 	
 	function getPriceUpdates() 
@@ -329,7 +335,9 @@ $(document).ready(function()
         {
         	e.preventDefault();
         	
-	        $("#contextMenu")
+        	$("#requestContextMenu").hide();
+        	
+	        $("#statusContextMenu")
 	            .data("row", cell.row)
 	            .css("top", e.pageY)
 	            .css("left", e.pageX)
@@ -337,9 +345,26 @@ $(document).ready(function()
         
 	        $("body").one("click", function() 
 	        {
-	          $("#contextMenu").hide();
+	          $("#statusContextMenu").hide();
 	        });
         }
+        else
+    	{
+        	e.preventDefault();
+        	
+        	$("#statusContextMenu").hide();
+        	
+	        $("#requestContextMenu")
+	            .data("row", cell.row)
+	            .css("top", e.pageY)
+	            .css("left", e.pageX)
+	            .show();
+        
+	        $("body").one("click", function() 
+	        {
+	          $("#requestContextMenu").hide();
+	        });
+    	}
     });	
 	
 	function getRequestsFromTodayOnly() 
@@ -429,7 +454,7 @@ $(document).ready(function()
         }
     });
 	
-    $("#contextMenu").click(function (e) 
+    $("#statusContextMenu").click(function (e) 
     {
     	if (!$(e.target).is("li")) 
     		return;
@@ -440,7 +465,19 @@ $(document).ready(function()
     	var row = $(this).data("row");
     	dataView.getItem(row).status = $(e.target).attr("data");
     	requestsGrid.updateRow(row);
-    });	
+    });
+    
+    $("#requestContextMenu").click(function (e) 
+    {
+    	if (!$(e.target).is("li")) 
+    		return;
+      
+    	if (!requestsGrid.getEditorLock().commitCurrentEdit())
+    		return;
+      
+    	var row = $(this).data("row");
+    	alert(row);
+    });	    
 	
 	$(".btn").button(); // TODO disable does not work yet. find disabled attribute and add it.
 	

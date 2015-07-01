@@ -32,7 +32,7 @@
 	<title><spring:message code="requests.title.label"/></title>
 	</head>
 	<body>
-		<ul id="contextMenu" style="display:none;position:absolute">
+		<ul id="statusContextMenu" class="contextMenu" style="display:none;position:absolute">
 		  <b>Set current status:</b>
 		  <li data="Pending">Pending</li>
 		  <li data="Traded Away">Traded Away</li>
@@ -41,7 +41,13 @@
 		  <li data="Traded Ask">Traded Ask</li>
 		  <li data="Traded Bid">Traded Bid</li>
 		  <li data="Passed">Passed</li>
-		</ul>	
+		</ul>
+		<ul id="requestContextMenu" class="contextMenu" style="display:none;position:absolute">
+		  <b>Set current status:</b>
+		  <li data="Clone">Clone</li>
+		  <li data="Recalculate">Recalculate</li>
+		  <li data="Chart">Chart</li>
+		</ul>
 		<div id="requests_bar">
 			<div id="requests_title">
 				<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
