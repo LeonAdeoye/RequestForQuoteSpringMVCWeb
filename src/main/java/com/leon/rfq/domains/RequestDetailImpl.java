@@ -97,7 +97,7 @@ public final class RequestDetailImpl
 	@Size(max=300, message="{request.validation.clientComment.size}")
 	private String clientComment;
 
-	@Size(min=1, max=20, message="{request.validation.pickedUpBy.size}")
+	@Size(max=20, message="{request.validation.pickedUpBy.size}")
 	private String pickedUpBy;
 	private HedgeTypeEnum hedgeType;
 	private BigDecimal hedgePrice;

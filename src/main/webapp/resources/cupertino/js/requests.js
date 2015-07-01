@@ -121,41 +121,6 @@ var options =
     topPanelHeight:250	    
 };
 
-$("#requests_add_button").click(function(event)
-{
-	disableAddButton();
-	disableClearButton();
-	
-	var snippet = $('#requests_snippet').val();
-    var bookCode = $('#requests_bookCode').val();
-    var client = $('#requests_client').val();
-    var json = { "requestSnippet" : snippet, "bookCode" : bookCode, "clientId": client };		
-    clearNewRequestInputFields();
-	
-	$.ajax({
-	    url: contextPath + "/requests/createNewRequest", 
-	    type: 'POST',
-	    data: JSON.stringify(json),
-	    dataType: 'json',  
-	    contentType: 'application/json',
-	    async : true, // the default but I want to be explicit for later reference. 
-	    mimeType: 'application/json',
-	    timeout: 5000,
-	    cache: false,
-	    success: function(newlyCreatedrequest) 
-	    {
-	    	processNewlyCreatedRequest(newlyCreatedrequest);		    	
-	    },
-        error: function (xhr, textStatus, errorThrown) 
-        {
-        	if(textStatus != "timeout")
-        		alert('Response to newly created RFQ timed-out after five seconds');
-        	else
-            	alert('Error: ' + xhr.responseText);                	
-        }
-	});		
-});
-
 function requiredFieldValidator(value) 
 {
 	if (value == null || value == undefined || !value.length) 
@@ -226,6 +191,41 @@ $(document).ready(function()
 		requestsGrid.render();
 	}
 	
+	$("#requests_add_button").click(function(event)
+	{
+		disableAddButton();
+		disableClearButton();
+		
+		var snippet = $('#requests_snippet').val();
+	    var bookCode = $('#requests_bookCode').val();
+	    var client = $('#requests_client').val();
+	    var json = { "requestSnippet" : snippet, "bookCode" : bookCode, "clientId": client };
+	    
+	    clearNewRequestInputFields();
+		
+		$.ajax({
+		    url: contextPath + "/requests/createNewRequest", 
+		    type: 'POST',
+		    data: JSON.stringify(json),
+		    dataType: 'json',  
+		    contentType: 'application/json', 
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(newlyCreatedrequest) 
+		    {
+		    	processNewlyCreatedRequest(newlyCreatedrequest);		    	
+		    },
+	        error: function (xhr, textStatus, errorThrown) 
+	        {
+	        	if(textStatus == "timeout")
+	        		alert('Response to newly created RFQ timed-out after five seconds');
+	        	else
+	            	alert('Error: ' + xhr.responseText);                	
+	        }
+		});		
+	});	
+	
 	function getPriceUpdates() 
 	{
 		if(!priceUpdatesAjaxLock)
@@ -236,8 +236,7 @@ $(document).ready(function()
 			    url: contextPath + "/requests/priceUpdates", 
 			    type: 'GET', 
 			    dataType: 'json',  
-			    contentType: 'application/json',
-			    async : true, // the default but I want to be explicit for later reference. 
+			    contentType: 'application/json', 
 			    mimeType: 'application/json',
 			    timeout: 3000,
 			    cache: false,
@@ -248,7 +247,7 @@ $(document).ready(function()
 			    },
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
-	            	if(textStatus != "timeout")
+	            	if(textStatus == "timeout")
 	            		alert('Price update timed-out after three seconds');
 	            	else
 	                	alert('Error: ' + xhr.responseText);                	
@@ -275,8 +274,7 @@ $(document).ready(function()
 			    url: contextPath + "/requests/calculationUpdates", 
 			    type: 'GET', 
 			    dataType: 'json',  
-			    contentType: 'application/json',
-			    async : true, // the default but I want to be explicit for later reference. 
+			    contentType: 'application/json', 
 			    mimeType: 'application/json',
 			    timeout: 5000,
 			    cache: false,
@@ -287,7 +285,7 @@ $(document).ready(function()
 			    },
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
-	            	if(textStatus != "timeout")
+	            	if(textStatus == "timeout")
 	            		alert('Calculation update timed-out after five seconds');
 	            	else
 	                	alert('Error: ' + xhr.responseText);                	
