@@ -114,6 +114,35 @@ var options =
     topPanelHeight:250	    
 };
 
+$("#requests_add_button").click(function(event)
+{
+	disableAddButton();
+	disableClearButton();
+	$("input.new_request").val($(this).attr("default_value"));
+	
+	$.ajax({
+	    url: contextPath + "/requests/createNewRequest", 
+	    type: 'POST', 
+	    dataType: 'json',  
+	    contentType: 'application/json',
+	    async : true, // the default but I want to be explicit for later reference. 
+	    mimeType: 'application/json',
+	    timeout: 5000,
+	    cache: false,
+	    success: function(newlyCreatedrequest) 
+	    {
+	    	processNewlyCreatedRequest(newlyCreatedrequest);		    	
+	    },
+        error: function (xhr, textStatus, errorThrown) 
+        {
+        	if(textStatus != "timeout")
+        		alert('Response to newly created RFQ timed-out after five seconds');
+        	else
+            	alert('Error: ' + xhr.responseText);                	
+        }
+	});		
+});
+
 function requiredFieldValidator(value) 
 {
 	if (value == null || value == undefined || !value.length) 
@@ -132,6 +161,14 @@ var calculationUpdatesAjaxLock = false;
 var priceUpdateIntervalTime = 1000;
 var calculationUpdateIntervalTime = 1000;
 var count = 0
+
+function processNewlyCreatedRequest(newlyCreatedrequest)
+{
+	if(!newlyCreatedrequest)
+	{
+		dataView.insertItem(0, newlyCreatedrequest);
+	}
+}
 
 $(document).ready(function()
 {	
@@ -230,7 +267,7 @@ $(document).ready(function()
 			    mimeType: 'application/json',
 			    timeout: 5000,
 			    cache: false,
-			    success: function(prices) 
+			    success: function(calculations) 
 			    {
 			    	processCalculationUpdates(calculations);		    	
 			    	calculationUpdatesAjaxLock = false;

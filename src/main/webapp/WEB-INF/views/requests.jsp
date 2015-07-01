@@ -66,7 +66,7 @@
 							<form:input id="requests_bookCode" class="new_request" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />
 						</div>
 						<div class="form-group">
-							<input type="submit" id="requests_add_button" class="btn" value="<spring:message code="requests.addRequest.button.label"/>"/>
+							<input id="requests_add_button" class="btn" value="<spring:message code="requests.addRequest.button.label"/>"/>
 						</div>
 						<div class="form-group">
 							<button id="requests_clear_button" value="Clear" class="btn"><spring:message code="requests.clearRequest.button.label"/></button>									

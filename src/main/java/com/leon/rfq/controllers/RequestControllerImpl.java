@@ -55,8 +55,7 @@ public class RequestControllerImpl
 	
 	 @RequestMapping(value="/requests/today",
 			 method=RequestMethod.GET,
-			 produces = MediaType.APPLICATION_JSON_VALUE,
-			 consumes = MediaType.APPLICATION_JSON_VALUE)
+			 produces = MediaType.APPLICATION_JSON_VALUE)
      public @ResponseBody List<RequestDetailImpl> getAllRequestsFromTodayOnly()
      {
          return this.requestService.getAllFromTodayOnly();
@@ -64,11 +63,20 @@ public class RequestControllerImpl
 	 
 	 @RequestMapping(value="/requests/priceUpdates",
 			 method=RequestMethod.GET,
-			 produces = MediaType.APPLICATION_JSON_VALUE,
-			 consumes = MediaType.APPLICATION_JSON_VALUE)
+			 produces = MediaType.APPLICATION_JSON_VALUE)
      public @ResponseBody Map<String, PriceDetailImpl> getPriceUpdates()
      {
          return this.requestService.getPriceUpdates();
+     }
+	 
+	 @RequestMapping(value="/requests/createNewRequest",
+			 method=RequestMethod.POST,
+			 produces = MediaType.APPLICATION_JSON_VALUE,
+			 consumes = MediaType.APPLICATION_JSON_VALUE)
+     public @ResponseBody RequestDetailImpl createNewRequest()
+     {
+         //return this.requestService.insert(requestSnippet, clientId, bookName, savedByUser);
+		 return new RequestDetailImpl();
      }
 		
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
