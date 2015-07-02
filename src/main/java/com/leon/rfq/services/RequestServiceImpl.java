@@ -467,7 +467,7 @@ ApplicationListener<PriceUpdateEvent>
 			throw new NullPointerException("requestToUpdate argument is invalid");
 		}
 		
-		throw new UnsupportedOperationException("Complete request update is not yet supported");
+		return this.requestDao.update(requestToUpdate);
 	}
 
 	/**

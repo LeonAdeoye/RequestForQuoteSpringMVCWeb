@@ -17,7 +17,7 @@ public class RequestDaoImpl implements RequestDao
 {
 	private static final Logger logger = LoggerFactory.getLogger(RequestDaoImpl.class);
 	
-	@Autowired
+	@Autowired(required=true)
 	private RequestMapper requestMapper;
 
 	@Override

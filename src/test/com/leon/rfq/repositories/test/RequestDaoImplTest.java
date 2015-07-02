@@ -7,9 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -18,6 +16,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDaoImpl;
@@ -36,16 +35,6 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 	
 	@Autowired
 	private RequestDaoImpl requestDaoImpl;
-	
-	@BeforeClass
-	public static void setup()
-	{
-	}
-	
-	@AfterClass
-	public static void teardown()
-	{
-	}
 	
 	@Before
 	public void setUp()
@@ -67,7 +56,7 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 	{
 		// Arrange
 		int beforeCount = this.requestDaoImpl.getAll().size();
-		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testuser");
 		this.requestDaoImpl.insert(newRequest);
 		// Act and Assert
 		assertEquals("count of request should have been incremented ", beforeCount + 1, this.requestDaoImpl.getAll().size());
@@ -77,7 +66,7 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
     public void get_ValidRequestId_ReturnsValidRequestMatchingRequestId()
 	{
 		// Arrange
-		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testuser");
 		this.requestDaoImpl.insert(newRequest);
 		// Act and Assert
 		assertEquals("get method should return the request when a valid requestId is provided", newRequest.getIdentifier(), this.requestDaoImpl.get(newRequest.getIdentifier()).getIdentifier());
@@ -93,7 +82,7 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
     public void insert_ValidParameters_InsertsRequestAndReturnsTrue()
 	{
 		// Arrange
-		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testuser");
 		// Act and Assert
 		assertTrue("Should insert the request and return true", this.requestDaoImpl.insert(newRequest));
 		// Assert
@@ -104,7 +93,7 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
     public void delete_ValidRequestId_DeleteSucceedsAndReturnsTrue()
 	{
 		// Arrange
-		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testuser");
 		this.requestDaoImpl.insert(newRequest);
 		// Act and Assert
 		assertTrue("delete method should return true", this.requestDaoImpl.delete(newRequest.getIdentifier()));
@@ -122,7 +111,7 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
     public void requestExistsWithRequestId_ExistingRequestId_ReturnsTrue()
 	{
 		// Arrange
-		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2016 0001.HK", 1, "TNG", "testuser");
+		RequestDetailImpl newRequest = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testuser");
 		this.requestDaoImpl.insert(newRequest);
 		// Act and Assert
 		assertTrue("requestExistsWithRequestId should return true because requestId exists", this.requestDaoImpl.requestExistsWithRequestId(newRequest.getIdentifier()));
@@ -134,4 +123,72 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 	{
 		assertFalse("requestExistsWithRequestId should return false because requestId does not exists", this.requestDaoImpl.requestExistsWithRequestId(Integer.MAX_VALUE));
 	}
+	
+	@Test
+    public void updateStatus_ValidStatusUpdate_StatusIsUpdated()
+	{
+		// Arrange
+		RequestDetailImpl requestToUpdate = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testuser");
+		this.requestDaoImpl.insert(requestToUpdate);
+		// Act
+		requestToUpdate.setStatus(StatusEnum.INVALID);
+		boolean result = this.requestDaoImpl.updateStatus(requestToUpdate);
+		// Assert
+		assertTrue("updateStatus method should return true", result);
+		assertEquals("status should be updated after persistance", StatusEnum.INVALID,
+				this.requestDaoImpl.get(requestToUpdate.getIdentifier()).getStatus());
+	}
+	
+	@Test
+    public void updateStatus_NonexistentRequestId_StatusIsNotUpdated()
+	{
+		// Arrange
+		RequestDetailImpl nonexistantRequest = new RequestDetailImpl();
+		nonexistantRequest.setIdentifier(Integer.MAX_VALUE);
+		nonexistantRequest.setStatus(StatusEnum.INVALID);
+		// Act
+		boolean result = this.requestDaoImpl.updateStatus(nonexistantRequest);
+		// Assert
+		assertFalse("updateStatus method should return false", result);
+	}
+	
+	@Test
+    public void update_NonexistentRequestId_StatusIsNotUpdated()
+	{
+		// Arrange
+		RequestDetailImpl nonexistantRequest = new RequestDetailImpl();
+		nonexistantRequest.setIdentifier(Integer.MAX_VALUE);
+		nonexistantRequest.setStatus(StatusEnum.INVALID);
+		// Act
+		boolean result = this.requestDaoImpl.update(nonexistantRequest);
+		// Assert
+		assertFalse("update method should return false", result);
+	}
+	
+	@Test
+    public void update_ValidUpdate_UpdatedCorrectly()
+	{
+		// Arrange
+		RequestDetailImpl requestToUpdate = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testuser");
+		this.requestDaoImpl.insert(requestToUpdate);
+		// Act
+		requestToUpdate.setStatus(StatusEnum.INVALID);
+		requestToUpdate.setClientId(Integer.MAX_VALUE);
+		requestToUpdate.setBookCode("testBook");
+		requestToUpdate.setTraderComment("traderComment");
+		requestToUpdate.setClientComment("clientComment");
+		requestToUpdate.setSalesComment("salesComment");
+		boolean result = this.requestDaoImpl.update(requestToUpdate);
+		RequestDetailImpl updatedRequest = this.requestDaoImpl.get(requestToUpdate.getIdentifier());
+		// Assert
+		assertTrue("update method should return true", result);
+		assertEquals("Status should be updated", StatusEnum.INVALID, updatedRequest.getStatus());
+		assertEquals("Client ID should be updated", Integer.MAX_VALUE, updatedRequest.getClientId());
+		assertEquals("Book code should be updated", "testBook", updatedRequest.getBookCode());
+		assertEquals("Trader comment should be updated", "traderComment", updatedRequest.getTraderComment());
+		assertEquals("Client comment should be updated", "clientComment", updatedRequest.getClientComment());
+		assertEquals("Sales comment should be updated", "salesComment", updatedRequest.getSalesComment());
+	}
+	
+	
 }

@@ -65,7 +65,9 @@
 		<result property="tradeDate" column="tradeDate"/>
 		<result property="expiryDate" column="expiryDate"/>
 		<result property="pickedUpBy" column="pickedUpBy"/>		
-		<result property="lastUpdatedBy" column="savedBy"/>
+		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
+		<result property="savedBy" column="savedBy"/>
+		<result property="lastUpdate" column="lastUpdate"/>
 		<result property="timeValue" column="timeValue"/>
 		<result property="intrinsicValue" column="intrinsicValue"/>
 		<result property="lambda" column="lambda"/>
@@ -139,7 +141,9 @@
 		lambda,
 		underlyingRIC,
 		underlyingPrice,
-		savedBy)
+		savedBy,
+		lastUpdate,
+		lastUpdatedBy)
 		
 		VALUES(
 		#{request}, 
@@ -205,7 +209,9 @@
 		#{lambda},
 		#{underlyingRIC},
 		#{underlyingPrice},
-		#{lastUpdatedBy})
+		#{savedBy},
+		now(),
+		#{savedBy})
 	</insert>
 	
 	<select id="get" parameterType="java.lang.Integer" resultType="RequestDetailImpl">
@@ -232,7 +238,8 @@
 	<update id="updateStatus" parameterType="RequestDetailImpl">
 		UPDATE requestforquotemain
 		SET status = #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
-		lastUpdatedBy = #{lastUpdatedBy}
+		lastUpdatedBy = #{lastUpdatedBy},
+		lastUpdate = now()	
 		WHERE identifier = #{identifier}
 	</update>
 
@@ -259,7 +266,7 @@
 		salesCreditCurrency = #{salesCreditCurrency},
 		salesComment = #{salesComment},
 		traderComment = #{traderComment},
-		clientComment #{clientComment},
+		clientComment = #{clientComment},
 		deltaNotional = #{deltaNotional},
 		gammaNotional = #{gammaNotional},
 		vegaNotional = #{vegaNotional},
@@ -283,7 +290,8 @@
 		bidPremiumAmount = #{bidPremiumAmount},
 		bidPremiumPercentage = #{bidPremiumPercentage},																			 
 		pickedUpBy = #{pickedUpBy},
-		lastUpdatedBy = #{lastUpdatedBy}		
+		lastUpdatedBy = #{lastUpdatedBy},
+		lastUpdate = now()		
 		WHERE identifier = #{identifier}
 	</update>
 			

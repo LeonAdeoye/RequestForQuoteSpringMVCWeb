@@ -113,9 +113,9 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		PricingModel modelMock = mock(BlackScholesModelImpl.class);
 		Mockito.doNothing().when(calculationServiceMock).calculate(modelMock, request);
 		
-		when(factoryMock.getNewInstance("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(request);
+		when(factoryMock.getNewInstance("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(request);
 		// Act
-		requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		requestService.insert("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		verify(requestDaoMock).insert(any(RequestDetailImpl.class));
 	}
@@ -129,9 +129,9 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		OptionRequestFactory optionRequestFactoryMock = mock(OptionRequestFactoryImpl.class);
 		requestService.setRequestDao(requestDaoMock);
 		requestService.setOptionRequestFactory(optionRequestFactoryMock);
-		when(optionRequestFactoryMock.getNewInstance("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(null);
+		when(optionRequestFactoryMock.getNewInstance("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(null);
 		// Act
-		RequestDetailImpl result = requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		RequestDetailImpl result = requestService.insert("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		verify(requestDaoMock, never()).insert(any(RequestDetailImpl.class));
 		assertNull("insert should return null", result);
@@ -148,7 +148,7 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		catchException(this.requestService).insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "snippet argument is invalid");
+		assertEquals("Exception message should match", "snippet argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -162,7 +162,7 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		catchException(requestService).insert("", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
+		assertEquals("Exception message should match",  "requestSnippet argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -175,7 +175,7 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		catchException(this.requestService).insert(null, Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "requestSnippet argument is invalid");
+		assertEquals("Exception message should match", "requestSnippet argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -185,10 +185,10 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
 		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		catchException(this.requestService).insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "", "tester");
+		catchException(this.requestService).insert("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "", "tester");
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "bookCode argument is invalid");
+		assertEquals("Exception message should match", "bookCode argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -198,10 +198,10 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
 		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		catchException(this.requestService).insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, null, "tester");
+		catchException(this.requestService).insert("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, null, "tester");
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "bookCode argument is invalid");
+		assertEquals("Exception message should match", "bookCode argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -211,10 +211,10 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
 		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		catchException(this.requestService).insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "");
+		catchException(this.requestService).insert("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "");
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "savedByUser argument is invalid");
+		assertEquals("Exception message should match", "savedByUser argument is invalid", caughtException().getMessage());
 	}
 	
 	@Test
@@ -224,10 +224,10 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
 		this.requestService.setRequestDao(requestDaoMock);
 		// Act
-		catchException(this.requestService).insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", null);
+		catchException(this.requestService).insert("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", null);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "savedByUser argument is invalid");
+		assertEquals("Exception message should match", "savedByUser argument is invalid", caughtException().getMessage());
 	}
 		
 	@Test
@@ -241,6 +241,53 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		// Assert
 		verify(requestDaoMock).requestExistsWithRequestId(Integer.MAX_VALUE);
 	}
+	
+	@Test
+    public void update_ValidRequest_CallsCorrectDaoMethod()
+	{
+		// Arrange
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		this.requestService.setRequestDao(requestDaoMock);
+		RequestDetailImpl testRequest = new RequestDetailImpl();
+		// Act
+		this.requestService.update(testRequest);
+		// Assert
+		verify(requestDaoMock).update(testRequest);
+	}
+	
+	@Test
+    public void update_InvalidRequest_ThrowsNullPointerException()
+	{
+		// Act
+		catchException(this.requestService).update(null);
+		// Assert
+		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof NullPointerException);
+		assertEquals("Exception message should match", "requestToUpdate argument is invalid", caughtException().getMessage());
+	}
+	
+	@Test
+    public void updateStatus_ValidRequest_CallsCorrectDaoMethod()
+	{
+		// Arrange
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		this.requestService.setRequestDao(requestDaoMock);
+		RequestDetailImpl testRequest = new RequestDetailImpl();
+		// Act
+		this.requestService.updateStatus(testRequest);
+		// Assert
+		verify(requestDaoMock).updateStatus(testRequest);
+	}
+	
+	@Test
+    public void updateStatus_InvalidRequest_ThrowsNullPointerException()
+	{
+		// Act
+		catchException(this.requestService).updateStatus(null);
+		// Assert
+		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof NullPointerException);
+		assertEquals("Exception message should match", "requestToUpdate argument is invalid", caughtException().getMessage());
+	}
+	
 	
 	@Test
     public void pricesUpdates_ValidRequestsWithFiveDifferentUnderlyingsInTotal_FivePriceDetailsAreReturned()
@@ -288,9 +335,9 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		
 		OptionRequestFactory factoryMock = mock(OptionRequestFactoryImpl.class);
 		requestService.setOptionRequestFactory(factoryMock);
-		when(factoryMock.getNewInstance("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestA);
-		when(factoryMock.getNewInstance("P 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestB);
-		when(factoryMock.getNewInstance("C 100 20Jan2016 0005.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestC);
+		when(factoryMock.getNewInstance("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestA);
+		when(factoryMock.getNewInstance("P 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestB);
+		when(factoryMock.getNewInstance("C 100 20Jan2020 0005.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestC);
 		
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
 		requestService.setRequestDao(requestDaoMock);
@@ -301,9 +348,9 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		doNothing().when(calculationServiceMock).calculate(any(BlackScholesModelImpl.class), any(RequestDetailImpl.class));
 		
 		// Act
-		requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
-		requestService.insert("P 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
-		requestService.insert("C 100 20Jan2016 0005.HK", Integer.MAX_VALUE, "testBook", "tester");
+		requestService.insert("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		requestService.insert("P 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		requestService.insert("C 100 20Jan2020 0005.HK", Integer.MAX_VALUE, "testBook", "tester");
 		
 		Map<String, PriceDetailImpl> prices = requestService.getPriceUpdates();
 		assertEquals("should return only two underlyings", 2, prices.keySet().size());

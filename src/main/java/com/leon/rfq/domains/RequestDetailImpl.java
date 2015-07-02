@@ -26,7 +26,13 @@ public final class RequestDetailImpl
 	private int clientId;
 	private boolean isOTC;
 	private StatusEnum status;
+	
+	@Size(max=20, message="{request.validation.lastUpdatedBy.size}")
 	private String lastUpdatedBy;
+	private LocalDate lastUpdate;
+	@Size(max=20, message="{request.validation.savedBy.size}")
+	private String savedBy;
+	
 	private BigDecimal underlyingPrice;
 	private String underlyingRIC;
 
@@ -116,6 +122,26 @@ public final class RequestDetailImpl
 		this.timeValue = BigDecimal.ZERO;
 		this.lambda = BigDecimal.ZERO;
 		this.rho = BigDecimal.ZERO;
+	}
+	
+	public LocalDate getLastUpdate()
+	{
+		return this.lastUpdate;
+	}
+
+	public void setLastUpdate(LocalDate lastUpdate)
+	{
+		this.lastUpdate = lastUpdate;
+	}
+
+	public String getSavedBy()
+	{
+		return this.savedBy;
+	}
+
+	public void setSavedBy(String savedBy)
+	{
+		this.savedBy = savedBy;
 	}
 
 	public void setOTC(boolean isOTC)
@@ -811,6 +837,10 @@ public final class RequestDetailImpl
 		builder.append(this.status);
 		builder.append(", lastUpdatedBy=");
 		builder.append(this.lastUpdatedBy);
+		builder.append(", lastUpdate=");
+		builder.append(this.lastUpdate);
+		builder.append(", savedBy=");
+		builder.append(this.savedBy);
 		builder.append(", underlyingPrice=");
 		builder.append(this.underlyingPrice);
 		builder.append(", underlyingRIC=");
@@ -1000,6 +1030,8 @@ public final class RequestDetailImpl
 		result = (prime * result) + (this.isOTC ? 1231 : 1237);
 		result = (prime * result) + ((this.lambda == null) ? 0 : this.lambda.hashCode());
 		result = (prime * result)
+				+ ((this.lastUpdate == null) ? 0 : this.lastUpdate.hashCode());
+		result = (prime * result)
 				+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
 		result = (prime * result) + this.lotSize;
 		result = (prime * result) + this.multiplier;
@@ -1057,6 +1089,7 @@ public final class RequestDetailImpl
 				* result)
 				+ ((this.salesCreditPercentage == null) ? 0 : this.salesCreditPercentage
 						.hashCode());
+		result = (prime * result) + ((this.savedBy == null) ? 0 : this.savedBy.hashCode());
 		result = (prime * result) + ((this.status == null) ? 0 : this.status.hashCode());
 		result = (prime * result) + ((this.theta == null) ? 0 : this.theta.hashCode());
 		result = (prime * result)
@@ -1359,6 +1392,16 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
+		if (this.lastUpdate == null)
+		{
+			if (other.lastUpdate != null)
+			{
+				return false;
+			}
+		} else if (!this.lastUpdate.equals(other.lastUpdate))
+		{
+			return false;
+		}
 		if (this.lastUpdatedBy == null)
 		{
 			if (other.lastUpdatedBy != null)
@@ -1567,6 +1610,16 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
+		if (this.savedBy == null)
+		{
+			if (other.savedBy != null)
+			{
+				return false;
+			}
+		} else if (!this.savedBy.equals(other.savedBy))
+		{
+			return false;
+		}
 		if (this.status != other.status)
 		{
 			return false;
@@ -1693,5 +1746,4 @@ public final class RequestDetailImpl
 		}
 		return true;
 	}
-	
 }

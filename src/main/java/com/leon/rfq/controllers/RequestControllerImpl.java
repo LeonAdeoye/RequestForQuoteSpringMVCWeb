@@ -54,68 +54,90 @@ public class RequestControllerImpl
 		binder.setValidator(this.requestValidator);
 	}
 	
-	 @RequestMapping(value="/requests/today",
-			 method=RequestMethod.GET,
-			 produces = MediaType.APPLICATION_JSON_VALUE)
-     public @ResponseBody List<RequestDetailImpl> getAllRequestsFromTodayOnly()
-     {
-         return this.requestService.getAllFromTodayOnly();
-     }
+	@RequestMapping(value="/requests/today",
+		method=RequestMethod.GET,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody List<RequestDetailImpl> getAllRequestsFromTodayOnly()
+	{
+		return this.requestService.getAllFromTodayOnly();
+	}
 	 
-	 @RequestMapping(value="/requests/priceUpdates",
-			 method=RequestMethod.GET,
-			 produces = MediaType.APPLICATION_JSON_VALUE)
-     public @ResponseBody Map<String, PriceDetailImpl> getPriceUpdates()
-     {
-         return this.requestService.getPriceUpdates();
-     }
+	@RequestMapping(value="/requests/priceUpdates",
+		method=RequestMethod.GET,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<String, PriceDetailImpl> getPriceUpdates()
+	{
+		return this.requestService.getPriceUpdates();
+	}
 	 
-	 @RequestMapping(value="/requests/createNewRequest",
-			 method=RequestMethod.POST,
-			 produces = MediaType.APPLICATION_JSON_VALUE,
-			 consumes = MediaType.APPLICATION_JSON_VALUE)
-	 public @ResponseBody RequestDetailImpl createNewRequest(@RequestBody RequestDetailImpl newRequest)
-	 {
-		 RequestDetailImpl createdRequest = this.requestService.insert(newRequest.getRequest(),
-			 newRequest.getClientId(), newRequest.getBookCode(), newRequest.getLastUpdatedBy());
+	@RequestMapping(value="/requests/createNewRequest",
+			method=RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody RequestDetailImpl createNewRequest(@RequestBody RequestDetailImpl newRequest)
+	{
+		RequestDetailImpl createdRequest = this.requestService.insert(newRequest.getRequest(),
+		newRequest.getClientId(), newRequest.getBookCode(), newRequest.getLastUpdatedBy());
 	 
-		 if(createdRequest != null)
-		 {
-			 if(logger.isDebugEnabled())
-				 logger.debug("Created new request: " + createdRequest);
-		 }
-		 else
-		 {
-			 if(logger.isErrorEnabled())
-				 logger.error("Failed to create new request: " + newRequest);
-		 }
+		if(createdRequest != null)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("Created new request: " + createdRequest);
+		}
+		else
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to create new request: " + newRequest);
+		}
 	
-		 return createdRequest;
-	 }
+		return createdRequest;
+	}
 	 
-	 @RequestMapping(value="/requests/updateStatus",
-			 method=RequestMethod.POST,
-			 produces = MediaType.APPLICATION_JSON_VALUE,
-			 consumes = MediaType.APPLICATION_JSON_VALUE)
-	 public @ResponseBody boolean updateStatus(@RequestBody RequestDetailImpl requestToUpdate)
-	 {
-		 boolean result = this.requestService.updateStatus(requestToUpdate);
-	 
-		 if(result)
-		 {
-			 if(logger.isDebugEnabled())
-				 logger.debug("Updated request with ID: " + requestToUpdate.getIdentifier()
+	@RequestMapping(value="/requests/updateStatus",
+			method=RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody boolean updateStatus(@RequestBody RequestDetailImpl requestToUpdate)
+	{
+		boolean result = this.requestService.updateStatus(requestToUpdate);
+ 
+		if(result)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("Updated request with ID: " + requestToUpdate.getIdentifier()
 						 + " to status: " + requestToUpdate.getStatus());
-		 }
-		 else
-		 {
-			 if(logger.isErrorEnabled())
-				 logger.error("Failed to Update request with ID: " + requestToUpdate.getIdentifier()
-					 + " to status: " + requestToUpdate.getStatus());
-		 }
-	
-		 return result;
-	 }
+		}
+		else
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to Update request with ID: " + requestToUpdate.getIdentifier()
+				+ " to status: " + requestToUpdate.getStatus());
+		}
+
+		return result;
+	}
+	 
+	@RequestMapping(value="/requests/update",
+			method=RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody boolean update(@RequestBody RequestDetailImpl requestToUpdate)
+	{
+		boolean result = this.requestService.update(requestToUpdate);
+ 
+		if(result)
+		{
+			if(logger.isDebugEnabled())
+				logger.debug("Updated request with ID: " + requestToUpdate.getIdentifier());
+		}
+		else
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to Update request with ID: " + requestToUpdate.getIdentifier());
+		}
+
+		return result;
+	}
 		
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
 	public String getAll(Model model)

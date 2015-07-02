@@ -27,17 +27,17 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 	{
 		return new Object[]
 		{
-			new Object[] {"C 100 10Jan2016 0001.HK"},
-			new Object[] {"C+P 100 10Jan2016 0001.HK"},
-			new Object[] {"C-P 100 10Jan2016 0001.HK"},
-			new Object[] {"2C 100 10Jan2016 0001.HK"},
-			new Object[] {"-C 100 10Jan2016 0001.HK"},
-			new Object[] {"+C 100 10Jan2016 0001.HK"},
-			new Object[] {"+C 10 10Nov2016 00001.HK"},
-			new Object[] {"+C-2P 10 10Nov2016 00001.HK"},
-			new Object[] {"+C-P 10 10Nov2016 00001.HK"},
-			new Object[] {"-C-P 10 10Nov2016 00001.HK,1000.JP"},
-			new Object[] {"-1P 10 10Nov2016 00001.HK"}
+			new Object[] {"C 100 10Jan2020 0001.HK"},
+			new Object[] {"C+P 100 10Jan2020 0001.HK"},
+			new Object[] {"C-P 100 10Jan2020 0001.HK"},
+			new Object[] {"2C 100 10Jan2020 0001.HK"},
+			new Object[] {"-C 100 10Jan2020 0001.HK"},
+			new Object[] {"+C 100 10Jan2020 0001.HK"},
+			new Object[] {"+C 10 10Jan2020 00001.HK"},
+			new Object[] {"+C-2P 10 10Jan2020 00001.HK"},
+			new Object[] {"+C-P 10 10Jan2020 00001.HK"},
+			new Object[] {"-C-P 10 10Jan2020 00001.HK,1000.JP"},
+			new Object[] {"-1P 10 10Jan2020 00001.HK"}
 		};
 	}
 	
