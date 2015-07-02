@@ -35,16 +35,16 @@ public class RequestControllerImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(RequestControllerImpl.class);
 	
-	@Autowired
+	@Autowired(required=true)
 	RequestService requestService;
 	
-	@Autowired
+	@Autowired(required=true)
 	BookService bookService;
 	
-	@Autowired
+	@Autowired(required=true)
 	ClientService clientService;
 	
-	@Autowired
+	@Autowired(required=true)
 	private RequestValidatorImpl requestValidator;
 	
 	@InitBinder
@@ -74,14 +74,24 @@ public class RequestControllerImpl
 			 method=RequestMethod.POST,
 			 produces = MediaType.APPLICATION_JSON_VALUE,
 			 consumes = MediaType.APPLICATION_JSON_VALUE)
-     public @ResponseBody RequestDetailImpl createNewRequest(@RequestBody String newRequest)
-     {
-		 if(logger.isDebugEnabled())
-			 logger.debug("Create new request: " + newRequest);
-         
-		 //return this.requestService.insert(requestSnippet, clientId, bookName, savedByUser);
-		 return new RequestDetailImpl();
-     }
+	 public @ResponseBody RequestDetailImpl createNewRequest(@RequestBody RequestDetailImpl newRequest)
+	 {
+		 RequestDetailImpl createdRequest = this.requestService.insert(newRequest.getRequest(),
+			 newRequest.getClientId(), newRequest.getBookCode(), newRequest.getLastUpdatedBy());
+	 
+		 if(createdRequest != null)
+		 {
+			 if(logger.isDebugEnabled())
+				 logger.debug("Created new request: " + createdRequest);
+		 }
+		 else
+		 {
+			 if(logger.isErrorEnabled())
+				 logger.error("Failed to create new request: " + newRequest);
+		 }
+	
+		 return createdRequest;
+	 }
 		
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
 	public String getAll(Model model)
@@ -117,10 +127,23 @@ public class RequestControllerImpl
 		
 		if(result.hasErrors())
 			return "requestsError";
-		
+	
 		//TODO ladeoye - should get correct user name
-		if(!this.requestService.insert(newRequest.getRequest(), newRequest.getClientId(), newRequest.getBookCode(),  "ladeoye"))
+		RequestDetailImpl createdRequest = this.requestService.insert(newRequest.getRequest(),
+				newRequest.getClientId(), newRequest.getBookCode(),  "ladeoye");
+		
+		if(createdRequest != null)
+		{
+			 if(logger.isDebugEnabled())
+				 logger.debug("Created new request: " + createdRequest);
+		}
+		else
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to create new request: " + newRequest);
+			
 			model.addAttribute("error", "Failed to insert new request");
+		}
 
 		return "redirect:/requests";
 	}

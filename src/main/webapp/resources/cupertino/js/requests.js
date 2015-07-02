@@ -142,10 +142,8 @@ var count = 0
 
 function processNewlyCreatedRequest(newlyCreatedrequest)
 {
-	if(!newlyCreatedrequest)
-	{
+	if(newlyCreatedrequest)
 		dataView.insertItem(0, newlyCreatedrequest);
-	}
 }
 
 $(document).ready(function()
@@ -199,7 +197,8 @@ $(document).ready(function()
 		var snippet = $('#requests_snippet').val();
 	    var bookCode = $('#requests_bookCode').val();
 	    var client = $('#requests_client').val();
-	    var json = { "requestSnippet" : snippet, "bookCode" : bookCode, "clientId": client };
+	    var lastUpdatedBy = "ladeoye"; // TODO
+	    var json = { "request" : snippet, "bookCode" : bookCode, "clientId": client , "lastUpdatedBy" : lastUpdatedBy};
 	    
 	    clearNewRequestInputFields();
 		

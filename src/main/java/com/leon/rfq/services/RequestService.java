@@ -13,7 +13,7 @@ public interface RequestService
 {
 	RequestDetailImpl get(int requestId);
 	
-	boolean insert(String requestSnippet, int clientId, String bookName, String savedByUser);
+	RequestDetailImpl insert(String requestSnippet, int clientId, String bookName, String savedByUser);
 	
 	boolean delete(int requestId);
 

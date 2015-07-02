@@ -3,8 +3,8 @@ package com.leon.rfq.services.test;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -131,10 +131,10 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		requestService.setOptionRequestFactory(optionRequestFactoryMock);
 		when(optionRequestFactoryMock.getNewInstance("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(null);
 		// Act
-		boolean result = requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		RequestDetailImpl result = requestService.insert("C 100 20Jan2016 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
 		// Assert
 		verify(requestDaoMock, never()).insert(any(RequestDetailImpl.class));
-		assertFalse("insert should return false", result);
+		assertNull("insert should return null", result);
 
 	}
 	

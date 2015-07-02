@@ -262,7 +262,7 @@ ApplicationListener<PriceUpdateEvent>
 	 * @throws 	IllegalArgumentException	if requestSnippet, bookCode, or savedByUser parameters are null or empty.
 	 */
 	@Override
-	public boolean insert(String requestSnippet, int clientId, String bookCode, String savedByUser)
+	public RequestDetailImpl insert(String requestSnippet, int clientId, String bookCode, String savedByUser)
 	{
 		if((requestSnippet == null) || requestSnippet.isEmpty())
 		{
@@ -311,11 +311,11 @@ ApplicationListener<PriceUpdateEvent>
 										
 					this.requests.put(newRequest.getIdentifier(), newRequest);
 					
-					return true;
+					return newRequest;
 				}
 			}
 			
-			return false;
+			return null;
 		}
 		catch(IllegalArgumentException iae)
 		{
