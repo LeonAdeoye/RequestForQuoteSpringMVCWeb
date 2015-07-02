@@ -420,8 +420,8 @@ ApplicationListener<PriceUpdateEvent>
 	@Override
 	public Map<String, PriceDetailImpl> getPriceUpdates()
 	{
-		Set<String> underlyings = this.requests.values().stream().map(RequestDetailImpl::getLegs)
-		.flatMap(List::stream).map(OptionDetailImpl::getUnderlyingRIC).distinct().collect(Collectors.toSet());
+		Set<String> underlyings = this.requests.values().stream().map(RequestDetailImpl::getUnderlyingRIC)
+				.distinct().collect(Collectors.toSet());
 			
 		return getPriceUpdates(underlyings);
 	}

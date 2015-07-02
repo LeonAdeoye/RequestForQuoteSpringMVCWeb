@@ -290,7 +290,7 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 	
 	
 	@Test
-    public void pricesUpdates_ValidRequestsWithFiveDifferentUnderlyingsInTotal_FivePriceDetailsAreReturned()
+    public void pricesUpdates_ValidRequestsWithTwoDifferentUnderlyingsInTotal_TwoPriceDetailsAreReturned()
 	{
 		// Arrange
 		RequestService requestService = new RequestServiceImpl();
@@ -312,7 +312,8 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		legsA.add(legA2);
 		legsA.add(legA3);
 		requestA.setLegs(legsA);
-		requestA.setIdentifier(Integer.MIN_VALUE);
+		requestA.setIdentifier(Integer.MAX_VALUE);
+		requestA.setUnderlyingRIC("0001.HK");
 		
 		RequestDetailImpl requestB = new RequestDetailImpl();
 		List<OptionDetailImpl> legsB = new ArrayList<>(3);
@@ -323,7 +324,8 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		legsB.add(legB1);
 		legsB.add(legB2);
 		requestB.setLegs(legsB);
-		requestB.setIdentifier(Integer.MAX_VALUE);
+		requestB.setIdentifier(Integer.MAX_VALUE - 1);
+		requestB.setUnderlyingRIC("0001.HK");
 		
 		RequestDetailImpl requestC = new RequestDetailImpl();
 		List<OptionDetailImpl> legsC = new ArrayList<>(3);
@@ -331,12 +333,13 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		legC1.setUnderlyingRIC("0005.HK");
 		legsC.add(legC1);
 		requestC.setLegs(legsC);
-		requestC.setIdentifier(Integer.MAX_VALUE/2);
+		requestC.setIdentifier(Integer.MAX_VALUE - 2);
+		requestC.setUnderlyingRIC("0005.HK");
 		
 		OptionRequestFactory factoryMock = mock(OptionRequestFactoryImpl.class);
 		requestService.setOptionRequestFactory(factoryMock);
-		when(factoryMock.getNewInstance("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestA);
-		when(factoryMock.getNewInstance("P 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestB);
+		when(factoryMock.getNewInstance("C+P+c 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestA);
+		when(factoryMock.getNewInstance("P+C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestB);
 		when(factoryMock.getNewInstance("C 100 20Jan2020 0005.HK", Integer.MAX_VALUE, "testBook", "tester")).thenReturn(requestC);
 		
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
@@ -348,8 +351,8 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		doNothing().when(calculationServiceMock).calculate(any(BlackScholesModelImpl.class), any(RequestDetailImpl.class));
 		
 		// Act
-		requestService.insert("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
-		requestService.insert("P 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		requestService.insert("C+P+c 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
+		requestService.insert("P+C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "testBook", "tester");
 		requestService.insert("C 100 20Jan2020 0005.HK", Integer.MAX_VALUE, "testBook", "tester");
 		
 		Map<String, PriceDetailImpl> prices = requestService.getPriceUpdates();

@@ -152,7 +152,8 @@ $(document).ready(function()
 	var requestsGrid = new Slick.Grid("#requestsGrid", dataView, columns, options);
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
-	getRequestsFromTodayOnly();	
+	getRequestsFromTodayOnly();
+	var columnpicker = new Slick.Controls.ColumnPicker(columns, requestsGrid, options);
 	
 	function processPriceUpdates(prices)
 	{
@@ -500,15 +501,32 @@ $(document).ready(function()
         }
     });
 	
+	function updateStatusInGrid(updatedRequest, row, oldStatus, newStatus)
+	{	
+    	var isPickedUpByChanging = ((oldStatus != "PICKED_UP") && (newStatus == "PICKED_UP")) 
+			|| ((oldStatus != "PENDING") && (newStatus == "PENDING"));
+    		
+    	dataView.getItem(row).status = newStatus;
+    	
+    	if(isPickedUpByChanging && dataView.getItem(row).pickedUpBy != updatedRequest.pickedUpBy)
+    		dataView.getItem(row).pickedUpBy = updatedRequest.pickedUpBy;			    		
+    	else
+    		isPickedUpByChanging = false;
+    	
+    	requestsGrid.updateRow(row);
+    	
+    	requestsGrid.flashCell(row, requestsGrid.getColumnIndex("status"), 100);
+    	
+    	if(isPickedUpByChanging)
+    		requestsGrid.flashCell(row, requestsGrid.getColumnIndex("pickedUpBy"), 100);
+	}
+	
 	function ajaxSendStatusUpdate(row, newStatus)
 	{
 		var identifier = dataView.getItem(row).identifier;
 		var oldStatus = dataView.getItem(row).status;
 		var lastUpdatedBy = "ladeoye"; // TODO
 		var json = { "identifier" : identifier, "status" : newStatus, "lastUpdatedBy" : lastUpdatedBy};
-		
-		var isPickedUpByChanging = ((oldStatus != "PICKED_UP") && (newStatus == "PICKED_UP")) 
-			|| ((oldStatus != "PENDING") && (newStatus == "PENDING"));
 		
 		$.ajax({
 		    url: contextPath + "/requests/updateStatus", 
@@ -522,20 +540,7 @@ $(document).ready(function()
 		    success: function(updatedRequest) 
 		    {
 		    	if(updatedRequest)
-		    	{
-			    	dataView.getItem(row).status = newStatus;
-			    	// if the pickup is changing but the 
-			    	if(isPickedUpByChanging && dataView.getItem(row).pickedUpBy != updatedRequest.pickedUpBy)
-			    		dataView.getItem(row).pickedUpBy = updatedRequest.pickedUpBy;			    		
-			    	else
-			    		isPickedUpByChanging = false;
-			    	
-			    	requestsGrid.updateRow(row);
-			    	
-			    	requestsGrid.flashCell(row, requestsGrid.getColumnIndex("status"), 100);
-			    	if(isPickedUpByChanging)
-			    		requestsGrid.flashCell(row, requestsGrid.getColumnIndex("pickedUpBy"), 100);
-		    	}
+		    		updateStatusInGrid(updatedRequest, row, oldStatus, newStatus);
 		    	else
 		    		alert("Server failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus);
 		    },		    
