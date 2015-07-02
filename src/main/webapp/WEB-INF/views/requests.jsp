@@ -36,19 +36,22 @@
 		  <b>Select new status:</b>
 		  <li data="PENDING">Pending</li>
 		  <li data="PICKED_UP">Picked Up</li>
+		  <li data="PASSED">Passed</li>
 		  <li data="TRADED_AWAY">Traded Away</li>
 		  <li data="TRADED_AWAY_ASK">Traded Away Ask</li>
 		  <li data="TRADED_AWAY_BID">Traded Away Bid</li>
 		  <li data="FILLED">Filled</li>
 		  <li data="FILLED_ASK">Filled Ask</li>
-		  <li data="FILLED_BID">Filled Bid</li>
-		  <li data="PASSED">Passed</li>
+		  <li data="FILLED_BID">Filled Bid</li>		  
 		  <li data="INVALID">Invalid</li>
 		</ul>
 		<ul id="requestContextMenu" class="contextMenu" style="display:none;position:absolute">
 		  <b>Select operation to perform:</b>
+		  <li data="VIEW_DETAILS">View details</li>
+		  <li data="PICK_UP">Pick up</li>
 		  <li data="SAVE">Save changes</li>
 		  <li data="RECALCULATE">Recalculate</li>
+		  <li data="FREEZE">Freeze underlying price</li>
 		  <li data="CHART">Chart</li>
 		  <li data="CLONE">Clone</li>
 		  <li data="DELETE">Delete</li>

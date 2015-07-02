@@ -467,14 +467,16 @@ ApplicationListener<PriceUpdateEvent>
 			throw new NullPointerException("requestToUpdate argument is invalid");
 		}
 		
-		return this.requestDao.update(requestToUpdate);
+		Boolean result = this.requestDao.update(requestToUpdate);
+		
+		return result && this.updateCache(requestToUpdate.getIdentifier());
 	}
 
 	/**
 	 * Updates the status of the request passed in as a parameter.
 	 * 
 	 * @param 	requestToUpdate 	the request's status will overwrite the one persisted.
-	 * @returns true if the status update completed successfully, otherwise false.
+	 * @returns true if the status update is completed successfully, otherwise false.
 	 * @throws NullPointerException if the set of requestToUpdate is invalid.
 	 */
 	@Override
@@ -488,6 +490,34 @@ ApplicationListener<PriceUpdateEvent>
 			throw new NullPointerException("requestToUpdate argument is invalid");
 		}
 		
-		return this.requestDao.updateStatus(requestToUpdate);
+		boolean result = this.requestDao.updateStatus(requestToUpdate);
+		
+		return result && this.updateCache(requestToUpdate.getIdentifier());
+	}
+	
+	/**
+	 * Updates the cache with a request that either does not exist in or is out-of-date.
+	 * The latest update comes from the persistence store.
+	 * 
+	 * @param 	identifier 	the request's identifier.
+	 * @returns true if the cache update is completed successfully, otherwise false.
+	 */
+	public boolean updateCache(int identifier)
+	{
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
+		
+			if(isRequestCached(identifier))
+				return this.requests.put(identifier, this.requestDao.get(identifier)) != null;
+			else
+				return this.get(identifier) != null;
+		}
+		finally
+		{
+			lock.unlock();
+		}
 	}
 }

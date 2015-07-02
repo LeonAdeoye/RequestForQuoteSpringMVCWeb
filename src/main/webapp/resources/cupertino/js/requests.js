@@ -500,19 +500,15 @@ $(document).ready(function()
         }
     });
 	
-    $("#statusContextMenu").click(function (e) 
-    {
-    	if (!$(e.target).is("li")) 
-    		return;
-      
-    	if (!requestsGrid.getEditorLock().commitCurrentEdit())
-    		return;
-    	
-    	var row = $(this).data("row");
+	function ajaxSendStatusUpdate(row, newStatus)
+	{
 		var identifier = dataView.getItem(row).identifier;
-		var newStatus = $(e.target).attr("data");
-	    var lastUpdatedBy = "ladeoye"; // TODO
-	    var json = { "identifier" : identifier, "status" : newStatus, "lastUpdatedBy" : lastUpdatedBy};
+		var oldStatus = dataView.getItem(row).status;
+		var lastUpdatedBy = "ladeoye"; // TODO
+		var json = { "identifier" : identifier, "status" : newStatus, "lastUpdatedBy" : lastUpdatedBy};
+		
+		var isPickedUpByChanging = ((oldStatus != "PICKED_UP") && (newStatus == "PICKED_UP")) 
+			|| ((oldStatus != "PENDING") && (newStatus == "PENDING"));
 		
 		$.ajax({
 		    url: contextPath + "/requests/updateStatus", 
@@ -523,24 +519,45 @@ $(document).ready(function()
 		    mimeType: 'application/json',
 		    timeout: 5000,
 		    cache: false,
-		    success: function(updated) 
+		    success: function(updatedRequest) 
 		    {
-		    	if(updated)
+		    	if(updatedRequest)
 		    	{
-			    	dataView.getItem(row).status = $(e.target).attr("data");
-			    	requestsGrid.updateRow(row);		    		
+			    	dataView.getItem(row).status = newStatus;
+			    	// if the pickup is changing but the 
+			    	if(isPickedUpByChanging && dataView.getItem(row).pickedUpBy != updatedRequest.pickedUpBy)
+			    		dataView.getItem(row).pickedUpBy = updatedRequest.pickedUpBy;			    		
+			    	else
+			    		isPickedUpByChanging = false;
+			    	
+			    	requestsGrid.updateRow(row);
+			    	
+			    	requestsGrid.flashCell(row, requestsGrid.getColumnIndex("status"), 100);
+			    	if(isPickedUpByChanging)
+			    		requestsGrid.flashCell(row, requestsGrid.getColumnIndex("pickedUpBy"), 100);
 		    	}
 		    	else
-		    		alert("Failed to update the status of request: "  + identifier + " to: " + newStatus);
+		    		alert("Server failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus);
 		    },		    
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
 	        	if(textStatus == "timeout")
-	        		alert('Response to newly created RFQ timed-out after five seconds');
+	        		alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + ". Status update timed-out after five seconds.");
 	        	else
-	            	alert('Error: ' + xhr.responseText);                	
+	            	alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + ". Error: " + xhr.responseText);                	
 	        }
-		});	    	      
+		});
+	}
+	
+    $("#statusContextMenu").click(function (e) 
+    {
+    	if (!$(e.target).is("li")) 
+    		return;
+      
+    	if (!requestsGrid.getEditorLock().commitCurrentEdit())
+    		return;
+    	
+		ajaxSendStatusUpdate( $(this).data("row"), $(e.target).attr("data"));		
     });
     
     $("#requestContextMenu").click(function (e) 
@@ -552,7 +569,17 @@ $(document).ready(function()
     		return;
       
     	var row = $(this).data("row");
-    	alert(row);
+    	var operation = $(e.target).attr("data");
+    	
+    	switch (operation) 
+    	{
+        	case "PICK_UP":
+        		ajaxSendStatusUpdate(row, "PICKED_UP");	
+        		break; 
+        	default: 
+        		alert("Sorry, this operation is yet to be supported!");
+    	}    	
+
     });	    
 	
 	$(".btn").button(); // TODO disable does not work yet. find disabled attribute and add it.

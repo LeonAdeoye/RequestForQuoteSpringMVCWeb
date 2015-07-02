@@ -238,6 +238,14 @@
 	<update id="updateStatus" parameterType="RequestDetailImpl">
 		UPDATE requestforquotemain
 		SET status = #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		<choose>
+			<when test='status.name().equals("PICKED_UP")'>
+				pickedUpBy = #{lastUpdatedBy},
+			</when>
+			<when test='status.name().equals("PENDING")'>
+				pickedUpBy = NULL,
+			</when>
+		</choose>		
 		lastUpdatedBy = #{lastUpdatedBy},
 		lastUpdate = now()	
 		WHERE identifier = #{identifier}
@@ -245,8 +253,7 @@
 
 	<update id="update" parameterType="RequestDetailImpl">
 		UPDATE requestforquotemain
-		SET status = #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
-		clientId = #{clientId}, 
+		SET clientId = #{clientId}, 
 		bookCode = #{bookCode},		
 		lotSize = #{lotSize},
 		isOTC = #{isOTC},

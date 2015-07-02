@@ -77,7 +77,7 @@ public class RequestControllerImpl
 	public @ResponseBody RequestDetailImpl createNewRequest(@RequestBody RequestDetailImpl newRequest)
 	{
 		RequestDetailImpl createdRequest = this.requestService.insert(newRequest.getRequest(),
-		newRequest.getClientId(), newRequest.getBookCode(), newRequest.getLastUpdatedBy());
+				newRequest.getClientId(), newRequest.getBookCode(), newRequest.getLastUpdatedBy());
 	 
 		if(createdRequest != null)
 		{
@@ -97,46 +97,46 @@ public class RequestControllerImpl
 			method=RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody boolean updateStatus(@RequestBody RequestDetailImpl requestToUpdate)
+	public @ResponseBody RequestDetailImpl updateStatus(@RequestBody RequestDetailImpl requestToUpdate)
 	{
-		boolean result = this.requestService.updateStatus(requestToUpdate);
- 
-		if(result)
+		if(this.requestService.updateStatus(requestToUpdate))
 		{
 			if(logger.isDebugEnabled())
 				logger.debug("Updated request with ID: " + requestToUpdate.getIdentifier()
 						 + " to status: " + requestToUpdate.getStatus());
+			
+			return this.requestService.get(requestToUpdate.getIdentifier());
 		}
 		else
 		{
 			if(logger.isErrorEnabled())
 				logger.error("Failed to Update request with ID: " + requestToUpdate.getIdentifier()
 				+ " to status: " + requestToUpdate.getStatus());
+			
+			return null;
 		}
-
-		return result;
 	}
 	 
 	@RequestMapping(value="/requests/update",
 			method=RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody boolean update(@RequestBody RequestDetailImpl requestToUpdate)
+	public @ResponseBody RequestDetailImpl update(@RequestBody RequestDetailImpl requestToUpdate)
 	{
-		boolean result = this.requestService.update(requestToUpdate);
- 
-		if(result)
+		if(this.requestService.update(requestToUpdate))
 		{
 			if(logger.isDebugEnabled())
 				logger.debug("Updated request with ID: " + requestToUpdate.getIdentifier());
+			
+			return this.requestService.get(requestToUpdate.getIdentifier());
 		}
 		else
 		{
 			if(logger.isErrorEnabled())
 				logger.error("Failed to Update request with ID: " + requestToUpdate.getIdentifier());
+			
+			return null;
 		}
-
-		return result;
 	}
 		
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
