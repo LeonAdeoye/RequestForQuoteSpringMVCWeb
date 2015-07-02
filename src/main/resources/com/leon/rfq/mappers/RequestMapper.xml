@@ -228,5 +228,63 @@
 		DELETE FROM requestforquotemain
 		WHERE identifier = #{identifier}
 	</delete>		
+
+	<update id="updateStatus" parameterType="RequestDetailImpl">
+		UPDATE requestforquotemain
+		SET status = #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		lastUpdatedBy = #{lastUpdatedBy}
+		WHERE identifier = #{identifier}
+	</update>
+
+	<update id="update" parameterType="RequestDetailImpl">
+		UPDATE requestforquotemain
+		SET status = #{status, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		clientId = #{clientId}, 
+		bookCode = #{bookCode},		
+		lotSize = #{lotSize},
+		isOTC = #{isOTC},
+		notionalMillions = #{notionalMillions},
+		notionalCurrency = #{notionalCurrency},
+		notionalFXRate = #{notionalFXRate},
+		contracts = #{contracts},
+		multiplier = #{multiplier},
+		quantity = #{quantity},
+		premiumSettlementCurrency = #{premiumSettlementCurrency},
+		premiumSettlementDate = #{premiumSettlementDate},
+		premiumSettlementDaysOverride = #{premiumSettlementDaysOverride},
+		premiumSettlementFXRate = #{premiumSettlementFXRate},
+		salesCreditAmount = #{salesCreditAmount},
+		salesCreditPercentage = #{salesCreditPercentage},
+		salesCreditFXRate = #{salesCreditFXRate},
+		salesCreditCurrency = #{salesCreditCurrency},
+		salesComment = #{salesComment},
+		traderComment = #{traderComment},
+		clientComment #{clientComment},
+		deltaNotional = #{deltaNotional},
+		gammaNotional = #{gammaNotional},
+		vegaNotional = #{vegaNotional},
+		thetaNotional = #{thetaNotional},
+		rhoNotional = #{rhoNotional},
+		deltaShares = #{deltaShares},
+		gammaShares = #{gammaShares},
+		vegaShares = #{vegaShares},
+		thetaShares = #{thetaShares},
+		rhoShares = #{rhoShares},
+		hedgePrice = #{hedgePrice},
+		hedgeType = #{hedgeType, typeHandler=org.apache.ibatis.type.EnumTypeHandler},
+		askFinalAmount = #{askFinalAmount},
+		askFinalPercentage = #{askFinalPercentage},
+		askImpliedVol = #{askImpliedVol},
+		askPremiumAmount = #{askPremiumAmount},
+		askPremiumPercentage = #{askPremiumPercentage},
+		bidFinalAmount = #{bidFinalAmount},
+		bidFinalPercentage = #{bidFinalPercentage},
+		bidImpliedVol = #{bidImpliedVol},
+		bidPremiumAmount = #{bidPremiumAmount},
+		bidPremiumPercentage = #{bidPremiumPercentage},																			 
+		pickedUpBy = #{pickedUpBy},
+		lastUpdatedBy = #{lastUpdatedBy}		
+		WHERE identifier = #{identifier}
+	</update>
 			
 </mapper>

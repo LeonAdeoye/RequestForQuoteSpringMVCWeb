@@ -448,4 +448,46 @@ ApplicationListener<PriceUpdateEvent>
 		return underlyings.stream().collect(Collectors
 				.toMap(underlying -> underlying, underlying -> this.priceService.getAllPrices(underlying)));
 	}
+
+	/**
+	 * Updates all of the request details passed in as a parameter.
+	 * 
+	 * @param 	requestToUpdate 	the request will overwrite the one persisted.
+	 * @returns true if the update completed successfully, otherwise false.
+	 * @throws NullPointerException if the set of requestToUpdate is invalid.
+	 */
+	@Override
+	public boolean update(RequestDetailImpl requestToUpdate)
+	{
+		if(requestToUpdate == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("requestToUpdate argument is invalid");
+			
+			throw new NullPointerException("requestToUpdate argument is invalid");
+		}
+		
+		throw new UnsupportedOperationException("Complete request update is not yet supported");
+	}
+
+	/**
+	 * Updates the status of the request passed in as a parameter.
+	 * 
+	 * @param 	requestToUpdate 	the request's status will overwrite the one persisted.
+	 * @returns true if the status update completed successfully, otherwise false.
+	 * @throws NullPointerException if the set of requestToUpdate is invalid.
+	 */
+	@Override
+	public boolean updateStatus(RequestDetailImpl requestToUpdate)
+	{
+		if(requestToUpdate == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("requestToUpdate argument is invalid");
+			
+			throw new NullPointerException("requestToUpdate argument is invalid");
+		}
+		
+		return this.requestDao.updateStatus(requestToUpdate);
+	}
 }

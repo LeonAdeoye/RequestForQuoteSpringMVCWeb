@@ -223,7 +223,7 @@ $(document).ready(function()
 	            	alert('Error: ' + xhr.responseText);                	
 	        }
 		});		
-	});	
+	});
 	
 	function getPriceUpdates() 
 	{
@@ -507,10 +507,40 @@ $(document).ready(function()
       
     	if (!requestsGrid.getEditorLock().commitCurrentEdit())
     		return;
-      
+    	
     	var row = $(this).data("row");
-    	dataView.getItem(row).status = $(e.target).attr("data");
-    	requestsGrid.updateRow(row);
+		var identifier = dataView.getItem(row).identifier;
+		var newStatus = $(e.target).attr("data");
+	    var lastUpdatedBy = "ladeoye"; // TODO
+	    var json = { "identifier" : identifier, "status" : newStatus, "lastUpdatedBy" : lastUpdatedBy};
+		
+		$.ajax({
+		    url: contextPath + "/requests/updateStatus", 
+		    type: 'POST',
+		    data: JSON.stringify(json),
+		    dataType: 'json',  
+		    contentType: 'application/json', 
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(updated) 
+		    {
+		    	if(updated)
+		    	{
+			    	dataView.getItem(row).status = $(e.target).attr("data");
+			    	requestsGrid.updateRow(row);		    		
+		    	}
+		    	else
+		    		alert("Failed to update the status of request: "  + identifier + " to: " + newStatus);
+		    },		    
+	        error: function (xhr, textStatus, errorThrown) 
+	        {
+	        	if(textStatus == "timeout")
+	        		alert('Response to newly created RFQ timed-out after five seconds');
+	        	else
+	            	alert('Error: ' + xhr.responseText);                	
+	        }
+		});	    	      
     });
     
     $("#requestContextMenu").click(function (e) 

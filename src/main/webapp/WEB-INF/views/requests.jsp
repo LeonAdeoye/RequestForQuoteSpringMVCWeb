@@ -33,20 +33,25 @@
 	</head>
 	<body>
 		<ul id="statusContextMenu" class="contextMenu" style="display:none;position:absolute">
-		  <b>Set current status:</b>
-		  <li data="Pending">Pending</li>
-		  <li data="Traded Away">Traded Away</li>
-		  <li data="Traded Away Ask">Traded Away Ask</li>
-		  <li data="Traded Away Bid">Traded Away Bid</li>
-		  <li data="Traded Ask">Traded Ask</li>
-		  <li data="Traded Bid">Traded Bid</li>
-		  <li data="Passed">Passed</li>
+		  <b>Select new status:</b>
+		  <li data="PENDING">Pending</li>
+		  <li data="PICKED_UP">Picked Up</li>
+		  <li data="TRADED_AWAY">Traded Away</li>
+		  <li data="TRADED_AWAY_ASK">Traded Away Ask</li>
+		  <li data="TRADED_AWAY_BID">Traded Away Bid</li>
+		  <li data="FILLED">Filled</li>
+		  <li data="FILLED_ASK">Filled Ask</li>
+		  <li data="FILLED_BID">Filled Bid</li>
+		  <li data="PASSED">Passed</li>
+		  <li data="INVALID">Invalid</li>
 		</ul>
 		<ul id="requestContextMenu" class="contextMenu" style="display:none;position:absolute">
-		  <b>Set current status:</b>
-		  <li data="Clone">Clone</li>
-		  <li data="Recalculate">Recalculate</li>
-		  <li data="Chart">Chart</li>
+		  <b>Select operation to perform:</b>
+		  <li data="SAVE">Save changes</li>
+		  <li data="RECALCULATE">Recalculate</li>
+		  <li data="CHART">Chart</li>
+		  <li data="CLONE">Clone</li>
+		  <li data="DELETE">Delete</li>
 		</ul>
 		<div id="requests_bar">
 			<div id="requests_title">

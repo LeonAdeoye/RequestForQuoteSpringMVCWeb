@@ -14,7 +14,9 @@ public interface RequestMapper
 	
 	int insert(RequestDetailImpl newRequest);
 	
-	int update(int requestId, String bookCode, int clientId, boolean isValid, String updatedByUser);
+	int update(RequestDetailImpl newRequest);
+	
+	int updateStatus(RequestDetailImpl newRequest);
 	
 	RequestDetailImpl requestExistsWithRequestId(int requestId);
 }

@@ -10,7 +10,9 @@ public interface RequestDao
 
 	boolean insert(RequestDetailImpl newRequest);
 	 
-	boolean update(int requestId, String bookCode, int clientId,	boolean isValid, String requesedByUser);
+	boolean updateStatus(RequestDetailImpl requestToUpdate);
+	
+	boolean update(RequestDetailImpl requestToUpdate);
 
 	List<RequestDetailImpl> getAll();
 	 

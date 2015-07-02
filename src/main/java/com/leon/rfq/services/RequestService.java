@@ -15,6 +15,10 @@ public interface RequestService
 	
 	RequestDetailImpl insert(String requestSnippet, int clientId, String bookName, String savedByUser);
 	
+	boolean update(RequestDetailImpl requestToUpdate);
+	
+	boolean updateStatus(RequestDetailImpl requestToUpdate);
+	
 	boolean delete(int requestId);
 
 	void setUserDao(RequestDao requestDao);

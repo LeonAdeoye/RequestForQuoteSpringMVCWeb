@@ -15,8 +15,8 @@ public final class EnumTypes
 	
 	public static enum StatusEnum
 	{
-		PENDING, TRADEDAWAY, PICKEDUP,
-		FILLED, INVALID
+		PENDING, PICKED_UP, TRADED_AWAY, TRADED_AWAY_ASK, TRADED_AWAY_BID,
+		FILLED,	FILLED_ASK,	FILLED_BID,	INVALID, PASSED
 	}
 	
 	public static enum HedgeTypeEnum

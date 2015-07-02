@@ -33,9 +33,15 @@ public class RequestDaoImpl implements RequestDao
 	}
 
 	@Override
-	public boolean update(int requestId, String bookCode, int clientId, boolean isValid, String updatedByUser)
+	public boolean updateStatus(RequestDetailImpl requestToUpdate)
 	{
-		return this.requestMapper.update(requestId, bookCode, clientId, isValid, updatedByUser) == 1;
+		return this.requestMapper.updateStatus(requestToUpdate) == 1;
+	}
+	
+	@Override
+	public boolean update(RequestDetailImpl requestToUpdate)
+	{
+		return this.requestMapper.update(requestToUpdate) == 1;
 	}
 
 	@SuppressWarnings("serial")

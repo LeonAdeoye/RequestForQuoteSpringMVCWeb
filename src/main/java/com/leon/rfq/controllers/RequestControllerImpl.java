@@ -92,6 +92,30 @@ public class RequestControllerImpl
 	
 		 return createdRequest;
 	 }
+	 
+	 @RequestMapping(value="/requests/updateStatus",
+			 method=RequestMethod.POST,
+			 produces = MediaType.APPLICATION_JSON_VALUE,
+			 consumes = MediaType.APPLICATION_JSON_VALUE)
+	 public @ResponseBody boolean updateStatus(@RequestBody RequestDetailImpl requestToUpdate)
+	 {
+		 boolean result = this.requestService.updateStatus(requestToUpdate);
+	 
+		 if(result)
+		 {
+			 if(logger.isDebugEnabled())
+				 logger.debug("Updated request with ID: " + requestToUpdate.getIdentifier()
+						 + " to status: " + requestToUpdate.getStatus());
+		 }
+		 else
+		 {
+			 if(logger.isErrorEnabled())
+				 logger.error("Failed to Update request with ID: " + requestToUpdate.getIdentifier()
+					 + " to status: " + requestToUpdate.getStatus());
+		 }
+	
+		 return result;
+	 }
 		
 	@RequestMapping(value = "/requests", method = RequestMethod.GET)
 	public String getAll(Model model)
