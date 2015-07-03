@@ -161,7 +161,7 @@
 		</div>
 		
 		<div style="width:1330px;">
-    		<div id="requestsGrid" style="width:1330px;height:585px;"></div>
+    		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div>
 
 	</body>

@@ -191,16 +191,19 @@ $(document).ready(function()
 	
 	function processPriceUpdates(prices)
 	{
+		if(!$("#groupByNothing").is(":checked"))
+			return;
+		
 		dataView.beginUpdate();
 		var changes = {};
 		var increaseInPrice = false;
-		
+				
 		for(var i = 0, size = dataView.getLength(); i < size; i++)
 		{
 			var item = dataView.getItemByIdx(i);
-			if(prices[item["underlyingRIC"]] !== undefined)
+			if((item !== undefined) && (prices[item["underlyingRIC"]] !== undefined))
 			{
-				if(item["underlyingPrice"] != prices[item["underlyingRIC"]].lastPrice)
+				if((item["underlyingPrice"]) && (item["underlyingPrice"] != prices[item["underlyingRIC"]].lastPrice))
 				{
 					if(prices[item["underlyingRIC"]].lastPrice > item["underlyingPrice"])
 						increaseInPrice = true;
