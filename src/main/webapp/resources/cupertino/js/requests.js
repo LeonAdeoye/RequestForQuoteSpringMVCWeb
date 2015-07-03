@@ -382,10 +382,12 @@ $(document).ready(function()
 	
 	requestsGrid.render();
 	
-	$("#requests.groupBy.radio").buttonset();
-	$("#requests.realTimeUpdates.checkbox").buttonset();
+/*	$("#requestsGroupByRadio").buttonset();
+	$("#requestsRealTimeUpdatesCheckbox").buttonset()*/;
 	
-	$("#underlyingFrequencySlider").slider(
+	$("#priceFrequencySliderValue").html(" = 1000 ms");
+	
+	$("#priceFrequencySlider").slider(
 	{
 		"range": "min",
 		"min" : 200,
@@ -400,9 +402,13 @@ $(document).ready(function()
 	    			priceUpdateIntervalTime = ui.value;
 	    		else
 	    			priceUpdateIntervalTime = priceUpdateTimeout - 500;
+	    		
+	    		$("#priceFrequencySliderValue").html(" = " + priceUpdateIntervalTime + " ms");
 	    	}	    	
 	    }
 	});
+	
+	$("#calculationFrequencySliderValue").html(" = 1000 ms");
 	
 	$("#calculationFrequencySlider").slider(
 	{
@@ -419,9 +425,13 @@ $(document).ready(function()
 	    			calculationUpdateIntervalTime = ui.value;
 	    		else
 	    			calculationUpdateIntervalTime = calculationUpdateTimeout - 500;
+	    		
+	    		$("#calculationFrequencySliderValue").html(" = " + calculationUpdateIntervalTime + " ms");
 	    	}
 	    }
 	});
+	
+	$("#statusFrequencySliderValue").html(" = 1000 ms");
 	
 	$("#statusFrequencySlider").slider(
 	{
@@ -438,71 +448,85 @@ $(document).ready(function()
 	    			statusUpdateIntervalTime = ui.value;
 	    		else
 	    			statusUpdateIntervalTime = statusUpdateTimeout - 500;
+	    		
+	    		$("#statusFrequencySliderValue").html(" = " + statusUpdateIntervalTime + " ms");
 	    	}
 	    }
 	});
 	
+	$("#priceTimeoutSliderValue").html(" = 5000 ms");
+	
 	$("#priceTimeoutSlider").slider(
 	{
 		"range": "min",
-		"min" : priceUpdateIntervalTime + 500,
+		"min" : priceUpdateIntervalTime + 1000,
 		"max" : 10000,
-		"step" : 1000,
+		"step" : 200,
 		"value" : 5000,
 	    "stop": function (event, ui)
 	    {
 	    	if (priceUpdateTimeout != ui.value)
 			{
-	    		if(ui.value >= (priceUpdateIntervalTime + 500))
+	    		if(ui.value >= (priceUpdateIntervalTime + 1000))
 	    			priceUpdateTimeout = ui.value;
 	    		else
-	    			priceUpdateTimeout = priceUpdateIntervalTime + 500;	    			
+	    			priceUpdateTimeout = priceUpdateIntervalTime + 1000;
+	    		
+	    		$("#priceTimeoutSliderValue").html(" = " + priceUpdateTimeout + " ms");
 			}
 	    }
 	});
 	
+	$("#statusTimeoutSliderValue").html(" = 5000 ms");
+	
 	$("#statusTimeoutSlider").slider(
 	{
 		"range": "min",
-		"min" : statusUpdateIntervalTime + 500,
+		"min" : statusUpdateIntervalTime + 1000,
 		"max" : 10000,
-		"step" : 1000,
+		"step" : 200,
 		"value" : 5000,
 	    "stop": function (event, ui)
 	    {
 	    	if (statusUpdateTimeout != ui.value)
 			{
-	    		if(ui.value >= (statusUpdateIntervalTime + 500))
+	    		if(ui.value >= (statusUpdateIntervalTime + 1000))
 	    			statusUpdateTimeout = ui.value;
 	    		else
-	    			statusUpdateTimeout = statusUpdateIntervalTime + 500;	    			
+	    			statusUpdateTimeout = statusUpdateIntervalTime + 1000;
+	    		
+	    		$("#statusTimeoutSliderValue").html(" = " + statusUpdateTimeout + " ms");
 			}
 	    }
-	});	
+	});
+	
+	$("#calculationTimeoutSliderValue").html(" = 5000 ms");
 
 	$("#calculationTimeoutSlider").slider(
 	{
 		"range": "min",
-		"min" : calculationUpdateIntervalTime + 500,
+		"min" : calculationUpdateIntervalTime + 1000,
 		"max" : 10000,
-		"step" : 1000,
+		"step" : 200,
 		"value" : 5000,
 	    "stop": function (event, ui)
 	    {
 	    	if (calculationUpdateTimeout != ui.value)
 			{
-	    		if(ui.value >= (calculationUpdateIntervalTime + 500))
+	    		if(ui.value >= (calculationUpdateIntervalTime + 1000))
 	    			calculationUpdateTimeout = ui.value;
 	    		else
-	    			calculationUpdateTimeout = calculationUpdateIntervalTime + 500;	    			
+	    			calculationUpdateTimeout = calculationUpdateIntervalTime + 1000;
+	    		
+	    		$("#calculationTimeoutSliderValue").html(" = " + calculationUpdateTimeout + " ms");
 			}
 	    }
 	});
 	
 	function appendToTopPanel()
 	{
-		$("#inlineConfigurePanel").appendTo(requestsGrid.getTopPanel());
-		$("#inlineGroupByPanel").appendTo(requestsGrid.getTopPanel());
+		$("#requestsInlineConfigurePanel").appendTo(requestsGrid.getTopPanel());
+		$("#requestsInlineGroupByPanel").appendTo(requestsGrid.getTopPanel());
 	}
 	
 	appendToTopPanel();		
@@ -513,10 +537,10 @@ $(document).ready(function()
     	switch ($(this).attr("data")) 
     	{
         	case "configure":
-        		$("#inlineConfigurePanel").show();
+        		$("#requestsInlineConfigurePanel").show();
         		break;
         	case "group":
-        		$("#inlineGroupByPanel").show();
+        		$("#requestsInlineGroupByPanel").show();
         		break;        		
         	case "search":
         		requestsGrid.setTopPanelVisibility(false);

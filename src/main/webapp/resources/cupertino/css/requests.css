@@ -118,3 +118,8 @@ fieldset
 	border: 1px solid black;
 	background: olive;
 }
+
+.requests_configure_item
+{
+	margin: 30px, 30px, 30px , 30px
+}

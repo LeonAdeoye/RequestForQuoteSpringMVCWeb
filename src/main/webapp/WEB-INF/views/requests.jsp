@@ -35,41 +35,83 @@
 	</head>
 	<body>
 		
-		<div id="inlineConfigurePanel" class="inlinePanel" style="display:none;background:#dddddd;padding:3px;color:black;">
+		<div id="requestsInlineConfigurePanel" class="inlinePanel" style="display:none;background:#dddddd;padding:3px;color:black;">
 			<Label><spring:message code="requests.configure.turnOn.updates.label"/></Label>
-			<div id="requests.realTimeUpdates.checkbox">
-			  <input type="checkbox" id="turnOnPriceUpdates"><label for="turnOnPriceUpdates"><spring:message code="requests.configure.turnOn.priceUpdates.label"/></label>
-			  <input type="checkbox" id="turnOnStatusUpdates"><label for="turnOnStatusUpdates"><spring:message code="requests.configure.turnOn.statusUpdates.label"/></label>
-			  <input type="checkbox" id="turnOnCalculationUpdates"><label for="turnOnCalculationUpdates"><spring:message code="requests.configure.turnOn.calculationUpdates.label"/></label>
-			</div>			
-		  	<Label><spring:message code="requests.configure.underlying.frequency.label"/></Label>
-		  	<div style="width:250px;display:inline-block;" id="underlyingFrequencySlider"></div>
-		  	<Label><spring:message code="requests.configure.calculation.frequency.label"/></Label>
-		  	<div style="width:250px;display:inline-block;" id="calculationFrequencySlider"></div>
-		  	<Label><spring:message code="requests.configure.status.frequency.label"/></Label>
-		  	<div style="width:250px;display:inline-block;" id="statusFrequencySlider"></div>
-		  	<Label><spring:message code="requests.configure.price.timeout.label"/></Label>
-		  	<div style="width:250px;display:inline-block;" id="priceTimeoutSlider"></div>
-		  	<Label><spring:message code="requests.configure.status.timeout.label"/></Label>
-		  	<div style="width:250px;display:inline-block;" id="statusTimeoutSlider"></div>
-		  	<Label><spring:message code="requests.configure.calculation.timeout.label"/></Label>
-		  	<div style="width:250px;display:inline-block;" id="calculationTimeoutSlider"></div>
-		  	<Button id="requests.configure.save" class="btn"><spring:message code="requests.configure.save.button.label"/></Button>
-		  	<Button id="requests.configure.save_and_close" class="btn"><spring:message code="requests.configure.save_and_close.button.label"/></Button>
-		  	<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>		  	
+			<div id="requestsRealTimeUpdatesCheckbox" class="requests_configure_item">
+				<input type="checkbox" id="turnOnPriceUpdates"><label for="turnOnPriceUpdates"><spring:message code="requests.configure.turnOn.priceUpdates.label"/></label>
+				<input type="checkbox" id="turnOnStatusUpdates"><label for="turnOnStatusUpdates"><spring:message code="requests.configure.turnOn.statusUpdates.label"/></label>
+				<input type="checkbox" id="turnOnCalculationUpdates"><label for="turnOnCalculationUpdates"><spring:message code="requests.configure.turnOn.calculationUpdates.label"/></label>
+			</div>
+			<br>			
+		  	<div class="requests_configure_item">
+			  	<Label><spring:message code="requests.configure.price.frequency.label"/></Label>
+			  	<div style="width:250px;display:inline-block;" id="priceFrequencySlider"></div>
+			  	<Label id="priceFrequencySliderValue"></Label>
+			</div>
+			<br>
+			<div class="requests_configure_item">
+			  	<Label><spring:message code="requests.configure.price.timeout.label"/></Label>
+			  	<div style="width:250px;display:inline-block;" id="priceTimeoutSlider"></div>
+			  	<Label id="priceTimeoutSliderValue"></Label>
+		  	</div>
+		  	<br>		  	
+		  	<div class="requests_configure_item">		  	
+			  	<Label><spring:message code="requests.configure.calculation.frequency.label"/></Label>
+			  	<div style="width:250px;display:inline-block;" id="calculationFrequencySlider"></div>
+			  	<Label id="calculationFrequencySliderValue"></Label>			 
+			</div>
+			<br>
+			<div class="requests_configure_item">			  	
+			  	<Label><spring:message code="requests.configure.calculation.timeout.label"/></Label>
+			  	<div style="width:250px;display:inline-block;" id="calculationTimeoutSlider"></div>
+			  	<Label id="calculationTimeoutSliderValue"></Label>		  	
+			</div>
+			<br>
+			<div class="requests_configure_item">		  	
+			  	<Label><spring:message code="requests.configure.status.frequency.label"/></Label>
+			  	<div style="width:250px;display:inline-block;" id="statusFrequencySlider"></div>
+			  	<Label id="statusFrequencySliderValue"></Label>
+			</div>
+			<br>
+			<div class="requests_configure_item">
+			  	<Label><spring:message code="requests.configure.status.timeout.label"/></Label>
+			  	<div style="width:250px;display:inline-block;" id="statusTimeoutSlider"></div>
+			  	<Label id="statusTimeoutSliderValue"></Label>
+		  	</div>
+		  	<br>
+			<div class="requests_configure_item">
+			  	<Button id="requestsConfigureSave" class="btn"><spring:message code="requests.configure.save.button.label"/></Button>
+			  	<Button id="requestsConfigureSaveAndClose" class="btn"><spring:message code="requests.configure.save_and_close.button.label"/></Button>
+			  	<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+		  	</div>		  	
 		</div>
 		
-		<div id="inlineGroupByPanel" class="inlinePanel" style="display:none;background:#dddddd;padding:3px;color:black;">
+		<div id="requestsInlineGroupByPanel" class="inlinePanel" style="display:none;background:#dddddd;padding:3px;color:black;">
 			<Label><spring:message code="requests.groupBy.title.label"/></Label>
-		  	<div id="requests.groupBy.radio">
-			  	<input type="radio" id="groupByNothing" name="requests.groupBy" checked="checked"><label for="groupByNothing"><spring:message code="requests.groupBy.nothing.label"/></label>
-			    <input type="radio" id="groupByBook" name="requests.groupBy"><label for="groupByBook"><spring:message code="requests.groupBy.book.label"/></label>
-			    <input type="radio" id="groupByClient" name="requests.groupBy"><label for="groupByClient"><spring:message code="requests.groupBy.client.label"/></label>
-			    <input type="radio" id="groupByUnderlying" name="requests.groupBy"><label for="groupByUnderlying"><spring:message code="requests.groupBy.underlying.label"/></label>
-			    <input type="radio" id="groupByStatus" name="requests.groupBy"><label for="groupByStatus"><spring:message code="requests.groupBy.status.label"/></label>
-			    <input type="radio" id="groupByTradeDate" name="requests.groupBy"><label for="groupByTradeDate"><spring:message code="requests.groupBy.tradeDate.label"/></label>
+		  	<div id="requestsGroupByRadio">
+		  		<div class="requests_configure_item">
+				  	<input type="radio" id="groupByNothing" name="requests.groupBy" checked="checked"><label for="groupByNothing"><spring:message code="requests.groupBy.nothing.label"/></label>
+				</div>
+				<div class="requests_configure_item">
+				    <input type="radio" id="groupByBook" name="requests.groupBy"><label for="groupByBook"><spring:message code="requests.groupBy.book.label"/></label>
+				</div>				    
+				<div class="requests_configure_item">
+				    <input type="radio" id="groupByClient" name="requests.groupBy"><label for="groupByClient"><spring:message code="requests.groupBy.client.label"/></label>
+			    </div>
+			    <div class="requests_configure_item">
+				    <input type="radio" id="groupByUnderlying" name="requests.groupBy"><label for="groupByUnderlying"><spring:message code="requests.groupBy.underlying.label"/></label>
+				</div>				    
+				<div class="requests_configure_item">
+				    <input type="radio" id="groupByStatus" name="requests.groupBy"><label for="groupByStatus"><spring:message code="requests.groupBy.status.label"/></label>
+				</div>
+				<div class="requests_configure_item">
+				    <input type="radio" id="groupByTradeDate" name="requests.groupBy"><label for="groupByTradeDate"><spring:message code="requests.groupBy.tradeDate.label"/></label>
+			    </div>
 		  	</div>
-		  	<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>		  	
+		  	<br>
+		  	<div class="requests_configure_item">
+		  		<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+		  	</div>		  	
 		</div>		
 
 		<ul id="statusContextMenu" class="contextMenu" style="display:none;position:absolute">
