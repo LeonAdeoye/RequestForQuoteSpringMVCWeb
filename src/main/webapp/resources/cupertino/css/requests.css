@@ -123,3 +123,13 @@ fieldset
 {
 	margin: 30px, 30px, 30px , 30px
 }
+
+.cell-effort-driven
+{
+	text-align: center;
+}
+
+.slick-group-title[level='0']
+{
+	font-weight: bold;
+}

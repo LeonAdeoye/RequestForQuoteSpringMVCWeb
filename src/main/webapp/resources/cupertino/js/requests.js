@@ -83,6 +83,16 @@ function decimalFormatter(row, cell, value, columnDef, dataContext)
     	return value.toFixed(3);     
 }
 
+function sumTotalsFormatter(totals, columnDef)
+{
+	var val = totals.sum && totals.sum[columnDef.field];
+	
+	if (val != null)
+		return "total: " + ((Math.round(parseFloat(val)*100)/100));
+	
+	return "";
+}
+
 var columns = 
 [
  	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
@@ -95,11 +105,11 @@ var columns =
 	{id: "timeValue", name: "Time Value", field: "timeValue", formatter: decimalFormatter, toolTip: "Time value"},
 	{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
 	{id: "underlyingPrice", name: "Spot", field: "underlyingPrice", toolTip: "Underlying Spot price"},
-	{id: "delta", name: "Delta", field: "delta", formatter: decimalFormatter, toolTip: "Delta"},
-	{id: "gamma", name: "Gamma", field: "gamma", formatter: decimalFormatter, toolTip: "Gamma"},
-	{id: "vega", name: "Vega", field: "vega", formatter: decimalFormatter, toolTip: "Vega"},
-	{id: "theta", name: "Theta", field: "theta", formatter: decimalFormatter, toolTip: "Theta"},
-	{id: "rho", name: "Rho", field: "rho", formatter: decimalFormatter, toolTip: "Rho"},
+	{id: "delta", name: "Delta", field: "delta", formatter: decimalFormatter, toolTip: "Delta", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "gamma", name: "Gamma", field: "gamma", formatter: decimalFormatter, toolTip: "Gamma", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "vega", name: "Vega", field: "vega", formatter: decimalFormatter, toolTip: "Vega", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "theta", name: "Theta", field: "theta", formatter: decimalFormatter, toolTip: "Theta", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "rho", name: "Rho", field: "rho", formatter: decimalFormatter, toolTip: "Rho", groupTotalsFormatter: sumTotalsFormatter},
 	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book code"},	
 	{id: "underlyingRIC", name: "Underlying RIC", field: "underlyingRIC", toolTip: "Underlying RIC"},
 	{id: "salesComment", name: "Sales Comment", field: "salesComment", editor: Slick.Editors.LongText, toolTip: "Comments made by sales."},
@@ -147,8 +157,15 @@ $(document).ready(function()
 	var priceUpdateTimeout = 5000;
 	var statusUpdateTimeout = 5000;
 
-	var dataView = new Slick.Data.DataView();	
+	var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+	var dataView = new Slick.Data.DataView(
+	{
+	    groupItemMetadataProvider: groupItemMetadataProvider,
+	    inlineFilters: true
+	});	
 	var requestsGrid = new Slick.Grid("#requestsGrid", dataView, columns, options);
+	requestsGrid.registerPlugin(groupItemMetadataProvider);
+	
 	var columnpicker = new Slick.Controls.ColumnPicker(columns, requestsGrid, options);
 	
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
@@ -261,13 +278,16 @@ $(document).ready(function()
 			    {
 			    	processPriceUpdates(prices);		    	
 			    	priceUpdatesAjaxLock = false;
+			    	priceUpdateInterval = setTimeout(getPriceUpdates, priceUpdateIntervalTime);
 			    },
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
+	            	$("#turnOnPriceUpdates").prop('checked', false);
+	            	
 	            	if(textStatus == "timeout")
-	            		alert('Price update timed-out after three seconds');
+	            		alert("Price updates timed-out after " + priceUpdateTimeout + " milliseconds. Retrigger manually.");
 	            	else
-	                	alert('Error: ' + xhr.responseText);                	
+	                	alert('Price updates failed due to error: ' + xhr.responseText);                	
 	            	
 	            	priceUpdatesAjaxLock = false;
 	            }
@@ -293,13 +313,16 @@ $(document).ready(function()
 			    {
 			    	processCalculationUpdates(calculations);		    	
 			    	calculationUpdatesAjaxLock = false;
+			    	calculationUpdateInterval = setTimeout(getCalculationUpdates, calculationUpdateIntervalTime);
 			    },
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
+	            	$("#turnOnCalculationUpdates").prop('checked', false);
+	            	
 	            	if(textStatus == "timeout")
-	            		alert('Calculation update timed-out after ' + calculationUpdateTimeout + ' milliseconds');
+	            		alert('Calculation updates timed-out after ' + calculationUpdateTimeout + ' milliseconds. Retriggger manually.');
 	            	else
-	                	alert('Error: ' + xhr.responseText);                	
+	                	alert('Calculation updates failed due to error: ' + xhr.responseText);                	
 	                
 	            	calculationUpdatesAjaxLock = false;            		
 	 
@@ -326,11 +349,14 @@ $(document).ready(function()
 			    {
 			    	processStatusUpdates(statuses);		    	
 			    	statusUpdatesAjaxLock = false;
+			    	statusUpdateInterval = setTimeout(getStatusUpdates, statusUpdateIntervalTime);
 			    },
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
+	            	$("#turnOnStatusUpdates").prop('checked', false);
+	            	
 	            	if(textStatus == "timeout")
-	            		alert('Status update timed-out after ' + statusUpdateTimeout + ' milliseconds');
+	            		alert('Status updates timed-out after ' + statusUpdateTimeout + ' milliseconds. Retrigger manually.');
 	            	else
 	                	alert('Error: ' + xhr.responseText);                	
 	                
@@ -382,27 +408,20 @@ $(document).ready(function()
 	
 	requestsGrid.render();
 	
-/*	$("#requestsGroupByRadio").buttonset();
-	$("#requestsRealTimeUpdatesCheckbox").buttonset()*/;
-	
 	$("#priceFrequencySliderValue").html(" = 1000 ms");
 	
 	$("#priceFrequencySlider").slider(
 	{
 		"range": "min",
 		"min" : 200,
-		"max" : 5000,
+		"max" : 60000,
 		"step" : 200,
 		"value" : 1000,
-	    "stop": function (event, ui)
+	    "slide": function (event, ui)
 	    {
 	    	if (priceUpdateIntervalTime != ui.value)
 	    	{
-	    		if(ui.value <= priceUpdateTimeout - 500)
-	    			priceUpdateIntervalTime = ui.value;
-	    		else
-	    			priceUpdateIntervalTime = priceUpdateTimeout - 500;
-	    		
+	    		priceUpdateIntervalTime = ui.value;
 	    		$("#priceFrequencySliderValue").html(" = " + priceUpdateIntervalTime + " ms");
 	    	}	    	
 	    }
@@ -414,18 +433,14 @@ $(document).ready(function()
 	{
 		"range": "min",
 		"min" : 200,
-		"max" : 5000,
+		"max" : 60000,
 		"step" : 200,
 		"value" : 1000,
-	    "stop": function (event, ui)
+	    "slide": function (event, ui)
 	    {
 	    	if (calculationUpdateIntervalTime != ui.value)
 	    	{
-	    		if(ui.value <= calculationUpdateTimeout - 500)
-	    			calculationUpdateIntervalTime = ui.value;
-	    		else
-	    			calculationUpdateIntervalTime = calculationUpdateTimeout - 500;
-	    		
+	    		calculationUpdateIntervalTime = ui.value;
 	    		$("#calculationFrequencySliderValue").html(" = " + calculationUpdateIntervalTime + " ms");
 	    	}
 	    }
@@ -437,18 +452,14 @@ $(document).ready(function()
 	{
 		"range": "min",
 		"min" : 200,
-		"max" : 5000,
+		"max" : 60000,
 		"step" : 200,
 		"value" : 1000,
-	    "stop": function (event, ui)
+	    "slide": function (event, ui)
 	    {
 	    	if (statusUpdateIntervalTime != ui.value)
 	    	{
-	    		if(ui.value <= statusUpdateTimeout - 500)
-	    			statusUpdateIntervalTime = ui.value;
-	    		else
-	    			statusUpdateIntervalTime = statusUpdateTimeout - 500;
-	    		
+	    		statusUpdateIntervalTime = ui.value;
 	    		$("#statusFrequencySliderValue").html(" = " + statusUpdateIntervalTime + " ms");
 	    	}
 	    }
@@ -459,19 +470,15 @@ $(document).ready(function()
 	$("#priceTimeoutSlider").slider(
 	{
 		"range": "min",
-		"min" : priceUpdateIntervalTime + 1000,
-		"max" : 10000,
-		"step" : 200,
+		"min" : 3000,
+		"max" : 60000,
+		"step" : 1000,
 		"value" : 5000,
-	    "stop": function (event, ui)
+	    "slide": function (event, ui)
 	    {
 	    	if (priceUpdateTimeout != ui.value)
 			{
-	    		if(ui.value >= (priceUpdateIntervalTime + 1000))
-	    			priceUpdateTimeout = ui.value;
-	    		else
-	    			priceUpdateTimeout = priceUpdateIntervalTime + 1000;
-	    		
+	    		priceUpdateTimeout = ui.value;
 	    		$("#priceTimeoutSliderValue").html(" = " + priceUpdateTimeout + " ms");
 			}
 	    }
@@ -482,19 +489,15 @@ $(document).ready(function()
 	$("#statusTimeoutSlider").slider(
 	{
 		"range": "min",
-		"min" : statusUpdateIntervalTime + 1000,
-		"max" : 10000,
-		"step" : 200,
+		"min" : 3000,
+		"max" : 60000,
+		"step" : 1000,
 		"value" : 5000,
-	    "stop": function (event, ui)
+	    "slide": function (event, ui)
 	    {
 	    	if (statusUpdateTimeout != ui.value)
 			{
-	    		if(ui.value >= (statusUpdateIntervalTime + 1000))
-	    			statusUpdateTimeout = ui.value;
-	    		else
-	    			statusUpdateTimeout = statusUpdateIntervalTime + 1000;
-	    		
+	    		statusUpdateTimeout = ui.value;
 	    		$("#statusTimeoutSliderValue").html(" = " + statusUpdateTimeout + " ms");
 			}
 	    }
@@ -505,19 +508,15 @@ $(document).ready(function()
 	$("#calculationTimeoutSlider").slider(
 	{
 		"range": "min",
-		"min" : calculationUpdateIntervalTime + 1000,
-		"max" : 10000,
-		"step" : 200,
+		"min" : 3000,
+		"max" : 60000,
+		"step" : 1000,
 		"value" : 5000,
-	    "stop": function (event, ui)
+	    "slide": function (event, ui)
 	    {
 	    	if (calculationUpdateTimeout != ui.value)
 			{
-	    		if(ui.value >= (calculationUpdateIntervalTime + 1000))
-	    			calculationUpdateTimeout = ui.value;
-	    		else
-	    			calculationUpdateTimeout = calculationUpdateIntervalTime + 1000;
-	    		
+	    		calculationUpdateTimeout = ui.value;
 	    		$("#calculationTimeoutSliderValue").html(" = " + calculationUpdateTimeout + " ms");
 			}
 	    }
@@ -571,17 +570,17 @@ $(document).ready(function()
 	$('#turnOnPriceUpdates').bind('click', function(event) 
 	{
 		if(jQuery('#turnOnPriceUpdates').is(':checked'))
-			priceUpdateInterval = setInterval(getPriceUpdates, priceUpdateIntervalTime);
+			priceUpdateInterval = setTimeout(getPriceUpdates, priceUpdateIntervalTime);
 		else
-			window.clearInterval(priceUpdateInterval);
+			window.clearTimeout(priceUpdateInterval);
 	});
 	
 	$('#turnOnCalculationUpdates').bind('click', function(event) 
 	{
 		if(jQuery('#turnOnCalculationUpdates').is(':checked'))
-			calculationUpdateInterval = setInterval(getCalculationUpdates, calculationUpdateIntervalTime);
+			calculationUpdateInterval = setTimeout(getCalculationUpdates, calculationUpdateIntervalTime);
 		else		
-			window.clearInterval(calculationUpdateInterval);
+			window.clearTimeout(calculationUpdateInterval);
 	});
 	
 	$('#turnOnStatusUpdates').bind('click', function(event) 
@@ -832,5 +831,119 @@ $(document).ready(function()
 	{
 		clearNewRequestInputFields();		
 		disableAddButton();		
+	});	
+	
+	function groupByBook() 
+	{
+		dataView.setGrouping(
+		{
+			getter: "bookCode",
+			formatter: function (g)
+			{
+				return "Book code: " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+			},
+			aggregateCollapsed: false,
+			lazyTotalsCalculation: true
+		});
+	}
+	
+	function groupByClient() 
+	{
+		dataView.setGrouping(
+		{
+			getter: "clientId",
+			formatter: function (g)
+			{
+				return "Client: " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+			},
+			aggregateCollapsed: false,
+			lazyTotalsCalculation: true
+		});
+	}
+	
+	function groupByTradeDate() 
+	{
+		dataView.setGrouping(
+		{
+			getter: "tradeDate",
+			formatter: function (g)
+			{
+				return "Trade date: " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+			},
+			aggregateCollapsed: false,
+			lazyTotalsCalculation: true
+		});
+	}	
+
+	function groupByStatus() 
+	{
+		dataView.setGrouping(
+		{
+			getter: "status",
+			formatter: function (g)
+			{
+				return "Status: " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+			},
+			aggregateCollapsed: false,
+			lazyTotalsCalculation: true
+		});
+	}	
+	
+	function groupByUnderlying() 
+	{
+		dataView.setGrouping(
+		{
+			getter: "underlyingRIC",
+			formatter: function (g)
+			{
+				return "Underlying: " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+			},
+			aggregators:
+			[ 
+			  new Slick.Data.Aggregators.Sum("delta"),
+			  new Slick.Data.Aggregators.Sum("gamma"),
+			  new Slick.Data.Aggregators.Sum("vega"),
+			  new Slick.Data.Aggregators.Sum("theta"),
+			  new Slick.Data.Aggregators.Sum("rho")			  
+			],
+			aggregateCollapsed: false,
+			lazyTotalsCalculation: true
+		});
+	}
+	
+	$("#groupByNothing").click(function()
+	{
+		if($("#groupByNothing").is(":checked"))
+			dataView.setGrouping([]);
+	});
+
+	$("#groupByClient").click(function()
+	{
+		if($("#groupByClient").is(":checked"))
+			groupByClient();
+	});
+		
+	$("#groupByBook").click(function()
+	{
+		if($("#groupByBook").is(":checked"))
+			groupByBook();
+	});
+	
+	$("#groupByStatus").click(function()
+	{
+		if($("#groupByStatus").is(":checked"))
+			groupByStatus();
+	});
+	
+	$("#groupByTradeDate").click(function()
+	{
+		if($("#groupByTradeDate").is(":checked"))
+			groupByTradeDate();
+	});
+	
+	$("#groupByUnderlying").click(function()
+	{
+		if($("#groupByUnderlying").is(":checked"))
+			groupByUnderlying();
 	});	
 });
