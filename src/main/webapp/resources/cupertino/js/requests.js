@@ -86,7 +86,7 @@ function decimalFormatter(row, cell, value, columnDef, dataContext)
 var columns = 
 [
  	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
-	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 300, validator: requiredFieldValidator, toolTip: "Request snippet"},
+	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
 	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: pascalCaseFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "Request picked up by user:"},
 	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},	
@@ -133,27 +133,44 @@ function requiredFieldValidator(value)
 	}
 }
 
-var dataView = new Slick.Data.DataView();
-var priceUpdatesAjaxLock = false;
-var calculationUpdatesAjaxLock = false;
-var priceUpdateIntervalTime = 1000;
-var calculationUpdateIntervalTime = 1000;
-var count = 0
-
-function processNewlyCreatedRequest(newlyCreatedrequest)
-{
-	if(newlyCreatedrequest)
-		dataView.insertItem(0, newlyCreatedrequest);
-}
-
 $(document).ready(function()
-{	
-	sortColumn = "requestId";	
+{
+	var priceUpdatesAjaxLock = false;
+	var calculationUpdatesAjaxLock = false;
+	var statusUpdatesAjaxLock = false;
+
+	var priceUpdateIntervalTime = 1000;
+	var calculationUpdateIntervalTime = 1000;
+	var statusUpdateIntervalTime = 1000;
+
+	var calculationUpdateTimeout = 5000;
+	var priceUpdateTimeout = 5000;
+	var statusUpdateTimeout = 5000;
+
+	var dataView = new Slick.Data.DataView();	
 	var requestsGrid = new Slick.Grid("#requestsGrid", dataView, columns, options);
+	var columnpicker = new Slick.Controls.ColumnPicker(columns, requestsGrid, options);
+	
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
 	getRequestsFromTodayOnly();
-	var columnpicker = new Slick.Controls.ColumnPicker(columns, requestsGrid, options);
+
+	function processNewlyCreatedRequest(newlyCreatedrequest)
+	{
+		if(newlyCreatedrequest)
+			dataView.insertItem(0, newlyCreatedrequest);
+	}
+	
+	
+	function processStatusUpdates(status)
+	{
+		alert("Not yet implemented: " + statuses);
+	}
+	
+	function processCalculationUpdates(calculations)
+	{
+			alert("Not yet implemented: " + calculations);
+	}	
 	
 	function processPriceUpdates(prices)
 	{
@@ -238,7 +255,7 @@ $(document).ready(function()
 			    dataType: 'json',  
 			    contentType: 'application/json', 
 			    mimeType: 'application/json',
-			    timeout: 3000,
+			    timeout: priceUpdateTimeout,
 			    cache: false,
 			    success: function(prices) 
 			    {
@@ -256,12 +273,6 @@ $(document).ready(function()
 	            }
 			});			
 		}		
-	}
-	
-	function processCalculationUpdates(calculations)
-	{
-		if(count++ < 5)
-			alert(calculations);
 	}	
 	
 	function getCalculationUpdates() 
@@ -276,7 +287,7 @@ $(document).ready(function()
 			    dataType: 'json',  
 			    contentType: 'application/json', 
 			    mimeType: 'application/json',
-			    timeout: 5000,
+			    timeout: calculationUpdateTimeout,
 			    cache: false,
 			    success: function(calculations) 
 			    {
@@ -286,7 +297,7 @@ $(document).ready(function()
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
 	            	if(textStatus == "timeout")
-	            		alert('Calculation update timed-out after five seconds');
+	            		alert('Calculation update timed-out after ' + calculationUpdateTimeout + ' milliseconds');
 	            	else
 	                	alert('Error: ' + xhr.responseText);                	
 	                
@@ -296,6 +307,38 @@ $(document).ready(function()
 			});			
 		}		
 	}
+	
+	function getStatusUpdates() 
+	{
+		if(!statusUpdatesAjaxLock)
+		{
+			statusUpdatesAjaxLock = true;
+			
+			$.ajax({
+			    url: contextPath + "/requests/statusUpdates", 
+			    type: 'GET', 
+			    dataType: 'json',  
+			    contentType: 'application/json', 
+			    mimeType: 'application/json',
+			    timeout: statusUpdateTimeout,
+			    cache: false,
+			    success: function(statuses) 
+			    {
+			    	processStatusUpdates(statuses);		    	
+			    	statusUpdatesAjaxLock = false;
+			    },
+	            error: function (xhr, textStatus, errorThrown) 
+	            {
+	            	if(textStatus == "timeout")
+	            		alert('Status update timed-out after ' + statusUpdateTimeout + ' milliseconds');
+	            	else
+	                	alert('Error: ' + xhr.responseText);                	
+	                
+	            	statusUpdatesAjaxLock = false;
+	            }
+			});			
+		}		
+	}	
 	
 	requestsGrid.onSort.subscribe(function(e, args)
 	{
@@ -335,45 +378,196 @@ $(document).ready(function()
 	{
 		requestsGrid.invalidateRows(args.rows);
 		requestsGrid.render();
-	});	
-
-	function toggleSearchPanel() 
-	{
-		requestsGrid.setTopPanelVisibility(!requestsGrid.getOptions().showTopPanel);
-	}
+	});
 	
 	requestsGrid.render();
 	
-	$("<Button id='startPriceUpdates'>Start price updates</Button>").appendTo(requestsGrid.getTopPanel());
-	$("<Button id='stopPriceUpdates'>Stop price updates</Button>").appendTo(requestsGrid.getTopPanel());
+	$("#requests.groupBy.radio").buttonset();
+	$("#requests.realTimeUpdates.checkbox").buttonset();
 	
-	$('.toggleSearchPanel').bind('click', function(event) 
+	$("#underlyingFrequencySlider").slider(
 	{
-		toggleSearchPanel();
+		"range": "min",
+		"min" : 200,
+		"max" : 5000,
+		"step" : 200,
+		"value" : 1000,
+	    "stop": function (event, ui)
+	    {
+	    	if (priceUpdateIntervalTime != ui.value)
+	    	{
+	    		if(ui.value <= priceUpdateTimeout - 500)
+	    			priceUpdateIntervalTime = ui.value;
+	    		else
+	    			priceUpdateIntervalTime = priceUpdateTimeout - 500;
+	    	}	    	
+	    }
+	});
+	
+	$("#calculationFrequencySlider").slider(
+	{
+		"range": "min",
+		"min" : 200,
+		"max" : 5000,
+		"step" : 200,
+		"value" : 1000,
+	    "stop": function (event, ui)
+	    {
+	    	if (calculationUpdateIntervalTime != ui.value)
+	    	{
+	    		if(ui.value <= calculationUpdateTimeout - 500)
+	    			calculationUpdateIntervalTime = ui.value;
+	    		else
+	    			calculationUpdateIntervalTime = calculationUpdateTimeout - 500;
+	    	}
+	    }
+	});
+	
+	$("#statusFrequencySlider").slider(
+	{
+		"range": "min",
+		"min" : 200,
+		"max" : 5000,
+		"step" : 200,
+		"value" : 1000,
+	    "stop": function (event, ui)
+	    {
+	    	if (statusUpdateIntervalTime != ui.value)
+	    	{
+	    		if(ui.value <= statusUpdateTimeout - 500)
+	    			statusUpdateIntervalTime = ui.value;
+	    		else
+	    			statusUpdateIntervalTime = statusUpdateTimeout - 500;
+	    	}
+	    }
+	});
+	
+	$("#priceTimeoutSlider").slider(
+	{
+		"range": "min",
+		"min" : priceUpdateIntervalTime + 500,
+		"max" : 10000,
+		"step" : 1000,
+		"value" : 5000,
+	    "stop": function (event, ui)
+	    {
+	    	if (priceUpdateTimeout != ui.value)
+			{
+	    		if(ui.value >= (priceUpdateIntervalTime + 500))
+	    			priceUpdateTimeout = ui.value;
+	    		else
+	    			priceUpdateTimeout = priceUpdateIntervalTime + 500;	    			
+			}
+	    }
+	});
+	
+	$("#statusTimeoutSlider").slider(
+	{
+		"range": "min",
+		"min" : statusUpdateIntervalTime + 500,
+		"max" : 10000,
+		"step" : 1000,
+		"value" : 5000,
+	    "stop": function (event, ui)
+	    {
+	    	if (statusUpdateTimeout != ui.value)
+			{
+	    		if(ui.value >= (statusUpdateIntervalTime + 500))
+	    			statusUpdateTimeout = ui.value;
+	    		else
+	    			statusUpdateTimeout = statusUpdateIntervalTime + 500;	    			
+			}
+	    }
+	});	
+
+	$("#calculationTimeoutSlider").slider(
+	{
+		"range": "min",
+		"min" : calculationUpdateIntervalTime + 500,
+		"max" : 10000,
+		"step" : 1000,
+		"value" : 5000,
+	    "stop": function (event, ui)
+	    {
+	    	if (calculationUpdateTimeout != ui.value)
+			{
+	    		if(ui.value >= (calculationUpdateIntervalTime + 500))
+	    			calculationUpdateTimeout = ui.value;
+	    		else
+	    			calculationUpdateTimeout = calculationUpdateIntervalTime + 500;	    			
+			}
+	    }
+	});
+	
+	function appendToTopPanel()
+	{
+		$("#inlineConfigurePanel").appendTo(requestsGrid.getTopPanel());
+		$("#inlineGroupByPanel").appendTo(requestsGrid.getTopPanel());
+	}
+	
+	appendToTopPanel();		
+	
+	$('.toggleTopPanel').bind('click', function(event) 
+	{
+		$(".inlinePanel").hide();
+    	switch ($(this).attr("data")) 
+    	{
+        	case "configure":
+        		$("#inlineConfigurePanel").show();
+        		break;
+        	case "group":
+        		$("#inlineGroupByPanel").show();
+        		break;        		
+        	case "search":
+        		requestsGrid.setTopPanelVisibility(false);
+        		alert("Sorry, search operation has not yet been implemented!");
+        		return;
+        	case "filter":
+        		requestsGrid.setTopPanelVisibility(false);
+        		alert("Sorry, filter operation has not yet been implemented!");
+        		return;
+        	case "chart":
+        		requestsGrid.setTopPanelVisibility(false);
+        		alert("Sorry, charting operation has not yet been implemented!");
+        		return;        		
+    	}
+    	
+    	requestsGrid.setTopPanelVisibility(true);
+	});
+	
+	$('.hideTopPanel').bind('click', function(event) 
+	{
+		requestsGrid.setTopPanelVisibility(false);
 	});
 	
 	var priceUpdateInterval;
-	$('#startPriceUpdates').bind('click', function(event) 
-	{
-		priceUpdateInterval = setInterval(getPriceUpdates, priceUpdateIntervalTime);
-	});
-	
-	$('#stopPriceUpdates').bind('click', function(event) 
-	{
-		window.clearInterval(priceUpdateInterval);
-	});
-	
+	var statusUpdateInterval;
 	var calculationUpdateInterval;
-	$('#startCalculationUpdates').bind('click', function(event) 
+	
+	$('#turnOnPriceUpdates').bind('click', function(event) 
 	{
-		calculationUpdateInterval = setInterval(getCalculationUpdates, calculationUpdateIntervalTime);
+		if(jQuery('#turnOnPriceUpdates').is(':checked'))
+			priceUpdateInterval = setInterval(getPriceUpdates, priceUpdateIntervalTime);
+		else
+			window.clearInterval(priceUpdateInterval);
 	});
 	
-	$('#stopCalculationUpdates').bind('click', function(event) 
+	$('#turnOnCalculationUpdates').bind('click', function(event) 
 	{
-		window.clearInterval(calculationUpdateInterval);
-	});		
-		
+		if(jQuery('#turnOnCalculationUpdates').is(':checked'))
+			calculationUpdateInterval = setInterval(getCalculationUpdates, calculationUpdateIntervalTime);
+		else		
+			window.clearInterval(calculationUpdateInterval);
+	});
+	
+	$('#turnOnStatusUpdates').bind('click', function(event) 
+	{
+		if(jQuery('#turnOnStatusUpdates').is(':checked'))
+			statusUpdateInterval = setInterval(getStatusUpdates, statusUpdateIntervalTime);
+		else		
+			window.clearInterval(statusUpdateInterval);
+	});	
+			
 	requestsGrid.onContextMenu.subscribe(function (e) 
 	{
         var cell = requestsGrid.getCellFromEvent(e);

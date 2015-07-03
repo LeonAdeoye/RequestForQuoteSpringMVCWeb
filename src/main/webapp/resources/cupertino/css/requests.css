@@ -7,7 +7,7 @@
 #requests_add_new 
 {
 	float:left;
-	width:960px
+	width:1120px
 }
 
 #requests_language_link 
@@ -46,14 +46,7 @@
 	margin:3px;
 }
 
-#requests_add_button
-{
-	float:left;
-	height:22px;
-	font-weight:normal;
-}
-
-#requests_clear_button
+.btn
 {
 	float:left;
 	height:22px;
@@ -66,7 +59,7 @@
 	clear:right;
 	overflow:hidden;
 	font-size:14px;
-	background-color:#e1efc7;
+/* 	background-color:#e1efc7; */
 	height:35px;
 }
 
