@@ -177,13 +177,11 @@ $(document).ready(function()
 		if(newlyCreatedrequest)
 			dataView.insertItem(0, newlyCreatedrequest);
 	}
-	
-	
+		
 	function processStatusUpdates(statuses)
 	{
 		dataView.beginUpdate();
 		var changes = {};
-		var increaseInPrice = false;
 				
 		for(var i = 0, size = dataView.getLength(); i < size; i++)
 		{
@@ -195,11 +193,7 @@ $(document).ready(function()
 					item["status"] = statuses[item["identifier"]]; 
 					dataView.updateItem(item["identifier"], item);
 			    	
-					requestsGrid.flashCell(i, requestsGrid.getColumnIndex("status"), 100);
-					
-					setTimeout(function() { 
-						requestsGrid.setCellCssStyles("highlight", {});
-					}, 300);
+					requestsGrid.flashCell(i, requestsGrid.getColumnIndex("status"), 100);					
 				}
 			}
 		}
