@@ -1,9 +1,11 @@
 package com.leon.rfq.services;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.products.OptionRequestFactory;
@@ -44,4 +46,8 @@ public interface RequestService
 	Map<String, PriceDetailImpl> getPriceUpdates();
 
 	Map<String, PriceDetailImpl> getPriceUpdates(Set<String> underlyings);
+
+	Map<Integer, StatusEnum> getStatusUpdates();
+	
+	Map<Integer, Map<String, BigDecimal>> getCalculationUpdates();
 }

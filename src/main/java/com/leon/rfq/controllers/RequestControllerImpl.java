@@ -1,5 +1,6 @@
 package com.leon.rfq.controllers;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BookService;
@@ -68,6 +70,22 @@ public class RequestControllerImpl
 	public @ResponseBody Map<String, PriceDetailImpl> getPriceUpdates()
 	{
 		return this.requestService.getPriceUpdates();
+	}
+	
+	@RequestMapping(value="/requests/statusUpdates",
+		method=RequestMethod.GET,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<Integer, StatusEnum> getStatusUpdates()
+	{
+		return this.requestService.getStatusUpdates();
+	}
+	
+	@RequestMapping(value="/requests/calculationUpdates",
+		method=RequestMethod.GET,
+		produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<Integer, Map<String, BigDecimal>> getCalculationUpdates()
+	{
+		return this.requestService.getCalculationUpdates();
 	}
 	 
 	@RequestMapping(value="/requests/createNewRequest",

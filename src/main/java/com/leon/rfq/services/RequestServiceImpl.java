@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -20,6 +21,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
+import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
@@ -519,5 +521,22 @@ ApplicationListener<PriceUpdateEvent>
 		{
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public Map<Integer, StatusEnum> getStatusUpdates()
+	{
+		this.getAllFromTodayOnly();
+		
+		return this.requests.values().stream()
+				.collect(Collectors.toMap(RequestDetailImpl::getIdentifier, RequestDetailImpl::getStatus));
+	}
+
+	@Override
+	public Map<Integer, Map<String, BigDecimal>> getCalculationUpdates()
+	{
+		this.getAllFromTodayOnly();
+		
+		return new TreeMap<Integer, Map<String, BigDecimal>>();
 	}
 }

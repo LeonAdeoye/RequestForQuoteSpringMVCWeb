@@ -179,9 +179,33 @@ $(document).ready(function()
 	}
 	
 	
-	function processStatusUpdates(status)
+	function processStatusUpdates(statuses)
 	{
-		alert("Not yet implemented: " + statuses);
+		dataView.beginUpdate();
+		var changes = {};
+		var increaseInPrice = false;
+				
+		for(var i = 0, size = dataView.getLength(); i < size; i++)
+		{
+			var item = dataView.getItemByIdx(i);
+			if((item !== undefined) && (statuses[item["identifier"]] !== undefined))
+			{
+				if(item["status"] != statuses[item["identifier"]])
+				{								
+					item["status"] = statuses[item["identifier"]]; 
+					dataView.updateItem(item["identifier"], item);
+			    	
+					requestsGrid.flashCell(i, requestsGrid.getColumnIndex("status"), 100);
+					
+					setTimeout(function() { 
+						requestsGrid.setCellCssStyles("highlight", {});
+					}, 300);
+				}
+			}
+		}
+		
+		dataView.endUpdate();
+		requestsGrid.render();
 	}
 	
 	function processCalculationUpdates(calculations)
@@ -203,7 +227,7 @@ $(document).ready(function()
 			var item = dataView.getItemByIdx(i);
 			if((item !== undefined) && (prices[item["underlyingRIC"]] !== undefined))
 			{
-				if((item["underlyingPrice"]) && (item["underlyingPrice"] != prices[item["underlyingRIC"]].lastPrice))
+				if(item["underlyingPrice"] != prices[item["underlyingRIC"]].lastPrice)
 				{
 					if(prices[item["underlyingRIC"]].lastPrice > item["underlyingPrice"])
 						increaseInPrice = true;
