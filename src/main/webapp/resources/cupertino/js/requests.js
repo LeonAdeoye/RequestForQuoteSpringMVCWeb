@@ -180,6 +180,9 @@ $(document).ready(function()
 		
 	function processStatusUpdates(statuses)
 	{
+		if(status.length == 0)
+			return;
+		
 		dataView.beginUpdate();
 		var changes = {};
 				
@@ -304,6 +307,7 @@ $(document).ready(function()
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
 	            	$("#turnOnPriceUpdates").prop('checked', false);
+	            	window.clearInterval(priceUpdateInterval);
 	            	
 	            	if(textStatus == "timeout")
 	            		alert("Price updates timed-out after " + priceUpdateTimeout + " milliseconds. Retrigger manually.");
@@ -339,6 +343,7 @@ $(document).ready(function()
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
 	            	$("#turnOnCalculationUpdates").prop('checked', false);
+	            	window.clearInterval(calculationUpdateInterval);
 	            	
 	            	if(textStatus == "timeout")
 	            		alert('Calculation updates timed-out after ' + calculationUpdateTimeout + ' milliseconds. Retriggger manually.');
@@ -375,6 +380,7 @@ $(document).ready(function()
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
 	            	$("#turnOnStatusUpdates").prop('checked', false);
+	            	window.clearInterval(statusUpdateInterval);
 	            	
 	            	if(textStatus == "timeout")
 	            		alert('Status updates timed-out after ' + statusUpdateTimeout + ' milliseconds. Retrigger manually.');

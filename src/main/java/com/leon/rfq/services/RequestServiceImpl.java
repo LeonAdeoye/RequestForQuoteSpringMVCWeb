@@ -2,8 +2,7 @@ package com.leon.rfq.services;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -41,6 +40,8 @@ ApplicationListener<PriceUpdateEvent>
 	private ApplicationEventPublisher applicationEventPublisher;
 	// TODO need a map for each user
 	private final Map<Integer, RequestDetailImpl> requests = new ConcurrentSkipListMap<>();
+	
+	private final Map<Integer, RequestDetailImpl> todaysRequests = new ConcurrentSkipListMap<>();
 	
 	@Autowired(required=true)
 	private RequestDao requestDao;
@@ -146,10 +147,10 @@ ApplicationListener<PriceUpdateEvent>
 	 * @returns a list of requests that were previously saved in the cache.
 	 */
 	@Override
-	public List<RequestDetailImpl> getAllFromCacheOnly()
+	public Set<RequestDetailImpl> getAllFromCacheOnly()
 	{
 	
-		return new LinkedList<RequestDetailImpl>(this.requests.values());
+		return new HashSet<RequestDetailImpl>(this.requests.values());
 	}
 	
 	/**
@@ -167,7 +168,7 @@ ApplicationListener<PriceUpdateEvent>
 	 * 
 	 */
 	@Override
-	public List<RequestDetailImpl> getAll()
+	public Set<RequestDetailImpl> getAll()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Getting all the requests");
@@ -180,7 +181,7 @@ ApplicationListener<PriceUpdateEvent>
 			
 			clearCache();
 		
-			List<RequestDetailImpl> result = this.requestDao.getAll();
+			Set<RequestDetailImpl> result = this.requestDao.getAll();
 			
 			if(result!= null)
 			{
@@ -197,7 +198,7 @@ ApplicationListener<PriceUpdateEvent>
 				return result;
 			}
 			else
-				return new LinkedList<RequestDetailImpl>();
+				return new HashSet<RequestDetailImpl>();
 		}
 		finally
 		{
@@ -211,7 +212,7 @@ ApplicationListener<PriceUpdateEvent>
 	 * 
 	 */
 	@Override
-	public List<RequestDetailImpl> getAllFromTodayOnly()
+	public Set<RequestDetailImpl> getAllFromTodayOnly()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Getting all the requests from today");
@@ -224,10 +225,10 @@ ApplicationListener<PriceUpdateEvent>
 		{
 			lock.lock();
 			
-			List<RequestDetailImpl> result = this.requestDao.getAll()
+			Set<RequestDetailImpl> result = this.requestDao.getAll()
 					.stream()
 					.filter(request -> request.getTradeDate().compareTo(LocalDate.now()) <= 0)
-					.collect(Collectors.toList());
+					.collect(Collectors.toSet());
 			
 			if(result!= null)
 			{
@@ -246,7 +247,7 @@ ApplicationListener<PriceUpdateEvent>
 				return result;
 			}
 			else
-				return new LinkedList<RequestDetailImpl>();
+				return new HashSet<RequestDetailImpl>();
 		}
 		finally
 		{
@@ -434,7 +435,7 @@ ApplicationListener<PriceUpdateEvent>
 	 * 
 	 * @param 	underlyings 	the set of underlying that prices are required for.
 	 * @returns a map of price details keyed by the underlying ric.
-	 * @throws NullPointerException if the set of underlyings is invalid.
+	 * @throws NullPointerException if the set of underlyings is null.
 	 */
 	@Override
 	public Map<String, PriceDetailImpl> getPriceUpdates(Set<String> underlyings)
@@ -456,7 +457,7 @@ ApplicationListener<PriceUpdateEvent>
 	 * 
 	 * @param 	requestToUpdate 	the request will overwrite the one persisted.
 	 * @returns true if the update completed successfully, otherwise false.
-	 * @throws NullPointerException if the set of requestToUpdate is invalid.
+	 * @throws NullPointerException if the set of requestToUpdate is null.
 	 */
 	@Override
 	public boolean update(RequestDetailImpl requestToUpdate)
@@ -479,7 +480,7 @@ ApplicationListener<PriceUpdateEvent>
 	 * 
 	 * @param 	requestToUpdate 	the request's status will overwrite the one persisted.
 	 * @returns true if the status update is completed successfully, otherwise false.
-	 * @throws NullPointerException if the set of requestToUpdate is invalid.
+	 * @throws NullPointerException if the set of requestToUpdate is null.
 	 */
 	@Override
 	public boolean updateStatus(RequestDetailImpl requestToUpdate)
@@ -523,19 +524,72 @@ ApplicationListener<PriceUpdateEvent>
 		}
 	}
 
+	/**
+	 * Returns the requests that have changed status for cached requests only.
+	 * 
+	 * @returns a map of statuses keyed by the unique request ID.
+	 */
 	@Override
 	public Map<Integer, StatusEnum> getStatusUpdates()
 	{
-		this.getAllFromTodayOnly();
+		return this.requests.values().stream().filter(request ->
+			request.getStatus() != this.requests.get(request.getIdentifier()).getStatus())
+			.collect(Collectors.toMap(RequestDetailImpl::getIdentifier, RequestDetailImpl::getStatus));
+	}
+	
+	/**
+	 * Returns the requests that have changed status amongst the set of requests passed in as an argument.
+	 * Some of the request may not exist in the cache (old requests) and will be retrieved from the
+	 * persistence store.
+	 * 
+	 * @returns a map of statuses keyed by the unique request ID.
+	 * @throws NullPointerException if the set of setOfRequests is null.
+	 */
+	@Override
+	public Map<Integer, StatusEnum> getStatusUpdates(Set<RequestDetailImpl> setOfRequests)
+	{
+		if(setOfRequests == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("setOfRequests argument is invalid");
+			
+			throw new NullPointerException("setOfRequests argument is invalid");
+		}
 		
-		return this.requests.values().stream()
-				.collect(Collectors.toMap(RequestDetailImpl::getIdentifier, RequestDetailImpl::getStatus));
+		return setOfRequests.stream().filter(request ->
+			request.getStatus() != this.get(request.getIdentifier()).getStatus())
+			.collect(Collectors.toMap(RequestDetailImpl::getIdentifier, RequestDetailImpl::getStatus));
 	}
 
+	/**
+	 * Returns the requests that have calculation changes for cached requests only.
+	 * 
+	 * @returns a map of calculation results keyed by the unique request ID.
+	 */
 	@Override
 	public Map<Integer, Map<String, BigDecimal>> getCalculationUpdates()
 	{
-		this.getAllFromTodayOnly();
+		return new TreeMap<Integer, Map<String, BigDecimal>>();
+	}
+
+	/**
+	 * Returns the requests that have calculation changes amongst the set of requests passed in as an argument.
+	 * Some of the request may not exist in the cache (old requests) and will be retrieved from the
+	 * persistence store.
+	 * 
+	 * @returns a map of calculation results keyed by the unique request ID.
+	 * @throws NullPointerException if the set of setOfRequests is null.
+	 */
+	@Override
+	public Map<Integer, Map<String, BigDecimal>> getCalculationUpdates(Set<RequestDetailImpl> setOfRequests)
+	{
+		if(setOfRequests == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("setOfRequests argument is invalid");
+			
+			throw new NullPointerException("setOfRequests argument is invalid");
+		}
 		
 		return new TreeMap<Integer, Map<String, BigDecimal>>();
 	}

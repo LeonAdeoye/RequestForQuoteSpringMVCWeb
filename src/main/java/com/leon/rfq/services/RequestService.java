@@ -1,7 +1,6 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -37,11 +36,11 @@ public interface RequestService
 	
 	void setOptionRequestFactory(OptionRequestFactory factory); // For unit test mocking
 	
-	List<RequestDetailImpl> getAll();
+	Set<RequestDetailImpl> getAll();
 
-	List<RequestDetailImpl> getAllFromCacheOnly();
+	Set<RequestDetailImpl> getAllFromCacheOnly();
 
-	List<RequestDetailImpl> getAllFromTodayOnly();
+	Set<RequestDetailImpl> getAllFromTodayOnly();
 
 	Map<String, PriceDetailImpl> getPriceUpdates();
 
@@ -49,5 +48,9 @@ public interface RequestService
 
 	Map<Integer, StatusEnum> getStatusUpdates();
 	
+	Map<Integer, StatusEnum> getStatusUpdates(Set<RequestDetailImpl> setOfRequests);
+	
 	Map<Integer, Map<String, BigDecimal>> getCalculationUpdates();
+	
+	Map<Integer, Map<String, BigDecimal>> getCalculationUpdates(Set<RequestDetailImpl> setOfRequests);
 }

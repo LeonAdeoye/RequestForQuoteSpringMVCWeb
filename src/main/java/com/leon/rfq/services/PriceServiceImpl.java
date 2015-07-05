@@ -61,8 +61,8 @@ public class PriceServiceImpl implements PriceService
 				{
 					PriceDetailImpl priceUpdate = this.priceUpdateBlockingQueue.take();
 			
-					if(logger.isDebugEnabled() && ((++count%50)==0))
-						logger.debug("Mudulo 50th price update taken from head of blocking queue: "  + priceUpdate);
+					if(logger.isDebugEnabled() && ((++count%200)==0))
+						logger.debug("Mudulo 200th price update taken from head of blocking queue: "  + priceUpdate);
 					
 					this.priceMap.put(priceUpdate.getUnderlyingRIC(), priceUpdate);
 				}

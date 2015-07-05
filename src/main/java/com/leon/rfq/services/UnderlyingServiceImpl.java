@@ -326,10 +326,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			
 			throw new IllegalArgumentException("ric argument is invalid");
 		}
-		
-		if(logger.isDebugEnabled())
-			logger.debug("Get underlying with RIC: " + ric);
-				
+						
 		ReentrantLock lock = new ReentrantLock();
 		
 		try

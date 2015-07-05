@@ -1,6 +1,6 @@
 package com.leon.rfq.mappers;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +9,7 @@ import com.leon.rfq.domains.RequestDetailImpl;
 
 public interface RequestMapper
 {
-	List<RequestDetailImpl> getAll();
+	Set<RequestDetailImpl> getAll();
 	
 	RequestDetailImpl get(int requestId);
 	

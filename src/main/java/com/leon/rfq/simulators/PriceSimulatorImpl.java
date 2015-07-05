@@ -245,10 +245,6 @@ public final class PriceSimulatorImpl implements PriceSimulator, ApplicationList
 			BigDecimal priceSpread = underlying.getSpread();
 			
 			this.priceMap.put(underlyingRIC, new PriceGeneratorImpl(priceMean, priceVariance, priceSpread));
-			
-			if(logger.isInfoEnabled())
-				logger.info("Added underlying " + underlyingRIC + " to the price publishing map with price mean: " +
-						priceMean + ", priceVariance: " + priceVariance + ", and priceSpread: " + priceSpread);
 		}
 	}
 

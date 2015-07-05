@@ -1,8 +1,8 @@
 package com.leon.rfq.controllers;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -59,7 +59,7 @@ public class RequestControllerImpl
 	@RequestMapping(value="/requests/today",
 		method=RequestMethod.GET,
 		produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody List<RequestDetailImpl> getAllRequestsFromTodayOnly()
+	public @ResponseBody Set<RequestDetailImpl> getAllRequestsFromTodayOnly()
 	{
 		return this.requestService.getAllFromTodayOnly();
 	}
@@ -78,6 +78,14 @@ public class RequestControllerImpl
 	public @ResponseBody Map<Integer, StatusEnum> getStatusUpdates()
 	{
 		return this.requestService.getStatusUpdates();
+	}
+	
+	@RequestMapping(value="/requests/statusUpdatesFromSet",
+			method=RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Map<Integer, StatusEnum> getStatusUpdates(@RequestBody Set<RequestDetailImpl> setOfRequests)
+	{
+		return this.requestService.getStatusUpdates(setOfRequests);
 	}
 	
 	@RequestMapping(value="/requests/calculationUpdates",

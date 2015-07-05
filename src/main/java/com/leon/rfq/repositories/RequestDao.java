@@ -1,6 +1,6 @@
 package com.leon.rfq.repositories;
 
-import java.util.List;
+import java.util.Set;
 
 import com.leon.rfq.domains.RequestDetailImpl;
 
@@ -14,7 +14,7 @@ public interface RequestDao
 	
 	boolean update(RequestDetailImpl requestToUpdate);
 
-	List<RequestDetailImpl> getAll();
+	Set<RequestDetailImpl> getAll();
 	 
 	RequestDetailImpl get(int requestId);
 	
