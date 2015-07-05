@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BookService;
@@ -75,7 +74,7 @@ public class RequestControllerImpl
 	@RequestMapping(value="/requests/statusUpdates",
 		method=RequestMethod.GET,
 		produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Map<Integer, StatusEnum> getStatusUpdates()
+	public @ResponseBody Set<RequestDetailImpl> getStatusUpdates()
 	{
 		return this.requestService.getStatusUpdates();
 	}
@@ -83,7 +82,7 @@ public class RequestControllerImpl
 	@RequestMapping(value="/requests/statusUpdatesFromSet",
 			method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Map<Integer, StatusEnum> getStatusUpdates(@RequestBody Set<RequestDetailImpl> setOfRequests)
+	public @ResponseBody Set<RequestDetailImpl> getStatusUpdates(@RequestBody Set<RequestDetailImpl> setOfRequests)
 	{
 		return this.requestService.getStatusUpdates(setOfRequests);
 	}

@@ -162,7 +162,8 @@ $(document).ready(function()
 	{
 	    groupItemMetadataProvider: groupItemMetadataProvider,
 	    inlineFilters: true
-	});	
+	});
+	
 	var requestsGrid = new Slick.Grid("#requestsGrid", dataView, columns, options);
 	requestsGrid.registerPlugin(groupItemMetadataProvider);
 	
@@ -178,26 +179,24 @@ $(document).ready(function()
 			dataView.insertItem(0, newlyCreatedrequest);
 	}
 		
-	function processStatusUpdates(statuses)
+	function processStatusUpdates(setOfRequests)
 	{
-		if(status.length == 0)
+		if(!$("#groupByNothing").is(":checked") || !$('#turnOnStatusUpdates').is(':checked') || setOfRequests.length == 0)
 			return;
 		
 		dataView.beginUpdate();
-		var changes = {};
 				
-		for(var i = 0, size = dataView.getLength(); i < size; i++)
+		for(var i = 0, size = setOfRequests.length; i < size; i++)
 		{
-			var item = dataView.getItemByIdx(i);
-			if((item !== undefined) && (statuses[item["identifier"]] !== undefined))
+			var request = setOfRequests[i];			
+			var gridItem = dataView.getItemById(request["identifier"]);
+			
+			if((gridItem !== undefined) && (request !== undefined) && (gridItem["status"] != request["status"]))
 			{
-				if(item["status"] != statuses[item["identifier"]])
-				{								
-					item["status"] = statuses[item["identifier"]]; 
-					dataView.updateItem(item["identifier"], item);
-			    	
-					requestsGrid.flashCell(i, requestsGrid.getColumnIndex("status"), 100);					
-				}
+				gridItem["status"] = request["status"];
+				gridItem["pickedUpBy"] = request["pickedUpBy"];
+				dataView.updateItem(gridItem["identifier"], gridItem);			    	
+				requestsGrid.flashCell(dataView.getRowById(request["identifier"]), requestsGrid.getColumnIndex("status"), 100);					
 			}
 		}
 		
@@ -207,14 +206,17 @@ $(document).ready(function()
 	
 	function processCalculationUpdates(calculations)
 	{
-			alert("Not yet implemented: " + calculations);
+		if(!$("#groupByNothing").is(":checked") || !$('#turnOnCalculationUpdates').is(':checked') || calculations.length == 0)
+			return;
+		
+		alert("Not yet implemented: " + calculations);
 	}	
 	
 	function processPriceUpdates(prices)
 	{
-		if(!$("#groupByNothing").is(":checked"))
+		if(!$("#groupByNothing").is(":checked") || (prices.length == 0) || !$('#turnOnPriceUpdates').is(':checked'))
 			return;
-		
+	
 		dataView.beginUpdate();
 		var changes = {};
 		var increaseInPrice = false;
@@ -276,10 +278,15 @@ $(document).ready(function()
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
-	        	if(textStatus == "timeout")
-	        		alert('Response to newly created RFQ timed-out after five seconds');
+	        	if(textStatus != "timeout")
+        		{
+	        		if(xhr.status == 404)
+	        			alert('Failed to add request because the server is no longer available. Please try to reload the page.');
+	        		else
+	        			alert('Failed to add request because of error: ' + xhr.responseText);   
+        		}
 	        	else
-	            	alert('Error: ' + xhr.responseText);                	
+	        		alert('Failed to add new request because of timeout after five seconds');
 	        }
 		});		
 	});
@@ -309,10 +316,15 @@ $(document).ready(function()
 	            	$("#turnOnPriceUpdates").prop('checked', false);
 	            	window.clearInterval(priceUpdateInterval);
 	            	
-	            	if(textStatus == "timeout")
-	            		alert("Price updates timed-out after " + priceUpdateTimeout + " milliseconds. Retrigger manually.");
+	            	if(textStatus != "timeout")
+	        		{
+		        		if(xhr.status == 404)
+		        			alert('Price updates failed because the server is no longer available. Please try to reload the page.');
+		        		else
+		        			alert('Price updates failed due to error: ' + xhr.responseText);   		        			
+	        		}
 	            	else
-	                	alert('Price updates failed due to error: ' + xhr.responseText);                	
+	            		alert("Price updates timed-out after " + priceUpdateTimeout + " milliseconds. Retrigger manually.");
 	            	
 	            	priceUpdatesAjaxLock = false;
 	            }
@@ -345,10 +357,15 @@ $(document).ready(function()
 	            	$("#turnOnCalculationUpdates").prop('checked', false);
 	            	window.clearInterval(calculationUpdateInterval);
 	            	
-	            	if(textStatus == "timeout")
-	            		alert('Calculation updates timed-out after ' + calculationUpdateTimeout + ' milliseconds. Retriggger manually.');
+	            	if(textStatus != "timeout")
+	        		{
+		        		if(xhr.status == 404)
+		        			alert('Calculation updates failed because the server is no longer available. Please try to reload the page.');
+		        		else
+		        			alert('Calculation updates failed due to error: ' + xhr.responseText);   		        			
+	        		}
 	            	else
-	                	alert('Calculation updates failed due to error: ' + xhr.responseText);                	
+	            		alert('Calculation updates timed-out after ' + calculationUpdateTimeout + ' milliseconds. Retriggger manually.');
 	                
 	            	calculationUpdatesAjaxLock = false;            		
 	 
@@ -382,10 +399,15 @@ $(document).ready(function()
 	            	$("#turnOnStatusUpdates").prop('checked', false);
 	            	window.clearInterval(statusUpdateInterval);
 	            	
-	            	if(textStatus == "timeout")
-	            		alert('Status updates timed-out after ' + statusUpdateTimeout + ' milliseconds. Retrigger manually.');
+	            	if(textStatus != "timeout")
+	        		{
+		        		if(xhr.status == 404)
+		        			alert('Status updates failed because the server is no longer available. Please try to reload the page.');
+		        		else
+		        			alert('Status updates failed due to error: ' + xhr.responseText);   		        			
+	        		}
 	            	else
-	                	alert('Error: ' + xhr.responseText);                	
+	            		alert('Status updates timed-out after ' + statusUpdateTimeout + ' milliseconds. Retrigger manually.');
 	                
 	            	statusUpdatesAjaxLock = false;
 	            }
@@ -596,24 +618,24 @@ $(document).ready(function()
 	
 	$('#turnOnPriceUpdates').bind('click', function(event) 
 	{
-		if(jQuery('#turnOnPriceUpdates').is(':checked'))
-			priceUpdateInterval = setTimeout(getPriceUpdates, priceUpdateIntervalTime);
+		if($('#turnOnPriceUpdates').is(':checked'))
+			getPriceUpdates();
 		else
 			window.clearTimeout(priceUpdateInterval);
 	});
 	
 	$('#turnOnCalculationUpdates').bind('click', function(event) 
 	{
-		if(jQuery('#turnOnCalculationUpdates').is(':checked'))
-			calculationUpdateInterval = setTimeout(getCalculationUpdates, calculationUpdateIntervalTime);
+		if($('#turnOnCalculationUpdates').is(':checked'))
+			getCalculationUpdates();
 		else		
 			window.clearTimeout(calculationUpdateInterval);
 	});
 	
 	$('#turnOnStatusUpdates').bind('click', function(event) 
 	{
-		if(jQuery('#turnOnStatusUpdates').is(':checked'))
-			statusUpdateInterval = setInterval(getStatusUpdates, statusUpdateIntervalTime);
+		if($('#turnOnStatusUpdates').is(':checked'))
+			getStatusUpdates();
 		else		
 			window.clearInterval(statusUpdateInterval);
 	});	

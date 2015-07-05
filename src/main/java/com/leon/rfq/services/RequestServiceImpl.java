@@ -20,7 +20,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
-import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
@@ -525,16 +524,14 @@ ApplicationListener<PriceUpdateEvent>
 	}
 
 	/**
-	 * Returns the requests that have changed status for cached requests only.
+	 * Returns a set of all requests as there is no way to determine which ones have has changed.
 	 * 
-	 * @returns a map of statuses keyed by the unique request ID.
+	 * @returns a set of requests.
 	 */
 	@Override
-	public Map<Integer, StatusEnum> getStatusUpdates()
+	public Set<RequestDetailImpl> getStatusUpdates()
 	{
-		return this.requests.values().stream().filter(request ->
-			request.getStatus() != this.requests.get(request.getIdentifier()).getStatus())
-			.collect(Collectors.toMap(RequestDetailImpl::getIdentifier, RequestDetailImpl::getStatus));
+		return this.requests.values().stream().collect(Collectors.toSet());
 	}
 	
 	/**
@@ -542,11 +539,11 @@ ApplicationListener<PriceUpdateEvent>
 	 * Some of the request may not exist in the cache (old requests) and will be retrieved from the
 	 * persistence store.
 	 * 
-	 * @returns a map of statuses keyed by the unique request ID.
+	 * @returns a set of requests that have changed status.
 	 * @throws NullPointerException if the set of setOfRequests is null.
 	 */
 	@Override
-	public Map<Integer, StatusEnum> getStatusUpdates(Set<RequestDetailImpl> setOfRequests)
+	public Set<RequestDetailImpl> getStatusUpdates(Set<RequestDetailImpl> setOfRequests)
 	{
 		if(setOfRequests == null)
 		{
@@ -558,7 +555,7 @@ ApplicationListener<PriceUpdateEvent>
 		
 		return setOfRequests.stream().filter(request ->
 			request.getStatus() != this.get(request.getIdentifier()).getStatus())
-			.collect(Collectors.toMap(RequestDetailImpl::getIdentifier, RequestDetailImpl::getStatus));
+			.collect(Collectors.toSet());
 	}
 
 	/**
