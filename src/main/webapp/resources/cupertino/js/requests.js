@@ -222,6 +222,8 @@ $(document).ready(function()
 	var calculationUpdateTimeout = 5000;
 	var priceUpdateTimeout = 5000;
 	var statusUpdateTimeout = 5000;
+	
+	var loadingIndicator = null;
 
 	var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
 	var dataView = new Slick.Data.DataView(
@@ -774,14 +776,17 @@ $(document).ready(function()
 		    success: function(requests) 
 		    {
 		    	dataView.setItems(requests, "identifier");
+		    	loadingIndicator.fadeOut();
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
                 alert('Error: ' + xhr.responseText);
+                loadingIndicator.fadeOut();
             }
 		});
 	}	
 	
+	showLoadIndicator();
 	getRequestsFromTodayOnly();
 		
 	$("#requests_bookCode").autocomplete(
@@ -1075,5 +1080,19 @@ $(document).ready(function()
 	{
 		if($("#groupByUnderlying").is(":checked"))
 			groupByUnderlying();
-	});	
+	});
+	
+    function showLoadIndicator() 
+    {
+        if (!loadingIndicator) 
+        {
+        	loadingIndicator = $("<span class='loading-indicator'><label>Retrieving today's requests...</label></span>").appendTo(document.body);
+        	var $g = $("#requestsGrid");
+        	loadingIndicator
+            	.css("position", "absolute")
+            	.css("top", $g.position().top + $g.height() / 2 - loadingIndicator.height() / 2)
+            	.css("left", $g.position().left + $g.width() / 2 - loadingIndicator.width() / 2);
+        }
+        loadingIndicator.show();
+    }
 });
