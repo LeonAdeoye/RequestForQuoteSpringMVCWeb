@@ -35,8 +35,7 @@
 	<title><spring:message code="requests.title.label"/></title>
 	</head>
 	<body>
-		
-		<div id="requestsInlineConfigurePanel" class="inlinePanel" style="display:none;background:#dddddd;padding:3px;color:black;">
+		<div id="requestsInlineConfigurePanel" class="inlinePanel" style="display:none;">
 			<Label><spring:message code="requests.configure.turnOn.updates.label"/></Label>
 			<div id="requestsRealTimeUpdatesCheckbox" class="requests_configure_item">
 				<input type="checkbox" id="turnOnPriceUpdates"><label for="turnOnPriceUpdates"><spring:message code="requests.configure.turnOn.priceUpdates.label"/></label>
@@ -81,13 +80,13 @@
 		  	</div>
 		  	<br>
 			<div class="requests_configure_item">
-			  	<Button id="requestsConfigureSave" class="btn"><spring:message code="requests.configure.save.button.label"/></Button>
-			  	<Button id="requestsConfigureSaveAndClose" class="btn"><spring:message code="requests.configure.save_and_close.button.label"/></Button>
-			  	<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+			  	<Button id="requestsConfigureSave" class="btn configureBtn"><spring:message code="requests.configure.save.button.label"/></Button>
+			  	<Button id="requestsConfigureSaveAndClose" class="btn configureBtn"><spring:message code="requests.configure.save_and_close.button.label"/></Button>
+			  	<Button class="hideTopPanel btn configureBtn"><spring:message code="requests.close.button.label"/></Button>
 		  	</div>		  	
 		</div>
 		
-		<div id="requestsInlineGroupByPanel" class="inlinePanel" style="display:none;background:#dddddd;padding:3px;color:black;">
+		<div id="requestsInlineGroupByPanel" class="inlinePanel" style="display:none;">
 			<Label><spring:message code="requests.groupBy.title.label"/></Label>
 		  	<div id="requestsGroupByRadio">
 		  		<div class="requests_configure_item">

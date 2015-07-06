@@ -59,7 +59,6 @@
 	clear:right;
 	overflow:hidden;
 	font-size:14px;
-/* 	background-color:#e1efc7; */
 	height:35px;
 }
 
@@ -132,4 +131,16 @@ fieldset
 .slick-group-title[level='0']
 {
 	font-weight: bold;
+}
+
+.slick-top-panel
+{
+	background-color: rgb(181,181,181);
+	padding: 10px;
+	color: black;
+}
+
+.configureBtn
+{
+	color: black;
 }
