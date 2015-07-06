@@ -2,9 +2,13 @@ package com.leon.rfq.services;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +79,101 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 		}
 		
 		aggregate(request);
+	}
+	
+	public Set<BigDecimal> createProfitAndLossPoints(PricingModel model, RequestDetailImpl request)
+	{
+		if(model == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("model is an invalid argument");
+			
+			throw new NullPointerException("model is an invalid argument");
+		}
+		
+		if(request == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("request is an invalid argument");
+			
+			throw new NullPointerException("request is an invalid argument");
+		}
+		
+		Set<BigDecimal> pointsOfInterest =	request.getLegs().stream().map(OptionDetailImpl::getStrike)
+				.collect(Collectors.toSet());
+		
+		BigDecimal totalPremium = request.getLegs().stream().map(OptionDetailImpl::getPremium)
+				.reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
+		
+		return calculatePointsOfInterest(model, request, pointsOfInterest, OptionConstants.UNDERLYING_PRICE,
+				OptionConstants.THEORETICAL_VALUE, (theoreticalValue) -> (theoreticalValue.subtract(totalPremium)));
+	}
+
+
+	public Set<BigDecimal> calculatePointsOfInterest(PricingModel model, RequestDetailImpl request,
+			Set<BigDecimal> pointsOfInterest, String input, String output,
+			Function<BigDecimal, BigDecimal> massageFunction)
+	{
+		if(model == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("model is an invalid argument");
+			
+			throw new NullPointerException("model is an invalid argument");
+		}
+		
+		if(request == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("request is an invalid argument");
+			
+			throw new NullPointerException("request is an invalid argument");
+		}
+		
+		if(pointsOfInterest == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("pointsOfInterest is an invalid argument");
+			
+			throw new NullPointerException("pointsOfInterest is an invalid argument");
+		}
+		
+		if(massageFunction == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("massageFunction is an invalid argument");
+			
+			throw new NullPointerException("massageFunction is an invalid argument");
+		}
+		
+		if((input == null) || input.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("input is an invalid argument");
+			
+			throw new IllegalArgumentException("input is an invalid argument");
+		}
+		
+		if((output == null) || output.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("output is an invalid argument");
+			
+			throw new IllegalArgumentException("output is an invalid argument");
+		}
+		
+		Set<BigDecimal> result = new HashSet<>();
+		for(OptionDetailImpl leg : request.getLegs())
+		{
+			for(BigDecimal pointOfInterest : pointsOfInterest)
+			{
+				Map<String, BigDecimal> inputs = extractModelInputs(leg);
+				inputs.put(input, pointOfInterest);
+				model.configure(inputs);
+				result.add(massageFunction.apply(model.calculate(output).orElse(BigDecimal.ZERO)));
+			}
+		}
+		return result;
 	}
 	
 	@Override

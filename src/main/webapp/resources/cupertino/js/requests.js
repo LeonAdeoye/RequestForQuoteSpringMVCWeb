@@ -193,7 +193,7 @@ var options =
     forceFitColumns: false,
     cellHighlightCssClass: "priceUpdateIncrease",
     cellFlashingCssClass: "cellFlash",
-    topPanelHeight:250	    
+    topPanelHeight:230	    
 };
 
 function requiredFieldValidator(value) 
@@ -208,9 +208,10 @@ function requiredFieldValidator(value)
 	}
 }
 
+
+
 $(document).ready(function()
 {
-	var sortColumn = "identifier";
 	var priceUpdatesAjaxLock = false;
 	var calculationUpdatesAjaxLock = false;
 	var statusUpdatesAjaxLock = false;
@@ -240,6 +241,20 @@ $(document).ready(function()
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
 	getRequestsFromTodayOnly();
+	
+    function showLoadIndicator() 
+    {
+        if (!loadingIndicator) 
+        {
+        	loadingIndicator = $(".loading-indicator").appendTo(document.body);
+        	var $g = $("#requestsGrid");
+        	loadingIndicator
+            	.css("position", "absolute")
+            	.css("top", $g.position().top + $g.height() / 2 - loadingIndicator.height() / 2)
+            	.css("left", $g.position().left + $g.width() / 2 - loadingIndicator.width() / 2);
+        }
+        loadingIndicator.show();
+    }	
 
 	function processNewlyCreatedRequest(newlyCreatedrequest)
 	{
@@ -481,8 +496,8 @@ $(document).ready(function()
 	            }
 			});			
 		}		
-	}	
-	
+	}
+		
 	requestsGrid.onSort.subscribe(function(e, args)
 	{
 	    sortColumn = args.sortCol.field;
@@ -506,9 +521,9 @@ $(document).ready(function()
 			}
 			else
 				return x.year - y.year;
-		}		
+		}	
 
-		dataView.sort((sortColumn == "tradeDate" ? dateComparer : lexographicComparer), args.sortAsc);
+		dataView.sort((sortColumn === "tradeDate" ? dateComparer : lexographicComparer), args.sortAsc);
 	});
 	
 	dataView.onRowCountChanged.subscribe(function (e, args)
@@ -776,6 +791,7 @@ $(document).ready(function()
 		    success: function(requests) 
 		    {
 		    	dataView.setItems(requests, "identifier");
+		    	$('.slick-header-columns').children().eq(0).trigger('click');
 		    	loadingIndicator.fadeOut();
 		    },
             error: function (xhr, textStatus, errorThrown) 
@@ -1081,18 +1097,4 @@ $(document).ready(function()
 		if($("#groupByUnderlying").is(":checked"))
 			groupByUnderlying();
 	});
-	
-    function showLoadIndicator() 
-    {
-        if (!loadingIndicator) 
-        {
-        	loadingIndicator = $("<span class='loading-indicator'><label>Retrieving today's requests...</label></span>").appendTo(document.body);
-        	var $g = $("#requestsGrid");
-        	loadingIndicator
-            	.css("position", "absolute")
-            	.css("top", $g.position().top + $g.height() / 2 - loadingIndicator.height() / 2)
-            	.css("left", $g.position().left + $g.width() / 2 - loadingIndicator.width() / 2);
-        }
-        loadingIndicator.show();
-    }
 });

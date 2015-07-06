@@ -234,6 +234,45 @@ public class BlackScholesModelImpl implements PricingModel
 				return new HashMap<String, Optional<BigDecimal>>();
 			}
 		}
+		
+		@Override
+		public Optional<BigDecimal> calculate(String requiredOutput)
+		{
+			try
+			{
+				calculateSeedValues();
+				
+				switch(requiredOutput)
+				{
+					case OptionConstants.THEORETICAL_VALUE:
+						return Optional.ofNullable(calculateTheoreticalValue());
+					case OptionConstants.INTRINSIC_VALUE:
+						return Optional.ofNullable(calculateIntrinsicValue());
+					case OptionConstants.TIME_VALUE:
+						return Optional.ofNullable(calculateTimeValue());
+					case OptionConstants.DELTA:
+						return Optional.ofNullable(calculateDelta());
+					case OptionConstants.GAMMA:
+						return Optional.ofNullable(calculateGamma());
+					case OptionConstants.VEGA:
+						return Optional.ofNullable(calculateVega());
+					case OptionConstants.THETA:
+						return Optional.ofNullable(calculateTheta());
+					case OptionConstants.RHO:
+						return Optional.ofNullable(calculateRho());
+					case OptionConstants.LAMBDA:
+						return Optional.ofNullable(calculateLambda());
+				}
+			}
+			catch(Exception e)
+			{
+				logger.isErrorEnabled();
+					logger.error("Failed to complete Black and Scholes calculation using following inputs: " + this);
+			}
+			
+			return Optional.empty();
+		}
+		
 
 		@Override
 		public Map<String, Optional<BigDecimal>> calculate(List<String> listOfRequiredOutputs)
@@ -244,60 +283,37 @@ public class BlackScholesModelImpl implements PricingModel
 				
 				calculateSeedValues();
 				
-				for(String output : listOfRequiredOutputs)
+				for(String requiredOutput : listOfRequiredOutputs)
 				{
-					if(output.equals(OptionConstants.THEORETICAL_VALUE))
+					switch(requiredOutput)
 					{
-						result.put(OptionConstants.THEORETICAL_VALUE, Optional.ofNullable(calculateTheoreticalValue()));
-						continue;
-					}
-					
-					if(output.equals(OptionConstants.INTRINSIC_VALUE))
-					{
-						result.put(OptionConstants.INTRINSIC_VALUE, Optional.ofNullable(calculateIntrinsicValue()));
-						continue;
-					}
-					
-					if(output.equals(OptionConstants.TIME_VALUE))
-					{
-						result.put(OptionConstants.TIME_VALUE, Optional.ofNullable(calculateTimeValue()));
-						continue;
-					}
-					
-					if(output.equals(OptionConstants.DELTA))
-					{
-						result.put(OptionConstants.DELTA, Optional.ofNullable(calculateDelta()));
-						continue;
-					}
-
-					if(output.equals(OptionConstants.GAMMA))
-					{
-						result.put(OptionConstants.GAMMA, Optional.ofNullable(calculateGamma()));
-						continue;
-					}
-					
-					if(output.equals(OptionConstants.VEGA))
-					{
-						result.put(OptionConstants.VEGA, Optional.ofNullable(calculateVega()));
-						continue;
-					}
-					
-					if(output.equals(OptionConstants.THETA))
-					{
-						result.put(OptionConstants.THETA, Optional.ofNullable(calculateTheta()));
-						continue;
-					}
-					
-					if(output.equals(OptionConstants.RHO))
-					{
-						result.put(OptionConstants.RHO, Optional.ofNullable(calculateRho()));
-						continue;
-					}
-										
-					if(output.equals(OptionConstants.LAMBDA))
-					{
-						result.put(OptionConstants.LAMBDA, Optional.ofNullable(calculateLambda()));
-						continue;
+						case OptionConstants.THEORETICAL_VALUE:
+							result.put(OptionConstants.THEORETICAL_VALUE, Optional.ofNullable(calculateTheoreticalValue()));
+							continue;
+						case OptionConstants.INTRINSIC_VALUE:
+							result.put(OptionConstants.INTRINSIC_VALUE, Optional.ofNullable(calculateIntrinsicValue()));
+							continue;
+						case OptionConstants.TIME_VALUE:
+							result.put(OptionConstants.TIME_VALUE, Optional.ofNullable(calculateTimeValue()));
+							continue;
+						case OptionConstants.DELTA:
+							result.put(OptionConstants.DELTA, Optional.ofNullable(calculateDelta()));
+							continue;
+						case OptionConstants.GAMMA:
+							result.put(OptionConstants.GAMMA, Optional.ofNullable(calculateGamma()));
+							continue;
+						case OptionConstants.VEGA:
+							result.put(OptionConstants.VEGA, Optional.ofNullable(calculateVega()));
+							continue;
+						case OptionConstants.THETA:
+							result.put(OptionConstants.THETA, Optional.ofNullable(calculateTheta()));
+							continue;
+						case OptionConstants.RHO:
+							result.put(OptionConstants.RHO, Optional.ofNullable(calculateRho()));
+							continue;
+						case OptionConstants.LAMBDA:
+							result.put(OptionConstants.LAMBDA, Optional.ofNullable(calculateLambda()));
+							continue;
 					}
 				}
 				

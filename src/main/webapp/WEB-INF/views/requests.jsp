@@ -112,7 +112,9 @@
 		  	<div class="requests_configure_item">
 		  		<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
 		  	</div>		  	
-		</div>		
+		</div>
+		
+		<span class='loading-indicator' style="display:none;"><label>Retrieving today's requests...</label></span>		
 
 		<ul id="statusContextMenu" class="contextMenu" style="display:none;position:absolute">
 		  <b><spring:message code="contextMenu.status.title.label"/></b>

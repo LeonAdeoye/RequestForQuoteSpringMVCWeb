@@ -6,8 +6,8 @@ public interface OptionRequestFactory
 {
 	RequestDetailImpl getNewInstance(String snippet, int clientId,
 			String bookCode, String savedByUser);
-
-	boolean parseRequest(String snippet, RequestDetailImpl parent);
 	
 	boolean doesUnderlyingExist(String snippet);
+
+	boolean parseRequest(RequestDetailImpl parent);
 }

@@ -74,7 +74,9 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 			throw new IllegalArgumentException("snippet argument is invalid");
 		}
 		
-		if(!parseRequest(snippet, newRequest))
+		newRequest.setRequest(snippet);
+		
+		if(!parseRequest(newRequest))
 		{
 			if(logger.isErrorEnabled())
 				logger.error("failed to parse snippet and create new request");
@@ -229,14 +231,6 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	 */
     private void parseOptionUnderlyings(String ric, List<OptionDetailImpl> optionLegs)
     {
-    	if((ric == null) || ric.isEmpty())
-    	{
-    		if(logger.isErrorEnabled())
-    			logger.error("ric is an invalid argument");
-    		
-    		throw new IllegalArgumentException("ric is an invalid argument");
-    	}
-    	
     	UnderlyingDetailImpl underlying = this.underlyingService.get(ric);
     	if(underlying == null)
     	{
@@ -264,17 +258,16 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	/**
 	 * Parses the request snippet containing other option characteristics and assigns them to each option leg.
 	 * This method calls the other private parsing methods.
-	 * 
-	 * @param snippet 	the option request snippet containing all of option details to be parsed.
+	 *
 	 * @param parent 	the parent request that these option details belong to.
 	 * @return boolean	true if the option is parsed successfully otherwise false;
 	 */
     @Override
-	public boolean parseRequest(String snippet, RequestDetailImpl parent)
+	public boolean parseRequest(RequestDetailImpl parent)
     {
     	try
     	{
-	    	String[] partsOfTheRequest = snippet.split(" ");
+	    	String[] partsOfTheRequest = parent.getRequest().split(" ");
 	    	List<OptionDetailImpl> optionLegs = parseOptionTypes(partsOfTheRequest[0], parent);
 	        parseOptionStrikes(partsOfTheRequest[1], optionLegs);
 	        parseOptionMaturityDates(partsOfTheRequest[2], optionLegs);
@@ -343,5 +336,4 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
         
         return optionTypes;
     }
-	
 }

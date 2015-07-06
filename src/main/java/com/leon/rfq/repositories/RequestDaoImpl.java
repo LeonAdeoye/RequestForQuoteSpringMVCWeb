@@ -55,7 +55,7 @@ public class RequestDaoImpl implements RequestDao
 			   add(new OptionDetailImpl("0001.HK", request));
 			   add(new OptionDetailImpl("0005.HK", request));
 			}}));
-		
+			
 		return result;
 	}
 
