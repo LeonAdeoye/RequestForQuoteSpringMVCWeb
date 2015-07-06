@@ -710,14 +710,20 @@ $(document).ready(function()
 	requestsGrid.onContextMenu.subscribe(function (e) 
 	{
         var cell = requestsGrid.getCellFromEvent(e);
+        var item = dataView.getItem(cell.row);
+        e.preventDefault();
         
         if (requestsGrid.getColumns()[cell.cell].id == "status")
         {
-        	e.preventDefault();
-        	
         	$("#requestContextMenu").hide();
-        	
-        	$("#statusContextMenu li[]")
+        	        	
+        	$("#statusContextMenu li").each(function(index)
+			{
+        		if(item["status"] === $(this).attr("data"))
+            		$(this).hide();
+        		else
+        			$(this).show();
+			});
         	
 	        $("#statusContextMenu")
 	            .data("row", cell.row)
@@ -732,9 +738,15 @@ $(document).ready(function()
         }
         else
     	{
-        	e.preventDefault();
-        	
         	$("#statusContextMenu").hide();
+        	
+        	$("#requestContextMenu li").each(function(index)
+			{
+        		if(item["status"] === $(this).attr("data"))
+            		$(this).hide();
+        		else
+        			$(this).show();
+			});        	
         	
 	        $("#requestContextMenu")
 	            .data("row", cell.row)
@@ -913,7 +925,7 @@ $(document).ready(function()
     	
     	switch (operation) 
     	{
-        	case "PICK_UP":
+        	case "PICKED_UP":
         		ajaxSendStatusUpdate(row, "PICKED_UP");	
         		break; 
         	default: 
