@@ -1,8 +1,9 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -81,7 +82,8 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 		aggregate(request);
 	}
 	
-	public Set<BigDecimal> createProfitAndLossPoints(PricingModel model, RequestDetailImpl request)
+	@Override
+	public synchronized List<BigDecimal> calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request)
 	{
 		if(model == null)
 		{
@@ -98,19 +100,17 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 			
 			throw new NullPointerException("request is an invalid argument");
 		}
-		
-		Set<BigDecimal> pointsOfInterest =	request.getLegs().stream().map(OptionDetailImpl::getStrike)
+				
+		Set<BigDecimal> pointsOfInterest = request.getLegs().stream().map(OptionDetailImpl::getStrike)
 				.collect(Collectors.toSet());
-		
-		BigDecimal totalPremium = request.getLegs().stream().map(OptionDetailImpl::getPremium)
-				.reduce(BigDecimal.ZERO, (a, b) -> a.add(b));
-		
-		return calculatePointsOfInterest(model, request, pointsOfInterest, OptionConstants.UNDERLYING_PRICE,
-				OptionConstants.THEORETICAL_VALUE, (theoreticalValue) -> (theoreticalValue.subtract(totalPremium)));
+				
+		return calculatePointsOfInterest(model, request, pointsOfInterest,
+				OptionConstants.UNDERLYING_PRICE, OptionConstants.THEORETICAL_VALUE,
+				(theoreticalValue) -> theoreticalValue.subtract(request.getPremiumAmount()));
 	}
 
-
-	public Set<BigDecimal> calculatePointsOfInterest(PricingModel model, RequestDetailImpl request,
+	@Override
+	public synchronized List<BigDecimal> calculatePointsOfInterest(PricingModel model, RequestDetailImpl request,
 			Set<BigDecimal> pointsOfInterest, String input, String output,
 			Function<BigDecimal, BigDecimal> massageFunction)
 	{
@@ -162,17 +162,21 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 			throw new IllegalArgumentException("output is an invalid argument");
 		}
 		
-		Set<BigDecimal> result = new HashSet<>();
-		for(OptionDetailImpl leg : request.getLegs())
+		List<BigDecimal> result = new ArrayList<>();
+		
+		for(BigDecimal pointOfInterest : pointsOfInterest)
 		{
-			for(BigDecimal pointOfInterest : pointsOfInterest)
+			BigDecimal sumOfOutputAtPoint = BigDecimal.ZERO;
+			for(OptionDetailImpl leg : request.getLegs())
 			{
 				Map<String, BigDecimal> inputs = extractModelInputs(leg);
 				inputs.put(input, pointOfInterest);
 				model.configure(inputs);
-				result.add(massageFunction.apply(model.calculate(output).orElse(BigDecimal.ZERO)));
+				sumOfOutputAtPoint = sumOfOutputAtPoint.add(model.calculate(output).orElse(BigDecimal.ZERO));
 			}
+			result.add(massageFunction.apply(sumOfOutputAtPoint));
 		}
+		
 		return result;
 	}
 	

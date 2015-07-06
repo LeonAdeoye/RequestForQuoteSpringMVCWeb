@@ -48,7 +48,8 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 	public void parseRequest_validCPlusPRequestSnippet_ReturnsTrue() throws Exception
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
-		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "C+P 100 20Jan2020 0001.HK", newRequest );
+		newRequest.setRequest("C+P 100 20Jan2030 0001.HK");
+		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", newRequest );
 		assertEquals("Number of legs for new request should be 2", 2, newRequest.getLegs().size());
 	}
 	
@@ -56,7 +57,8 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 	public void parseRequest_valid_c_RequestSnippet_ReturnsTrue() throws Exception
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
-		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "c 100 20Jan2030 0001.HK", newRequest );
+		newRequest.setRequest("c 100 20Jan2030 0001.HK");
+		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", newRequest );
 		assertEquals("Number of legs for new request should be 1", 1, newRequest.getLegs().size());
 	}
 	
@@ -64,7 +66,8 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 	public void parseRequest_valid_P_RequestSnippet_ReturnsTrue() throws Exception
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
-		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "P 100 20Jan2030 0001.HK", newRequest );
+		newRequest.setRequest("P 100 20Jan2030 0001.HK");
+		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", newRequest );
 		assertEquals("Number of legs for new request should be 1", 1, newRequest.getLegs().size());
 	}
 	
@@ -72,7 +75,8 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 	public void parseRequest_valid_p_RequestSnippet_ReturnsTrue() throws Exception
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
-		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "p 100 20Jan2030 0001.HK", newRequest );
+		newRequest.setRequest("p 100 20Jan2030 0001.HK");
+		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", newRequest );
 		assertEquals("Number of legs for new request should be 1", 1, newRequest.getLegs().size());
 	}
 	
@@ -80,7 +84,8 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 	public void parseRequest_InvalidMaturityDate_ReturnsFalse() throws Exception
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
-		boolean result = Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", "C 100 20Jan2010 0001.HK", newRequest );
+		newRequest.setRequest("C 100 20Jan2010 0001.HK");
+		boolean result = Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", newRequest );
 		assertFalse("should return false because maturity precedes today", result);
 	}
 	

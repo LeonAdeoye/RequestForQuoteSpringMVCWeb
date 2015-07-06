@@ -52,6 +52,15 @@ public class OptionRequestFactoryImpl implements OptionRequestFactory
 	
 	public OptionRequestFactoryImpl() {}
 	
+	@Override
+	/**
+	 * Used in unit testing
+	 */
+	public void setPriceService(PriceService priceService)
+	{
+		this.priceService = priceService;
+	}
+	
 	/**
 	 * Creates an instance of RequestDetailImpl using the parameters passed.
 	 * 

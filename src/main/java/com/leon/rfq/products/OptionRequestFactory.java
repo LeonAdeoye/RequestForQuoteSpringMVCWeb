@@ -1,6 +1,7 @@
 package com.leon.rfq.products;
 
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.services.PriceService;
 
 public interface OptionRequestFactory
 {
@@ -10,4 +11,6 @@ public interface OptionRequestFactory
 	boolean doesUnderlyingExist(String snippet);
 
 	boolean parseRequest(RequestDetailImpl parent);
+
+	void setPriceService(PriceService priceService);
 }
