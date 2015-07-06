@@ -4,6 +4,7 @@ import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -81,6 +82,16 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 	}
 	
 	@Test
+	public void parseRequest_ValidTwoStrikeRequestSnippet_ReturnsTwoDifferentStrikes() throws Exception
+	{
+		RequestDetailImpl newRequest = new RequestDetailImpl();
+		newRequest.setRequest("C+P 100,110 20Jan2030 0001.HK");
+		Whitebox.invokeMethod(this.optionRequestFactory, "parseRequest", newRequest );
+		assertEquals("Number of legs for new request should be 1", 2, newRequest.getLegs().size());
+		assertNotEquals(newRequest.getLegs().get(0).getStrike(), newRequest.getLegs().get(1).getStrike());
+	}
+	
+	@Test
 	public void parseRequest_InvalidMaturityDate_ReturnsFalse() throws Exception
 	{
 		RequestDetailImpl newRequest = new RequestDetailImpl();
@@ -122,5 +133,3 @@ public class OptionRequestFactoryImplTest extends AbstractJUnit4SpringContextTes
 		assertEquals("Exception message should match", "snippet argument is invalid", caughtException().getMessage());
 	}
 }
-
-

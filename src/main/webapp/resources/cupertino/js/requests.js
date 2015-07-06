@@ -133,6 +133,7 @@ var allColumns =
 		{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
 		{id: "underlyingPrice", name: "Spot", field: "underlyingPrice", toolTip: "Underlying Spot price"},
 		{id: "impliedVol", name: "Implied Volatility", field: "impliedVol", toolTip: "Implied volatility"},
+		{id: "profitAndLossPoints", name: "Profit And Loss Graph", sortable: false, asyncPostRender: renderSparkline, toolTip: "Profit and loss points"},
 						
 		{id: "delta", name: "Delta", field: "delta", formatter: decimalFormatter, toolTip: "Delta", groupTotalsFormatter: sumTotalsFormatter},
 		{id: "gamma", name: "Gamma", field: "gamma", formatter: decimalFormatter, toolTip: "Gamma", groupTotalsFormatter: sumTotalsFormatter},
@@ -181,6 +182,11 @@ var allColumns =
 		{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", toolTip: "User who last updated this request"},
 		{id: "lastUpdate", name: "Last Updated At", field: "lastUpdate", toolTip: "Date of last update"}		
 	];
+
+function renderSparkline(cellNode, row, dataContext, colDef)
+{
+    $(cellNode).empty().sparkline(dataView["profitAndLossPoints"], {width: "100%"});
+}
 
 var options = 
 {

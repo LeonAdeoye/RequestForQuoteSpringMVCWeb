@@ -1,13 +1,13 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -80,10 +80,11 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 		}
 		
 		aggregate(request);
+		calculateProfitAndLossPoints(model, request);
 	}
 	
 	@Override
-	public synchronized List<BigDecimal> calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request)
+	public synchronized void calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request)
 	{
 		if(model == null)
 		{
@@ -103,14 +104,20 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 				
 		Set<BigDecimal> pointsOfInterest = request.getLegs().stream().map(OptionDetailImpl::getStrike)
 				.collect(Collectors.toSet());
+		
+		BigDecimal minValue = Collections.min(pointsOfInterest).multiply(BigDecimal.valueOf(0.9));
+		BigDecimal maxValue = Collections.max(pointsOfInterest).multiply(BigDecimal.valueOf(1.1));
+		
+		pointsOfInterest.add(minValue);
+		pointsOfInterest.add(maxValue);
 				
-		return calculatePointsOfInterest(model, request, pointsOfInterest,
+		request.setProfitAndLossPoints(calculatePointsOfInterest(model, request, pointsOfInterest,
 				OptionConstants.UNDERLYING_PRICE, OptionConstants.THEORETICAL_VALUE,
-				(theoreticalValue) -> theoreticalValue.subtract(request.getPremiumAmount()));
+				(theoreticalValue) -> theoreticalValue.subtract(request.getPremiumAmount())));
 	}
 
 	@Override
-	public synchronized List<BigDecimal> calculatePointsOfInterest(PricingModel model, RequestDetailImpl request,
+	public synchronized Set<BigDecimal> calculatePointsOfInterest(PricingModel model, RequestDetailImpl request,
 			Set<BigDecimal> pointsOfInterest, String input, String output,
 			Function<BigDecimal, BigDecimal> massageFunction)
 	{
@@ -162,7 +169,7 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 			throw new IllegalArgumentException("output is an invalid argument");
 		}
 		
-		List<BigDecimal> result = new ArrayList<>();
+		Set<BigDecimal> result = new TreeSet<>();
 		
 		for(BigDecimal pointOfInterest : pointsOfInterest)
 		{

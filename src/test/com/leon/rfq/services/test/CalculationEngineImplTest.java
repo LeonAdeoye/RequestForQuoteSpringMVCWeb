@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -64,7 +63,7 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 	}
 
 	@Test
-	public void calculateProfitAndLossPoints_ValidInputs_CorrectResultReturned() throws Exception
+	public void calculateProfitAndLossPoints_ValidStrikePair_CorrectResultReturned() throws Exception
 	{
 		PriceService priceServiceMock = mock(PriceServiceImpl.class);
 		this.optionRequestFactory.setPriceService(priceServiceMock);
@@ -77,8 +76,23 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 		
 		this.calculationService.calculate(model, request);
 		
-		List<BigDecimal> result = this.calculationService.calculateProfitAndLossPoints(model, request);
+		assertEquals("Should return four points", 4, request.getProfitAndLossPoints().size());
+	}
+	
+	@Test
+	public void calculateProfitAndLossPoints_ValidSingleStrike_CorrectResultReturned() throws Exception
+	{
+		PriceService priceServiceMock = mock(PriceServiceImpl.class);
+		this.optionRequestFactory.setPriceService(priceServiceMock);
+		when(priceServiceMock.getLastPrice("0001.HK")).thenReturn(BigDecimal.valueOf(90));
 		
-		assertEquals("Should return two points", 2, result.size());
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C+P 100 20Jan2016 0001.HK",
+				Integer.MAX_VALUE, "testBook", "testUser");
+		
+		PricingModel model = new BlackScholesModelImpl();
+		
+		this.calculationService.calculate(model, request);
+		
+		assertEquals("Should return three points", 3, request.getProfitAndLossPoints().size());
 	}
 }

@@ -1,7 +1,6 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -29,9 +28,9 @@ public interface CalculationService
 	Map<BigDecimal, Map<String, Optional<BigDecimal>>> calculateRange(
 			PricingModel model, Map<String, BigDecimal> inputs,	RangeParameters rangeParameters);
 
-	List<BigDecimal> calculatePointsOfInterest(PricingModel model,
+	Set<BigDecimal> calculatePointsOfInterest(PricingModel model,
 			RequestDetailImpl request, Set<BigDecimal> pointsOfInterest,
 			String input, String output, Function<BigDecimal, BigDecimal> massageFunction);
 
-	List<BigDecimal> calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request);
+	void calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request);
 }
