@@ -115,7 +115,7 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 				
 		request.setProfitAndLossPoints(calculatePointsOfInterest(request, pointsOfInterest,
 				OptionConstants.UNDERLYING_PRICE, OptionConstants.THEORETICAL_VALUE,
-				(theoreticalValue) -> theoreticalValue.subtract(request.getPremiumAmount())));
+				(theoreticalValue) -> theoreticalValue.add(request.getPremiumAmount())));
 	}
 
 	@Override

@@ -130,4 +130,73 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 		
 		assertEquals("Should return three points", 3, request.getProfitAndLossPoints().size());
 	}
+	
+	@Test
+	public void calculateProfitAndLossPoints_ValidShortCall_CorrectResultReturned() throws Exception
+	{
+		PriceService priceServiceMock = mock(PriceServiceImpl.class);
+		this.optionRequestFactory.setPriceService(priceServiceMock);
+		when(priceServiceMock.getLastPrice("0001.HK")).thenReturn(BigDecimal.valueOf(90));
+		
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("-C 90 20Jan2016 0001.HK",
+				Integer.MAX_VALUE, "testBook", "testUser");
+		
+		PricingModel model = new BlackScholesModelImpl();
+		
+		this.calculationService.calculate(model, request);
+		
+		assertEquals("Should return three points", 3, request.getProfitAndLossPoints().size());
+	}
+	
+	@Test
+	public void calculateProfitAndLossPoints_ValidLongCall_CorrectResultReturned() throws Exception
+	{
+		PriceService priceServiceMock = mock(PriceServiceImpl.class);
+		this.optionRequestFactory.setPriceService(priceServiceMock);
+		when(priceServiceMock.getLastPrice("0001.HK")).thenReturn(BigDecimal.valueOf(90));
+		
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 90 20Jan2016 0001.HK",
+				Integer.MAX_VALUE, "testBook", "testUser");
+		
+		PricingModel model = new BlackScholesModelImpl();
+		
+		this.calculationService.calculate(model, request);
+		
+		assertEquals("Should return three points", 3, request.getProfitAndLossPoints().size());
+	}
+	
+	@Test
+	public void calculateProfitAndLossPoints_ValidShortPut_CorrectResultReturned() throws Exception
+	{
+		PriceService priceServiceMock = mock(PriceServiceImpl.class);
+		this.optionRequestFactory.setPriceService(priceServiceMock);
+		when(priceServiceMock.getLastPrice("0001.HK")).thenReturn(BigDecimal.valueOf(90));
+		
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("-P 90 20Jan2016 0001.HK",
+				Integer.MAX_VALUE, "testBook", "testUser");
+		
+		PricingModel model = new BlackScholesModelImpl();
+		
+		this.calculationService.calculate(model, request);
+		
+		assertEquals("Should return three points", 3, request.getProfitAndLossPoints().size());
+	}
+	
+	@Test
+	public void calculateProfitAndLossPoints_ValidLongPut_CorrectResultReturned() throws Exception
+	{
+		PriceService priceServiceMock = mock(PriceServiceImpl.class);
+		this.optionRequestFactory.setPriceService(priceServiceMock);
+		when(priceServiceMock.getLastPrice("0001.HK")).thenReturn(BigDecimal.valueOf(90));
+		
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("P 90 20Jan2016 0001.HK",
+				Integer.MAX_VALUE, "testBook", "testUser");
+		
+		PricingModel model = new BlackScholesModelImpl();
+		
+		this.calculationService.calculate(model, request);
+		
+		assertEquals("Should return three points", 3, request.getProfitAndLossPoints().size());
+	}
+	
 }
