@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.SortedSet;
 import java.util.function.Function;
 
+import com.leon.rfq.common.TriFunction;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.products.PricingModel;
@@ -31,7 +32,8 @@ public interface CalculationService
 
 	void calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request);
 
-	List<BigDecimal> calculatePointsOfInterest(RequestDetailImpl request,
-			SortedSet<BigDecimal> pointsOfInterest, String input,
-			String output, Function<BigDecimal, BigDecimal> massageFunction);
+	List<BigDecimal> calculatePointsOfInterest(PricingModel model, RequestDetailImpl request,
+			SortedSet<BigDecimal> pointsOfInterest, String input, String output,
+			TriFunction<OptionDetailImpl, BigDecimal, BigDecimal, BigDecimal> sideAggregator,
+			Function<BigDecimal, BigDecimal> massageFunction);
 }

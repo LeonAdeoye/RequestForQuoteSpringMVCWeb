@@ -20,10 +20,10 @@ import org.springframework.stereotype.Component;
 
 import com.leon.rfq.common.EnumTypes.SideEnum;
 import com.leon.rfq.common.OptionConstants;
+import com.leon.rfq.common.TriFunction;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.PriceUpdateEvent;
-import com.leon.rfq.products.BlackScholesModelImpl;
 import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
 
@@ -112,17 +112,30 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 				
 		pointsOfInterest.add(Collections.min(pointsOfInterest).multiply(BigDecimal.valueOf(0.9)));
 		pointsOfInterest.add(Collections.max(pointsOfInterest).multiply(BigDecimal.valueOf(1.1)));
+		
+		TriFunction<OptionDetailImpl, BigDecimal, BigDecimal, BigDecimal> sideAggregator =
+				(leg, AggregatedValue, calculationResult) -> (leg.getSide() == SideEnum.BUY) ?
+						AggregatedValue.add(calculationResult) : AggregatedValue.subtract(calculationResult);
 				
-		request.setProfitAndLossPoints(calculatePointsOfInterest(request, pointsOfInterest,
-				OptionConstants.UNDERLYING_PRICE, OptionConstants.THEORETICAL_VALUE,
-				(theoreticalValue) -> theoreticalValue.add(request.getPremiumAmount())));
+		request.setProfitAndLossPoints(calculatePointsOfInterest(model, request, pointsOfInterest,
+				OptionConstants.UNDERLYING_PRICE, OptionConstants.INTRINSIC_VALUE, sideAggregator,
+				(calculatedValue) -> calculatedValue.add(request.getPremiumAmount())));
 	}
 
 	@Override
-	public synchronized List<BigDecimal> calculatePointsOfInterest(RequestDetailImpl request,
+	public synchronized List<BigDecimal> calculatePointsOfInterest(PricingModel model, RequestDetailImpl request,
 			SortedSet<BigDecimal> pointsOfInterest, String input, String output,
+			TriFunction<OptionDetailImpl, BigDecimal, BigDecimal, BigDecimal> sideAggregator,
 			Function<BigDecimal, BigDecimal> massageFunction)
 	{
+		if(model == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("model is an invalid argument");
+			
+			throw new NullPointerException("model is an invalid argument");
+		}
+		
 		if(request == null)
 		{
 			if(logger.isErrorEnabled())
@@ -137,6 +150,14 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 				logger.error("pointsOfInterest is an invalid argument");
 			
 			throw new NullPointerException("pointsOfInterest is an invalid argument");
+		}
+		
+		if(sideAggregator == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("sideAggregator is an invalid argument");
+			
+			throw new NullPointerException("sideAggregator is an invalid argument");
 		}
 		
 		if(massageFunction == null)
@@ -170,19 +191,21 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 			BigDecimal sumOfOutputAtPoint = BigDecimal.ZERO;
 			for(OptionDetailImpl leg : request.getLegs())
 			{
-				BigDecimal intrinsicValue = BlackScholesModelImpl.calculateIntrinsicValue(leg.getIsCall(), pointOfInterest, leg.getStrike())
+				Map<String, BigDecimal> inputs = extractModelInputs(leg);
+				inputs.put(input, pointOfInterest);
+				model.configure(inputs);
+				
+				BigDecimal requiredResult = model.calculate(output).orElse(BigDecimal.ZERO)
 						.multiply(BigDecimal.valueOf(leg.getQuantity()));
 				
-				if(leg.getSide() == SideEnum.BUY)
-					sumOfOutputAtPoint = sumOfOutputAtPoint.add(intrinsicValue);
-				else
-					sumOfOutputAtPoint = sumOfOutputAtPoint.subtract(intrinsicValue);
+				sumOfOutputAtPoint = sideAggregator.apply(leg, sumOfOutputAtPoint, requiredResult);
 			}
 			result.add(massageFunction.apply(sumOfOutputAtPoint));
 		}
 		
 		return result;
 	}
+	
 	
 	@Override
 	public synchronized void aggregate(RequestDetailImpl request)
@@ -375,3 +398,4 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 		
 	}
 }
+
