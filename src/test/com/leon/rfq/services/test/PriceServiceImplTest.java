@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -336,6 +337,7 @@ public class PriceServiceImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
+	@Ignore
 	 public void getAskPrice_ricWithPrices_ValidPriceReturned()
 	{
 		// Arrange

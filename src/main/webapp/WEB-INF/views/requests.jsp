@@ -4,8 +4,8 @@
 
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">		
-
+		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+		
 		<link href="<c:url value="/resources/css/requests.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/jquery-ui.min.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/examples.css" />" rel="stylesheet" type="text/css">
@@ -14,21 +14,24 @@
 		<link href="<c:url value="/resources/slickGrid/controls/slick.columnpicker.css" />" rel="stylesheet" type="text/css">
 
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>				
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.event.drag-2.2.js" />"></script>
-						
+		<script type="text/javascript" src="<c:url value="/resources/js/jquery.browser.min.js" />"></script>
+								
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.core.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.formatters.js" />"></script>	
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.editors.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.sparkline.min.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.groupitemmetadataprovider.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/slickGrid/plugins/slick.rowselectionmodel.js" />"></script>	
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.groupitemmetadataprovider.js" />"></script>			
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.grid.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.dataview.js" />"></script>
+		
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.sparkline.min.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/plugins/slick.rowselectionmodel.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/controls/slick.columnpicker.js" />"></script>
+		
 		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>		
-				
+		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>
+						
 		<script type="text/javascript">
 			var contextPath='<%=request.getContextPath()%>' /* needed for all ajax calls */			
 		</script>

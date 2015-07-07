@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -110,7 +109,7 @@ public final class RequestDetailImpl
 	private BigDecimal hedgePrice;
 	private BigDecimal totalPremium;
 	
-	private Set<BigDecimal> profitAndLossPoints;
+	private List<BigDecimal> profitAndLossPoints;
 
 	private List<OptionDetailImpl> legs;
 
@@ -127,12 +126,12 @@ public final class RequestDetailImpl
 		this.rho = BigDecimal.ZERO;
 	}
 		
-	public Set<BigDecimal> getProfitAndLossPoints()
+	public List<BigDecimal> getProfitAndLossPoints()
 	{
 		return this.profitAndLossPoints;
 	}
 
-	public void setProfitAndLossPoints(Set<BigDecimal> profitAndLossPoints)
+	public void setProfitAndLossPoints(List<BigDecimal> profitAndLossPoints)
 	{
 		this.profitAndLossPoints = profitAndLossPoints;
 	}
@@ -970,8 +969,6 @@ public final class RequestDetailImpl
 		builder.append(this.hedgePrice);
 		builder.append(", totalPremium=");
 		builder.append(this.totalPremium);
-		builder.append(", profitAndLossPoints=");
-		builder.append(this.profitAndLossPoints);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -1048,7 +1045,6 @@ public final class RequestDetailImpl
 				+ ((this.lastUpdate == null) ? 0 : this.lastUpdate.hashCode());
 		result = (prime * result)
 				+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
-		result = (prime * result) + ((this.legs == null) ? 0 : this.legs.hashCode());
 		result = (prime * result) + this.lotSize;
 		result = (prime * result) + this.multiplier;
 		result = (prime
@@ -1080,10 +1076,6 @@ public final class RequestDetailImpl
 				* result)
 				+ ((this.premiumSettlementFXRate == null) ? 0
 						: this.premiumSettlementFXRate.hashCode());
-		result = (prime
-				* result)
-				+ ((this.profitAndLossPoints == null) ? 0 : this.profitAndLossPoints
-						.hashCode());
 		result = (prime * result) + this.quantity;
 		result = (prime * result) + ((this.request == null) ? 0 : this.request.hashCode());
 		result = (prime * result) + ((this.rho == null) ? 0 : this.rho.hashCode());
@@ -1432,16 +1424,6 @@ public final class RequestDetailImpl
 		{
 			return false;
 		}
-		if (this.legs == null)
-		{
-			if (other.legs != null)
-			{
-				return false;
-			}
-		} else if (!this.legs.equals(other.legs))
-		{
-			return false;
-		}
 		if (this.lotSize != other.lotSize)
 		{
 			return false;
@@ -1543,16 +1525,6 @@ public final class RequestDetailImpl
 			}
 		} else if (!this.premiumSettlementFXRate
 				.equals(other.premiumSettlementFXRate))
-		{
-			return false;
-		}
-		if (this.profitAndLossPoints == null)
-		{
-			if (other.profitAndLossPoints != null)
-			{
-				return false;
-			}
-		} else if (!this.profitAndLossPoints.equals(other.profitAndLossPoints))
 		{
 			return false;
 		}
@@ -1786,4 +1758,5 @@ public final class RequestDetailImpl
 		}
 		return true;
 	}
+	
 }

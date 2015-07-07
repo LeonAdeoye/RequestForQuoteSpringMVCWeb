@@ -50,9 +50,6 @@ public class RequestDaoImpl implements RequestDao
 	public Set<RequestDetailImpl> getAll()
 	{
 		Set<RequestDetailImpl> result = this.requestMapper.getAll();
-		
-		// TODO - remove once OptionDetailImpl DB persistence is implemented.
-		result.forEach(request -> this.optionRequestFactory.parseRequest(request));
 			
 		return result;
 	}

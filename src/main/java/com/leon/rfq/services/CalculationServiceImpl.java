@@ -1,11 +1,13 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Function;
@@ -16,10 +18,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import com.leon.rfq.common.EnumTypes.SideEnum;
 import com.leon.rfq.common.OptionConstants;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.events.PriceUpdateEvent;
+import com.leon.rfq.products.BlackScholesModelImpl;
 import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
 
@@ -101,34 +105,24 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 			
 			throw new NullPointerException("request is an invalid argument");
 		}
-				
-		Set<BigDecimal> pointsOfInterest = request.getLegs().stream().map(OptionDetailImpl::getStrike)
-				.collect(Collectors.toSet());
 		
-		BigDecimal minValue = Collections.min(pointsOfInterest).multiply(BigDecimal.valueOf(0.9));
-		BigDecimal maxValue = Collections.max(pointsOfInterest).multiply(BigDecimal.valueOf(1.1));
-		
-		pointsOfInterest.add(minValue);
-		pointsOfInterest.add(maxValue);
+		SortedSet<BigDecimal> pointsOfInterest = new TreeSet<>();
+		pointsOfInterest.addAll(request.getLegs().stream().map(OptionDetailImpl::getStrike)
+				.collect(Collectors.toSet()));
 				
-		request.setProfitAndLossPoints(calculatePointsOfInterest(model, request, pointsOfInterest,
+		pointsOfInterest.add(Collections.min(pointsOfInterest).multiply(BigDecimal.valueOf(0.9)));
+		pointsOfInterest.add(Collections.max(pointsOfInterest).multiply(BigDecimal.valueOf(1.1)));
+				
+		request.setProfitAndLossPoints(calculatePointsOfInterest(request, pointsOfInterest,
 				OptionConstants.UNDERLYING_PRICE, OptionConstants.THEORETICAL_VALUE,
 				(theoreticalValue) -> theoreticalValue.subtract(request.getPremiumAmount())));
 	}
 
 	@Override
-	public synchronized Set<BigDecimal> calculatePointsOfInterest(PricingModel model, RequestDetailImpl request,
-			Set<BigDecimal> pointsOfInterest, String input, String output,
+	public synchronized List<BigDecimal> calculatePointsOfInterest(RequestDetailImpl request,
+			SortedSet<BigDecimal> pointsOfInterest, String input, String output,
 			Function<BigDecimal, BigDecimal> massageFunction)
 	{
-		if(model == null)
-		{
-			if(logger.isErrorEnabled())
-				logger.error("model is an invalid argument");
-			
-			throw new NullPointerException("model is an invalid argument");
-		}
-		
 		if(request == null)
 		{
 			if(logger.isErrorEnabled())
@@ -169,17 +163,20 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 			throw new IllegalArgumentException("output is an invalid argument");
 		}
 		
-		Set<BigDecimal> result = new TreeSet<>();
+		List<BigDecimal> result = new ArrayList<>();
 		
 		for(BigDecimal pointOfInterest : pointsOfInterest)
 		{
 			BigDecimal sumOfOutputAtPoint = BigDecimal.ZERO;
 			for(OptionDetailImpl leg : request.getLegs())
 			{
-				Map<String, BigDecimal> inputs = extractModelInputs(leg);
-				inputs.put(input, pointOfInterest);
-				model.configure(inputs);
-				sumOfOutputAtPoint = sumOfOutputAtPoint.add(model.calculate(output).orElse(BigDecimal.ZERO));
+				BigDecimal intrinsicValue = BlackScholesModelImpl.calculateIntrinsicValue(leg.getIsCall(), pointOfInterest, leg.getStrike())
+						.multiply(BigDecimal.valueOf(leg.getQuantity()));
+				
+				if(leg.getSide() == SideEnum.BUY)
+					sumOfOutputAtPoint = sumOfOutputAtPoint.add(intrinsicValue);
+				else
+					sumOfOutputAtPoint = sumOfOutputAtPoint.subtract(intrinsicValue);
 			}
 			result.add(massageFunction.apply(sumOfOutputAtPoint));
 		}
@@ -200,29 +197,45 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 		
 		if((request.getLegs() != null) || (request.getLegs().size() != 0))
 		{
-			request.setDelta(request.getLegs().stream().map(OptionDetailImpl::getDelta)
-			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			request.setDelta(request.getLegs().stream().map(leg ->
+				(leg.getDelta().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
+				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setGamma(request.getLegs().stream().map(OptionDetailImpl::getGamma)
-			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			request.setGamma(request.getLegs().stream().map(leg ->
+				(leg.getGamma().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
+				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setVega(request.getLegs().stream().map(OptionDetailImpl::getVega)
-			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			request.setVega(request.getLegs().stream().map(leg ->
+				(leg.getVega().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
+				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setTheta(request.getLegs().stream().map(OptionDetailImpl::getTheta)
-			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			request.setTheta(request.getLegs().stream().map(leg ->
+				(leg.getTheta().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
+				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setRho(request.getLegs().stream().map(OptionDetailImpl::getRho)
-			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			request.setRho(request.getLegs().stream().map(leg ->
+				(leg.getRho().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
+				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setIntrinsicValue(request.getLegs().stream().map(OptionDetailImpl::getIntrinsicValue)
-			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			request.setIntrinsicValue(request.getLegs().stream().map(leg ->
+				(leg.getIntrinsicValue().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.valueOf(-1) : BigDecimal.ONE)
+				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setTimeValue(request.getLegs().stream().map(OptionDetailImpl::getTimeValue)
-			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			request.setTimeValue(request.getLegs().stream().map(leg ->
+				(leg.getTimeValue().multiply(leg.getSide() == SideEnum.BUY ?  BigDecimal.valueOf(-1) : BigDecimal.ONE)
+				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setPremiumAmount(request.getLegs().stream().map(OptionDetailImpl::getPremium)
-			.reduce(BigDecimal.ZERO, BigDecimal::add));
+			request.setPremiumAmount(request.getLegs().stream().map(leg ->
+				(leg.getPremium().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.valueOf(-1) : BigDecimal.ONE)
+				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+				.reduce(BigDecimal.ZERO, BigDecimal::add));
 		}
 		
 		if((request.getLegs() != null) && (request.getLegs().size() == 1))

@@ -144,12 +144,19 @@ public class BlackScholesModelImpl implements PricingModel
         	return this.lambda;
         }
         
-        private BigDecimal calculateIntrinsicValue() throws Exception
+        private BigDecimal calculateIntrinsicValue()
         {
-        	this.intrinsicValue = this.isCallOption ? this.underlyingPrice.subtract(this.strike) : this.strike.subtract(this.underlyingPrice);
-        	this.intrinsicValue = scale(this.intrinsicValue.compareTo(BigDecimal.ZERO) > 0 ? this.intrinsicValue : BigDecimal.ZERO);
-        	
+        	this.intrinsicValue = scale(calculateIntrinsicValue(this.isCallOption, this.underlyingPrice, this.strike));
         	return this.intrinsicValue;
+        }
+        
+        public static BigDecimal calculateIntrinsicValue(boolean isCallOption, BigDecimal underlyingPrice, BigDecimal strike)
+        {
+        	BigDecimal intrinsicValue;
+        	intrinsicValue = isCallOption ? underlyingPrice.subtract(strike) : strike.subtract(underlyingPrice);
+        	intrinsicValue = intrinsicValue.compareTo(BigDecimal.ZERO) > 0 ? intrinsicValue : BigDecimal.ZERO;
+        	
+        	return intrinsicValue;
         }
         
         private BigDecimal calculateTimeValue() throws Exception
@@ -159,7 +166,7 @@ public class BlackScholesModelImpl implements PricingModel
         	
         	return this.timeValue;
         }
-        
+                
         private BigDecimal scale(BigDecimal initialValue)
         {
         	return initialValue.setScale(this.scale, RoundingMode.HALF_UP);

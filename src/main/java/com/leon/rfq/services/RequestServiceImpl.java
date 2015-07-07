@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -169,9 +170,6 @@ ApplicationListener<PriceUpdateEvent>
 	@Override
 	public Set<RequestDetailImpl> getAll()
 	{
-		if(logger.isDebugEnabled())
-			logger.debug("Getting all the requests");
-		
 		ReentrantLock lock = new ReentrantLock();
 		
 		try
@@ -184,7 +182,10 @@ ApplicationListener<PriceUpdateEvent>
 			
 			if(result!= null)
 			{
-				// Could use a more complicated lambda expression here but below is far simpler
+				// TODO - remove once OptionDetailImpl DB persistence is implemented.
+				result.forEach(request -> this.optionRequestFactory.parseRequest(request));
+				result.forEach(request -> this.calculationService.calculate(new BlackScholesModelImpl(), request));
+				
 				for(RequestDetailImpl request : result)
 				{
 					this.requests.put(request.getIdentifier(), request);
@@ -213,9 +214,6 @@ ApplicationListener<PriceUpdateEvent>
 	@Override
 	public Set<RequestDetailImpl> getAllFromTodayOnly()
 	{
-		if(logger.isDebugEnabled())
-			logger.debug("Getting all the requests from today");
-		
 		ReentrantLock lock = new ReentrantLock();
 		
 		clearCache();
@@ -224,13 +222,15 @@ ApplicationListener<PriceUpdateEvent>
 		{
 			lock.lock();
 			
-			Set<RequestDetailImpl> result = this.requestDao.getAll()
-					.stream()
-					.filter(request -> request.getTradeDate().compareTo(LocalDate.now()) <= 0)
-					.collect(Collectors.toSet());
-			
+			Set<RequestDetailImpl> result = this.requestDao.getAll().stream()
+				.filter(request -> request.getTradeDate().compareTo(LocalDate.now()) == 0).collect(Collectors.toSet());
+						
 			if(result!= null)
 			{
+				// TODO - remove once OptionDetailImpl DB persistence is implemented.
+				result.forEach(request -> this.optionRequestFactory.parseRequest(request));
+				result.forEach(request -> this.calculationService.calculate(new BlackScholesModelImpl(), request));
+				
 				for(RequestDetailImpl request : result)
 				{
 					this.requests.put(request.getIdentifier(), request);
@@ -242,11 +242,10 @@ ApplicationListener<PriceUpdateEvent>
 						this.applicationEventPublisher.publishEvent(new PriceSimulatorRequestEvent
 								(this, PriceSimulatorRequestEnum.ADD_UNDERLYING, leg.getUnderlyingRIC()));
 				}
-				// TODO - change back top "== 0"
 				return result;
 			}
-			else
-				return new HashSet<RequestDetailImpl>();
+			
+			return new TreeSet<RequestDetailImpl>();
 		}
 		finally
 		{

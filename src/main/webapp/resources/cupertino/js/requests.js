@@ -93,114 +93,10 @@ function sumTotalsFormatter(totals, columnDef)
 	return "";
 }
 
-var columns = 
-[
- 	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
-	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
-	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: pascalCaseFormatter},
-	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "Request picked up by user:"},
-	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},	
-	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
-	{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: decimalFormatter, toolTip: "Theoretical value"},
-	{id: "timeValue", name: "Time Value", field: "timeValue", formatter: decimalFormatter, toolTip: "Time value"},
-	{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
-	{id: "underlyingPrice", name: "Spot", field: "underlyingPrice", toolTip: "Underlying Spot price"},
-	{id: "delta", name: "Delta", field: "delta", formatter: decimalFormatter, toolTip: "Delta", groupTotalsFormatter: sumTotalsFormatter},
-	{id: "gamma", name: "Gamma", field: "gamma", formatter: decimalFormatter, toolTip: "Gamma", groupTotalsFormatter: sumTotalsFormatter},
-	{id: "vega", name: "Vega", field: "vega", formatter: decimalFormatter, toolTip: "Vega", groupTotalsFormatter: sumTotalsFormatter},
-	{id: "theta", name: "Theta", field: "theta", formatter: decimalFormatter, toolTip: "Theta", groupTotalsFormatter: sumTotalsFormatter},
-	{id: "rho", name: "Rho", field: "rho", formatter: decimalFormatter, toolTip: "Rho", groupTotalsFormatter: sumTotalsFormatter},
-	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book code"},	
-	{id: "underlyingRIC", name: "Underlying RIC", field: "underlyingRIC", toolTip: "Underlying RIC"},
-	{id: "salesComment", name: "Sales Comment", field: "salesComment", editor: Slick.Editors.LongText, toolTip: "Comments made by sales."},
-	{id: "traderComment", name: "Trader Comment", field: "traderComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the traders."},
-	{id: "clientComment", name: "Client Comment", field: "clientComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the client."}		
-];
-
-var allColumns = 
-	[
-	 	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
-		{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
-		{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request", formatter: pascalCaseFormatter},
-		{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "User who picked up the request"},
-		{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},	
-		{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
-		{id: "expiryDate", name: "Maturity Date", field: "expiryDate", toolTip: "Expiry date."},
-		
-		{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: decimalFormatter, toolTip: "Theoretical value"},
-		{id: "premiumPercentage", name: "Premium Percentage", field: "premiumPercentage", toolTip: "Premium percentage"},
-		{id: "timeValue", name: "Time Value", field: "timeValue", formatter: decimalFormatter, toolTip: "Time value"},
-		{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
-		{id: "underlyingPrice", name: "Spot", field: "underlyingPrice", toolTip: "Underlying Spot price"},
-		{id: "impliedVol", name: "Implied Volatility", field: "impliedVol", toolTip: "Implied volatility"},
-		{id: "profitAndLossPoints", name: "Profit And Loss Graph", sortable: false, asyncPostRender: renderSparkline, toolTip: "Profit and loss points"},
-						
-		{id: "delta", name: "Delta", field: "delta", formatter: decimalFormatter, toolTip: "Delta", groupTotalsFormatter: sumTotalsFormatter},
-		{id: "gamma", name: "Gamma", field: "gamma", formatter: decimalFormatter, toolTip: "Gamma", groupTotalsFormatter: sumTotalsFormatter},
-		{id: "vega", name: "Vega", field: "vega", formatter: decimalFormatter, toolTip: "Vega", groupTotalsFormatter: sumTotalsFormatter},
-		{id: "theta", name: "Theta", field: "theta", formatter: decimalFormatter, toolTip: "Theta", groupTotalsFormatter: sumTotalsFormatter},
-		{id: "rho", name: "Rho", field: "rho", formatter: decimalFormatter, toolTip: "Rho", groupTotalsFormatter: sumTotalsFormatter},
-				
-		{id: "notionalMillions", name: "Notional Millions", field: "notionalMillions", toolTip: "Notional in Millions"},
-		{id: "notionalFXRate", name: "Notional FX Rate", field: "notionalFXRate", toolTip: "Notional FX Rate"},
-		{id: "notionalCurrency", name: "Notional Currency", field: "notionalCurrency", toolTip: "Notional Currency"},
-		
-		{id: "quantity", name: "Quantity", field: "quantity", toolTip: "Quantity"},
-		{id: "contracts", name: "Contracts", field: "contracts", toolTip: "Number of contracts"},
-		{id: "lotSize", name: "Lot Size", field: "lotSize", toolTip: "Lot Size"},
-		{id: "multiplier", name: "Multiplier", field: "multiplier", toolTip: "Multiplier"},		
-
-		{id: "deltaNotional", name: "Delta Notional", field: "deltaNotional", toolTip: "Delta Notional"},
-		{id: "gammaNotional", name: "Gamma Notional", field: "gammaNotional", toolTip: "Gamma Notional"},
-		{id: "vegaNotional", name: "Vega Notional", field: "vegaNotional", toolTip: "Vega Notional"},
-		{id: "thetaNotional", name: "Theta Notional", field: "thetaNotional", toolTip: "Theta Notional"},
-		{id: "rhoNotional", name: "Rho Notional", field: "rhoNotional", toolTip: "Rho Notional"},
-		
-		{id: "deltaShares", name: "Delta Shares", field: "deltaShares", toolTip: "Delta Shares"},
-		{id: "gammaShares", name: "Gamma Shares", field: "gammaShares", toolTip: "Gamma Shares"},
-		{id: "vegaShares", name: "Vega Shares", field: "vegaShares", toolTip: "Vega Shares"},
-		{id: "thetaShares", name: "Theta Shares", field: "thetaShares", toolTip: "Theta Shares"},
-		{id: "rhoShares", name: "Rho Shares", field: "rhoShares", toolTip: "Rho Shares"},
-		
-		{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book code"},	
-		{id: "underlyingRIC", name: "Underlying RIC", field: "underlyingRIC", toolTip: "Underlying RIC"},
-		
-		{id: "salesComment", name: "Sales Comment", field: "salesComment", editor: Slick.Editors.LongText, toolTip: "Comments made by sales"},
-		{id: "traderComment", name: "Trader Comment", field: "traderComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the traders"},
-		{id: "clientComment", name: "Client Comment", field: "clientComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the client"},		
-		
-		{id: "salesCreditAmount", name: "Sales Credit Amount", field: "salesCreditAmount", toolTip: "Sales Credit Amount"},
-		{id: "salesCreditPercentage", name: "Sales Credit Percentage", field: "salesCreditPercentage", toolTip: "Sales Credit Percentage"},
-		{id: "salesCreditFXRate", name: "Sales Credit FX Rate", field: "salesCreditFXRate", toolTip: "Sales Credit FX Rate"},
-		{id: "salesCreditCurrency", name: "Sales Credit Currency", field: "salesCreditCurrency", toolTip: "Sales Credit Currency"},
-		
-		{id: "premiumSettlementDate", name: "Premium Settlement Date", field: "premiumSettlementDate", toolTip: "Premium Settlement Date"},
-		{id: "premiumSettlementDaysOverride", name: "Premium Settlement Days Override", field: "premiumSettlementDaysOverride", toolTip: "Premium Settlement Days Override"},
-		{id: "premiumSettlementCurrency", name: "Premium Settlement Currency", field: "premiumSettlementCurrency", toolTip: "Premium Settlement Currency"},
-		{id: "premiumSettlementFXRate", name: "Premium Settlement FX Rate", field: "premiumSettlementFXRate", toolTip: "Premium Settlement FX Rate"},		
-		
-		{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", toolTip: "User who last updated this request"},
-		{id: "lastUpdate", name: "Last Updated At", field: "lastUpdate", toolTip: "Date of last update"}		
-	];
-
-function renderSparkline(cellNode, row, dataContext, colDef)
+function waitingFormatter(value)
 {
-    $(cellNode).empty().sparkline(dataView["profitAndLossPoints"], {width: "100%"});
+	return "Wait...";
 }
-
-var options = 
-{
-	enableCellNavigation: true,
-	enableColumnReorder: true,		
-    editable: true,
-    enableAddRow: false,
-    asyncEditorLoading: false,
-    autoEdit: false,
-    forceFitColumns: false,
-    cellHighlightCssClass: "priceUpdateIncrease",
-    cellFlashingCssClass: "cellFlash",
-    topPanelHeight:230	    
-};
 
 function requiredFieldValidator(value) 
 {
@@ -214,7 +110,116 @@ function requiredFieldValidator(value)
 	}
 }
 
+function renderSparkline(cellNode, row, dataContext, colDef)
+{
+    $(cellNode).empty().sparkline(dataContext["profitAndLossPoints"], {width: "100%"});
+}
 
+var columns = 
+[
+ 	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
+	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
+	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: pascalCaseFormatter},
+	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "Request picked up by user:"},
+	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},	
+	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
+	{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: decimalFormatter, toolTip: "Theoretical value"},
+	{id: "timeValue", name: "Time Value", field: "timeValue", formatter: decimalFormatter, toolTip: "Time value"},
+	{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
+	{id: "underlyingPrice", name: "Spot", field: "underlyingPrice", toolTip: "Underlying Spot price"},
+	{id: "profitAndLossPoints", name: "P&L Chart", sortable: false, formatter: waitingFormatter, asyncPostRender: renderSparkline, toolTip: "Profit and loss chart"},
+	{id: "delta", name: "Delta", field: "delta", formatter: decimalFormatter, toolTip: "Delta", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "gamma", name: "Gamma", field: "gamma", formatter: decimalFormatter, toolTip: "Gamma", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "vega", name: "Vega", field: "vega", formatter: decimalFormatter, toolTip: "Vega", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "theta", name: "Theta", field: "theta", formatter: decimalFormatter, toolTip: "Theta", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "rho", name: "Rho", field: "rho", formatter: decimalFormatter, toolTip: "Rho", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book code"},	
+	{id: "underlyingRIC", name: "Underlying RIC", field: "underlyingRIC", toolTip: "Underlying RIC"},
+	{id: "salesComment", name: "Sales Comment", field: "salesComment", editor: Slick.Editors.LongText, toolTip: "Comments made by sales."},
+	{id: "traderComment", name: "Trader Comment", field: "traderComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the traders."},
+	{id: "clientComment", name: "Client Comment", field: "clientComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the client."}		
+];
+
+var allColumns = 
+[
+ 	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
+	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
+	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request", formatter: pascalCaseFormatter},
+	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "User who picked up the request"},
+	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},	
+	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
+	{id: "expiryDate", name: "Maturity Date", field: "expiryDate", toolTip: "Expiry date."},
+	
+	{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: decimalFormatter, toolTip: "Theoretical value"},
+	{id: "premiumPercentage", name: "Premium Percentage", field: "premiumPercentage", toolTip: "Premium percentage"},
+	{id: "timeValue", name: "Time Value", field: "timeValue", formatter: decimalFormatter, toolTip: "Time value"},
+	{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
+	{id: "underlyingPrice", name: "Spot", field: "underlyingPrice", toolTip: "Underlying Spot price"},
+	{id: "impliedVol", name: "Implied Volatility", field: "impliedVol", toolTip: "Implied volatility"},
+	{id: "profitAndLossPoints", name: "Profit And Loss Graph", sortable: false, formatter: waitingFormatter, asyncPostRender: renderSparkline, toolTip: "Profit and loss points"},
+					
+	{id: "delta", name: "Delta", field: "delta", formatter: decimalFormatter, toolTip: "Delta", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "gamma", name: "Gamma", field: "gamma", formatter: decimalFormatter, toolTip: "Gamma", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "vega", name: "Vega", field: "vega", formatter: decimalFormatter, toolTip: "Vega", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "theta", name: "Theta", field: "theta", formatter: decimalFormatter, toolTip: "Theta", groupTotalsFormatter: sumTotalsFormatter},
+	{id: "rho", name: "Rho", field: "rho", formatter: decimalFormatter, toolTip: "Rho", groupTotalsFormatter: sumTotalsFormatter},
+			
+	{id: "notionalMillions", name: "Notional Millions", field: "notionalMillions", toolTip: "Notional in Millions"},
+	{id: "notionalFXRate", name: "Notional FX Rate", field: "notionalFXRate", toolTip: "Notional FX Rate"},
+	{id: "notionalCurrency", name: "Notional Currency", field: "notionalCurrency", toolTip: "Notional Currency"},
+	
+	{id: "quantity", name: "Quantity", field: "quantity", toolTip: "Quantity"},
+	{id: "contracts", name: "Contracts", field: "contracts", toolTip: "Number of contracts"},
+	{id: "lotSize", name: "Lot Size", field: "lotSize", toolTip: "Lot Size"},
+	{id: "multiplier", name: "Multiplier", field: "multiplier", toolTip: "Multiplier"},		
+
+	{id: "deltaNotional", name: "Delta Notional", field: "deltaNotional", toolTip: "Delta Notional"},
+	{id: "gammaNotional", name: "Gamma Notional", field: "gammaNotional", toolTip: "Gamma Notional"},
+	{id: "vegaNotional", name: "Vega Notional", field: "vegaNotional", toolTip: "Vega Notional"},
+	{id: "thetaNotional", name: "Theta Notional", field: "thetaNotional", toolTip: "Theta Notional"},
+	{id: "rhoNotional", name: "Rho Notional", field: "rhoNotional", toolTip: "Rho Notional"},
+	
+	{id: "deltaShares", name: "Delta Shares", field: "deltaShares", toolTip: "Delta Shares"},
+	{id: "gammaShares", name: "Gamma Shares", field: "gammaShares", toolTip: "Gamma Shares"},
+	{id: "vegaShares", name: "Vega Shares", field: "vegaShares", toolTip: "Vega Shares"},
+	{id: "thetaShares", name: "Theta Shares", field: "thetaShares", toolTip: "Theta Shares"},
+	{id: "rhoShares", name: "Rho Shares", field: "rhoShares", toolTip: "Rho Shares"},
+	
+	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book code"},	
+	{id: "underlyingRIC", name: "Underlying RIC", field: "underlyingRIC", toolTip: "Underlying RIC"},
+	
+	{id: "salesComment", name: "Sales Comment", field: "salesComment", editor: Slick.Editors.LongText, toolTip: "Comments made by sales"},
+	{id: "traderComment", name: "Trader Comment", field: "traderComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the traders"},
+	{id: "clientComment", name: "Client Comment", field: "clientComment", editor: Slick.Editors.LongText, toolTip: "Comments made by the client"},		
+	
+	{id: "salesCreditAmount", name: "Sales Credit Amount", field: "salesCreditAmount", toolTip: "Sales Credit Amount"},
+	{id: "salesCreditPercentage", name: "Sales Credit Percentage", field: "salesCreditPercentage", toolTip: "Sales Credit Percentage"},
+	{id: "salesCreditFXRate", name: "Sales Credit FX Rate", field: "salesCreditFXRate", toolTip: "Sales Credit FX Rate"},
+	{id: "salesCreditCurrency", name: "Sales Credit Currency", field: "salesCreditCurrency", toolTip: "Sales Credit Currency"},
+	
+	{id: "premiumSettlementDate", name: "Premium Settlement Date", field: "premiumSettlementDate", toolTip: "Premium Settlement Date"},
+	{id: "premiumSettlementDaysOverride", name: "Premium Settlement Days Override", field: "premiumSettlementDaysOverride", toolTip: "Premium Settlement Days Override"},
+	{id: "premiumSettlementCurrency", name: "Premium Settlement Currency", field: "premiumSettlementCurrency", toolTip: "Premium Settlement Currency"},
+	{id: "premiumSettlementFXRate", name: "Premium Settlement FX Rate", field: "premiumSettlementFXRate", toolTip: "Premium Settlement FX Rate"},		
+	
+	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", toolTip: "User who last updated this request"},
+	{id: "lastUpdate", name: "Last Updated At", field: "lastUpdate", toolTip: "Date of last update"}		
+];
+
+var options = 
+{
+	enableCellNavigation: true,
+	enableColumnReorder: true,		
+    editable: true,
+    enableAddRow: false,
+    asyncEditorLoading: false,
+    autoEdit: false,
+    forceFitColumns: false,
+    cellHighlightCssClass: "priceUpdateIncrease",
+    cellFlashingCssClass: "cellFlash",
+    topPanelHeight:230,
+    enableAsyncPostRender: true
+};
 
 $(document).ready(function()
 {
@@ -233,6 +238,7 @@ $(document).ready(function()
 	var loadingIndicator = null;
 
 	var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
+	
 	var dataView = new Slick.Data.DataView(
 	{
 	    groupItemMetadataProvider: groupItemMetadataProvider,
