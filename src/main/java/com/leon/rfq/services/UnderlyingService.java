@@ -1,8 +1,10 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Set;
 
+import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.repositories.UnderlyingDao;
 
@@ -29,4 +31,6 @@ public interface UnderlyingService
 	
 	boolean update(String RIC, String description, BigDecimal referencePrice,
 			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String updatedByUser);
+
+	List<Tag> getMatchingUnderlyingTags(String upperCase);
 }

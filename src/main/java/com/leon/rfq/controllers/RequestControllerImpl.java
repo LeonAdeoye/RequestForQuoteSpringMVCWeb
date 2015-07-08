@@ -227,16 +227,4 @@ public class RequestControllerImpl
 			
 		return "redirect:/requests";
 	}
-	
-	@RequestMapping(value = "/requests/matchingBookTags", method = RequestMethod.GET, produces = "application/json")
-	public @ResponseBody Object getBookMatches(@RequestParam String pattern)
-	{
-		return this.bookService.getMatchingBookTags(pattern.toUpperCase());
-	}
-	
-	@RequestMapping(value = "/requests/matchingClientTags", method = RequestMethod.GET, produces = "application/json")
-	public @ResponseBody Object getClientMatches(@RequestParam String pattern)
-	{
-		return this.clientService.getMatchingClientTags(pattern.toUpperCase());
-	}
 }

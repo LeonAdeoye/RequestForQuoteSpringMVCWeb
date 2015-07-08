@@ -2,10 +2,12 @@ package com.leon.rfq.services;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -16,6 +18,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.stereotype.Service;
 
+import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.UnderlyingDetailImpl;
 import com.leon.rfq.events.NewUnderlyingEvent;
 import com.leon.rfq.repositories.UnderlyingDao;
@@ -398,6 +401,13 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			logger.debug("Check if underlying exists with RIC: " + ric);
 		
 		return (isUnderlyingCached(ric) ? true : this.underlyingDao.underlyingExistsWithRic(ric));
+	}
+
+	@Override
+	public List<Tag> getMatchingUnderlyingTags(String pattern)
+	{
+		return this.getAllFromCacheOnly().stream().filter(underlying -> underlying.getRic().contains(pattern))
+				.map(underlying -> new Tag(String.valueOf(underlying.getRic()), underlying.getDescription())).collect(Collectors.toList());
 	}
 	
 }

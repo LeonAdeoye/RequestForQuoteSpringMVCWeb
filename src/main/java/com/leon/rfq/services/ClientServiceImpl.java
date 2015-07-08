@@ -202,7 +202,7 @@ public final class ClientServiceImpl implements ClientService
 	@Override
 	public List<Tag> getMatchingClientTags(String pattern)
 	{
-		return Collections.synchronizedList(this.getAllFromCacheOnly().stream().filter(client -> client.getName().contains(pattern))
-				.map(client -> new Tag(String.valueOf(client.getClientId()), client.getName())).collect(Collectors.toList()));
+		return this.getAllFromCacheOnly().stream().filter(client -> client.getName().toUpperCase().contains(pattern))
+				.map(client -> new Tag(String.valueOf(client.getClientId()), client.getName())).collect(Collectors.toList());
 	}
 }

@@ -252,8 +252,7 @@ $(document).ready(function()
 	
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
-	getRequestsFromTodayOnly();
-	
+		
     function showLoadIndicator() 
     {
         if (!loadingIndicator) 
@@ -266,7 +265,14 @@ $(document).ready(function()
             	.css("left", $g.position().left + $g.width() / 2 - loadingIndicator.width() / 2);
         }
         loadingIndicator.show();
-    }	
+    }
+    
+	showLoadIndicator();
+	getStatusList();
+	getUnderlyingList();
+	getBookList();
+	getClientList();	
+	getRequestsFromTodayOnly();    
 
 	function processNewlyCreatedRequest(newlyCreatedrequest)
 	{
@@ -788,7 +794,77 @@ $(document).ready(function()
 	          $("#requestContextMenu").hide();
 	        });
     	}
-    });	
+    });
+	
+	function getStatusList()
+	{
+
+	}
+	
+	// TODO - decide if this is needed
+	function getUnderlyingList()
+	{
+		$.ajax({
+		    url: contextPath + "/underlyings/all", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(underlyings) 
+		    {
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+                alert('Failed to get list of underlyings. Error: ' + xhr.responseText);
+            }
+		});	
+	}
+	
+	// TODO - decide if this is needed	
+	function getBookList()
+	{
+		$.ajax({
+		    url: contextPath + "/books/all", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(books) 
+		    {
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+                alert('Failed to get list of books. Error: ' + xhr.responseText);
+                loadingIndicator.fadeOut();
+            }
+		});	
+	}
+	
+	// TODO - decide if this is needed	
+	function getClientList()
+	{
+		$.ajax({
+		    url: contextPath + "/clients/all", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(clients) 
+		    {
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+                alert('Failed to get list of Clients. Error: ' + xhr.responseText);
+                loadingIndicator.fadeOut();
+            }
+		});	
+	}
 	
 	function getRequestsFromTodayOnly() 
 	{		
@@ -812,12 +888,9 @@ $(document).ready(function()
                 loadingIndicator.fadeOut();
             }
 		});
-	}	
-	
-	showLoadIndicator();
-	getRequestsFromTodayOnly();
+	}
 		
-	$("#requests_bookCode").autocomplete(
+	$(".requests_book_autocomplete").autocomplete(
 	{
 		minLength:3,
         source: function (request, response) 
@@ -825,7 +898,7 @@ $(document).ready(function()
             $.ajax(
             {
                 type: "GET",
-                url: contextPath + "/requests/matchingBookTags?pattern=" + request.term,
+                url: contextPath + "/books/matchingBookTags?pattern=" + request.term,
                 dataType: "json",
                 data: 
                 {
@@ -833,7 +906,7 @@ $(document).ready(function()
                 },
                 error: function (xhr, textStatus, errorThrown) 
                 {
-                    alert('Error: ' + xhr.responseText);
+                    alert('Failed to retrieve book autocomplete data. Error: ' + xhr.responseText);
                 },
                 success: function (data) 
                 {
@@ -849,7 +922,7 @@ $(document).ready(function()
         }
     });
 	
-	$("#requests_client").autocomplete(
+	$(".requests_client_autocomplete").autocomplete(
 	{
 		minLength:2,
         source: function (request, response) 
@@ -857,7 +930,7 @@ $(document).ready(function()
             $.ajax(
             {
                 type: "GET",
-                url: contextPath + "/requests/matchingClientTags?pattern=" + request.term,
+                url: contextPath + "/clients/matchingClientTags?pattern=" + request.term,
                 dataType: "json",
                 data: 
                 {
@@ -865,15 +938,47 @@ $(document).ready(function()
                 },
                 error: function (xhr, textStatus, errorThrown) 
                 {
-                    alert('Error: ' + xhr.responseText);
+                    alert('Failed to retrieve client autocomplete data. Error: ' + xhr.responseText);
                 },
-                success: function (data) 
+                success: function (clients)
                 {
-                    response($.map(data, function (item) 
+                    response($.map(clients, function (client) 
                     {
                         return {
-                            		label: item.label,
-                            		value: item.value
+                            		label: client.label,
+                            		value: client.value
+                        		}
+                    }));
+                }
+            });
+        }
+    });
+	
+	$(".requests_underlying_autocomplete").autocomplete(
+	{
+		minLength:1,
+        source: function (request, response) 
+        {
+            $.ajax(
+            {
+                type: "GET",
+                url: contextPath + "/underlyings/matchingUnderlyingTags?pattern=" + request.term,
+                dataType: "json", 
+                data: 
+                {
+                    term: request.termCode
+                },
+                error: function (xhr, textStatus, errorThrown) 
+                {
+                    alert('Failed to retrieve underlying autocomplete data. Error: ' + xhr.responseText);
+                },
+                success: function (underlyings) 
+                {
+                    response($.map(underlyings, function (underlying) 
+                    {
+                        return {
+                            		label: underlying.value + "  (" + underlying.label + ")",
+                            		value: underlying.value
                         		}
                     }));
                 }
@@ -994,8 +1099,16 @@ $(document).ready(function()
 	{
 		clearNewRequestInputFields();		
 		disableAddButton();		
-	});	
+	});
 	
+	$(".requests_filter_search_clear_btn").click(function()
+	{
+		$(".requests_underlying_autocomplete").val($(".requests_underlying_autocomplete").attr("default_value"));
+		$(".requests_book_autocomplete").val($(".requests_book_autocomplete").attr("default_value"));
+		$(".requests_client_autocomplete").val($(".requests_client_autocomplete").attr("default_value"));	
+		$(".requests_status_autocomplete").val($(".requests_status_autocomplete").attr("default_value"));		
+	});
+		
 	function groupByBook() 
 	{
 		dataView.setGrouping(

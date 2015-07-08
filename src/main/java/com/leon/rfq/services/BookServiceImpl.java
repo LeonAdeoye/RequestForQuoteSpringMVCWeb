@@ -1,6 +1,5 @@
 package com.leon.rfq.services;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -281,7 +280,7 @@ public final class BookServiceImpl implements BookService
 	@Override
 	public List<Tag> getMatchingBookTags(String pattern)
 	{
-		return Collections.synchronizedList(this.getAllFromCacheOnly().stream().filter(book -> book.getBookCode().contains(pattern))
-				.map(book -> new Tag(book.getBookCode())).collect(Collectors.toList()));
+		return this.getAllFromCacheOnly().stream().filter(book -> book.getBookCode().contains(pattern))
+				.map(book -> new Tag(book.getBookCode())).collect(Collectors.toList());
 	}
 }
