@@ -118,6 +118,66 @@
 		  	</div>		  	
 		</div>
 		
+		<div id="requestsInlineFilterPanel" class="inlinePanel" style="display:none;">
+			<Label><spring:message code="requests.filter.title.label"/></Label>
+		  	<div id="requestsFilter">
+		  		<div class="requests_filter_item">
+				  	<input id="requests_filter_bookCode" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />				  	
+				</div>
+		  		<div class="requests_filter_item">		  		
+				  	<input id="requests_filter_client" path="clientId" value="Select client name..." type="text" default_value="Select client name..." />				  	
+				</div>
+				<div class="requests_filter_item">		  		
+				  	<input id="requests_filter_tradeDate_start" value="Select start trade date..." type="text" default_value="Select start trade date ..." />
+				  	<input id="requests_filter_tradeDate_end" value="Select end trade date..." type="text" default_value="Select end trade date ..." />
+				</div>
+				<div class="requests_filter_item">		  		
+				  	<input id="requests_filter_maturityDate_start" value="Select start maturity date..." type="text" default_value="Select start maturity date ..." />
+				  	<input id="requests_filter_maturityDate_end" value="Select end maturity date..." type="text" default_value="Select end maturity date ..." />
+				</div>
+		  		<div class="requests_filter_item">
+				  	<input id="requests_filter_status" path="status" value="Select status code..." type="text" default_value="Select status code..." />				  	
+				</div>
+		  		<div class="requests_filter_item">
+				  	<input id="requests_filter_underlying" path="underlying" value="Select underlying..." type="text" default_value="Select underlying code..." />				  	
+				</div>				
+		  	</div>
+		  	<br>
+		  	<div class="requests_configure_item">
+		  		<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+		  	</div>		  	
+		</div>
+		
+		<div id="requestsInlineSearchPanel" class="inlinePanel" style="display:none;">
+			<Label><spring:message code="requests.search.title.label"/></Label>
+		  	<div id="requestsSearch">
+		  		<div class="requests_search_item">
+				  	<input id="requests_search_bookCode" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />				  	
+				</div>
+		  		<div class="requests_search_item">		  		
+				  	<input id="requests_search_client" path="clientId" value="Select client name..." type="text" default_value="Select client name..." />				  	
+				</div>
+				<div class="requests_search_item">		  		
+				  	<input id="requests_search_tradeDate_start" value="Select start trade date..." type="text" default_value="Select start trade date ..." />
+				  	<input id="requests_search_tradeDate_end" value="Select end trade date..." type="text" default_value="Select end trade date ..." />
+				</div>
+				<div class="requests_search_item">		  		
+				  	<input id="requests_search_maturityDate_start" value="Select start maturity date..." type="text" default_value="Select start maturity date ..." />
+				  	<input id="requests_search_maturityDate_end" value="Select end maturity date..." type="text" default_value="Select end maturity date ..." />
+				</div>
+		  		<div class="requests_search_item">
+				  	<input id="requests_search_status" path="status" value="Select status code..." type="text" default_value="Select status code..." />				  	
+				</div>
+		  		<div class="requests_search_item">
+				  	<input id="requests_filter_underlying" path="underlying" value="Select underlying..." type="text" default_value="Select underlying code..." />				  	
+				</div>				
+		  	</div>
+		  	<br>
+		  	<div class="requests_configure_item">
+		  		<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+		  	</div>		  	
+		</div>
+		
 		<span class='loading-indicator' style="display:none;"><label>Retrieving today's requests...</label></span>		
 
 		<ul id="statusContextMenu" class="contextMenu" style="display:none;position:absolute">

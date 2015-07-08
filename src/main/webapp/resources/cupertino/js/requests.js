@@ -670,6 +670,8 @@ $(document).ready(function()
 	{
 		$("#requestsInlineConfigurePanel").appendTo(requestsGrid.getTopPanel());
 		$("#requestsInlineGroupByPanel").appendTo(requestsGrid.getTopPanel());
+		$("#requestsInlineSearchPanel").appendTo(requestsGrid.getTopPanel());
+		$("#requestsInlineFilterPanel").appendTo(requestsGrid.getTopPanel());
 	}
 	
 	appendToTopPanel();		
@@ -686,13 +688,11 @@ $(document).ready(function()
         		$("#requestsInlineGroupByPanel").show();
         		break;        		
         	case "search":
-        		requestsGrid.setTopPanelVisibility(false);
-        		alert("Sorry, search operation has not yet been implemented!");
-        		return;
+        		$("#requestsInlineSearchPanel").show();
+        		break;
         	case "filter":
-        		requestsGrid.setTopPanelVisibility(false);
-        		alert("Sorry, filter operation has not yet been implemented!");
-        		return;
+        		$("#requestsInlineFilterPanel").show();
+        		break;
         	case "chart":
         		requestsGrid.setTopPanelVisibility(false);
         		alert("Sorry, charting operation has not yet been implemented!");
