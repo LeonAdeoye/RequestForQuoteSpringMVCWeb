@@ -939,7 +939,7 @@ $(document).ready(function()
                 error: function (xhr, textStatus, errorThrown) 
                 {
                     alert('Failed to retrieve client autocomplete data. Error: ' + xhr.responseText);
-                },
+                },              
                 success: function (clients)
                 {
                     response($.map(clients, function (client) 
@@ -953,6 +953,15 @@ $(document).ready(function()
             });
         }
     });
+	
+	function displayLabel(event, ui)
+	{
+        event.preventDefault();
+        $(".requests_client_autocomplete").val(ui.item.label);
+	}
+	
+	$( ".requests_client_autocomplete" ).on("autocompleteselect", displayLabel);
+	$( ".requests_client_autocomplete" ).on("autocompletefocus", displayLabel);
 	
 	$(".requests_underlying_autocomplete").autocomplete(
 	{
@@ -985,6 +994,38 @@ $(document).ready(function()
             });
         }
     });
+	
+	$(".requests_status_autocomplete").autocomplete(
+	{
+		minLength:1,
+        source: function (request, response) 
+        {
+            $.ajax(
+            {
+                type: "GET",
+                url: contextPath + "/requests/matchingStatusTags?pattern=" + request.term,
+                dataType: "json", 
+                data: 
+                {
+                    term: request.termCode
+                },
+                error: function (xhr, textStatus, errorThrown) 
+                {
+                    alert('Failed to retrieve status autocomplete data. Error: ' + xhr.responseText);
+                },
+                success: function (statuses) 
+                {
+                    response($.map(statuses, function (status) 
+                    {
+                        return {
+                            		label: status.label,
+                            		value: status.value
+                        		}
+                    }));
+                }
+            });
+        }
+    });	
 	
 	function updateStatusInGrid(updatedRequest, row, oldStatus, newStatus)
 	{	
@@ -1093,13 +1134,27 @@ $(document).ready(function()
 	{
 		if(trimSpaces($(this).val()) == "")
 			$(this).val($(this).attr("default_value"));
-	});
+	});	
 
 	$("#requests_clear_button").click(function()
 	{
 		clearNewRequestInputFields();		
 		disableAddButton();		
 	});
+	
+	$(".filter_search_textBox").click(function()
+	{
+		if($(this).val() == $(this).attr("default_value"))
+		{
+			$(this).val("");			
+		}
+	});
+
+	$(".filter_search_textBox").focusout(function()
+	{
+		if(trimSpaces($(this).val()) == "")
+			$(this).val($(this).attr("default_value"));
+	});	
 	
 	$(".requests_filter_search_clear_btn").click(function()
 	{

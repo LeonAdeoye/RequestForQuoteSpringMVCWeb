@@ -121,6 +121,7 @@
 		<div id="requestsInlineFilterPanel" class="inlinePanel" style="display:none;">
 			<Label><spring:message code="requests.filter.title.label"/></Label>
 			<br>
+			<br>
 		  	<div id="requestsFilter">
 		  		<div class="requests_filter_item">
 				  	<input id="requests_filter_bookCode" path="bookCode" class="filter_search_textBox requests_book_autocomplete" value="Select book code..." type="text" default_value="Select book code..." />				  	
@@ -145,7 +146,7 @@
 				</div>
 				<br>
 		  		<div class="requests_filter_item">
-				  	<input id="requests_filter_underlying" path="underlying" class="filter_search_textBox requests_underlying_autocomplete" value="Select underlying..." type="text" default_value="Select underlying code..." />				  	
+				  	<input id="requests_filter_underlying" path="underlying" class="filter_search_textBox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." />				  	
 				</div>				
 		  	</div>
 		  	<br>
@@ -157,6 +158,7 @@
 		
 		<div id="requestsInlineSearchPanel" class="inlinePanel" style="display:none;">
 			<Label><spring:message code="requests.search.title.label"/></Label>
+			<br>
 			<br>
 		  	<div id="requestsSearch">
 		  		<div class="requests_search_item">
@@ -182,7 +184,7 @@
 				</div>
 				<br>
 		  		<div class="requests_search_item">
-				  	<input id="requests_search_underlying" path="underlying" class="filter_search_textBox requests_underlying_autocomplete" value="Select underlying..." type="text" default_value="Select underlying code..." />				  	
+				  	<input id="requests_search_underlying" path="underlying" class="filter_search_textBox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." />				  	
 				</div>				
 		  	</div>
 		  	<br>

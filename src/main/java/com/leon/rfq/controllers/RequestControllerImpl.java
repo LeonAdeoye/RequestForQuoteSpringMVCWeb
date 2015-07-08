@@ -1,8 +1,12 @@
 package com.leon.rfq.controllers;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -24,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.leon.rfq.common.EnumTypes.StatusEnum;
+import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.services.BookService;
@@ -226,5 +232,15 @@ public class RequestControllerImpl
 			model.addAttribute("error", "Failed to delete request with requestId: " + requestId);
 			
 		return "redirect:/requests";
+	}
+	
+	@RequestMapping(value = "requests/matchingStatusTags", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Object getStatusMatches(@RequestParam String pattern)
+	{
+		List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
+		
+		return listOfStatus.stream().filter(status -> status.getDescription().toUpperCase().contains(pattern.toUpperCase()))
+				.map(status -> new Tag(String.valueOf(status), status.getDescription())).collect(Collectors.toList());
+		
 	}
 }

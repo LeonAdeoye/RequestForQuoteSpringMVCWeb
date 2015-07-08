@@ -15,8 +15,21 @@ public final class EnumTypes
 	
 	public static enum StatusEnum
 	{
-		PENDING, PICKED_UP, TRADED_AWAY, TRADED_AWAY_ASK, TRADED_AWAY_BID,
-		FILLED,	FILLED_ASK,	FILLED_BID,	INVALID, PASSED
+		PENDING("Pending"), PICKED_UP("Picked up"), TRADED_AWAY("Traded away"), TRADED_AWAY_ASK("Traded away ask"),
+		TRADED_AWAY_BID("Traded away bid"),	FILLED("Filled"),	FILLED_ASK("Filled ask"),	FILLED_BID("Filled bid"),
+		INVALID("Invalid"), PASSED("Passed");
+		
+		private final String description;
+		
+		private StatusEnum(String description)
+		{
+			this.description = description;
+		}
+		
+		public String getDescription()
+		{
+			return this.description;
+		}
 	}
 	
 	public static enum HedgeTypeEnum
