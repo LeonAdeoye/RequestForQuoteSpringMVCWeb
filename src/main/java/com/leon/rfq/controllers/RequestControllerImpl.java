@@ -243,4 +243,12 @@ public class RequestControllerImpl
 				.map(status -> new Tag(String.valueOf(status), status.getDescription())).collect(Collectors.toList());
 		
 	}
+	
+	@RequestMapping(value = "requests/statuses", method = RequestMethod.GET, produces = "application/json")
+	public @ResponseBody Object getStatuses()
+	{
+		List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
+		
+		return listOfStatus.stream().collect(Collectors.toMap(status -> status.getDescription(), status -> status));
+	}
 }

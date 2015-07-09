@@ -252,6 +252,8 @@ $(document).ready(function()
 	
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
+	
+	var bookCode = "";
 		
     function showLoadIndicator() 
     {
@@ -267,12 +269,30 @@ $(document).ready(function()
         loadingIndicator.show();
     }
     
+	function requestsFilter(item, args)
+	{
+		if (args.searchString != "" && item["bookCode"].indexOf(args.searchString) == -1)
+		    return false;
+		
+		return true;
+	}    
+    
 	showLoadIndicator();
 	getStatusList();
 	getUnderlyingList();
 	getBookList();
 	getClientList();	
-	getRequestsFromTodayOnly();    
+	getRequestsFromTodayOnly();
+	
+	
+	  // initialize the model after all the events have been hooked up
+	dataView.beginUpdate();
+	dataView.setFilterArgs(
+	{
+		bookCode: bookCode
+	});
+	dataView.setFilter(requestsFilter);
+	dataView.endUpdate();	
 
 	function processNewlyCreatedRequest(newlyCreatedrequest)
 	{
@@ -358,7 +378,7 @@ $(document).ready(function()
 		
 		var snippet = $('#requests_snippet').val();
 	    var bookCode = $('#requests_bookCode').val();
-	    var client = $('#requests_client').val();
+	    var client = clientHash[$('#requests_client').val()];
 	    var lastUpdatedBy = "ladeoye"; // TODO
 	    var json = { "request" : snippet, "bookCode" : bookCode, "clientId": client , "lastUpdatedBy" : lastUpdatedBy};
 	    
@@ -683,7 +703,7 @@ $(document).ready(function()
 	appendToTopPanel();		
 	
 	$('.toggleTopPanel').bind('click', function(event) 
-	{
+	{		
 		$(".inlinePanel").hide();	
     	switch ($(this).attr("data"))
     	{
@@ -694,9 +714,11 @@ $(document).ready(function()
         		$("#requestsInlineGroupByPanel").show();
         		break;        		
         	case "search":
+        		clearSearchFilterInputFields();
         		$("#requestsInlineSearchPanel").show();
         		break;
         	case "filter":
+        		clearSearchFilterInputFields();
         		$("#requestsInlineFilterPanel").show();
         		break;
         	case "chart":
@@ -796,9 +818,23 @@ $(document).ready(function()
     	}
     });
 	
+	var statusHash = {};
 	function getStatusList()
 	{
-
+		$.ajax({
+		    url: contextPath + "/requests/statuses", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(statusHash) {}, 
+            error: function (xhr, textStatus, errorThrown) 
+            {
+                alert('Failed to get list of statuses. Error: ' + xhr.responseText);
+            }
+		});	
 	}
 	
 	// TODO - decide if this is needed
@@ -844,7 +880,7 @@ $(document).ready(function()
 		});	
 	}
 	
-	// TODO - decide if this is needed	
+	var clientHash = {};	
 	function getClientList()
 	{
 		$.ajax({
@@ -857,6 +893,10 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(clients) 
 		    {
+                $.map(clients, function (client) 
+                {
+                	clientHash[client.name] = client.clientId;
+                });		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
@@ -954,14 +994,24 @@ $(document).ready(function()
         }
     });
 	
-	function displayLabel(event, ui)
+	function displayClientLabel(event, ui)
 	{
         event.preventDefault();
         $(".requests_client_autocomplete").val(ui.item.label);
 	}
 	
-	$( ".requests_client_autocomplete" ).on("autocompleteselect", displayLabel);
-	$( ".requests_client_autocomplete" ).on("autocompletefocus", displayLabel);
+	function displayStatusLabel(event, ui)
+	{
+        event.preventDefault();
+        $(".requests_status_autocomplete").val(ui.item.label);
+	}	
+	
+	$( ".requests_client_autocomplete" ).on("autocompleteselect", displayClientLabel);
+	$( ".requests_client_autocomplete" ).on("autocompletefocus", displayClientLabel);
+
+	$( ".requests_status_autocomplete" ).on("autocompleteselect", displayStatusLabel);
+	$( ".requests_status_autocomplete" ).on("autocompletefocus", displayStatusLabel);
+	
 	
 	$(".requests_underlying_autocomplete").autocomplete(
 	{
@@ -1154,14 +1204,19 @@ $(document).ready(function()
 	{
 		if(trimSpaces($(this).val()) == "")
 			$(this).val($(this).attr("default_value"));
-	});	
+	});
 	
-	$(".requests_filter_search_clear_btn").click(function()
+	function clearSearchFilterInputFields()
 	{
 		$(".requests_underlying_autocomplete").val($(".requests_underlying_autocomplete").attr("default_value"));
 		$(".requests_book_autocomplete").val($(".requests_book_autocomplete").attr("default_value"));
 		$(".requests_client_autocomplete").val($(".requests_client_autocomplete").attr("default_value"));	
-		$(".requests_status_autocomplete").val($(".requests_status_autocomplete").attr("default_value"));		
+		$(".requests_status_autocomplete").val($(".requests_status_autocomplete").attr("default_value"));				
+	}
+	
+	$(".requests_filter_search_clear_btn").click(function()
+	{
+		clearSearchFilterInputFields();
 	});
 		
 	function groupByBook() 
