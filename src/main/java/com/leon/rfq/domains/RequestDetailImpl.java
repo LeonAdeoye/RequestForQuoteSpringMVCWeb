@@ -307,6 +307,11 @@ public final class RequestDetailImpl
 		return this.expiryDate;
 	}
 
+	public String getExpiryDateString()
+	{
+		return this.expiryDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+	}
+	
 	public void setExpiryDate(LocalDate expiryDate)
 	{
 		this.expiryDate = expiryDate;

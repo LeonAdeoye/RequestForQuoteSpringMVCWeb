@@ -47,33 +47,28 @@ function RequestDate(dayOfMonth, month, year)
 	  this.year = year;
 }
 
-/*RequestDate.prototype.toString = function dateToString() 
-{
-	var displayValue = new String(this.dayOfMonth);
-	displayValue = displayValue.concat(((this.month).substr(0,3)).toPascalCase());
-	displayValue = displayValue.concat(this.year);
-	return displayValue;
-}*/
-
 function dateFormatter(row, cell, value, columnDef, dataContext)
 {
+	var dateArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	
     if (value != null)
     {	
-    	//var theRequestDate = new RequestDate(value.dayOfMonth, value.month, value.year);
+    	var theDate = new Date(value);
     	
-    	return value;
+    	if(theDate !== NaN)
+    		return theDate.getDate() + " " + dateArray[theDate.getMonth()] + " " + theDate.getFullYear();    		
     }
-    else
-        return "";
+    return "";
 }
 
-var statusHash = {}, clientHash = {};
+var statusHash = {}, clientHashIndexedByDesc = {}, clientHashIndexedById = {}
+
 function clientFormatter(row, cell, value, columnDef, dataContext)
 {
     if (value == null)
         return "";
     else
-    	return clientHash[value];
+    	return clientHashIndexedById[value];
 }
 
 function pascalCaseFormatter(row, cell, value, columnDef, dataContext)
@@ -131,7 +126,7 @@ var columns =
 	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: pascalCaseFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "Request picked up by user:"},
 	{id: "clientId", name: "Client", field: "clientId", sortable: true, toolTip: "Client this requests applies to", formatter: clientFormatter},	
-	{id: "tradeDate", name: "Trade Date", field: "tradeDateString", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
+	{id: "tradeDate", name: "Trade Date", field: "tradeDateString", formatter: dateFormatter, sortable: true, toolTip: "Trade date"},
 	{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: decimalFormatter, toolTip: "Theoretical value"},
 	{id: "timeValue", name: "Time Value", field: "timeValue", formatter: decimalFormatter, toolTip: "Time value"},
 	{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
@@ -156,8 +151,8 @@ var allColumns =
 	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request", formatter: pascalCaseFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "User who picked up the request"},
 	{id: "clientId", name: "Client", field: "clientId", sortable: true, toolTip: "Client this requests applies to", formatter: clientFormatter},	
-	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
-	{id: "expiryDate", name: "Maturity Date", field: "expiryDate", toolTip: "Expiry date."},
+	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, sortable: true, toolTip: "Trade date"},
+	{id: "expiryDate", name: "Maturity Date", field: "expiryDateString", toolTip: "Expiry date", formatter: dateFormatter},
 	
 	{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: decimalFormatter, toolTip: "Theoretical value"},
 	{id: "premiumPercentage", name: "Premium Percentage", field: "premiumPercentage", toolTip: "Premium percentage"},
@@ -442,7 +437,7 @@ $(document).ready(function()
 		
 		var snippet = $('#requests_snippet').val();
 	    var bookCode = $('#requests_bookCode').val();
-	    var client = clientHash[$('#requests_client').val()];
+	    var client = clientHashIndexedByDesc[$('#requests_client').val()];
 	    var lastUpdatedBy = "ladeoye"; // TODO
 	    var json = { "request" : snippet, "bookCode" : bookCode, "clientId": client , "lastUpdatedBy" : lastUpdatedBy};
 	    
@@ -958,7 +953,9 @@ $(document).ready(function()
 		    {
                 $.map(clients, function (client) 
                 {
-                	clientHash[client.name] = client.clientId;
+                	clientHashIndexedByDesc[client.name] = client.clientId;
+                	clientHashIndexedById[client.clientId] = client.name;
+                	
                 });		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
