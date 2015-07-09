@@ -124,29 +124,29 @@
 			<br>
 		  	<div id="requestsFilter">
 		  		<div class="requests_filter_item">
-				  	<input id="requests_filter_bookCode" path="bookCode" class="filter_search_textBox requests_book_autocomplete" value="Select book code..." type="text" default_value="Select book code..." />				  	
+				  	<input id="requests_filter_bookCode" path="bookCode" class="filter_search_textBox filter_textbox requests_book_autocomplete" value="Select book code..." type="text" default_value="Select book code..." />				  	
 				</div>
 				<br>
 		  		<div class="requests_filter_item">		  		
-				  	<input id="requests_filter_client" path="clientId" class="filter_search_textBox requests_client_autocomplete" value="Select client name..." type="text" default_value="Select client name..." />				  	
+				  	<input id="requests_filter_client" path="clientId" class="filter_search_textBox filter_textbox requests_client_autocomplete" value="Select client name..." type="text" default_value="Select client name..." />				  	
 				</div>
 				<br>
 				<div class="requests_filter_item">		  		
-				  	<input id="requests_filter_tradeDate_start" class="filter_search_textBox" value="Select start trade date..." type="text" default_value="Select start trade date ..." />
-				  	<input id="requests_filter_tradeDate_end" class="filter_search_textBox" value="Select end trade date..." type="text" default_value="Select end trade date ..." />
+				  	<input id="requests_filter_tradeDate_start" class="filter_search_textBox filter_textbox" value="Select start trade date..." type="text" default_value="Select start trade date ..." />
+				  	<input id="requests_filter_tradeDate_end" class="filter_search_textBox filter_textbox" value="Select end trade date..." type="text" default_value="Select end trade date ..." />
 				</div>
 				<br>
 				<div class="requests_filter_item">		  		
-				  	<input id="requests_filter_maturityDate_start" class="filter_search_textBox" value="Select start maturity date..." type="text" default_value="Select start maturity date ..." />
-				  	<input id="requests_filter_maturityDate_end" class="filter_search_textBox" value="Select end maturity date..." type="text" default_value="Select end maturity date ..." />
+				  	<input id="requests_filter_maturityDate_start" class="filter_search_textBox filter_textbox" value="Select start maturity date..." type="text" default_value="Select start maturity date ..." />
+				  	<input id="requests_filter_maturityDate_end" class="filter_search_textBox filter_textbox" value="Select end maturity date..." type="text" default_value="Select end maturity date ..." />
 				</div>
 				<br>
 		  		<div class="requests_filter_item">
-				  	<input id="requests_filter_status" path="status" class="filter_search_textBox requests_status_autocomplete" value="Select status code..." type="text" default_value="Select status code..." />				  	
+				  	<input id="requests_filter_status" path="status" class="filter_search_textBox filter_textbox requests_status_autocomplete" value="Select status code..." type="text" default_value="Select status code..." />				  	
 				</div>
 				<br>
 		  		<div class="requests_filter_item">
-				  	<input id="requests_filter_underlying" path="underlying" class="filter_search_textBox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." />				  	
+				  	<input id="requests_filter_underlying" path="underlying" class="filter_search_textBox filter_textbox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." />				  	
 				</div>				
 		  	</div>
 		  	<br>

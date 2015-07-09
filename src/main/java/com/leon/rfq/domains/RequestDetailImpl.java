@@ -2,6 +2,7 @@ package com.leon.rfq.domains;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 
@@ -293,7 +294,7 @@ public final class RequestDetailImpl
 	
 	public String getTradeDateString()
 	{
-		return this.tradeDate.toString();
+		return this.tradeDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
 	}
 
 	public void setTradeDate(LocalDate tradeDate)

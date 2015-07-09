@@ -47,24 +47,33 @@ function RequestDate(dayOfMonth, month, year)
 	  this.year = year;
 }
 
-RequestDate.prototype.toString = function dateToString() 
+/*RequestDate.prototype.toString = function dateToString() 
 {
 	var displayValue = new String(this.dayOfMonth);
 	displayValue = displayValue.concat(((this.month).substr(0,3)).toPascalCase());
 	displayValue = displayValue.concat(this.year);
 	return displayValue;
-}
+}*/
 
 function dateFormatter(row, cell, value, columnDef, dataContext)
 {
     if (value != null)
     {	
-    	var theRequestDate = new RequestDate(value.dayOfMonth, value.month, value.year);
+    	//var theRequestDate = new RequestDate(value.dayOfMonth, value.month, value.year);
     	
-    	return theRequestDate;
+    	return value;
     }
     else
         return "";
+}
+
+var statusHash = {}, clientHash = {};
+function clientFormatter(row, cell, value, columnDef, dataContext)
+{
+    if (value == null)
+        return "";
+    else
+    	return clientHash[value];
 }
 
 function pascalCaseFormatter(row, cell, value, columnDef, dataContext)
@@ -121,8 +130,8 @@ var columns =
 	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
 	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: pascalCaseFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "Request picked up by user:"},
-	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},	
-	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
+	{id: "clientId", name: "Client", field: "clientId", sortable: true, toolTip: "Client this requests applies to", formatter: clientFormatter},	
+	{id: "tradeDate", name: "Trade Date", field: "tradeDateString", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
 	{id: "premiumAmount", name: "Theoretical Value", field: "premiumAmount", formatter: decimalFormatter, toolTip: "Theoretical value"},
 	{id: "timeValue", name: "Time Value", field: "timeValue", formatter: decimalFormatter, toolTip: "Time value"},
 	{id: "intrinsicValue", name: "Intrinsic Value", field: "intrinsicValue", formatter: decimalFormatter, toolTip: "Intrinsic value"},
@@ -146,7 +155,7 @@ var allColumns =
 	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
 	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request", formatter: pascalCaseFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "User who picked up the request"},
-	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client this requests applies to"},	
+	{id: "clientId", name: "Client", field: "clientId", sortable: true, toolTip: "Client this requests applies to", formatter: clientFormatter},	
 	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, editor: Slick.Editors.Date, sortable: true, toolTip: "Trade date"},
 	{id: "expiryDate", name: "Maturity Date", field: "expiryDate", toolTip: "Expiry date."},
 	
@@ -212,7 +221,7 @@ var options =
 	enableColumnReorder: true,		
     editable: true,
     enableAddRow: false,
-    asyncEditorLoading: false,
+    asyncEditorLoading: true,
     autoEdit: false,
     forceFitColumns: false,
     cellHighlightCssClass: "priceUpdateIncrease",
@@ -253,8 +262,6 @@ $(document).ready(function()
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
 	
-	var bookCode = "";
-		
     function showLoadIndicator() 
     {
         if (!loadingIndicator) 
@@ -267,32 +274,89 @@ $(document).ready(function()
             	.css("left", $g.position().left + $g.width() / 2 - loadingIndicator.width() / 2);
         }
         loadingIndicator.show();
-    }
+    }   
     
-	function requestsFilter(item, args)
-	{
-		if (args.searchString != "" && item["bookCode"].indexOf(args.searchString) == -1)
-		    return false;
-		
-		return true;
-	}    
-    
+    var bookCode = "", status = "", underlyingRIC = "", clientId = "";
+        
 	showLoadIndicator();
 	getStatusList();
 	getUnderlyingList();
 	getBookList();
 	getClientList();	
 	getRequestsFromTodayOnly();
-	
-	
-	  // initialize the model after all the events have been hooked up
-	dataView.beginUpdate();
-	dataView.setFilterArgs(
+
+	function updateFilter()
 	{
-		bookCode: bookCode
-	});
+		dataView.setFilterArgs(
+		{	      
+			bookCode : bookCode,
+			status : status,
+			underlyingRIC : underlyingRIC,
+			clientId : clientId
+		});
+		dataView.refresh();
+	}
+	
+	function clearFilter()
+	{
+		bookCode = "";
+		clientId = "";
+		status = "";
+		underlyingRIC = "";
+		updateFilter();
+	}
+	
+	function requestsFilter(item, args)
+	{
+		if (args.bookCode != "" && item["bookCode"].indexOf(args.bookCode) == -1)
+		    return false;
+		
+		if (args.status != "" && (item["status"].toUpperCase()).indexOf(args.status.toUpperCase()) == -1)
+		    return false;
+		
+		if (args.clientId != "" && item["clientId"].indexOf(args.clientId) == -1)
+		    return false;
+		
+		if (args.underlyingRIC != "" && item["underlyingRIC"].indexOf(args.underlyingRIC) == -1)
+		    return false;		
+		
+		return true;
+	}	
+
+	dataView.beginUpdate();
+	updateFilter();		
 	dataView.setFilter(requestsFilter);
-	dataView.endUpdate();	
+	dataView.endUpdate();
+	
+	dataView.syncGridSelection(requestsGrid, true);
+	
+    $("#requests_filter_bookCode").keyup(function (e)
+    {
+    	Slick.GlobalEditorLock.cancelCurrentEdit();
+	    bookCode = this.value;
+	    updateFilter();
+    });
+    
+    $("#requests_filter_status").keyup(function (e)
+    {
+    	Slick.GlobalEditorLock.cancelCurrentEdit();
+	    status = this.value;
+	    updateFilter();
+    });
+    
+    $("#requests_filter_underlying").keyup(function (e)
+    {
+    	Slick.GlobalEditorLock.cancelCurrentEdit();
+	    underlyingRIC = this.value;
+	    updateFilter();
+    });
+    
+    $("#requests_filter_client").keyup(function (e)
+    {
+    	Slick.GlobalEditorLock.cancelCurrentEdit();
+	    clientId = this.value;
+	    updateFilter();
+    });    
 
 	function processNewlyCreatedRequest(newlyCreatedrequest)
 	{
@@ -818,7 +882,7 @@ $(document).ready(function()
     	}
     });
 	
-	var statusHash = {};
+
 	function getStatusList()
 	{
 		$.ajax({
@@ -879,8 +943,7 @@ $(document).ready(function()
             }
 		});	
 	}
-	
-	var clientHash = {};	
+		
 	function getClientList()
 	{
 		$.ajax({
@@ -1217,6 +1280,9 @@ $(document).ready(function()
 	$(".requests_filter_search_clear_btn").click(function()
 	{
 		clearSearchFilterInputFields();
+		
+		if($(this).is("#requests_filter_clear_btn"))
+			clearFilter();
 	});
 		
 	function groupByBook() 
