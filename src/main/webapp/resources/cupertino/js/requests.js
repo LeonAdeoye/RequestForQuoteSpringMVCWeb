@@ -40,28 +40,18 @@ function toggleAddButtonState()
 		disableAddButton();
 }
 
-function RequestDate(dayOfMonth, month, year) 
-{
-	  this.dayOfMonth = dayOfMonth;
-	  this.month = month;
-	  this.year = year;
-}
+var statusHashIndexedByStatusEnum = {}, clientHashIndexedByDesc = {}, clientHashIndexedById = {};
 
 function dateFormatter(row, cell, value, columnDef, dataContext)
 {
-	var dateArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	
     if (value != null)
     {	
     	var theDate = new Date(value);
-    	
     	if(theDate !== NaN)
-    		return theDate.getDate() + " " + dateArray[theDate.getMonth()] + " " + theDate.getFullYear();    		
+    		return $.datepicker.formatDate("dd M yy", theDate);    		
     }
     return "";
 }
-
-var statusHash = {}, clientHashIndexedByDesc = {}, clientHashIndexedById = {}
 
 function clientFormatter(row, cell, value, columnDef, dataContext)
 {
@@ -69,6 +59,14 @@ function clientFormatter(row, cell, value, columnDef, dataContext)
         return "";
     else
     	return clientHashIndexedById[value];
+}
+
+function statusFormatter(row, cell, value, columnDef, dataContext)
+{
+    if (value == null)
+        return "";
+    else
+    	return statusHashIndexedByStatusEnum[value];
 }
 
 function pascalCaseFormatter(row, cell, value, columnDef, dataContext)
@@ -123,7 +121,7 @@ var columns =
 [
  	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
 	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
-	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: pascalCaseFormatter},
+	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: statusFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "Request picked up by user:"},
 	{id: "clientId", name: "Client", field: "clientId", sortable: true, toolTip: "Client this requests applies to", formatter: clientFormatter},	
 	{id: "tradeDate", name: "Trade Date", field: "tradeDateString", formatter: dateFormatter, sortable: true, toolTip: "Trade date"},
@@ -148,7 +146,7 @@ var allColumns =
 [
  	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
 	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
-	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request", formatter: pascalCaseFormatter},
+	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request", formatter: statusFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "User who picked up the request"},
 	{id: "clientId", name: "Client", field: "clientId", sortable: true, toolTip: "Client this requests applies to", formatter: clientFormatter},	
 	{id: "tradeDate", name: "Trade Date", field: "tradeDate", formatter: dateFormatter, sortable: true, toolTip: "Trade date"},
@@ -225,6 +223,63 @@ var options =
     enableAsyncPostRender: true
 };
 
+function validateAgainstBothDates(startDate, endDate)
+{
+	return endDate - startDate >= 0;
+}
+
+function validateAgainstStartDate(startDate, gridDate)
+{		
+	return gridDate - startDate >= 0;
+}
+
+function validateAgainstEndDate(endDate, gridDate)
+{
+	return endDate - gridDate >= 0;
+}
+
+function convertToDate(dateToConvert)
+{
+	return new Date(dateToConvert.dayOfMonth + " " + dateToConvert.month + " " + dateToConvert.year);;
+}
+
+function requestsFilter(item, args)
+{		
+	if (args.startTradeDate != "" && !validateAgainstStartDate(new Date(args.startTradeDate), convertToDate(item["tradeDate"])))
+		return false;
+	
+	if (args.endTradeDate != "" && !validateAgainstEndDate(new Date(args.endTradeDate),	convertToDate(item["tradeDate"])))
+		return false;
+	
+	if (args.startTradeDate != "" && args.endTradeDate != "" && !validateAgainstBothDates(new Date(args.startTradeDate), 
+			new Date(args.endTradeDate)))
+		return false;
+	
+	if (args.startMaturityDate != "" && !validateAgainstStartDate(new Date(args.startMaturityDate), convertToDate(item["expiryDate"])))
+		return false;
+	
+	if (args.endMaturityDate != "" && !validateAgainstEndDate(new Date(args.endMaturityDate),	convertToDate(item["expiryDate"])))
+		return false;
+	
+	if (args.startMaturityDate != "" && args.endMaturityDate != "" && !validateAgainstBothDates(new Date(args.startMaturityDate), 
+			new Date(args.endMaturityDate)))
+		return false;	
+	
+	if (args.bookCode != "" && item["bookCode"].indexOf(args.bookCode) == -1)
+	    return false;		
+	
+	if (args.status != "" && statusHashIndexedByStatusEnum && (statusHashIndexedByStatusEnum[item["status"]].toUpperCase()).indexOf(args.status.toUpperCase()) == -1)
+	    return false;
+	
+	if (args.clientId != "" && clientHashIndexedById && (clientHashIndexedById[item["clientId"]].toUpperCase()).indexOf(args.clientId.toUpperCase()) == -1)
+		return false;
+	
+	if (args.underlyingRIC != "" && item["underlyingRIC"].indexOf(args.underlyingRIC) == -1)
+	    return false;		
+	
+	return true;
+}
+
 $(document).ready(function()
 {
 	var priceUpdatesAjaxLock = false;
@@ -257,6 +312,28 @@ $(document).ready(function()
 	requestsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	requestsGrid.setTopPanelVisibility(false);
 	
+	function datepickerOnClose(theDate, instance)
+	{
+		try
+		{			
+			if(theDate !== "" && ($(this).val() !== $(this).attr("default_value")))
+			{
+				$.datepicker.parseDate("dd M yy", theDate);
+				Slick.GlobalEditorLock.cancelCurrentEdit();
+				filterHash[$(this).attr("hash_index")] = $(this).val();
+				updateFilter();
+			}
+		}
+		catch(err)
+		{
+			alert('Invalid date! "DD MMM YYYY" date format expected. For example: "23 Dec 2012" or "01 Jan 2000".');
+			$(this).val($(this).attr("default_value"));
+		}		
+	}	
+	
+	$.datepicker.setDefaults({dateFormat : "dd M yy", onClose : datepickerOnClose });
+	$(".dateTxtBox").datepicker();
+	
     function showLoadIndicator() 
     {
         if (!loadingIndicator) 
@@ -271,7 +348,7 @@ $(document).ready(function()
         loadingIndicator.show();
     }   
     
-    var bookCode = "", status = "", underlyingRIC = "", clientId = "";
+    var filterHash = {};
         
 	showLoadIndicator();
 	getStatusList();
@@ -279,83 +356,50 @@ $(document).ready(function()
 	getBookList();
 	getClientList();	
 	getRequestsFromTodayOnly();
+	clearFilter();
 
 	function updateFilter()
 	{
 		dataView.setFilterArgs(
 		{	      
-			bookCode : bookCode,
-			status : status,
-			underlyingRIC : underlyingRIC,
-			clientId : clientId
+			bookCode : filterHash["bookCode"],
+			status : filterHash["status"],
+			underlyingRIC : filterHash["underlyingRIC"],
+			clientId : filterHash["clientId"],
+			startTradeDate : filterHash["startTradeDate"],
+			endTradeDate : filterHash["endTradeDate"],
+			startMaturityDate : filterHash["startMaturityDate"],
+			endMaturityDate : filterHash["endMaturityDate"]		
 		});
+		
 		dataView.refresh();
 	}
 	
 	function clearFilter()
 	{
-		bookCode = "";
-		clientId = "";
-		status = "";
-		underlyingRIC = "";
+		filterHash["bookCode"] = "";
+		filterHash["clientId"] = "";
+		filterHash["status"] = "";
+		filterHash["underlyingRIC"] = "";
+	    filterHash["startTradeDate"] = "";
+	    filterHash["endTradeDate"] = "";
+	    filterHash["startMaturityDate"] = "";
+	    filterHash["endMaturityDate"] = "";
 		updateFilter();
-	}
-	
-	function requestsFilter(item, args)
-	{
-		if (args.bookCode != "" && item["bookCode"].indexOf(args.bookCode) == -1)
-		    return false;
-		
-		if (args.status != "" && (item["status"].toUpperCase()).indexOf(args.status.toUpperCase()) == -1)
-		    return false;
-		
-		alert(args.clientId);
-		alert(item["clientId"]);
-		
-		if (args.clientId != "" && item["clientId"].indexOf(args.clientId) == -1)
-			return false;
-		
-		if (args.underlyingRIC != "" && item["underlyingRIC"].indexOf(args.underlyingRIC) == -1)
-		    return false;		
-		
-		return true;
-	}	
+	}		
 
 	dataView.beginUpdate();
 	updateFilter();		
 	dataView.setFilter(requestsFilter);
 	dataView.endUpdate();
 	
-	dataView.syncGridSelection(requestsGrid, true);
-	
-    $("#requests_filter_bookCode").keyup(function (e)
+    $(".filter_textbox").keyup(function (e)
     {
     	Slick.GlobalEditorLock.cancelCurrentEdit();
-	    bookCode = this.value;
+    	filterHash[$(this).attr("hash_index")] = $(this).val();
 	    updateFilter();
     });
     
-    $("#requests_filter_status").keyup(function (e)
-    {
-    	Slick.GlobalEditorLock.cancelCurrentEdit();
-	    status = this.value;
-	    updateFilter();
-    });
-    
-    $("#requests_filter_underlying").keyup(function (e)
-    {
-    	Slick.GlobalEditorLock.cancelCurrentEdit();
-	    underlyingRIC = this.value;
-	    updateFilter();
-    });
-    
-    $("#requests_filter_client").keyup(function (e)
-    {
-    	Slick.GlobalEditorLock.cancelCurrentEdit();
-	    clientId = this.value;
-	    updateFilter();
-    });    
-
 	function processNewlyCreatedRequest(newlyCreatedrequest)
 	{
 		if(newlyCreatedrequest)
@@ -781,7 +825,7 @@ $(document).ready(function()
         		$("#requestsInlineSearchPanel").show();
         		break;
         	case "filter":
-        		clearSearchFilterInputFields();
+        		// Does not clear previous filters because they may still be active
         		$("#requestsInlineFilterPanel").show();
         		break;
         	case "chart":
@@ -797,6 +841,14 @@ $(document).ready(function()
 	$('.hideTopPanel').bind('click', function(event) 
 	{
 		requestsGrid.setTopPanelVisibility(false);
+		if($(this).is("#filter_close_btn"))
+		{			
+			$(".filter_textBox").each(function(index)
+			{
+				if($(this).val() != $(this).attr("default_value"))
+					$("#requests_filter_button").addClass("filter_on");					
+			})
+		}
 	});
 	
 	var priceUpdateInterval;
@@ -881,7 +933,6 @@ $(document).ready(function()
     	}
     });
 	
-
 	function getStatusList()
 	{
 		$.ajax({
@@ -892,7 +943,10 @@ $(document).ready(function()
 		    mimeType: 'application/json',
 		    timeout: 5000,
 		    cache: false,
-		    success: function(statusHash) {}, 
+		    success: function(statusHash) 
+		    {
+		    	statusHashIndexedByStatusEnum = statusHash;
+		    }, 
             error: function (xhr, textStatus, errorThrown) 
             {
                 alert('Failed to get list of statuses. Error: ' + xhr.responseText);
@@ -1252,8 +1306,11 @@ $(document).ready(function()
 
 	$("#requests_clear_button").click(function()
 	{
+		clearSearchFilterInputFields();
+		clearFilter();
 		clearNewRequestInputFields();		
-		disableAddButton();		
+		disableAddButton();
+		$("#requests_filter_button").removeClass("filter_on");
 	});
 	
 	$(".filter_search_textBox").click(function()
@@ -1271,11 +1328,11 @@ $(document).ready(function()
 	});
 	
 	function clearSearchFilterInputFields()
-	{
-		$(".requests_underlying_autocomplete").val($(".requests_underlying_autocomplete").attr("default_value"));
-		$(".requests_book_autocomplete").val($(".requests_book_autocomplete").attr("default_value"));
-		$(".requests_client_autocomplete").val($(".requests_client_autocomplete").attr("default_value"));	
-		$(".requests_status_autocomplete").val($(".requests_status_autocomplete").attr("default_value"));				
+	{				
+		$(".filter_search_textBox").each(function(index)
+		{
+			$(this).val($(this).attr("default_value"));
+		});		
 	}
 	
 	$(".requests_filter_search_clear_btn").click(function()
@@ -1283,7 +1340,10 @@ $(document).ready(function()
 		clearSearchFilterInputFields();
 		
 		if($(this).is("#requests_filter_clear_btn"))
+		{
 			clearFilter();
+			$("#requests_filter_button").removeClass("filter_on");
+		}			
 	});
 		
 	function groupByBook() 

@@ -174,3 +174,9 @@ fieldset
 	height:20px;
 	border:1px;
 }
+
+.filter_on#requests_filter_button
+{
+	background: olive;
+	color:white
+}

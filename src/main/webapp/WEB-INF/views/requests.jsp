@@ -124,35 +124,35 @@
 			<br>
 		  	<div id="requestsFilter">
 		  		<div class="requests_filter_item">
-				  	<input id="requests_filter_bookCode" path="bookCode" class="filter_search_textBox filter_textbox requests_book_autocomplete" value="Select book code..." type="text" default_value="Select book code..." />				  	
+				  	<input id="requests_filter_bookCode" path="bookCode" class="filter_search_textBox filter_textbox requests_book_autocomplete" value="Select book code..." type="text" hash_index="bookCode" default_value="Select book code..." />				  	
 				</div>
 				<br>
 		  		<div class="requests_filter_item">		  		
-				  	<input id="requests_filter_client" path="clientId" class="filter_search_textBox filter_textbox requests_client_autocomplete" value="Select client name..." type="text" default_value="Select client name..." />				  	
+				  	<input id="requests_filter_client" path="clientId" class="filter_search_textBox filter_textbox requests_client_autocomplete" value="Select client name..." type="text" hash_index="clientId" default_value="Select client name..." />				  	
 				</div>
 				<br>
 				<div class="requests_filter_item">		  		
-				  	<input id="requests_filter_tradeDate_start" class="filter_search_textBox filter_textbox" value="Select start trade date..." type="text" default_value="Select start trade date ..." />
-				  	<input id="requests_filter_tradeDate_end" class="filter_search_textBox filter_textbox" value="Select end trade date..." type="text" default_value="Select end trade date ..." />
+				  	<input id="requests_filter_tradeDate_start" class="filter_search_textBox dateTxtBox filter_textbox" value="Select start trade date..." type="text" default_value="Select start trade date..." hash_index="startTradeDate" />
+				  	<input id="requests_filter_tradeDate_end" class="filter_search_textBox dateTxtBox filter_textbox" value="Select end trade date..." type="text" default_value="Select end trade date..." hash_index="endTradeDate" />
 				</div>
 				<br>
 				<div class="requests_filter_item">		  		
-				  	<input id="requests_filter_maturityDate_start" class="filter_search_textBox filter_textbox" value="Select start maturity date..." type="text" default_value="Select start maturity date ..." />
-				  	<input id="requests_filter_maturityDate_end" class="filter_search_textBox filter_textbox" value="Select end maturity date..." type="text" default_value="Select end maturity date ..." />
+				  	<input id="requests_filter_maturityDate_start" class="filter_search_textBox dateTxtBox filter_textbox" value="Select start maturity date..." type="text" default_value="Select start maturity date..." hash_index="startMaturityDate" />
+				  	<input id="requests_filter_maturityDate_end" class="filter_search_textBox dateTxtBox filter_textbox" value="Select end maturity date..." type="text" default_value="Select end maturity date..." hash_index="endMaturityDate" />
 				</div>
 				<br>
 		  		<div class="requests_filter_item">
-				  	<input id="requests_filter_status" path="status" class="filter_search_textBox filter_textbox requests_status_autocomplete" value="Select status code..." type="text" default_value="Select status code..." />				  	
+				  	<input id="requests_filter_status" path="status" class="filter_search_textBox filter_textbox requests_status_autocomplete" value="Select status code..." type="text" hash_index="status" default_value="Select status code..." />				  	
 				</div>
 				<br>
 		  		<div class="requests_filter_item">
-				  	<input id="requests_filter_underlying" path="underlying" class="filter_search_textBox filter_textbox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." />				  	
+				  	<input id="requests_filter_underlying" path="underlying" class="filter_search_textBox filter_textbox requests_underlying_autocomplete" value="Select underlying code..." type="text" hash_index="underlyingRIC" default_value="Select underlying code..." />				  	
 				</div>				
 		  	</div>
 		  	<br>
 		  	<div class="requests_configure_item">
 		  	<Button id="requests_filter_clear_btn" class="btn requests_filter_search_clear_btn"><spring:message code="requests.clear.button.label"/></Button>
-		  		<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+		  		<Button id="filter_close_btn" class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
 		  	</div>		  	
 		</div>
 		
@@ -170,13 +170,13 @@
 				</div>
 				<br>
 				<div class="requests_search_item">		  		
-				  	<input id="requests_search_tradeDate_start" class="filter_search_textBox" value="Select start trade date..." type="text" default_value="Select start trade date ..." />
-				  	<input id="requests_search_tradeDate_end" class="filter_search_textBox" value="Select end trade date..." type="text" default_value="Select end trade date ..." />
+				  	<input id="requests_search_tradeDate_start" class="filter_search_textBox dateTxtBox" value="Select start trade date..." type="text" default_value="Select start trade date..." />
+				  	<input id="requests_search_tradeDate_end" class="filter_search_textBox dateTxtBox" value="Select end trade date..." type="text" default_value="Select end trade date..." />
 				</div>
 				<br>
 				<div class="requests_search_item">		  		
-				  	<input id="requests_search_maturityDate_start" class="filter_search_textBox" value="Select start maturity date..." type="text" default_value="Select start maturity date ..." />
-				  	<input id="requests_search_maturityDate_end" class="filter_search_textBox" value="Select end maturity date..." type="text" default_value="Select end maturity date ..." />
+				  	<input id="requests_search_maturityDate_start" class="filter_search_textBox dateTxtBox" value="Select start maturity date..." type="text" default_value="Select start maturity date..." />
+				  	<input id="requests_search_maturityDate_end" class="filter_search_textBox dateTxtBox" value="Select end maturity date..." type="text" default_value="Select end maturity date..." />
 				</div>
 				<br>
 		  		<div class="requests_search_item">
@@ -194,7 +194,7 @@
 		  	</div>		  	
 		</div>
 		
-		<span class='loading-indicator' style="display:none;"><label>Retrieving today's requests...</label></span>		
+		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>		
 
 		<ul id="statusContextMenu" class="contextMenu" style="display:none;position:absolute">
 		  <b><spring:message code="contextMenu.status.title.label"/></b>

@@ -249,6 +249,6 @@ public class RequestControllerImpl
 	{
 		List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
 		
-		return listOfStatus.stream().collect(Collectors.toMap(status -> status.getDescription(), status -> status));
+		return listOfStatus.stream().collect(Collectors.toMap(status -> status, status -> status.getDescription()));
 	}
 }

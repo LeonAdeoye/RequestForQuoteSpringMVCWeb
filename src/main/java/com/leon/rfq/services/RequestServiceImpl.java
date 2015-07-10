@@ -221,7 +221,7 @@ ApplicationListener<PriceUpdateEvent>
 		try
 		{
 			lock.lock();
-			
+						
 			Set<RequestDetailImpl> result = this.requestDao.getAll().stream()
 				.filter(request -> request.getTradeDate().compareTo(LocalDate.now()) == 0).collect(Collectors.toSet());
 						
