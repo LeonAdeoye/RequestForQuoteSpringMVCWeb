@@ -144,11 +144,8 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		// Arrange
 		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
 		this.requestService.setRequestDao(requestDaoMock);
-		// Act
-		catchException(this.requestService).insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester");
-		// Assert
-		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", "snippet argument is invalid", caughtException().getMessage());
+		// Act & Assert
+		assertNull(this.requestService.insert("testSnippet", Integer.MAX_VALUE, "testBook", "tester"));
 	}
 	
 	@Test

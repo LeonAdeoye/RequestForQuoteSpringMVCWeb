@@ -320,7 +320,7 @@ ApplicationListener<PriceUpdateEvent>
 		}
 		catch(IllegalArgumentException iae)
 		{
-			throw iae;
+			return null;
 		}
 		finally
 		{

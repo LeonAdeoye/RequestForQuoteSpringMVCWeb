@@ -309,8 +309,11 @@ $(document).ready(function()
 		if (args.status != "" && (item["status"].toUpperCase()).indexOf(args.status.toUpperCase()) == -1)
 		    return false;
 		
+		alert(args.clientId);
+		alert(item["clientId"]);
+		
 		if (args.clientId != "" && item["clientId"].indexOf(args.clientId) == -1)
-		    return false;
+			return false;
 		
 		if (args.underlyingRIC != "" && item["underlyingRIC"].indexOf(args.underlyingRIC) == -1)
 		    return false;		
@@ -454,7 +457,8 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(newlyCreatedrequest) 
 		    {
-		    	processNewlyCreatedRequest(newlyCreatedrequest);		    	
+		    	if(newlyCreatedrequest)
+		    		processNewlyCreatedRequest(newlyCreatedrequest);
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
@@ -463,7 +467,7 @@ $(document).ready(function()
 	        		if(xhr.status == 404)
 	        			alert('Failed to add request because the server is no longer available. Please try to reload the page.');
 	        		else
-	        			alert('Failed to add request because of error: ' + xhr.responseText);   
+	        			alert('Failed to add request [' + snippet + '] because of error: ' + (xhr.responseText !== "" ? xhr.responseText : textStatus));   
         		}
 	        	else
 	        		alert('Failed to add new request because of timeout after five seconds');

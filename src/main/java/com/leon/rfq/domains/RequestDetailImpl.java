@@ -111,7 +111,6 @@ public final class RequestDetailImpl
 	private BigDecimal totalPremium;
 	
 	private List<BigDecimal> profitAndLossPoints;
-
 	private List<OptionDetailImpl> legs;
 
 	public RequestDetailImpl()

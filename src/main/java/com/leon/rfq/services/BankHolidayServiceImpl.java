@@ -99,7 +99,7 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 			if(logger.isErrorEnabled())
 				logger.error("startDate can not come before endDate");
 			
-			throw new IllegalArgumentException("startDate can not come before endDate");
+			throw new IllegalArgumentException("endDate cannot come before startDate");
 		}
 		
 		 return startDate.until(endDate, ChronoUnit.DAYS);
