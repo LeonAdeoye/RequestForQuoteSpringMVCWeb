@@ -1,5 +1,6 @@
 package com.leon.rfq.services;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.leon.rfq.domains.SearchCriterionImpl;
@@ -12,14 +13,16 @@ public interface SearchService
 
 	void initialise();
 
-	boolean isSearchCached(String searchId);
+	Set<SearchCriterionImpl> get(String owner, String searchKey);
 
-	SearchCriterionImpl get(String owner, String searchKey);
-
-	Set<SearchCriterionImpl> getAll();
+	Map<String, Set<SearchCriterionImpl>> get(String owner);
+	
+	Map<String, Map<String, Set<SearchCriterionImpl>>> get();
 
 	boolean insert(String owner, String searchKey, String controlName,
 			String controlValue, Boolean isPrivate, Boolean isFilter);
 
 	boolean delete(String owner, String searchKey);
+	
+	boolean delete(String owner);
 }

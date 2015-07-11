@@ -1,16 +1,21 @@
 package com.leon.rfq.repositories;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.leon.rfq.domains.SearchCriterionImpl;
 
 public interface SearchDao
 {
-	SearchCriterionImpl get(String searchKey);
+	Set<SearchCriterionImpl> get(String owner, String searchKey);
 
-	Set<SearchCriterionImpl> getAll();
+	Map<String, Set<SearchCriterionImpl>> get(String owner);
+	
+	Map<String, Map<String, Set<SearchCriterionImpl>>> get();
 
-	boolean delete(String searchId);
+	boolean delete(String owner, String searchKey);
+	
+	boolean delete(String owner);
 
 	boolean insert(String owner, String searchKey, String controlName,
 			String controlValue, Boolean isPrivate, Boolean isFilter);

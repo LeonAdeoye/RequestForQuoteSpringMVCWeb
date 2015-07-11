@@ -1,6 +1,6 @@
 package com.leon.rfq.services;
 
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -20,7 +20,7 @@ import com.leon.rfq.repositories.SearchDao;
 public final class SearchServiceImpl implements SearchService
 {
 	private static final Logger logger = LoggerFactory.getLogger(SearchServiceImpl.class);
-	private final Map<String, SearchCriterionImpl> savedSearches = new ConcurrentSkipListMap<>();
+	private final Map<String, Map<String, Set<SearchCriterionImpl>>> savedSearches = new ConcurrentSkipListMap<>();
 	
 	@Autowired(required=true)
 	private SearchDao searchDao;
@@ -39,19 +39,64 @@ public final class SearchServiceImpl implements SearchService
 		if(logger.isDebugEnabled())
 			logger.debug("Initializing search service by getting all existing searches...");
 		
-		this.getAll();
+		this.get();
 	}
 	
 	public SearchServiceImpl() {}
 	
-	@Override
-	public boolean isSearchCached(String searchId)
+	private boolean areSearchCriteriaCached(String owner, String searchKey)
 	{
-		return this.savedSearches.containsKey(searchId);
+		if(this.savedSearches.containsKey(owner))
+			return this.savedSearches.get(owner).containsKey(searchKey);
+		
+		return false;
+	}
+	
+	private void clearCache(String owner)
+	{
+		this.savedSearches.get(owner).clear();
+		this.savedSearches.remove(owner);
+	}
+	
+	private void clearCache(String owner, String searchKey)
+	{
+		this.savedSearches.get(owner).get(searchKey).clear();
+		this.savedSearches.get(owner).remove(searchKey);
+	}
+	
+	private boolean areSearchCriteriaCached(String owner)
+	{
+		return this.savedSearches.containsKey(owner);
+	}
+	
+	private Set<SearchCriterionImpl> getCriteriaFromCache(String owner, String searchKey)
+	{
+		return this.savedSearches.get(owner).get(searchKey);
+	}
+	
+	private Map<String, Set<SearchCriterionImpl>> getCriteriaFromCache(String owner)
+	{
+		return this.savedSearches.get(owner);
+	}
+	
+	private void addCriteriaToCache(String owner, String searchKey, String controlName, String controlValue, Boolean isPrivate, Boolean isFilter)
+	{
+		throw new UnsupportedOperationException();
+	}
+	
+	private void addCriteriaToCache(String owner, String searchKey, Set<SearchCriterionImpl> criteria)
+	{
+		this.savedSearches.get(owner).put(searchKey, criteria);
+	}
+	
+	private void addCriteriaToCache(String owner, Map<String, Set<SearchCriterionImpl>> criteria)
+	{
+		clearCache(owner);
+		this.savedSearches.putIfAbsent(owner, criteria);
 	}
 	
 	@Override
-	public SearchCriterionImpl get(String owner, String searchKey)
+	public Set<SearchCriterionImpl> get(String owner, String searchKey)
 	{
 		if((owner == null) || owner.isEmpty())
 		{
@@ -78,19 +123,19 @@ public final class SearchServiceImpl implements SearchService
 		{
 			lock.lock();
 					
-			SearchCriterionImpl search;
+			Set<SearchCriterionImpl> criteria;
 			
-			if(isSearchCached(owner + searchKey))
-				search = this.savedSearches.get(owner + searchKey);
+			if(areSearchCriteriaCached(owner, searchKey))
+				criteria = getCriteriaFromCache(owner, searchKey);
 			else
 			{
-				search = this.searchDao.get(owner + searchKey);
+				criteria = this.searchDao.get(owner, searchKey);
 				
-				if(search != null)
-					this.savedSearches.putIfAbsent(owner + searchKey, search);
+				if(criteria != null)
+					addCriteriaToCache(owner, searchKey, criteria);
 			}
 			
-			return search;
+			return criteria;
 		}
 		finally
 		{
@@ -99,10 +144,12 @@ public final class SearchServiceImpl implements SearchService
 	}
 		
 	@Override
-	public Set<SearchCriterionImpl> getAll()
+	public Map<String, Set<SearchCriterionImpl>> get(String owner)
 	{
 		if(logger.isDebugEnabled())
-			logger.debug("Getting all previously saved searches.");
+			logger.debug("Getting all previously saved searches for owner:" + owner);
+		
+		Map<String, Set<SearchCriterionImpl>> criteria;
 		
 		ReentrantLock lock = new ReentrantLock();
 		
@@ -110,19 +157,50 @@ public final class SearchServiceImpl implements SearchService
 		{
 			lock.lock();
 						
-			Set<SearchCriterionImpl> searches = this.searchDao.getAll();
-			
-			if(searches != null)
+			if(!areSearchCriteriaCached(owner))
 			{
-				this.savedSearches.clear();
-				
-				for(SearchCriterionImpl search : searches)
-					this.savedSearches.putIfAbsent(search.getOwner() + search.getKey(), search);
-				
-				return searches;
+				criteria = this.searchDao.get(owner);
+
+				if(criteria != null)
+					addCriteriaToCache(owner, criteria);
+				else
+					return new HashMap<String, Set<SearchCriterionImpl>>();
 			}
 			else
-				return new HashSet<SearchCriterionImpl>();
+				criteria = getCriteriaFromCache(owner);
+			
+			return criteria;
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+	
+	@Override
+	public Map<String, Map<String, Set<SearchCriterionImpl>>> get()
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Getting all previously saved searches for all owners");
+		
+		Map<String, Map<String, Set<SearchCriterionImpl>>> criteria;
+		
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
+						
+			criteria = this.searchDao.get();
+
+			if(criteria != null)
+			{
+				this.savedSearches.clear();
+				this.savedSearches.putAll(criteria);
+				return criteria;
+			}
+			else
+				return new HashMap<>();
 		}
 		finally
 		{
@@ -174,10 +252,9 @@ public final class SearchServiceImpl implements SearchService
 		{
 			lock.lock();
 			
-			if(!isSearchCached(searchKey))
+			if(!areSearchCriteriaCached(owner, searchKey))
 			{
-				this.savedSearches.putIfAbsent(owner + searchKey, new SearchCriterionImpl(owner, searchKey,
-					controlName, controlValue, isPrivate, isFilter));
+				addCriteriaToCache(owner, searchKey, controlName, controlValue, isPrivate, isFilter);
 				
 				return this.searchDao.insert(owner, searchKey, controlName, controlValue, isPrivate, isFilter);
 			}
@@ -218,11 +295,46 @@ public final class SearchServiceImpl implements SearchService
 		{
 			lock.lock();
 					
-			if(isSearchCached(owner + searchKey))
+			if(areSearchCriteriaCached(owner, searchKey))
 			{
-				this.savedSearches.remove(owner + searchKey);
+				clearCache(owner, searchKey);
 				
-				return this.searchDao.delete(owner + searchKey);
+				return this.searchDao.delete(owner, searchKey);
+			}
+			
+			return false;
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+	
+	@Override
+	public boolean delete(String owner)
+	{
+		if((owner == null) || owner.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("owner argument is invalid");
+			
+			throw new IllegalArgumentException("owner argument is invalid");
+		}
+		
+		if(logger.isDebugEnabled())
+			logger.debug("Deleting the search criteria with owner: " + owner);
+		
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
+					
+			if(areSearchCriteriaCached(owner))
+			{
+				clearCache(owner);
+				
+				return this.searchDao.delete(owner);
 			}
 			
 			return false;

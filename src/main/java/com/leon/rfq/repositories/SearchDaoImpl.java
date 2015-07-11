@@ -1,5 +1,6 @@
 package com.leon.rfq.repositories;
 
+import java.util.Map;
 import java.util.Set;
 
 import com.leon.rfq.domains.SearchCriterionImpl;
@@ -7,21 +8,35 @@ import com.leon.rfq.domains.SearchCriterionImpl;
 public class SearchDaoImpl implements SearchDao
 {
 	@Override
-	public SearchCriterionImpl get(String searchKey)
+	public Set<SearchCriterionImpl> get(String owner, String searchKey)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Set<SearchCriterionImpl> getAll()
+	public Map<String, Set<SearchCriterionImpl>> get(String owner)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public boolean delete(String searchId)
+	public Map<String, Map<String, Set<SearchCriterionImpl>>> get()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean delete(String owner, String searchKey)
+	{
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean delete(String owner)
 	{
 		// TODO Auto-generated method stub
 		return false;
