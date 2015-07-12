@@ -71,6 +71,7 @@
 						<value>com.leon.rfq.domains.BookDetailImpl</value>
 						<value>com.leon.rfq.domains.RequestDetailImpl</value>
 						<value>com.leon.rfq.domains.OptionDetailImpl</value>
+						<value>com.leon.rfq.domains.SearchCriterionImpl</value>
 					</list>
 				</property>
 			</bean>

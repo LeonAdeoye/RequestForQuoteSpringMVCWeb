@@ -13,12 +13,12 @@ public final class SearchCriterionImpl
 	private String owner;
 	private Boolean isPrivate;
 	private Boolean isFilter;
-	private String key;
+	private String searchKey;
 
 	public SearchCriterionImpl(String owner, String key, String controlName, String controlValue, Boolean isPrivate, Boolean isFilter)
 	{
 		this.owner = owner;
-		this.key = key;
+		this.searchKey = key;
 		this.controlName = controlName;
 		this.controlValue = controlValue;
 		this.isPrivate = isPrivate;
@@ -30,6 +30,12 @@ public final class SearchCriterionImpl
 
 	public SearchCriterionImpl() {}
 
+	public SearchCriterionImpl(String owner, String searchKey)
+	{
+		this.owner = owner;
+		this.searchKey = searchKey;
+	}
+
 	public String getOwner()
 	{
 		return this.owner;
@@ -40,14 +46,14 @@ public final class SearchCriterionImpl
 		this.owner = owner;
 	}
 
-	public String getKey()
+	public String getSearchKey()
 	{
-		return this.key;
+		return this.searchKey;
 	}
 
-	public void setKey(String key)
+	public void setSearchKey(String searchKey)
 	{
-		this.key = key;
+		this.searchKey = searchKey;
 	}
 
 	public String getControlName()
@@ -95,8 +101,8 @@ public final class SearchCriterionImpl
 	{
 		StringBuilder buf = new StringBuilder("Owner: ");
 		buf.append(this.owner);
-		buf.append(", Key: ");
-		buf.append(this.key);
+		buf.append(", searchKey: ");
+		buf.append(this.searchKey);
 		buf.append(", Criterion Key: ");
 		buf.append(this.controlName);
 		buf.append(", Criterion Value: ");
@@ -121,7 +127,7 @@ public final class SearchCriterionImpl
 				+ ((this.isFilter == null) ? 0 : this.isFilter.hashCode());
 		result = (prime * result)
 				+ ((this.isPrivate == null) ? 0 : this.isPrivate.hashCode());
-		result = (prime * result) + ((this.key == null) ? 0 : this.key.hashCode());
+		result = (prime * result) + ((this.searchKey == null) ? 0 : this.searchKey.hashCode());
 		result = (prime * result) + ((this.owner == null) ? 0 : this.owner.hashCode());
 		return result;
 	}
@@ -182,13 +188,13 @@ public final class SearchCriterionImpl
 		{
 			return false;
 		}
-		if (this.key == null)
+		if (this.searchKey == null)
 		{
-			if (other.key != null)
+			if (other.searchKey != null)
 			{
 				return false;
 			}
-		} else if (!this.key.equals(other.key))
+		} else if (!this.searchKey.equals(other.searchKey))
 		{
 			return false;
 		}

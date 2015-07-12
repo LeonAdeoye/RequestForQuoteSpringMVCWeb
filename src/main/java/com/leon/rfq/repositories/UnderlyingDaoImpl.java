@@ -17,7 +17,7 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 {
 	private static final Logger logger = LoggerFactory.getLogger(UnderlyingDaoImpl.class);
 	
-	@Autowired
+	@Autowired(required=true)
 	private UnderlyingMapper underlyingMapper;
 	
 	public UnderlyingDaoImpl() {}

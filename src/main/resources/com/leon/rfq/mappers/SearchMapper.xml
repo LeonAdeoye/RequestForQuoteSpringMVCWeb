@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.leon.rfq.mappers.SearchMapper">
+	
+	<resultMap type="SearchCriterionImpl" id="SearchResultSet">
+		<result property="owner" column="owner"/>
+		<result property="searchKey" column="searchKey"/>
+		<result property="controlName" column="controlName"/>
+		<result property="controlValue" column="controlValue"/>
+		<result property="isPrivate" column="isPrivate"/>
+	</resultMap>
+	
+	<select id="getForOwner" parameterType="java.lang.String" resultMap="SearchResultSet">
+		SELECT *
+		FROM searches WHERE owner=#{owner}
+	</select>
+	
+	<select id="getAll" resultMap="SearchResultSet">
+		SELECT *
+		FROM searches
+	</select>
+	
+	<select id="get" parameterType="SearchCriterionImpl" resultMap="SearchResultSet">
+		SELECT * 
+		FROM searches 
+		WHERE owner=#{owner} AND searchKey=#{searchKey}
+	</select>
+		
+	<insert id="insert" parameterType="SearchCriterionImpl">
+		INSERT INTO searches (owner, searchKey,  controlName, controlValue, isPrivate)
+		VALUES(#{owner}, #{searchKey}, #{controlName}, #{controlValue}, #{isPrivate})
+	</insert>
+	
+	<delete id="deleteForOwner" parameterType="java.lang.String">
+		DELETE 
+		FROM searches
+		WHERE owner = #{owner}
+	</delete>
+	
+	<delete id="delete" parameterType="SearchCriterionImpl">
+		DELETE 
+		FROM searches
+		WHERE owner = #{owner} AND searchKey = #{searchKey}
+	</delete>
+			
+</mapper>
