@@ -7,13 +7,15 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.mappers.SearchMapper;
 
+@Repository
 public class SearchDaoImpl implements SearchDao
 {
-	private static final Logger logger = LoggerFactory.getLogger(UnderlyingDaoImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(SearchDaoImpl.class);
 	
 	@Autowired(required=true)
 	private SearchMapper searchMapper;

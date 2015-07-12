@@ -7,7 +7,7 @@
 	
 	<resultMap type="SearchCriterionImpl" id="SearchResultSet">
 		<result property="owner" column="owner"/>
-		<result property="searchKey" column="searchKey"/>
+		<result property="searchKey" column="keyValue"/>
 		<result property="controlName" column="controlName"/>
 		<result property="controlValue" column="controlValue"/>
 		<result property="isPrivate" column="isPrivate"/>

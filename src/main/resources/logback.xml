@@ -118,6 +118,10 @@
 		<appender-ref ref="REPOSITORIES_LOG_FILE" />           
 	</logger>
 	
+	<logger name="com.leon.rfq.repositories.SearchDaoImpl" level="TRACE">
+		<appender-ref ref="REPOSITORIES_LOG_FILE" />           
+	</logger>	
+	
 	<logger name="com.leon.rfq.repositories.ClientDaoImpl" level="TRACE">
 		<appender-ref ref="REPOSITORIES_LOG_FILE" />           
 	</logger>
@@ -141,6 +145,10 @@
 	<logger name="com.leon.rfq.services.UserServiceImpl" level="TRACE">
 		<appender-ref ref="SERVICES_LOG_FILE" />           
 	</logger>
+	
+	<logger name="com.leon.rfq.services.SearchServiceImpl" level="TRACE">
+		<appender-ref ref="SERVICES_LOG_FILE" />           
+	</logger>	
 	
 	<logger name="com.leon.rfq.services.RequestServiceImpl" level="TRACE">
 		<appender-ref ref="SERVICES_LOG_FILE" />           

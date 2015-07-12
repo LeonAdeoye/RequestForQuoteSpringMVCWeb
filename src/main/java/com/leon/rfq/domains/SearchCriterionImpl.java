@@ -12,7 +12,6 @@ public final class SearchCriterionImpl
 	private String controlValue;
 	private String owner;
 	private Boolean isPrivate;
-	private Boolean isFilter;
 	private String searchKey;
 
 	public SearchCriterionImpl(String owner, String key, String controlName, String controlValue, Boolean isPrivate, Boolean isFilter)
@@ -22,7 +21,6 @@ public final class SearchCriterionImpl
 		this.controlName = controlName;
 		this.controlValue = controlValue;
 		this.isPrivate = isPrivate;
-		this.isFilter = isFilter;
 
 		if(logger.isDebugEnabled())
 		logger.debug("Criterion instantiated = > " +  this);
@@ -86,16 +84,6 @@ public final class SearchCriterionImpl
 		this.isPrivate = isPrivate;
 	}
 
-	public Boolean getIsFilter()
-	{
-		return this.isFilter;
-	}
-
-	public void setIsFilter(Boolean isFilter)
-	{
-		this.isFilter = isFilter;
-	}
-
 	@Override
 	public String toString()
 	{
@@ -109,8 +97,6 @@ public final class SearchCriterionImpl
 		buf.append(this.controlValue);
 		buf.append(", IsPrivate: ");
 		buf.append(this.isPrivate);
-		buf.append(", IsFilter: ");
-		buf.append(this.isFilter);
 		return buf.toString();
 	}
 
@@ -123,8 +109,6 @@ public final class SearchCriterionImpl
 				+ ((this.controlName == null) ? 0 : this.controlName.hashCode());
 		result = (prime * result)
 				+ ((this.controlValue == null) ? 0 : this.controlValue.hashCode());
-		result = (prime * result)
-				+ ((this.isFilter == null) ? 0 : this.isFilter.hashCode());
 		result = (prime * result)
 				+ ((this.isPrivate == null) ? 0 : this.isPrivate.hashCode());
 		result = (prime * result) + ((this.searchKey == null) ? 0 : this.searchKey.hashCode());
@@ -165,16 +149,6 @@ public final class SearchCriterionImpl
 				return false;
 			}
 		} else if (!this.controlValue.equals(other.controlValue))
-		{
-			return false;
-		}
-		if (this.isFilter == null)
-		{
-			if (other.isFilter != null)
-			{
-				return false;
-			}
-		} else if (!this.isFilter.equals(other.isFilter))
 		{
 			return false;
 		}
