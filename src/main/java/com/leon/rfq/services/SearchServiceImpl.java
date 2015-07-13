@@ -1,6 +1,7 @@
 package com.leon.rfq.services;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -44,14 +45,6 @@ public final class SearchServiceImpl implements SearchService
 	
 	public SearchServiceImpl() {}
 	
-	private boolean areSearchCriteriaCached(String owner, String searchKey)
-	{
-		if(this.savedSearches.containsKey(owner))
-			return this.savedSearches.get(owner).containsKey(searchKey);
-		
-		return false;
-	}
-	
 	private void clearCache(String owner)
 	{
 		this.savedSearches.get(owner).clear();
@@ -69,6 +62,14 @@ public final class SearchServiceImpl implements SearchService
 		return this.savedSearches.containsKey(owner);
 	}
 	
+	private boolean areSearchCriteriaCached(String owner, String searchKey)
+	{
+		if(this.savedSearches.containsKey(owner))
+			return this.savedSearches.get(owner).containsKey(searchKey);
+		
+		return false;
+	}
+	
 	private Set<SearchCriterionImpl> getCriteriaFromCache(String owner, String searchKey)
 	{
 		return this.savedSearches.get(owner).get(searchKey);
@@ -81,18 +82,26 @@ public final class SearchServiceImpl implements SearchService
 	
 	private void addCriteriaToCache(String owner, String searchKey, String controlName, String controlValue, Boolean isPrivate)
 	{
-		throw new UnsupportedOperationException();
-	}
-	
-	private void addCriteriaToCache(String owner, String searchKey, Set<SearchCriterionImpl> criteria)
-	{
-		this.savedSearches.get(owner).put(searchKey, criteria);
-	}
-	
-	private void addCriteriaToCache(String owner, Map<String, Set<SearchCriterionImpl>> criteria)
-	{
-		clearCache(owner);
-		this.savedSearches.putIfAbsent(owner, criteria);
+		SearchCriterionImpl criterionToBeInserted = new SearchCriterionImpl(owner, searchKey, controlName, controlValue, isPrivate);
+		Set<SearchCriterionImpl> setToBeInserted = new HashSet<>();
+		
+		if(areSearchCriteriaCached(owner))
+		{
+			if(!areSearchCriteriaCached(owner, searchKey))
+			{
+				setToBeInserted.add(criterionToBeInserted);
+				this.savedSearches.get(owner).put(searchKey, setToBeInserted);
+			}
+			else
+				this.savedSearches.get(owner).get(searchKey).add(new SearchCriterionImpl(owner, searchKey, controlName, controlValue, isPrivate));
+		}
+		else
+		{
+			setToBeInserted.add(criterionToBeInserted);
+			Map<String, Set<SearchCriterionImpl>> mapToBeInserted = new HashMap<>();
+			mapToBeInserted.put(searchKey, setToBeInserted);
+			this.savedSearches.put(owner, mapToBeInserted);
+		}
 	}
 	
 	@Override
@@ -109,9 +118,9 @@ public final class SearchServiceImpl implements SearchService
 		if((searchKey == null) || searchKey.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("searchId argument is invalid");
+				logger.error("searchKey argument is invalid");
 			
-			throw new IllegalArgumentException("searchId argument is invalid");
+			throw new IllegalArgumentException("searchKey argument is invalid");
 		}
 		
 		if(logger.isDebugEnabled())
@@ -131,8 +140,8 @@ public final class SearchServiceImpl implements SearchService
 			{
 				criteria = this.searchDao.get(owner, searchKey);
 				
-				if(criteria != null)
-					addCriteriaToCache(owner, searchKey, criteria);
+				criteria.forEach(criterion -> addCriteriaToCache(owner, searchKey, criterion.getControlName(),
+					criterion.getControlValue(), criterion.getIsPrivate()));
 			}
 			
 			return criteria;
@@ -146,6 +155,14 @@ public final class SearchServiceImpl implements SearchService
 	@Override
 	public Map<String, Set<SearchCriterionImpl>> get(String owner)
 	{
+		if((owner == null) || owner.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("owner argument is invalid");
+			
+			throw new IllegalArgumentException("owner argument is invalid");
+		}
+		
 		if(logger.isDebugEnabled())
 			logger.debug("Getting all previously saved searches for owner:" + owner);
 		
@@ -161,10 +178,11 @@ public final class SearchServiceImpl implements SearchService
 			{
 				criteria = this.searchDao.get(owner);
 
-				if(criteria != null)
-					addCriteriaToCache(owner, criteria);
-				else
-					return new HashMap<String, Set<SearchCriterionImpl>>();
+				for(Set<SearchCriterionImpl> set : criteria.values())
+				{
+					set.forEach(criterion ->addCriteriaToCache(owner, criterion.getSearchKey(),
+						criterion.getControlName(), criterion.getControlValue(), criterion.getIsPrivate()));
+				}
 			}
 			else
 				criteria = getCriteriaFromCache(owner);
@@ -224,7 +242,7 @@ public final class SearchServiceImpl implements SearchService
 			if(logger.isErrorEnabled())
 				logger.error("searchkey argument is invalid");
 			
-			throw new IllegalArgumentException("searchkey argument is invalid");
+			throw new IllegalArgumentException("searchKey argument is invalid");
 		}
 		
 		if((controlName == null) || controlName.isEmpty())
@@ -252,14 +270,10 @@ public final class SearchServiceImpl implements SearchService
 		{
 			lock.lock();
 			
-			if(!areSearchCriteriaCached(owner, searchKey))
-			{
-				addCriteriaToCache(owner, searchKey, controlName, controlValue, isPrivate);
+			addCriteriaToCache(owner, searchKey, controlName, controlValue, isPrivate);
 				
-				return this.searchDao.insert(owner, searchKey, controlName, controlValue, isPrivate);
-			}
+			return this.searchDao.insert(owner, searchKey, controlName, controlValue, isPrivate);
 			
-			return true;
 		}
 		finally
 		{
@@ -270,20 +284,20 @@ public final class SearchServiceImpl implements SearchService
 	@Override
 	public boolean delete(String owner, String searchKey)
 	{
-		if((searchKey == null) || searchKey.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("searchKey argument is invalid");
-			
-			throw new IllegalArgumentException("searchKey argument is invalid");
-		}
-		
 		if((owner == null) || owner.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("owner argument is invalid");
 			
 			throw new IllegalArgumentException("owner argument is invalid");
+		}
+		
+		if((searchKey == null) || searchKey.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("searchKey argument is invalid");
+			
+			throw new IllegalArgumentException("searchKey argument is invalid");
 		}
 		
 		if(logger.isDebugEnabled())
