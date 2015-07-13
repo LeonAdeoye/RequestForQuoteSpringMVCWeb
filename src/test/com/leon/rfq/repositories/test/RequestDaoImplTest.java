@@ -6,6 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +21,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDaoImpl;
 
@@ -235,5 +239,146 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		assertEquals("Sales comment should be updated", "salesComment", updatedRequest.getSalesComment());
 	}
 	
+	@Test
+    public void search_ValidBookCriteria_ReturnsCorrectSingleResult()
+	{
+		// Arrange
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testUser");
+		this.requestDaoImpl.insert(request);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey", "bookCode", "TNG", true));
+		// Act
+		Set<RequestDetailImpl> result = this.requestDaoImpl.search(criteria);
+		assertEquals("Should return newly inserted request", 1, result.size());
+	}
 	
+	@Test
+    public void search_ValidClientCriteria_ReturnsSingleCorrectResult()
+	{
+		// Arrange
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "TNG", "testUser");
+		this.requestDaoImpl.insert(request);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey", "clientId", String.valueOf(Integer.MAX_VALUE), true));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		assertEquals("Should return newly inserted request", 1, results.size());
+		for(RequestDetailImpl result : results)
+		{
+			assertEquals(request.getIdentifier(), result.getIdentifier());
+			assertEquals(request.getClientId(), result.getClientId());
+			assertEquals(request.getBookCode(), result.getBookCode());
+			assertEquals(request.getUnderlyingRIC(), result.getUnderlyingRIC());
+		}
+	}
+	
+	@Test
+    public void search_ValidBookAndClientCriteria_ReturnsSingleCorrectResult()
+	{
+		// Arrange
+		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "TNG", "testUser");
+		this.requestDaoImpl.insert(request);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(Integer.MAX_VALUE), true));
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG", true));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return newly inserted request", 1, results.size());
+		for(RequestDetailImpl result : results)
+		{
+			assertEquals(request.getIdentifier(), result.getIdentifier());
+			assertEquals(request.getClientId(), result.getClientId());
+			assertEquals(request.getBookCode(), result.getBookCode());
+			assertEquals(request.getUnderlyingRIC(), result.getUnderlyingRIC());
+		}
+	}
+	
+	@Test
+    public void search_ValidBookAndClientCriteria_ReturnsZeroResults()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 2, "TNG2", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(1), true));
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG2", true));
+		// Act
+		Set<RequestDetailImpl> result = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return both newly inserted requests", 0, result.size());
+	}
+	
+	@Test
+    public void search_ValidBookAndClientCriteria_ReturnsTwoCorrectResults()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0005.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(1), true));
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG1", true));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return both newly inserted requests", 1, results.size());
+		for(RequestDetailImpl result : results)
+		{
+			assertEquals(requestA.getIdentifier(), result.getIdentifier());
+			assertEquals(requestA.getClientId(), result.getClientId());
+			assertEquals(requestA.getBookCode(), result.getBookCode());
+			assertEquals(requestA.getUnderlyingRIC(), result.getUnderlyingRIC());
+		}
+	}
+	
+	@Test
+    public void search_ValidBookAndClientCriteria_ReturnsTwoCorrectResultsOutOfThree()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		RequestDetailImpl requestC = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestC);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(2), true));
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG1", true));
+		// Act
+		Set<RequestDetailImpl> result = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return both newly inserted requests", 2, result.size());
+	}
+	
+	@Test
+    public void search_ValidBookAndClientAndUnderlyingCriteria_ReturnsOneCorrectResultsOutOfThree()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		RequestDetailImpl requestC = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0005.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestC);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(2), true));
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG1", true));
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey3", "underlyingRIC", "0005.HK", true));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return both newly inserted requests", 1, results.size());
+		
+		for(RequestDetailImpl result : results)
+		{
+			assertEquals(requestC.getIdentifier(), result.getIdentifier());
+			assertEquals(requestC.getClientId(), result.getClientId());
+			assertEquals(requestC.getBookCode(), result.getBookCode());
+			assertEquals(requestC.getUnderlyingRIC(), result.getUnderlyingRIC());
+		}
+	}
 }

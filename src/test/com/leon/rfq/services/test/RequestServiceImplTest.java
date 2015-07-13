@@ -14,8 +14,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +29,7 @@ import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.products.BlackScholesModelImpl;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.products.OptionRequestFactoryImpl;
@@ -369,5 +372,35 @@ public final class RequestServiceImplTest extends AbstractJUnit4SpringContextTes
 		// Act
 		Map<String, PriceDetailImpl> prices = requestService.getPriceUpdates();
 		assertEquals(0, prices.keySet().size());
+	}
+	
+	@Test
+    public void search_valdiCriteria_SearchDaoMethodShouldBeCalled()
+	{
+		// Arrange
+		RequestService requestService = new RequestServiceImpl();
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		requestService.setRequestDao(requestDaoMock);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "testKey", "criterionName", "criterionValue", true));
+		// Act
+		requestService.search(criteria);
+		// Assert
+		verify(requestDaoMock).search(criteria);
+	}
+	
+	@Test
+    public void search_nullCriteria_NullPointerExceptionShouldBeThrown()
+	{
+		// Arrange
+		RequestService requestService = new RequestServiceImpl();
+		RequestDao requestDaoMock = mock(RequestDaoImpl.class);
+		requestService.setRequestDao(requestDaoMock);
+		// Act
+		catchException(requestService).search(null);
+		// Assert
+		verify(requestDaoMock, never()).search(null);
+		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof NullPointerException);
+		assertEquals("Exception message should match", "criteria argument is invalid", caughtException().getMessage());
 	}
 }
