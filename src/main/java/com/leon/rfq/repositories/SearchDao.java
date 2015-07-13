@@ -18,6 +18,5 @@ public interface SearchDao
 	boolean delete(String owner);
 
 	boolean insert(String owner, String searchKey, String controlName,
-			String controlValue, Boolean isPrivate, Boolean isFilter);
-
+			String controlValue, Boolean isPrivate);
 }

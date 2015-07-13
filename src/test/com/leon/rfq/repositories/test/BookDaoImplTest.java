@@ -59,7 +59,7 @@ public class BookDaoImplTest extends AbstractJUnit4SpringContextTests
 	}
 	
 	@Test
-    public void getAll_ValidScenario_ReturnsValidListOfAllBooks()
+    public void getAll_ValidScenario_PersistedBookCountShouldBeIncremented()
 	{
 		int beforeCount = this.bookDaoImpl.getAll().size();
 		this.bookDaoImpl.insert("testbook", "testEntity", true, "testUSer");

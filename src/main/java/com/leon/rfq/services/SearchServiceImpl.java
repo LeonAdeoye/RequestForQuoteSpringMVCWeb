@@ -79,7 +79,7 @@ public final class SearchServiceImpl implements SearchService
 		return this.savedSearches.get(owner);
 	}
 	
-	private void addCriteriaToCache(String owner, String searchKey, String controlName, String controlValue, Boolean isPrivate, Boolean isFilter)
+	private void addCriteriaToCache(String owner, String searchKey, String controlName, String controlValue, Boolean isPrivate)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -209,7 +209,7 @@ public final class SearchServiceImpl implements SearchService
 	}
 
 	@Override
-	public boolean insert(String owner, String searchKey, String controlName, String controlValue, Boolean isPrivate, Boolean isFilter)
+	public boolean insert(String owner, String searchKey, String controlName, String controlValue, Boolean isPrivate)
 	{
 		if((owner == null) || owner.isEmpty())
 		{
@@ -254,9 +254,9 @@ public final class SearchServiceImpl implements SearchService
 			
 			if(!areSearchCriteriaCached(owner, searchKey))
 			{
-				addCriteriaToCache(owner, searchKey, controlName, controlValue, isPrivate, isFilter);
+				addCriteriaToCache(owner, searchKey, controlName, controlValue, isPrivate);
 				
-				return this.searchDao.insert(owner, searchKey, controlName, controlValue, isPrivate, isFilter);
+				return this.searchDao.insert(owner, searchKey, controlName, controlValue, isPrivate);
 			}
 			
 			return true;

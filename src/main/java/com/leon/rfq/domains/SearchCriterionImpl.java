@@ -14,7 +14,7 @@ public final class SearchCriterionImpl
 	private Boolean isPrivate;
 	private String searchKey;
 
-	public SearchCriterionImpl(String owner, String key, String controlName, String controlValue, Boolean isPrivate, Boolean isFilter)
+	public SearchCriterionImpl(String owner, String key, String controlName, String controlValue, Boolean isPrivate)
 	{
 		this.owner = owner;
 		this.searchKey = key;

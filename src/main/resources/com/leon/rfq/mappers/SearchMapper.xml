@@ -26,11 +26,11 @@
 	<select id="get" parameterType="SearchCriterionImpl" resultMap="SearchResultSet">
 		SELECT * 
 		FROM searches 
-		WHERE owner=#{owner} AND searchKey=#{searchKey}
+		WHERE owner=#{owner} AND keyValue=#{searchKey}
 	</select>
 		
 	<insert id="insert" parameterType="SearchCriterionImpl">
-		INSERT INTO searches (owner, searchKey,  controlName, controlValue, isPrivate)
+		INSERT INTO searches (owner, keyValue,  controlName, controlValue, isPrivate)
 		VALUES(#{owner}, #{searchKey}, #{controlName}, #{controlValue}, #{isPrivate})
 	</insert>
 	
@@ -43,7 +43,7 @@
 	<delete id="delete" parameterType="SearchCriterionImpl">
 		DELETE 
 		FROM searches
-		WHERE owner = #{owner} AND searchKey = #{searchKey}
+		WHERE owner = #{owner} AND keyValue = #{searchKey}
 	</delete>
 			
 </mapper>
