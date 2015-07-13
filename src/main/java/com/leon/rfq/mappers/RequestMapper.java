@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 
 public interface RequestMapper
 {
@@ -24,4 +25,6 @@ public interface RequestMapper
 	RequestDetailImpl requestExistsWithRequestId(int requestId);
 	
 	int test(@Param("status") StatusEnum status);
+
+	Set<RequestDetailImpl> search(@Param("criteria") Set<SearchCriterionImpl> criteria);
 }

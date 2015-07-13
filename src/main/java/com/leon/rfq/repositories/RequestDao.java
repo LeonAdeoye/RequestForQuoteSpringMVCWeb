@@ -3,6 +3,7 @@ package com.leon.rfq.repositories;
 import java.util.Set;
 
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 
 public interface RequestDao
 {
@@ -19,4 +20,6 @@ public interface RequestDao
 	RequestDetailImpl get(int requestId);
 	
 	boolean requestExistsWithRequestId(int requestId);
+
+	Set<RequestDetailImpl> search(Set<SearchCriterionImpl> criteriaRequests);
 }

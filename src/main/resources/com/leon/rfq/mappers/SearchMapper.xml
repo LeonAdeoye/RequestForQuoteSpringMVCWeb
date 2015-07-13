@@ -7,9 +7,9 @@
 	
 	<resultMap type="SearchCriterionImpl" id="SearchResultSet">
 		<result property="owner" column="owner"/>
-		<result property="searchKey" column="keyValue"/>
-		<result property="controlName" column="controlName"/>
-		<result property="controlValue" column="controlValue"/>
+		<result property="searchKey" column="searchKey"/>
+		<result property="name" column="name"/>
+		<result property="value" column="value"/>
 		<result property="isPrivate" column="isPrivate"/>
 	</resultMap>
 	
@@ -26,12 +26,12 @@
 	<select id="get" parameterType="SearchCriterionImpl" resultMap="SearchResultSet">
 		SELECT * 
 		FROM searches 
-		WHERE owner=#{owner} AND keyValue=#{searchKey}
+		WHERE owner=#{owner} AND searchKey=#{searchKey}
 	</select>
 		
 	<insert id="insert" parameterType="SearchCriterionImpl">
-		INSERT INTO searches (owner, keyValue,  controlName, controlValue, isPrivate)
-		VALUES(#{owner}, #{searchKey}, #{controlName}, #{controlValue}, #{isPrivate})
+		INSERT INTO searches (owner, searchKey, name, value, isPrivate)
+		VALUES(#{owner}, #{searchKey}, #{name}, #{value}, #{isPrivate})
 	</insert>
 	
 	<delete id="deleteForOwner" parameterType="java.lang.String">
@@ -43,7 +43,7 @@
 	<delete id="delete" parameterType="SearchCriterionImpl">
 		DELETE 
 		FROM searches
-		WHERE owner = #{owner} AND keyValue = #{searchKey}
+		WHERE owner = #{owner} AND searchKey = #{searchKey}
 	</delete>
 			
 </mapper>

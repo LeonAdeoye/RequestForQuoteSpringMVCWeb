@@ -175,9 +175,9 @@ public class SearchServiceImplTest extends AbstractJUnit4SpringContextTests
 		SearchDao searchDaoMock = mock(SearchDaoImpl.class);
 		searchService.setSearchDao(searchDaoMock);
 		// Act
-		searchService.insert("testOwner", "testKey", "controlName", "controlValue", true);
+		searchService.insert("testOwner", "testKey", "name", "value", true);
 		// Assert
-		verify(searchDaoMock).insert("testOwner", "testKey", "controlName", "controlValue", true);
+		verify(searchDaoMock).insert("testOwner", "testKey", "name", "value", true);
 	}
 	
 	@Test
@@ -186,7 +186,7 @@ public class SearchServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Arrange
 		SearchService searchService = new SearchServiceImpl();
 		// Act
-		catchException(searchService).insert(null, "testKey", "controlName", "controlValue", true);
+		catchException(searchService).insert(null, "testKey", "name", "value", true);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "owner argument is invalid");
@@ -198,7 +198,7 @@ public class SearchServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Arrange
 		SearchService searchService = new SearchServiceImpl();
 		// Act
-		catchException(searchService).insert("", "testKey", "controlName", "controlValue", true);
+		catchException(searchService).insert("", "testKey", "name", "value", true);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "owner argument is invalid");
@@ -210,7 +210,7 @@ public class SearchServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Arrange
 		SearchService searchService = new SearchServiceImpl();
 		// Act
-		catchException(searchService).insert("testOwner", null, "controlName", "controlValue", true);
+		catchException(searchService).insert("testOwner", null, "name", "value", true);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "searchKey argument is invalid");
@@ -222,58 +222,58 @@ public class SearchServiceImplTest extends AbstractJUnit4SpringContextTests
 		// Arrange
 		SearchService searchService = new SearchServiceImpl();
 		// Act
-		catchException(searchService).insert("testOwner", "", "controlName", "controlValue", true);
+		catchException(searchService).insert("testOwner", "", "name", "value", true);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "searchKey argument is invalid");
 	}
 	
 	@Test
-    public void insert_NullControlName_ThrowsIllegalArgumentException()
+    public void insert_NullCriterionName_ThrowsIllegalArgumentException()
 	{
 		// Arrange
 		SearchService searchService = new SearchServiceImpl();
 		// Act
-		catchException(searchService).insert("testOwner", "testKey", null, "controlValue", true);
+		catchException(searchService).insert("testOwner", "testKey", null, "value", true);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "controlName argument is invalid");
+		assertEquals("Exception message should match", caughtException().getMessage(), "name argument is invalid");
 	}
 	
 	@Test
-    public void insert_EmptyControlNameString_ThrowsInvalidArgumentException()
+    public void insert_EmptyCriterionNameString_ThrowsInvalidArgumentException()
 	{
 		// Arrange
 		SearchService searchService = new SearchServiceImpl();
 		// Act
-		catchException(searchService).insert("testOwner", "testKey", "", "controlValue", true);
+		catchException(searchService).insert("testOwner", "testKey", "", "value", true);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "controlName argument is invalid");
+		assertEquals("Exception message should match", caughtException().getMessage(), "name argument is invalid");
 	}
 	
 	@Test
-    public void insert_NullControlValue_ThrowsInvalidArgumentException()
+    public void insert_NullCriterionValue_ThrowsInvalidArgumentException()
 	{
 		// Arrange
 		SearchService searchService = new SearchServiceImpl();
 		// Act
-		catchException(searchService).insert("testOwner", "testKey", "controlName", null, true);
+		catchException(searchService).insert("testOwner", "testKey", "name", null, true);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "controlValue argument is invalid");
+		assertEquals("Exception message should match", caughtException().getMessage(), "value argument is invalid");
 	}
 	
 	@Test
-    public void insert_EmptyControlValueString_ThrowsInvalidArgumentException()
+    public void insert_EmptyCriterionValueString_ThrowsInvalidArgumentException()
 	{
 		// Arrange
 		SearchService searchService = new SearchServiceImpl();
 		// Act
-		catchException(searchService).insert("testOwner", "testKey", "controlName", "", true);
+		catchException(searchService).insert("testOwner", "testKey", "name", "", true);
 		// Assert
 		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "controlValue argument is invalid");
+		assertEquals("Exception message should match", caughtException().getMessage(), "value argument is invalid");
 	}
 	
 	@Test

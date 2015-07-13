@@ -24,6 +24,7 @@ import com.leon.rfq.common.EnumTypes.PriceSimulatorRequestEnum;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.events.NewRequestEvent;
 import com.leon.rfq.events.PriceSimulatorRequestEvent;
 import com.leon.rfq.events.PriceUpdateEvent;
@@ -589,4 +590,98 @@ ApplicationListener<PriceUpdateEvent>
 		
 		return new TreeMap<Integer, Map<String, BigDecimal>>();
 	}
+	
+	/**
+	 * Returns the requests that match the search criteria.
+	 * All items will be retrieved from the persistence store.
+	 * 
+	 * @returns a set of request results matching the search criteria
+	 * @throws NullPointerException if the set of criteria is null.
+	 */
+	@Override
+	public Set<RequestDetailImpl> search(Set<SearchCriterionImpl> criteria)
+	{
+		if(criteria == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("criteria argument is invalid");
+			
+			throw new NullPointerException("criteria argument is invalid");
+		}
+		
+		if(logger.isDebugEnabled())
+			logger.debug("Searching for requests with criteria: " + criteria);
+		
+		ReentrantLock lock = new ReentrantLock();
+		
+		try
+		{
+			lock.lock();
+			
+			return this.requestDao.search(criteria);
+		}
+		finally
+		{
+			lock.unlock();
+		}
+	}
+	
+/*	private RequestDetailImpl[] populateCriteria(Set<SearchCriterionImpl> criteria)
+	{
+		RequestDetailImpl primaryCriteriaRequest = new RequestDetailImpl();
+		RequestDetailImpl secondaryCriteriaRequest = new RequestDetailImpl();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM yyyy");
+		RequestDetailImpl[] criteriaRequests = new RequestDetailImpl[2];
+		boolean isRangeUsed = false;
+		
+		for(SearchCriterionImpl criterion : criteria)
+		{
+			try
+			{
+				switch(criterion.getName())
+				{
+					case "Client":
+						primaryCriteriaRequest.setClientId(Integer.parseInt(criterion.getValue()));
+						continue;
+					case "Book":
+						primaryCriteriaRequest.setBookCode(criterion.getValue());
+						continue;
+					case "Underlying":
+						primaryCriteriaRequest.setUnderlyingRIC(criterion.getValue());
+						continue;
+					case "Status":
+						primaryCriteriaRequest.setStatus(StatusEnum.valueOf(criterion.getValue()));
+						continue;
+					case "Tier":
+						//secondaryCriteriaRequest.setClientId(0/MAX_INT/MIN_INT?);
+						continue;
+					case "TradeDateStart":
+						primaryCriteriaRequest.setTradeDate(LocalDate.parse(criterion.getValue(), formatter));
+						continue;
+					case "TradeDateEnd":
+						isRangeUsed = true;
+						secondaryCriteriaRequest.setTradeDate(LocalDate.parse(criterion.getValue(), formatter));
+						continue;
+					case "ExpiryDateStart":
+						primaryCriteriaRequest.setExpiryDate(LocalDate.parse(criterion.getValue(), formatter));
+						continue;
+					case "ExpiryDateEnd":
+						isRangeUsed = true;
+						secondaryCriteriaRequest.setExpiryDate(LocalDate.parse(criterion.getValue(), formatter));
+						continue;
+				}
+			}
+			catch(Exception e)
+			{
+				if(logger.isErrorEnabled())
+					logger.error("Failed to parse search criterion: " + criterion + "due to exception: " + e);
+			}
+		}
+		
+		criteriaRequests[0] = primaryCriteriaRequest;
+		if(isRangeUsed)
+			criteriaRequests[1] = secondaryCriteriaRequest;
+		
+		return criteriaRequests;
+	}*/
 }

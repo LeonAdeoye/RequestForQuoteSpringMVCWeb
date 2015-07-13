@@ -8,18 +8,18 @@ import org.slf4j.LoggerFactory;
 public final class SearchCriterionImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(SearchCriterionImpl.class);
-	private String controlName;
-	private String controlValue;
+	private String name;
+	private String value;
 	private String owner;
 	private Boolean isPrivate;
 	private String searchKey;
 
-	public SearchCriterionImpl(String owner, String key, String controlName, String controlValue, Boolean isPrivate)
+	public SearchCriterionImpl(String owner, String key, String name, String value, Boolean isPrivate)
 	{
 		this.owner = owner;
 		this.searchKey = key;
-		this.controlName = controlName;
-		this.controlValue = controlValue;
+		this.name = name;
+		this.value = value;
 		this.isPrivate = isPrivate;
 
 		if(logger.isDebugEnabled())
@@ -54,24 +54,24 @@ public final class SearchCriterionImpl
 		this.searchKey = searchKey;
 	}
 
-	public String getControlName()
+	public String getName()
 	{
-		return this.controlName;
+		return this.name;
 	}
 
-	public void setControlName(String controlName)
+	public void setName(String name)
 	{
-		this.controlName = controlName;
+		this.name = name;
 	}
 
-	public String getControlValue()
+	public String getValue()
 	{
-		return this.controlValue;
+		return this.value;
 	}
 
-	public void setControlValue(String controlValue)
+	public void setValue(String value)
 	{
-		this.controlValue = controlValue;
+		this.value = value;
 	}
 
 	public Boolean getIsPrivate()
@@ -91,10 +91,10 @@ public final class SearchCriterionImpl
 		buf.append(this.owner);
 		buf.append(", searchKey: ");
 		buf.append(this.searchKey);
-		buf.append(", Criterion Key: ");
-		buf.append(this.controlName);
-		buf.append(", Criterion Value: ");
-		buf.append(this.controlValue);
+		buf.append(", Name: ");
+		buf.append(this.name);
+		buf.append(", Value: ");
+		buf.append(this.value);
 		buf.append(", IsPrivate: ");
 		buf.append(this.isPrivate);
 		return buf.toString();
@@ -106,9 +106,9 @@ public final class SearchCriterionImpl
 		final int prime = 31;
 		int result = 1;
 		result = (prime * result)
-				+ ((this.controlName == null) ? 0 : this.controlName.hashCode());
+				+ ((this.name == null) ? 0 : this.name.hashCode());
 		result = (prime * result)
-				+ ((this.controlValue == null) ? 0 : this.controlValue.hashCode());
+				+ ((this.value == null) ? 0 : this.value.hashCode());
 		result = (prime * result)
 				+ ((this.isPrivate == null) ? 0 : this.isPrivate.hashCode());
 		result = (prime * result) + ((this.searchKey == null) ? 0 : this.searchKey.hashCode());
@@ -132,23 +132,23 @@ public final class SearchCriterionImpl
 			return false;
 		}
 		SearchCriterionImpl other = (SearchCriterionImpl) obj;
-		if (this.controlName == null)
+		if (this.name == null)
 		{
-			if (other.controlName != null)
+			if (other.name != null)
 			{
 				return false;
 			}
-		} else if (!this.controlName.equals(other.controlName))
+		} else if (!this.name.equals(other.name))
 		{
 			return false;
 		}
-		if (this.controlValue == null)
+		if (this.value == null)
 		{
-			if (other.controlValue != null)
+			if (other.value != null)
 			{
 				return false;
 			}
-		} else if (!this.controlValue.equals(other.controlValue))
+		} else if (!this.value.equals(other.value))
 		{
 			return false;
 		}
@@ -184,6 +184,4 @@ public final class SearchCriterionImpl
 		}
 		return true;
 	}
-
-	
 }

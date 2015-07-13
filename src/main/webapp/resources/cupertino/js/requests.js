@@ -1246,7 +1246,78 @@ $(document).ready(function()
 	            	alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + ". Error: " + xhr.responseText);                	
 	        }
 		});
+	}	
+	
+	function saveSearch()
+	{
+		$.ajax({
+		    url: contextPath + "/searches/ajaxInsert", 
+		    type: 'POST',
+		    data: JSON.stringify(json),
+		    dataType: 'json',  
+		    contentType: 'application/json', 
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(savedSearches) 
+		    {
+		    	if(savedSearches)
+	    		{
+	    		
+	    		}
+		    },		    
+	        error: function (xhr, textStatus, errorThrown) 
+	        {
+	        	if(textStatus == "timeout")
+	        		alert("Failed to save the searches. Timed-out after five seconds.");
+	        	else
+	            	alert("Failed to save the searches. Error: " + xhr.responseText);                	
+	        }
+		});		
 	}
+	
+	function updateGridWithSearchResults(searchResults)
+	{
+		
+	}
+	
+	function performSearch()
+	{
+		showLoadIndicator();
+		
+		$.ajax({
+		    url: contextPath + "/requests/ajaxSearch", 
+		    type: 'POST',
+		    data: JSON.stringify(json),
+		    dataType: 'json',  
+		    contentType: 'application/json', 
+		    mimeType: 'application/json',
+		    timeout: 60000,
+		    cache: false,
+		    success: function(searchResults) 
+		    {
+		    	if(searchResults)
+	    		{
+		    		updateGridWithSearchResults(searchResults);
+		    		loadingIndicator.fadeOut();
+	    		}
+		    	else
+	    		{
+	    			loadingIndicator.fadeOut();
+	    			alert("No results were returned from the server. Pls enhance search criteria.");
+	    		}		    			    	
+		    },		    
+	        error: function (xhr, textStatus, errorThrown) 
+	        {
+	        	loadingIndicator.fadeOut();
+	        	
+	        	if(textStatus == "timeout")
+	        		alert("Failed to retrieve result of search. Timed-out after 1 minute.");
+	        	else
+	            	alert("Failed to retrieve search results. Error: " + xhr.responseText);                	
+	        }
+		});		
+	}	
 	
     $("#statusContextMenu").click(function (e) 
     {
@@ -1312,6 +1383,11 @@ $(document).ready(function()
 		disableAddButton();
 		$("#requests_filter_button").removeClass("filter_on");
 	});
+	
+	$("#requests_search_btn").click(function()
+	{		
+		performSearch();
+	});	
 	
 	$(".filter_search_textBox").click(function()
 	{

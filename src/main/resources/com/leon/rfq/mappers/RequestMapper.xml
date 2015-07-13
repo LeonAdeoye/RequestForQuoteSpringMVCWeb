@@ -250,6 +250,16 @@
 		lastUpdate = now()	
 		WHERE identifier = #{identifier}
 	</update>
+	
+	<select id="search" parameterType="java.util.Set" resultMap="RequestResultSet">
+		SELECT *
+		FROM requestforquotemain
+       <where>
+            <foreach item="criterion" collection="criteria"  open="" separator=" AND " close=""> 
+                ${criterion.name} = #{criterion.value} 
+            </foreach>              
+       </where>	
+	</select>
 
 	<update id="update" parameterType="RequestDetailImpl">
 		UPDATE requestforquotemain

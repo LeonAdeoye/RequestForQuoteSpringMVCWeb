@@ -180,3 +180,19 @@ fieldset
 	background: olive;
 	color:white
 }
+
+.filter_on#requests_search_button
+{
+	background: olive;
+	color:white
+}
+
+.requests_filter_item > input.rhs
+{
+	margin-left: 7px;
+}
+
+.requests_search_item > input.rhs
+{
+	margin-left: 7px;
+}

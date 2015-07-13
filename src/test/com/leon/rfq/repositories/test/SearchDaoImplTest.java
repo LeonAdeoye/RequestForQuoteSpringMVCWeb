@@ -62,9 +62,9 @@ public class SearchDaoImplTest extends AbstractJUnit4SpringContextTests
 	{
 		// Arrange
 		int beforeCount = this.searchDaoImpl.get().size();
-		SearchCriterionImpl expected = new SearchCriterionImpl("testOwner", "testKey", "testControl", "testValue", true);
+		SearchCriterionImpl expected = new SearchCriterionImpl("testOwner", "testKey", "testName", "testValue", true);
 		// Act
-		this.searchDaoImpl.insert("testOwner", "testKey", "testControl", "testValue", true);
+		this.searchDaoImpl.insert("testOwner", "testKey", "testName", "testValue", true);
 		// Assert
 		assertNotNull("get method should return a non-null list of searchs", this.searchDaoImpl.get());
 		assertEquals("count of searches returned should be incremented ", beforeCount + 1, this.searchDaoImpl.get().size());
@@ -75,9 +75,9 @@ public class SearchDaoImplTest extends AbstractJUnit4SpringContextTests
     public void get_InsertValidSearch_ReturnsMatchingSearch()
 	{
 		// Arrange
-		SearchCriterionImpl expected = new SearchCriterionImpl("testOwner", "testKey", "testControl", "testValue", true);
+		SearchCriterionImpl expected = new SearchCriterionImpl("testOwner", "testKey", "testName", "testValue", true);
 		// Act
-		this.searchDaoImpl.insert("testOwner", "testKey", "testControl", "testValue", true);
+		this.searchDaoImpl.insert("testOwner", "testKey", "testName", "testValue", true);
 		// Assert
 		assertTrue("get method should return a set with expected criterion",
 				this.searchDaoImpl.get("testOwner", "testKey").contains(expected));
@@ -94,9 +94,9 @@ public class SearchDaoImplTest extends AbstractJUnit4SpringContextTests
     public void get_ValidOwner_ReturnsMatchingSearch()
 	{
 		// Arrange
-		SearchCriterionImpl expected = new SearchCriterionImpl("testOwner", "testKey", "testControl", "testValue", true);
+		SearchCriterionImpl expected = new SearchCriterionImpl("testOwner", "testKey", "testName", "testValue", true);
 		// Act
-		this.searchDaoImpl.insert("testOwner", "testKey", "testControl", "testValue", true);
+		this.searchDaoImpl.insert("testOwner", "testKey", "testName", "testValue", true);
 		// Assert
 		assertTrue("get method should return a set with expected criterion",
 				this.searchDaoImpl.get("testOwner").get("testKey").contains(expected));
@@ -113,8 +113,8 @@ public class SearchDaoImplTest extends AbstractJUnit4SpringContextTests
     public void insert_duplicatedSearchCode_SaveFailsAndReturnsFalse()
 	{
 		// Arrange & Act
-		this.searchDaoImpl.insert("tester", "testKey", "testControl", "testValue", true);
-		boolean result = this.searchDaoImpl.insert("tester", "testKey", "testControl", "testValue", true);
+		this.searchDaoImpl.insert("tester", "testKey", "testName", "testValue", true);
+		boolean result = this.searchDaoImpl.insert("tester", "testKey", "testName", "testValue", true);
 		// Assert
 		assertFalse("second save method should return false because search already exists", result);
 	}
@@ -123,7 +123,7 @@ public class SearchDaoImplTest extends AbstractJUnit4SpringContextTests
     public void delete_ValidOwnerAndKey_DeleteShouldReturnTrue()
 	{
 		// Act
-		this.searchDaoImpl.insert("tester", "testKey", "testControl", "testValue", true);
+		this.searchDaoImpl.insert("tester", "testKey", "testName", "testValue", true);
 		// Assert
 		assertTrue("delete method should delete search and return true", this.searchDaoImpl.delete("tester", "testKey"));
 		assertTrue("After the delete the get method should return an empty set", this.searchDaoImpl.get("tester", "testKey").isEmpty());
@@ -141,7 +141,7 @@ public class SearchDaoImplTest extends AbstractJUnit4SpringContextTests
     public void delete_ValidOwner_DeleteShouldReturnTrue()
 	{
 		// Act
-		this.searchDaoImpl.insert("tester", "testKey", "testControl", "testValue", true);
+		this.searchDaoImpl.insert("tester", "testKey", "testName", "testValue", true);
 		// Assert
 		assertTrue("delete method should delete search and return true", this.searchDaoImpl.delete("tester"));
 		assertTrue("After delete the get method should return an empty set", this.searchDaoImpl.get("tester").isEmpty());

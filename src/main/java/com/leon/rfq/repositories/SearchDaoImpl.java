@@ -51,8 +51,7 @@ public class SearchDaoImpl implements SearchDao
 	public Map<String, Map<String, Set<SearchCriterionImpl>>> get()
 	{
 		Map<String, Map<String, Set<SearchCriterionImpl>>> result = this.searchMapper.getAll().stream().collect(Collectors.groupingBy(
-				SearchCriterionImpl::getOwner, Collectors.groupingBy(
-						SearchCriterionImpl::getSearchKey, Collectors.toSet())));
+				SearchCriterionImpl::getOwner, Collectors.groupingBy(SearchCriterionImpl::getSearchKey, Collectors.toSet())));
 		
 		if(result != null)
 			return result;
@@ -98,11 +97,10 @@ public class SearchDaoImpl implements SearchDao
 	}
 
 	@Override
-	public boolean insert(String owner, String searchKey, String controlName,
-			String controlValue, Boolean isPrivate)
+	public boolean insert(String owner, String searchKey, String name, String value, Boolean isPrivate)
 	{
-		SearchCriterionImpl searchToBeInserted = new SearchCriterionImpl(owner, searchKey, controlName,
-				controlValue, isPrivate);
+		SearchCriterionImpl searchToBeInserted = new SearchCriterionImpl(owner, searchKey, name,
+				value, isPrivate);
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Inserting the search: " + searchToBeInserted);
@@ -119,5 +117,4 @@ public class SearchDaoImpl implements SearchDao
 			return false;
 		}
 	}
-
 }

@@ -1,5 +1,6 @@
 package com.leon.rfq.repositories;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.mappers.RequestMapper;
 import com.leon.rfq.products.OptionRequestFactory;
 
@@ -65,6 +67,21 @@ public class RequestDaoImpl implements RequestDao
 	{
 		return this.requestMapper.requestExistsWithRequestId(requestId) != null;
 	}
-
+	
+	@Override
+	public Set<RequestDetailImpl> search(Set<SearchCriterionImpl> criteria)
+	{
+		try
+		{
+			return this.requestMapper.search(criteria);
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to complete search using criteria: " + criteria);
+			
+			return new HashSet<>();
+		}
+	}
 }
 

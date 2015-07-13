@@ -19,8 +19,7 @@ public interface SearchService
 	
 	Map<String, Map<String, Set<SearchCriterionImpl>>> get();
 
-	boolean insert(String owner, String searchKey, String controlName,
-			String controlValue, Boolean isPrivate);
+	boolean insert(String owner, String searchKey, String name, String value, Boolean isPrivate);
 
 	boolean delete(String owner, String searchKey);
 	

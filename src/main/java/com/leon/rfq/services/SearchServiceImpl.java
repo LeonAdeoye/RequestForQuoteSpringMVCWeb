@@ -80,9 +80,9 @@ public final class SearchServiceImpl implements SearchService
 		return this.savedSearches.get(owner);
 	}
 	
-	private void addCriteriaToCache(String owner, String searchKey, String controlName, String controlValue, Boolean isPrivate)
+	private void addCriteriaToCache(String owner, String searchKey, String name, String value, Boolean isPrivate)
 	{
-		SearchCriterionImpl criterionToBeInserted = new SearchCriterionImpl(owner, searchKey, controlName, controlValue, isPrivate);
+		SearchCriterionImpl criterionToBeInserted = new SearchCriterionImpl(owner, searchKey, name, value, isPrivate);
 		Set<SearchCriterionImpl> setToBeInserted = new HashSet<>();
 		
 		if(areSearchCriteriaCached(owner))
@@ -93,7 +93,7 @@ public final class SearchServiceImpl implements SearchService
 				this.savedSearches.get(owner).put(searchKey, setToBeInserted);
 			}
 			else
-				this.savedSearches.get(owner).get(searchKey).add(new SearchCriterionImpl(owner, searchKey, controlName, controlValue, isPrivate));
+				this.savedSearches.get(owner).get(searchKey).add(new SearchCriterionImpl(owner, searchKey, name, value, isPrivate));
 		}
 		else
 		{
@@ -140,8 +140,8 @@ public final class SearchServiceImpl implements SearchService
 			{
 				criteria = this.searchDao.get(owner, searchKey);
 				
-				criteria.forEach(criterion -> addCriteriaToCache(owner, searchKey, criterion.getControlName(),
-					criterion.getControlValue(), criterion.getIsPrivate()));
+				criteria.forEach(criterion -> addCriteriaToCache(owner, searchKey, criterion.getName(),
+					criterion.getValue(), criterion.getIsPrivate()));
 			}
 			
 			return criteria;
@@ -181,7 +181,7 @@ public final class SearchServiceImpl implements SearchService
 				for(Set<SearchCriterionImpl> set : criteria.values())
 				{
 					set.forEach(criterion ->addCriteriaToCache(owner, criterion.getSearchKey(),
-						criterion.getControlName(), criterion.getControlValue(), criterion.getIsPrivate()));
+						criterion.getName(), criterion.getValue(), criterion.getIsPrivate()));
 				}
 			}
 			else
@@ -227,7 +227,7 @@ public final class SearchServiceImpl implements SearchService
 	}
 
 	@Override
-	public boolean insert(String owner, String searchKey, String controlName, String controlValue, Boolean isPrivate)
+	public boolean insert(String owner, String searchKey, String name, String value, Boolean isPrivate)
 	{
 		if((owner == null) || owner.isEmpty())
 		{
@@ -245,20 +245,20 @@ public final class SearchServiceImpl implements SearchService
 			throw new IllegalArgumentException("searchKey argument is invalid");
 		}
 		
-		if((controlName == null) || controlName.isEmpty())
+		if((name == null) || name.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("controlName argument is invalid");
+				logger.error("name argument is invalid");
 			
-			throw new IllegalArgumentException("controlName argument is invalid");
+			throw new IllegalArgumentException("name argument is invalid");
 		}
 		
-		if((controlValue == null) || controlValue.isEmpty())
+		if((value == null) || value.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("controlValue argument is invalid");
+				logger.error("value argument is invalid");
 			
-			throw new IllegalArgumentException("controlValue argument is invalid");
+			throw new IllegalArgumentException("value argument is invalid");
 		}
 		
 		if(logger.isDebugEnabled())
@@ -270,9 +270,9 @@ public final class SearchServiceImpl implements SearchService
 		{
 			lock.lock();
 			
-			addCriteriaToCache(owner, searchKey, controlName, controlValue, isPrivate);
+			addCriteriaToCache(owner, searchKey, name, value, isPrivate);
 				
-			return this.searchDao.insert(owner, searchKey, controlName, controlValue, isPrivate);
+			return this.searchDao.insert(owner, searchKey, name, value, isPrivate);
 			
 		}
 		finally

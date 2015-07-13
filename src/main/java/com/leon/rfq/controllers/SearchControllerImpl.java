@@ -94,17 +94,17 @@ public class SearchControllerImpl
 		if(result.hasErrors())
 			return "addSearch";
 		
-		this.searchService.insert(newSearch.getOwner(), newSearch.getSearchKey(), newSearch.getControlName(),
-				newSearch.getControlValue(), newSearch.getIsPrivate());
+		this.searchService.insert(newSearch.getOwner(), newSearch.getSearchKey(), newSearch.getName(),
+				newSearch.getValue(), newSearch.getIsPrivate());
 		
 		return "redirect:/searches";
 	}
 	
 	@RequestMapping(value="/ajaxInsert", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody boolean insert(@RequestParam String owner, @RequestParam String searchKey,
-			@RequestParam String controlName, @RequestParam String controlValue, @RequestParam boolean isPrivate)
+			@RequestParam String name, @RequestParam String value, @RequestParam boolean isPrivate)
 	{
-		return this.searchService.insert(owner, searchKey, controlName, controlValue, isPrivate);
+		return this.searchService.insert(owner, searchKey, name, value, isPrivate);
 	}
 	
 	@RequestMapping("/deleteForOwner")

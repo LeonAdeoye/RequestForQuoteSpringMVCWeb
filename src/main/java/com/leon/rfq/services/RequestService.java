@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.repositories.RequestDao;
 
@@ -52,4 +53,6 @@ public interface RequestService
 	Map<Integer, Map<String, BigDecimal>> getCalculationUpdates();
 	
 	Map<Integer, Map<String, BigDecimal>> getCalculationUpdates(Set<RequestDetailImpl> setOfRequests);
+
+	Set<RequestDetailImpl> search(Set<SearchCriterionImpl> criteria);
 }
