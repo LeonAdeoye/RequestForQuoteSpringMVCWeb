@@ -618,7 +618,12 @@ ApplicationListener<PriceUpdateEvent>
 		{
 			lock.lock();
 			
-			return this.requestDao.search(criteria);
+			Set<RequestDetailImpl> requests = this.requestDao.search(criteria);
+			// TODO debug
+/*			requests.forEach(request -> this.optionRequestFactory.parseRequest(request));
+			requests.forEach(request -> this.calculationService.calculate(new BlackScholesModelImpl(), request))*/;
+			return requests;
+			
 		}
 		finally
 		{

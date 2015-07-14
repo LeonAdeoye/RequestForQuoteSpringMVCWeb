@@ -146,7 +146,7 @@
 		  	<br>
 		  	<div class="requests_configure_item">
 		  		<Button id="requests_filter_clear_btn" class="btn requests_filter_search_clear_btn"><spring:message code="requests.clear.button.label"/></Button>
-		  		<Button id="filter_close_btn" class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+		  		<Button id="filter_close_btn" class="filter_search_close_btn hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
 		  	</div>		  	
 		</div>
 		
@@ -156,23 +156,23 @@
 			<br>
 		  	<div id="requestsSearch">
 		  		<div class="requests_search_item">
-				  	<input id="requests_search_bookCode" class="requests_search_collate filter_search_textBox requests_book_autocomplete" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." criterion_name="bookCode" />
-				  	<input id="requests_search_client" class="rhs filter_search_textBox requests_client_autocomplete" path="clientId" value="Select client name..." type="text" default_value="Select client name..." criterion_name="clientId" />				  	
+				  	<input id="requests_search_bookCode" class="search_textBox requests_search_collate filter_search_textBox requests_book_autocomplete" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." criterion_name="bookCode" />
+				  	<input id="requests_search_client" class="search_textBox rhs filter_search_textBox requests_client_autocomplete" path="clientId" value="Select client name..." type="text" default_value="Select client name..." criterion_name="clientId" />				  	
 				</div>
 				<br>
 				<div class="requests_search_item">
-				  	<input id="requests_search_tradeDate_start" class="requests_search_collate filter_search_textBox dateTxtBox" value="Select start trade date..." type="text" default_value="Select start trade date..." criterion_name="startTradeDate" />
-				  	<input id="requests_search_tradeDate_end" class="requests_search_collate rhs filter_search_textBox dateTxtBox" value="Select end trade date..." type="text" default_value="Select end trade date..." criterion_name="endTradeDate" />
+				  	<input id="requests_search_tradeDate_start" class="search_textBox requests_search_collate filter_search_textBox dateTxtBox" value="Select start trade date..." type="text" default_value="Select start trade date..." criterion_name="startTradeDate" />
+				  	<input id="requests_search_tradeDate_end" class="search_textBox requests_search_collate rhs filter_search_textBox dateTxtBox" value="Select end trade date..." type="text" default_value="Select end trade date..." criterion_name="endTradeDate" />
 				</div>
 				<br>
 				<div class="requests_search_item">
-				  	<input id="requests_search_maturityDate_start" class="requests_search_collate filter_search_textBox dateTxtBox" value="Select start maturity date..." type="text" default_value="Select start maturity date..." criterion_name="startMaturityDate" />
-				  	<input id="requests_search_maturityDate_end" class="requests_search_collate rhs filter_search_textBox dateTxtBox" value="Select end maturity date..." type="text" default_value="Select end maturity date..." criterion_name="endMaturityDate" />
+				  	<input id="requests_search_maturityDate_start" class="search_textBox requests_search_collate filter_search_textBox dateTxtBox" value="Select start maturity date..." type="text" default_value="Select start maturity date..." criterion_name="startMaturityDate" />
+				  	<input id="requests_search_maturityDate_end" class="search_textBox requests_search_collate rhs filter_search_textBox dateTxtBox" value="Select end maturity date..." type="text" default_value="Select end maturity date..." criterion_name="endMaturityDate" />
 				</div>
 				<br>
 		  		<div class="requests_search_item">
-				  	<input id="requests_search_status" path="status" class="filter_search_textBox requests_status_autocomplete" value="Select status code..." type="text" default_value="Select status code..." criterion_name="status"/>
-				  	<input id="requests_search_underlying" path="underlying" class="requests_search_collate rhs filter_search_textBox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." criterion_name="underlyingRIC"/>				  	
+				  	<input id="requests_search_status" path="status" class="search_textBox filter_search_textBox requests_status_autocomplete" value="Select status code..." type="text" default_value="Select status code..." criterion_name="status"/>
+				  	<input id="requests_search_underlying" path="underlying" class="search_textBox requests_search_collate rhs filter_search_textBox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." criterion_name="underlyingRIC"/>				  	
 				</div>
 				<br>
 				<div class="requests_search_item">
@@ -189,7 +189,7 @@
 		  		<Button id="requests_search_search_btn" class="btn"><spring:message code="requests.search.search.button.label"/></Button>
 		  		<Button id="requests_search_save_btn" class="btn"><spring:message code="requests.search.save.button.label"/></Button>
 		  		<Button id="requests_search_clear_btn" class="btn requests_filter_search_clear_btn"><spring:message code="requests.search.clear.button.label"/></Button>
-		  		<Button class="hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+		  		<Button class="filter_search_close_btn hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
 		  	</div>		  			  
 		</div>
 		

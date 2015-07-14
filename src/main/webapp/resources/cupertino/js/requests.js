@@ -841,13 +841,19 @@ $(document).ready(function()
 	$('.hideTopPanel').bind('click', function(event) 
 	{
 		requestsGrid.setTopPanelVisibility(false);
-		if($(this).is("#filter_close_btn"))
+		if($(this).is(".filter_search_close_btn"))
 		{			
 			$(".filter_textBox").each(function(index)
 			{
 				if($(this).val() != $(this).attr("default_value"))
 					$("#requests_filter_button").addClass("filter_on");					
 			})
+			
+			$(".search_textBox").each(function(index)
+			{
+				if($(this).val() != $(this).attr("default_value"))
+					$("#requests_search_button").addClass("filter_on");					
+			})			
 		}
 	});
 	
@@ -1279,11 +1285,6 @@ $(document).ready(function()
 		});		
 	}
 	
-	function updateGridWithSearchResults(searchResults)
-	{
-		
-	}
-	
 	function addCriterionToCriteria(criterionOwner, criterionName, criterionValue)
 	{
 		var criterion = {};
@@ -1337,8 +1338,8 @@ $(document).ready(function()
 		    {
 		    	if(searchResults)
 	    		{
-		    		updateGridWithSearchResults(searchResults);
-		    		loadingIndicator.fadeOut();
+			    	dataView.setItems(searchResults, "identifier");
+			    	loadingIndicator.fadeOut();		    		
 	    		}
 		    	else
 	    		{
@@ -1421,6 +1422,8 @@ $(document).ready(function()
 		clearNewRequestInputFields();		
 		disableAddButton();
 		$("#requests_filter_button").removeClass("filter_on");
+		$("#requests_search_button").removeClass("filter_on");
+		getRequestsFromTodayOnly();
 	});
 	
 	$("#requests_search_search_btn").click(function()
@@ -1455,10 +1458,9 @@ $(document).ready(function()
 		clearSearchFilterInputFields();
 		
 		if($(this).is("#requests_filter_clear_btn"))
-		{
 			clearFilter();
-			$("#requests_filter_button").removeClass("filter_on");
-		}			
+		
+		$("#requests_filter_search_clear_btn").removeClass("filter_on");
 	});
 		
 	function groupByBook() 
