@@ -25,14 +25,24 @@ public final class SearchCriterionImpl
 		if(logger.isDebugEnabled())
 		logger.debug("Criterion instantiated = > " +  this);
 	}
+	
+	public SearchCriterionImpl(String owner, String name, String value)
+	{
+		this.owner = owner;
+		this.name = name;
+		this.value = value;
 
-	public SearchCriterionImpl() {}
+		if(logger.isDebugEnabled())
+		logger.debug("Criterion instantiated = > " +  this);
+	}
 
 	public SearchCriterionImpl(String owner, String searchKey)
 	{
 		this.owner = owner;
 		this.searchKey = searchKey;
 	}
+	
+	public SearchCriterionImpl() {}
 
 	public String getOwner()
 	{

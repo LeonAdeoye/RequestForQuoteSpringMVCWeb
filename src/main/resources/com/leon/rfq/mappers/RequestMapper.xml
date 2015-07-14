@@ -255,9 +255,25 @@
 		SELECT *
 		FROM requestforquotemain
        <where>
-            <foreach item="criterion" collection="criteria"  open="" separator=" AND " close=""> 
-                ${criterion.name} = #{criterion.value} 
-            </foreach>              
+            <foreach item="criterion" collection="criteria"  open="" separator=" AND " close="">
+            	<choose>
+            		<when test="criterion.name == 'tradeDateStart' and criterion.value != null and criterion.value != ''">
+            		 	tradeDate &gt;= #{criterion.value}
+            		</when>
+            		<when test="criterion.name == 'tradeDateEnd' and criterion.value != null and criterion.value != ''">
+            		 	tradeDate &lt;= #{criterion.value}
+            		</when>
+            		<when test="criterion.name == 'expiryDateStart' and criterion.value != null and criterion.value != ''">
+            		 	expiryDate &gt;= #{criterion.value}
+            		</when>
+            		<when test="criterion.name == 'expiryDateEnd' and criterion.value != null and criterion.value != ''">
+            		 	expiryDate &lt;= #{criterion.value}
+            		</when>            		
+            		<otherwise>
+            			${criterion.name} = #{criterion.value}
+            		</otherwise>                	
+                </choose> 
+            </foreach>             
        </where>	
 	</select>
 

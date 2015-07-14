@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -246,7 +247,7 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 1, "TNG", "testUser");
 		this.requestDaoImpl.insert(request);
 		Set<SearchCriterionImpl> criteria = new HashSet<>();
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey", "bookCode", "TNG", true));
+		criteria.add(new SearchCriterionImpl("testOwner", "bookCode", "TNG"));
 		// Act
 		Set<RequestDetailImpl> result = this.requestDaoImpl.search(criteria);
 		assertEquals("Should return newly inserted request", 1, result.size());
@@ -259,7 +260,7 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "TNG", "testUser");
 		this.requestDaoImpl.insert(request);
 		Set<SearchCriterionImpl> criteria = new HashSet<>();
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey", "clientId", String.valueOf(Integer.MAX_VALUE), true));
+		criteria.add(new SearchCriterionImpl("testOwner", "clientId", String.valueOf(Integer.MAX_VALUE)));
 		// Act
 		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
 		assertEquals("Should return newly inserted request", 1, results.size());
@@ -279,8 +280,8 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		RequestDetailImpl request = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", Integer.MAX_VALUE, "TNG", "testUser");
 		this.requestDaoImpl.insert(request);
 		Set<SearchCriterionImpl> criteria = new HashSet<>();
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(Integer.MAX_VALUE), true));
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG", true));
+		criteria.add(new SearchCriterionImpl("testOwner", "clientId", String.valueOf(Integer.MAX_VALUE)));
+		criteria.add(new SearchCriterionImpl("testOwner", "bookCode", "TNG"));
 		// Act
 		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
 		// Assert
@@ -303,8 +304,8 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 2, "TNG2", "testUser");
 		this.requestDaoImpl.insert(requestB);
 		Set<SearchCriterionImpl> criteria = new HashSet<>();
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(1), true));
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG2", true));
+		criteria.add(new SearchCriterionImpl("testOwner", "clientId", String.valueOf(1)));
+		criteria.add(new SearchCriterionImpl("testOwner", "bookCode", "TNG2"));
 		// Act
 		Set<RequestDetailImpl> result = this.requestDaoImpl.search(criteria);
 		// Assert
@@ -320,8 +321,8 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0005.HK", 2, "TNG1", "testUser");
 		this.requestDaoImpl.insert(requestB);
 		Set<SearchCriterionImpl> criteria = new HashSet<>();
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(1), true));
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG1", true));
+		criteria.add(new SearchCriterionImpl("testOwner", "clientId", String.valueOf(1)));
+		criteria.add(new SearchCriterionImpl("testOwner", "bookCode", "TNG1"));
 		// Act
 		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
 		// Assert
@@ -346,8 +347,8 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		RequestDetailImpl requestC = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0001.HK", 2, "TNG1", "testUser");
 		this.requestDaoImpl.insert(requestC);
 		Set<SearchCriterionImpl> criteria = new HashSet<>();
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(2), true));
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG1", true));
+		criteria.add(new SearchCriterionImpl("testOwner", "clientId", String.valueOf(2)));
+		criteria.add(new SearchCriterionImpl("testOwner", "bookCode", "TNG1"));
 		// Act
 		Set<RequestDetailImpl> result = this.requestDaoImpl.search(criteria);
 		// Assert
@@ -365,9 +366,9 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 		RequestDetailImpl requestC = this.optionRequestFactory.getNewInstance("C 100 20Jan2020 0005.HK", 2, "TNG1", "testUser");
 		this.requestDaoImpl.insert(requestC);
 		Set<SearchCriterionImpl> criteria = new HashSet<>();
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey1", "clientId", String.valueOf(2), true));
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey2", "bookCode", "TNG1", true));
-		criteria.add(new SearchCriterionImpl("testOwner", "testKey3", "underlyingRIC", "0005.HK", true));
+		criteria.add(new SearchCriterionImpl("testOwner", "clientId", String.valueOf(2)));
+		criteria.add(new SearchCriterionImpl("testOwner", "bookCode", "TNG1"));
+		criteria.add(new SearchCriterionImpl("testOwner", "underlyingRIC", "0005.HK"));
 		// Act
 		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
 		// Assert
@@ -379,6 +380,126 @@ public class RequestDaoImplTest extends AbstractJUnit4SpringContextTests
 			assertEquals(requestC.getClientId(), result.getClientId());
 			assertEquals(requestC.getBookCode(), result.getBookCode());
 			assertEquals(requestC.getUnderlyingRIC(), result.getUnderlyingRIC());
+		}
+	}
+	
+	@Test
+    public void search_ExpiryDateRange_ReturnsThreeCorrectResults()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 1, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		RequestDetailImpl requestC = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0005.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestC);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateStart", "2027-12-20"));
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateEnd", "2027-12-23"));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return all newly inserted requests", 3, results.size());
+		
+		for(RequestDetailImpl result : results)
+			assertEquals("expiry date should match", result.getExpiryDate(), LocalDate.of(2027, 12, 23));
+	}
+	
+	@Test
+    public void search_ExpiryDateRangeAndUnderlying_ReturnsTwoCorrectResults()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 1, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		RequestDetailImpl requestC = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0005.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestC);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateStart", "2027-12-20"));
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateEnd", "2027-12-23"));
+		criteria.add(new SearchCriterionImpl("testOwner", "underlyingRIC", "0001.HK"));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return all newly inserted requests", 2, results.size());
+		
+		for(RequestDetailImpl result : results)
+		{
+			assertEquals("expiry date should match", result.getExpiryDate(), LocalDate.of(2027, 12, 23));
+			assertEquals("underlying RIC should match", result.getUnderlyingRIC(), "0001.HK");
+		}
+	}
+	
+	@Test
+    public void search_ExpiryDateRangeAndOneUnderlying_ReturnsOneCorrectResults()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 1, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		RequestDetailImpl requestC = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0005.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestC);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateStart", "2027-12-20"));
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateEnd", "2027-12-23"));
+		criteria.add(new SearchCriterionImpl("testOwner", "underlyingRIC", "0005.HK"));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return only one newly inserted requests", 1, results.size());
+		
+		for(RequestDetailImpl result : results)
+		{
+			assertEquals("expiry date should match", result.getExpiryDate(), LocalDate.of(2027, 12, 23));
+			assertEquals("underlying RIC should match", result.getUnderlyingRIC(), "0005.HK");
+		}
+	}
+	
+	@Test
+    public void search_ExpiryDateRangeAndNonExistentUnderlying_ReturnsZeroResults()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 1, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 2, "TNG1", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateStart", "2027-12-20"));
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateEnd", "2027-12-23"));
+		criteria.add(new SearchCriterionImpl("testOwner", "underlyingRIC", "0005.HK"));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return zero results", 0, results.size());
+	}
+	
+	@Test
+    public void search_ExpiryDateRangeAndOneUnderlyingAndBook_ReturnsOneCorrectResults()
+	{
+		// Arrange
+		RequestDetailImpl requestA = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 1, "TNG", "testUser");
+		this.requestDaoImpl.insert(requestA);
+		RequestDetailImpl requestB = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0001.HK", 2, "TNG", "testUser");
+		this.requestDaoImpl.insert(requestB);
+		RequestDetailImpl requestC = this.optionRequestFactory.getNewInstance("C 100 23Dec2027 0005.HK", 2, "TNG", "testUser");
+		this.requestDaoImpl.insert(requestC);
+		Set<SearchCriterionImpl> criteria = new HashSet<>();
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateStart", "2027-12-20"));
+		criteria.add(new SearchCriterionImpl("testOwner", "expiryDateEnd", "2027-12-23"));
+		criteria.add(new SearchCriterionImpl("testOwner", "underlyingRIC", "0005.HK"));
+		criteria.add(new SearchCriterionImpl("testOwner", "bookCode", "TNG"));
+		// Act
+		Set<RequestDetailImpl> results = this.requestDaoImpl.search(criteria);
+		// Assert
+		assertEquals("Should return only one newly inserted requests", 1, results.size());
+		
+		for(RequestDetailImpl result : results)
+		{
+			assertEquals("expiry date should match", result.getExpiryDate(), LocalDate.of(2027, 12, 23));
+			assertEquals("underlying RIC should match", result.getUnderlyingRIC(), "0005.HK");
+			assertEquals("bookCode should match", result.getBookCode(), "TNG");
 		}
 	}
 }

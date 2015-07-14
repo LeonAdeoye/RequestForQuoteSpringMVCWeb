@@ -78,7 +78,7 @@ public class RequestDaoImpl implements RequestDao
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("Failed to complete search using criteria: " + criteria);
+				logger.error("Failed to complete search using criteria: " + criteria + " due to exception: " + e);
 			
 			return new HashSet<>();
 		}
