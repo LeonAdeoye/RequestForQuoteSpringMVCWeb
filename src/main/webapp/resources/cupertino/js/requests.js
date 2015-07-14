@@ -821,11 +821,11 @@ $(document).ready(function()
         		$("#requestsInlineGroupByPanel").show();
         		break;        		
         	case "search":
-        		clearSearchFilterInputFields();
+        		// Does not clear previous search criteria because they may still be active.        		
         		$("#requestsInlineSearchPanel").show();
         		break;
         	case "filter":
-        		// Does not clear previous filters because they may still be active
+        		// Does not clear previous filters because they may still be active.
         		$("#requestsInlineFilterPanel").show();
         		break;
         	case "chart":
@@ -1458,9 +1458,15 @@ $(document).ready(function()
 		clearSearchFilterInputFields();
 		
 		if($(this).is("#requests_filter_clear_btn"))
+		{
+			$("#requests_filter_button").removeClass("filter_on");
 			clearFilter();
+		}
+
+		if($(this).is("#requests_search_clear_btn"))
+			$("#requests_search_button").removeClass("filter_on");
 		
-		$("#requests_filter_search_clear_btn").removeClass("filter_on");
+		getRequestsFromTodayOnly();
 	});
 		
 	function groupByBook() 
