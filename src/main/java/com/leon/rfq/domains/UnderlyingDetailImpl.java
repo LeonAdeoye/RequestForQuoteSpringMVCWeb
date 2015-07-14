@@ -52,8 +52,6 @@ public class UnderlyingDetailImpl
 		this.referencePrice = BigDecimal.TEN;
 		this.simulationPriceVariance = BigDecimal.ONE;
 		this.spread = BigDecimal.ONE;
-
-		logger.debug("underlying instantiated = > " +  this);
 	}
 	
 	public UnderlyingDetailImpl(String ric, String description, BigDecimal referencePrice,
@@ -66,8 +64,6 @@ public class UnderlyingDetailImpl
 		this.referencePrice = referencePrice;
 		this.simulationPriceVariance = simulationPriceVariance;
 		this.spread = spread;
-
-		logger.debug("underlying instantiated = > " +  this);
 	}
 
 	public String getRic()

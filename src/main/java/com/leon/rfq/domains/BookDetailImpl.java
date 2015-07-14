@@ -28,8 +28,6 @@ public final class BookDetailImpl
 		this.entity = entity;
 		this.isValid = isValid;
 		this.lastUpdatedByUser = lastUpdatedByUser;
-
-		logger.debug("BookDetailImpl object instantiated => " +  this);
 	}
 
 	public String getBookCode()

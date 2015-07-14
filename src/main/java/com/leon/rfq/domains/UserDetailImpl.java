@@ -52,9 +52,6 @@ public class UserDetailImpl
 		this.groupName = "";
 		this.isValid = true;
 		this.lastUpdatedBy = "";
-		
-		if(logger.isDebugEnabled())
-			logger.debug("Default constructor instantiation of UserDetailImpl: " + this.toString());
 	}
 	
 	public UserDetailImpl(String userId, String emailAddress, String firstName,
@@ -68,9 +65,6 @@ public class UserDetailImpl
 		this.groupName = groupName;
 		this.isValid = isValid;
 		this.lastUpdatedBy = lastUpdatedBy;
-		
-		if(logger.isDebugEnabled())
-			logger.debug("Constructor instantiation of UserDetailImpl: " + this.toString());
 	}
 
 	public String getUserId()

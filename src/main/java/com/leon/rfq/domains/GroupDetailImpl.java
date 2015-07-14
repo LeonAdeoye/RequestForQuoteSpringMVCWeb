@@ -20,8 +20,6 @@ public class GroupDetailImpl
 		this.groupId = groupId;
 		this.groupName = groupName;
 		this.isValid = isValid;
-		
-		logger.debug("GroupDetailImpl object instantiated => " +  this);
 	}
 
 	/**

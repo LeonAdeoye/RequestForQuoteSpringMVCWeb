@@ -34,7 +34,8 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 	
 	private CalculationServiceImpl() {}
 	
-	// TODO - should all of these methods be synchronized
+	// TODO - should all of these methods be synchronized? Definitely NOT!!!
+	// Stage 2: Need to revisit and optimize/limit all synchronization blocks here
 	@Override
 	public synchronized Map<String, Optional<BigDecimal>> calculate(PricingModel model, Map<String, BigDecimal> inputs)
 	{

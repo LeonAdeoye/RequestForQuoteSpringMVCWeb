@@ -32,6 +32,7 @@ import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.services.BookService;
 import com.leon.rfq.services.ClientService;
 import com.leon.rfq.services.RequestService;
@@ -58,7 +59,7 @@ public class RequestControllerImpl
 	public void initialiseBinder(WebDataBinder binder)
 	{
 		binder.setAllowedFields("request", "bookCode", "clientId", "language");
-		binder.setValidator(this.requestValidator);
+		//binder.setValidator(this.requestValidator);
 	}
 	
 	@RequestMapping(value="/requests/today",
@@ -234,7 +235,8 @@ public class RequestControllerImpl
 		return "redirect:/requests";
 	}
 	
-	@RequestMapping(value = "requests/matchingStatusTags", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "requests/matchingStatusTags", method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object getStatusMatches(@RequestParam String pattern)
 	{
 		List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
@@ -244,11 +246,23 @@ public class RequestControllerImpl
 		
 	}
 	
-	@RequestMapping(value = "requests/statuses", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "requests/statuses", method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object getStatuses()
 	{
 		List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
 		
 		return listOfStatus.stream().collect(Collectors.toMap(status -> status, status -> status.getDescription()));
+	}
+	
+	@RequestMapping(value = "requests/ajaxSearch", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object search(@RequestBody Set<SearchCriterionImpl> criteria)
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Received search request: " + criteria);
+		
+		return this.requestService.search(criteria);
 	}
 }

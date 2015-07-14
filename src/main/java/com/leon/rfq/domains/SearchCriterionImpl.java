@@ -21,9 +21,6 @@ public final class SearchCriterionImpl
 		this.name = name;
 		this.value = value;
 		this.isPrivate = isPrivate;
-
-		if(logger.isDebugEnabled())
-		logger.debug("Criterion instantiated = > " +  this);
 	}
 	
 	public SearchCriterionImpl(String owner, String name, String value)
@@ -31,9 +28,6 @@ public final class SearchCriterionImpl
 		this.owner = owner;
 		this.name = name;
 		this.value = value;
-
-		if(logger.isDebugEnabled())
-		logger.debug("Criterion instantiated = > " +  this);
 	}
 
 	public SearchCriterionImpl(String owner, String searchKey)

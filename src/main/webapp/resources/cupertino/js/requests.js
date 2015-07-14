@@ -40,7 +40,7 @@ function toggleAddButtonState()
 		disableAddButton();
 }
 
-var statusHashIndexedByStatusEnum = {}, clientHashIndexedByDesc = {}, clientHashIndexedById = {};
+var statusHashIndexedByStatusEnum = {}, statusHashIndexedByDesc = {}, clientHashIndexedByDesc = {}, clientHashIndexedById = {};
 
 function dateFormatter(row, cell, value, columnDef, dataContext)
 {
@@ -48,7 +48,7 @@ function dateFormatter(row, cell, value, columnDef, dataContext)
     {	
     	var theDate = new Date(value);
     	if(theDate !== NaN)
-    		return $.datepicker.formatDate("dd M yy", theDate);    		
+    		return $.datepicker.formatDate("yy-mm-dd", theDate);    		
     }
     return "";
 }
@@ -318,20 +318,20 @@ $(document).ready(function()
 		{			
 			if(theDate !== "" && ($(this).val() !== $(this).attr("default_value")))
 			{
-				$.datepicker.parseDate("dd M yy", theDate);
+				$.datepicker.parseDate("yy-mm-dd", theDate);
 				Slick.GlobalEditorLock.cancelCurrentEdit();
-				filterHash[$(this).attr("hash_index")] = $(this).val();
+				filterHash[$(this).attr("criterion_name")] = $(this).val();
 				updateFilter();
 			}
 		}
 		catch(err)
 		{
-			alert('Invalid date! "DD MMM YYYY" date format expected. For example: "23 Dec 2012" or "01 Jan 2000".');
+			alert('Invalid date! "YYYY-DD-MM" date format expected. For example: 2012-12-23.');
 			$(this).val($(this).attr("default_value"));
 		}		
 	}	
 	
-	$.datepicker.setDefaults({dateFormat : "dd M yy", onClose : datepickerOnClose });
+	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
 	$(".dateTxtBox").datepicker();
 	
     function showLoadIndicator() 
@@ -396,7 +396,7 @@ $(document).ready(function()
     $(".filter_textbox").keyup(function (e)
     {
     	Slick.GlobalEditorLock.cancelCurrentEdit();
-    	filterHash[$(this).attr("hash_index")] = $(this).val();
+    	filterHash[$(this).attr("criterion_name")] = $(this).val();
 	    updateFilter();
     });
     
@@ -943,9 +943,12 @@ $(document).ready(function()
 		    mimeType: 'application/json',
 		    timeout: 5000,
 		    cache: false,
-		    success: function(statusHash) 
+		    success: function(statuses) 
 		    {
-		    	statusHashIndexedByStatusEnum = statusHash;
+		    	statusHashIndexedByStatusEnum = statuses;
+		    	
+		    	for(var status in statuses)
+		    		statusHashIndexedByDesc[statuses[status]] = status;
 		    }, 
             error: function (xhr, textStatus, errorThrown) 
             {
@@ -1281,14 +1284,50 @@ $(document).ready(function()
 		
 	}
 	
+	function addCriterionToCriteria(criterionOwner, criterionName, criterionValue)
+	{
+		var criterion = {};
+		criterion["owner"] = criterionOwner;
+		criterion["name"] = criterionName;
+		criterion["value"] = criterionValue;		
+		return criterion;
+	}
+	
+	function collateCriteria()
+	{
+		var criteria = [];
+		
+		$(".requests_search_collate").each(function()
+		{
+			if($(this).val() !== $(this).attr("default_value"))
+				criteria.push(addCriterionToCriteria("NO_OWNER", $(this).attr("criterion_name"), $(this).val()));
+		});
+		
+		// Transformation from client description to client ID is required....
+		if($("#requests_search_client").val() !== $("#requests_search_client").attr("default_value"))
+		{
+			criteria.push(addCriterionToCriteria("NO_OWNER", $("#requests_search_client").attr("criterion_name"), 
+					clientHashIndexedByDesc[$("#requests_search_client").val()]));
+		}
+		
+		// Transformation from status description to status enum is required....		
+		if($("#requests_search_status").val() !== $("#requests_search_status").attr("default_value"))
+		{			
+			criteria.push(addCriterionToCriteria("NO_OWNER", $("#requests_search_status").attr("criterion_name"), 
+					statusHashIndexedByDesc[$("#requests_search_status").val()]));
+		}
+				
+		return criteria;
+	}
+	
 	function performSearch()
 	{
 		showLoadIndicator();
-		
+
 		$.ajax({
 		    url: contextPath + "/requests/ajaxSearch", 
 		    type: 'POST',
-		    data: JSON.stringify(json),
+		    data: JSON.stringify(collateCriteria()),
 		    dataType: 'json',  
 		    contentType: 'application/json', 
 		    mimeType: 'application/json',
@@ -1384,7 +1423,7 @@ $(document).ready(function()
 		$("#requests_filter_button").removeClass("filter_on");
 	});
 	
-	$("#requests_search_btn").click(function()
+	$("#requests_search_search_btn").click(function()
 	{		
 		performSearch();
 	});	

@@ -257,16 +257,16 @@
        <where>
             <foreach item="criterion" collection="criteria"  open="" separator=" AND " close="">
             	<choose>
-            		<when test="criterion.name == 'tradeDateStart' and criterion.value != null and criterion.value != ''">
+            		<when test="criterion.name == 'startTradeDate' and criterion.value != null and criterion.value != ''">
             		 	tradeDate &gt;= #{criterion.value}
             		</when>
-            		<when test="criterion.name == 'tradeDateEnd' and criterion.value != null and criterion.value != ''">
+            		<when test="criterion.name == 'endTradeDate' and criterion.value != null and criterion.value != ''">
             		 	tradeDate &lt;= #{criterion.value}
             		</when>
-            		<when test="criterion.name == 'expiryDateStart' and criterion.value != null and criterion.value != ''">
+            		<when test="criterion.name == 'startMaturityDate' and criterion.value != null and criterion.value != ''">
             		 	expiryDate &gt;= #{criterion.value}
             		</when>
-            		<when test="criterion.name == 'expiryDateEnd' and criterion.value != null and criterion.value != ''">
+            		<when test="criterion.name == 'endMaturityDate' and criterion.value != null and criterion.value != ''">
             		 	expiryDate &lt;= #{criterion.value}
             		</when>            		
             		<otherwise>

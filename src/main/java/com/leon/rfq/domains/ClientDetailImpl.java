@@ -30,8 +30,6 @@ public final class ClientDetailImpl
 		this.tier = tier;
 		this.isValid = isValid;
 		this.lastUpdatedBy = createdByUser;
-
-		logger.debug("ClientDetailImpl object instantiated = > " +  this);
 	}
 	
 	public ClientDetailImpl(String name, ClientTierEnum tier, boolean isValid, String createdByUser)
@@ -40,8 +38,6 @@ public final class ClientDetailImpl
 		this.tier = tier;
 		this.isValid = isValid;
 		this.lastUpdatedBy = createdByUser;
-
-		logger.debug("ClientDetailImpl object instantiated = > " +  this);
 	}
 
 	public String getName()

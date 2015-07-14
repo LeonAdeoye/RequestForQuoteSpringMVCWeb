@@ -10,6 +10,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import com.leon.rfq.domains.RequestDetailImpl;
+import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.products.OptionRequestFactory;
 import com.leon.rfq.products.OptionRequestFactoryImpl;
 import com.leon.rfq.services.RequestService;
@@ -29,7 +30,7 @@ public class RequestValidatorImpl implements Validator
 	@Override
 	public boolean supports(Class<?> clazz)
 	{
-		return RequestDetailImpl.class.isAssignableFrom(clazz);
+		return RequestDetailImpl.class.isAssignableFrom(clazz) || SearchCriterionImpl.class.isAssignableFrom(clazz);
 	}
 
 	@Override
@@ -44,15 +45,18 @@ public class RequestValidatorImpl implements Validator
 			errors.rejectValue(propertyPath, "", message);
 		}
 		
-		RequestDetailImpl request = (RequestDetailImpl) target;
-		
-		if(!OptionRequestFactoryImpl.isValidOptionRequestSnippet(request.getRequest()))
+		if(target instanceof RequestDetailImpl)
 		{
-			errors.rejectValue("request", "request.validation.snippet.pattern");
-			return;
+			RequestDetailImpl request = (RequestDetailImpl) target;
+			
+			if(!OptionRequestFactoryImpl.isValidOptionRequestSnippet(request.getRequest()))
+			{
+				errors.rejectValue("request", "request.validation.snippet.pattern");
+				return;
+			}
+			
+			if(!this.factory.doesUnderlyingExist(request.getRequest()))
+				errors.rejectValue("request", "request.validation.underlying.absent");
 		}
-		
-		if(!this.factory.doesUnderlyingExist(request.getRequest()))
-			errors.rejectValue("request", "request.validation.underlying.absent");
 	}
 }
