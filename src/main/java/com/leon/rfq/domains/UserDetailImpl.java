@@ -1,19 +1,22 @@
 package com.leon.rfq.domains;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.ibatis.type.Alias;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@XmlRootElement
-@Alias("UserDetailImpl")
-public class UserDetailImpl
+public class UserDetailImpl implements UserDetail
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserDetailImpl.class);
+	private final Map<Integer, Map<Long, ChatMessageImpl>> messages = new HashMap<>();
 	
 	@NotNull(message="{user.validation.userId.notNull}")
 	@Size(min=1, max=20, message="{user.validation.userId.size}")
@@ -280,5 +283,37 @@ public class UserDetailImpl
 		}
 		return true;
 	}
+
+	@Override
+	public void receive(ChatMessageImpl message)
+	{
+		Map<Long, ChatMessageImpl> messagesForRequest;
+		
+		if(this.messages.containsKey(message.getRequestId()))
+			messagesForRequest = this.messages.get(message.getRequestId());
+		else
+			messagesForRequest = new HashMap<>();
+		
+		messagesForRequest.put(message.getSequenceId(), message);
+		this.messages.put(message.getRequestId(), messagesForRequest);
+	}
 	
+	public Map<Long, ChatMessageImpl> getMessagesForRequest(int requestId)
+	{
+		if(this.messages.containsKey(requestId))
+			return this.messages.get(requestId);
+		
+		return new HashMap<>();
+	}
+	
+	public Set<ChatMessageImpl> getMessagesForRequest(int requestId, long sequenceId)
+	{
+		if(this.messages.containsKey(requestId))
+			if(this.messages.get(requestId).containsKey(sequenceId))
+				return this.messages.get(requestId).values().stream()
+						.filter(message -> message.getSequenceId() >= sequenceId)
+						.collect(Collectors.toSet());
+		
+		return new HashSet<>();
+	}
 }

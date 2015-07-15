@@ -5,19 +5,9 @@ function enableAddButton()
 	$("#requests_add_button").removeAttr('disabled');
 }
 
-function enableClearButton()
-{
-	$("#requests_clear_button").removeAttr('disabled');
-}
-
 function disableAddButton()
 {
 	$("#requests_add_button").attr('disabled', 'disabled');
-}
-
-function disableClearButton()
-{
-	$("#requests_clear_button").attr('disabled', 'disabled');
 }
 
 function clearNewRequestInputFields()
@@ -480,7 +470,6 @@ $(document).ready(function()
 	$("#requests_add_button").click(function(event)
 	{
 		disableAddButton();
-		disableClearButton();
 		
 		var snippet = $('#requests_snippet').val();
 	    var bookCode = $('#requests_bookCode').val();

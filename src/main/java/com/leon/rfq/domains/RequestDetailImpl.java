@@ -112,6 +112,8 @@ public final class RequestDetailImpl
 	
 	private List<BigDecimal> profitAndLossPoints;
 	private List<OptionDetailImpl> legs;
+	
+	private final static DateTimeFormatter dateFormatter_MMddyyyy = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
 	public RequestDetailImpl()
 	{
@@ -293,7 +295,7 @@ public final class RequestDetailImpl
 	
 	public String getTradeDateString()
 	{
-		return this.tradeDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+		return this.tradeDate.format(dateFormatter_MMddyyyy);
 	}
 
 	public void setTradeDate(LocalDate tradeDate)
@@ -308,7 +310,7 @@ public final class RequestDetailImpl
 
 	public String getExpiryDateString()
 	{
-		return this.expiryDate.format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+		return this.expiryDate.format(dateFormatter_MMddyyyy);
 	}
 	
 	public void setExpiryDate(LocalDate expiryDate)
