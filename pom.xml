@@ -21,7 +21,9 @@
   	<hibernate-validator.version>4.3.1.Final</hibernate-validator.version>
   	<JUnitParams.version>1.0.4</JUnitParams.version>
   	<powermock.version>1.6.2</powermock.version>
-	<jstl.version>1.2</jstl.version>  	
+	<jstl.version>1.2</jstl.version>
+	<mongo.async.version>3.0.2</mongo.async.version>
+	<mockito.core.version>1.10.8</mockito.core.version>  	
   </properties>
   
     <dependencyManagement>
@@ -44,10 +46,15 @@
 	</dependencyManagement>
 	
 	<dependencies>
+	    <dependency>
+	        <groupId>org.mongodb</groupId>
+	        <artifactId>mongodb-driver-async</artifactId>
+	        <version>${mongo.async.version}</version>
+	    </dependency>			
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>1.10.8</version>
+			<version>${mockito.core.version}</version>
 		</dependency>	
 		<dependency>
 			<groupId>jstl</groupId>

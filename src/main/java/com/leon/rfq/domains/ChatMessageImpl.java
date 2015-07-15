@@ -6,14 +6,14 @@ import java.util.Set;
 
 public final class ChatMessageImpl
 {
-	private final UserDetail owner;
-	private final Set<UserDetail> recipients;
+	private final UserDetailImpl owner;
+	private final Set<UserDetailImpl> recipients;
 	private final String content;
 	private final LocalDateTime timeStamp;
 	private static long sequenceId = 0L;
 	private final int requestId;
 
-	public ChatMessageImpl(UserDetail sender, Set<UserDetail> recipients, String content, int requestId)
+	public ChatMessageImpl(UserDetailImpl sender, Set<UserDetailImpl> recipients, String content, int requestId)
 	{
 		this.owner = sender;
 		this.recipients = new HashSet<>(recipients);
@@ -23,12 +23,12 @@ public final class ChatMessageImpl
 		++sequenceId;
 	}
 			
-	public UserDetail getOwner()
+	public UserDetailImpl getOwner()
 	{
 		return this.owner;
 	}
 
-	public Set<UserDetail> getRecipients()
+	public Set<UserDetailImpl> getRecipients()
 	{
 		return new HashSet<>(this.recipients);
 	}

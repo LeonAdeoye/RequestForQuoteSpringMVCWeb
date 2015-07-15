@@ -11,5 +11,9 @@ public interface ChatDao
 	
 	Set<ChatMessageImpl> get(int requestForQuoteId);
 
-	boolean save(ChatMessageImpl message);
+	void save(ChatMessageImpl message);
+
+	void initialize();
+
+	void terminate();
 }

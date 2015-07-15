@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UserDetailImpl implements UserDetail
+public class UserDetailImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserDetailImpl.class);
 	private final Map<Integer, Map<Long, ChatMessageImpl>> messages = new HashMap<>();
@@ -284,7 +284,6 @@ public class UserDetailImpl implements UserDetail
 		return true;
 	}
 
-	@Override
 	public void receive(ChatMessageImpl message)
 	{
 		Map<Long, ChatMessageImpl> messagesForRequest;

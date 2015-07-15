@@ -11,14 +11,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.leon.rfq.domains.ChatMessageImpl;
-import com.leon.rfq.domains.UserDetail;
+import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.repositories.ChatDao;
-
 
 public final class ChatMediatorServiceImpl implements ChatMediatorService
 {
 	private static final Logger logger = LoggerFactory.getLogger(ChatMediatorServiceImpl.class);
-	private final Map<Integer, Set<UserDetail>> chatRooms = new ConcurrentSkipListMap<>();
+	private final Map<Integer, Set<UserDetailImpl>> chatRooms = new ConcurrentSkipListMap<>();
 	
 	@Autowired(required=true)
 	private final ChatDao chatDao;
@@ -37,7 +36,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public boolean sendMessage(int requestForQuoteId, UserDetail sender, String content)
+	public boolean sendMessage(int requestForQuoteId, UserDetailImpl sender, String content)
 	{
 		if((sender == null))
 		{
@@ -61,13 +60,15 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		{
 			lock.lock();
 			
-			Set<UserDetail> recipients = this.chatRooms.get(requestForQuoteId);
+			Set<UserDetailImpl> recipients = this.chatRooms.get(requestForQuoteId);
 			ChatMessageImpl message = new ChatMessageImpl(sender, recipients, content, requestForQuoteId);
 			
 			recipients.stream().filter(recipient -> !recipient.equals(sender))
 				.forEach(recipient -> recipient.receive(message));
 			
-			return this.chatDao.save(message);
+			this.chatDao.save(message);
+			
+			return true;
 		}
 		finally
 		{
@@ -76,7 +77,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public void registerParticipant(int requestForQuoteId, UserDetail participant)
+	public void registerParticipant(int requestForQuoteId, UserDetailImpl participant)
 	{
 		if(participant == null)
 		{
@@ -88,14 +89,14 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 
 		if(this.chatRooms.containsKey(requestForQuoteId))
 		{
-			Set<UserDetail> participants = this.chatRooms.get(requestForQuoteId);
+			Set<UserDetailImpl> participants = this.chatRooms.get(requestForQuoteId);
 			
 			if(!participants.contains(participant))
 				participants.add(participant);
 		}
 		else
 		{
-			Set<UserDetail> participants = new HashSet<>();
+			Set<UserDetailImpl> participants = new HashSet<>();
 			participants.add(participant);
 			
 			this.chatRooms.put(requestForQuoteId, participants);
@@ -103,7 +104,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public boolean isParticipantRegistered(int requestForQuoteId, UserDetail participant)
+	public boolean isParticipantRegistered(int requestForQuoteId, UserDetailImpl participant)
 	{
 		if(participant == null)
 		{
@@ -137,7 +138,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public boolean unregisterParticipant(int requestForQuoteId, UserDetail participant)
+	public boolean unregisterParticipant(int requestForQuoteId, UserDetailImpl participant)
 	{
 		if(participant == null)
 		{
@@ -192,11 +193,11 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		for(Map.Entry<Integer, Set<UserDetail>> chatroom : this.chatRooms.entrySet())
+		for(Map.Entry<Integer, Set<UserDetailImpl>> chatroom : this.chatRooms.entrySet())
 		{
 			sb.append("\n[ Chatroom for requestforQuoteId=");
 			sb.append(chatroom.getKey());
-			for(UserDetail participant : chatroom.getValue())
+			for(UserDetailImpl participant : chatroom.getValue())
 			{
 				sb.append("\nParticipant=");
 				sb.append(participant);
