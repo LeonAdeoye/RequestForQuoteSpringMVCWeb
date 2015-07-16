@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
+import com.leon.rfq.domains.ChatMessageImpl;
 import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.repositories.UserDao;
 
@@ -413,5 +414,22 @@ public final class UserServiceImpl implements UserService
 		{
 			lock.unlock();
 		}
+	}
+
+	@Override
+	public Set<ChatMessageImpl> getMessages(String userId, int requestId, int sequenceId)
+	{
+		if((userId == null) || userId.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("userId argument is invalid");
+			
+			throw new IllegalArgumentException("userId argument is invalid");
+		}
+		
+		if(this.users.containsKey(userId))
+			return this.users.get(userId).getMessagesForRequest(requestId, sequenceId);
+		
+		return new HashSet<>();
 	}
 }

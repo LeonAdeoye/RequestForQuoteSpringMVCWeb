@@ -2,6 +2,7 @@ package com.leon.rfq.services;
 
 import java.util.Set;
 
+import com.leon.rfq.domains.ChatMessageImpl;
 import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.repositories.UserDao;
 
@@ -32,4 +33,6 @@ public interface UserService
 	void initialise();
 
 	Set<UserDetailImpl> getAllFromCacheOnly();
+
+	Set<ChatMessageImpl> getMessages(String userId, int requestId, int sequenceId);
 }

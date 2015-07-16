@@ -297,14 +297,6 @@ public class UserDetailImpl
 		this.messages.put(message.getRequestId(), messagesForRequest);
 	}
 	
-	public Map<Long, ChatMessageImpl> getMessagesForRequest(int requestId)
-	{
-		if(this.messages.containsKey(requestId))
-			return this.messages.get(requestId);
-		
-		return new HashMap<>();
-	}
-	
 	public Set<ChatMessageImpl> getMessagesForRequest(int requestId, long sequenceId)
 	{
 		if(this.messages.containsKey(requestId))
