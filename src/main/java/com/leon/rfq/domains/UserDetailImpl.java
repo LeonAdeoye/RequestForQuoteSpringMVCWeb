@@ -1,5 +1,6 @@
 package com.leon.rfq.domains;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,7 +17,7 @@ import org.slf4j.LoggerFactory;
 public class UserDetailImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(UserDetailImpl.class);
-	private final Map<Integer, Map<Long, ChatMessageImpl>> messages = new HashMap<>();
+	private final Map<Integer, Set<ChatMessageImpl>> messageCache = new HashMap<>();
 	
 	@NotNull(message="{user.validation.userId.notNull}")
 	@Size(min=1, max=20, message="{user.validation.userId.size}")
@@ -150,6 +151,28 @@ public class UserDetailImpl
 		this.lastUpdatedBy = lastUpdatedBy;
 	}
 	
+	public void receive(ChatMessageImpl message)
+	{
+		Set<ChatMessageImpl> messages;
+		
+		if(this.messageCache.containsKey(message.getRequestId()))
+			messages = this.messageCache.get(message.getRequestId());
+		else
+			messages = new HashSet<>();
+		
+		messages.add(message);
+		this.messageCache.put(message.getRequestId(), messages);
+	}
+	
+	public Set<ChatMessageImpl> getMessagesForRequest(int requestId, LocalDateTime fromTimeStamp)
+	{
+		if(this.messageCache.containsKey(requestId))
+			return this.messageCache.get(requestId).stream()
+				.filter(message -> message.getTimeStamp().compareTo(fromTimeStamp) >= 0)
+				.collect(Collectors.toSet());
+		
+		return new HashSet<>();
+	}
 
 	@Override
 	public String toString()
@@ -282,29 +305,5 @@ public class UserDetailImpl
 			return false;
 		}
 		return true;
-	}
-
-	public void receive(ChatMessageImpl message)
-	{
-		Map<Long, ChatMessageImpl> messagesForRequest;
-		
-		if(this.messages.containsKey(message.getRequestId()))
-			messagesForRequest = this.messages.get(message.getRequestId());
-		else
-			messagesForRequest = new HashMap<>();
-		
-		messagesForRequest.put(message.getSequenceId(), message);
-		this.messages.put(message.getRequestId(), messagesForRequest);
-	}
-	
-	public Set<ChatMessageImpl> getMessagesForRequest(int requestId, long sequenceId)
-	{
-		if(this.messages.containsKey(requestId))
-			if(this.messages.get(requestId).containsKey(sequenceId))
-				return this.messages.get(requestId).values().stream()
-						.filter(message -> message.getSequenceId() >= sequenceId)
-						.collect(Collectors.toSet());
-		
-		return new HashSet<>();
 	}
 }

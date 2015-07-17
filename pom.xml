@@ -22,10 +22,9 @@
   	<JUnitParams.version>1.0.4</JUnitParams.version>
   	<powermock.version>1.6.2</powermock.version>
 	<jstl.version>1.2</jstl.version>
-	<mongo.async.version>3.0.2</mongo.async.version>
-	<mockito.core.version>1.10.8</mockito.core.version>  	
+	<mockito.core.version>1.10.8</mockito.core.version>
+	<spring.data.version>1.7.1.RELEASE</spring.data.version>  	
   </properties>
-  
     <dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -47,10 +46,10 @@
 	
 	<dependencies>
 	    <dependency>
-	        <groupId>org.mongodb</groupId>
-	        <artifactId>mongodb-driver-async</artifactId>
-	        <version>${mongo.async.version}</version>
-	    </dependency>			
+	        <groupId>org.springframework.data</groupId>
+	        <artifactId>spring-data-mongodb</artifactId>
+	        <version>${spring.data.version}</version>
+	    </dependency>	
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>

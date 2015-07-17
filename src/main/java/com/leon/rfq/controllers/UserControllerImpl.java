@@ -1,5 +1,7 @@
 package com.leon.rfq.controllers;
 
+import java.time.LocalDateTime;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -106,8 +108,8 @@ public class UserControllerImpl
 	@RequestMapping(value = "/ajaxGetMessages", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object getChatMessages(@RequestBody String userId, @RequestBody int requestId, int sequenceId)
+	public @ResponseBody Object getChatMessages(@RequestBody String userId, @RequestBody int requestId, LocalDateTime fromTimeStamp)
 	{
-		return this.userService.getMessages(userId, requestId, sequenceId);
+		return this.userService.getMessages(userId, requestId, fromTimeStamp);
 	}
 }

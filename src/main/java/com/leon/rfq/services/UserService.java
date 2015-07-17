@@ -1,5 +1,6 @@
 package com.leon.rfq.services;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import com.leon.rfq.domains.ChatMessageImpl;
@@ -34,5 +35,5 @@ public interface UserService
 
 	Set<UserDetailImpl> getAllFromCacheOnly();
 
-	Set<ChatMessageImpl> getMessages(String userId, int requestId, int sequenceId);
+	Set<ChatMessageImpl> getMessages(String userId, int requestId, LocalDateTime fromTimeStamp);
 }

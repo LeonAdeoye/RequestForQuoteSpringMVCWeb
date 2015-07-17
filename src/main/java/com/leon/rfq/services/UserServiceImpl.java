@@ -1,5 +1,6 @@
 package com.leon.rfq.services;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -417,7 +418,7 @@ public final class UserServiceImpl implements UserService
 	}
 
 	@Override
-	public Set<ChatMessageImpl> getMessages(String userId, int requestId, int sequenceId)
+	public Set<ChatMessageImpl> getMessages(String userId, int requestId, LocalDateTime fromTimeStamp)
 	{
 		if((userId == null) || userId.isEmpty())
 		{
@@ -428,7 +429,7 @@ public final class UserServiceImpl implements UserService
 		}
 		
 		if(this.users.containsKey(userId))
-			return this.users.get(userId).getMessagesForRequest(requestId, sequenceId);
+			return this.users.get(userId).getMessagesForRequest(requestId, fromTimeStamp);
 		
 		return new HashSet<>();
 	}

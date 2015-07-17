@@ -1,37 +1,33 @@
 package com.leon.rfq.repositories;
 
-import java.util.Set;
+import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-import org.bson.Document;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.WriteResultChecking;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Repository;
 
 import com.leon.rfq.domains.ChatMessageImpl;
-import com.mongodb.async.client.MongoClient;
-import com.mongodb.async.client.MongoCollection;
-import com.mongodb.async.client.MongoDatabase;
 
+@Repository
 public class ChatDaoImpl implements ChatDao
 {
 	private static final Logger logger = LoggerFactory.getLogger(ChatDaoImpl.class);
-	private MongoClient client;
-	private MongoDatabase database;
-	private MongoCollection<Document> chatCollection;
 	
-	private final String connectionString;
-	private final String databaseName;
+	@Autowired(required=true)
+	private MongoTemplate chatMongoDBTemplate;
+	
 	private final String collectionName;
 	
-	public ChatDaoImpl(String databaseName, String collectionName, String connectionString)
+	public ChatDaoImpl(String collectionName)
 	{
-		if((databaseName == null) || databaseName.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("databaseName is an invalid argument");
-			
-			throw new IllegalArgumentException("databaseName is an invalid argument");
-		}
-		
 		if((collectionName == null) || collectionName.isEmpty())
 		{
 			if(logger.isErrorEnabled())
@@ -40,64 +36,111 @@ public class ChatDaoImpl implements ChatDao
 			throw new IllegalArgumentException("collectionName is an invalid argument");
 		}
 		
-		if((connectionString == null) || connectionString.isEmpty())
+		this.collectionName = collectionName;
+	}
+	
+	@Override
+	public void initialize()
+	{
+		// Also by default the WriteConcern is ACKNOWLEDGED so no need to set it.
+		this.chatMongoDBTemplate.setWriteResultChecking(WriteResultChecking.EXCEPTION);
+	}
+
+	@Override
+	public List<ChatMessageImpl> get(int requestId, LocalDateTime fromTimeStamp)
+	{
+		Query query = new Query(where("requestId").is(requestId))
+			.addCriteria(where("timeStamp").gte(fromTimeStamp));
+		
+		try
+		{
+			return this.chatMongoDBTemplate.find(query, ChatMessageImpl.class, this.collectionName);
+		}
+		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("connectionString is an invalid argument");
+				logger.error("Failed to get chat messages with request ID: " + requestId +
+						" and from time stamp: " + fromTimeStamp + " due to exception: " + e);
 			
-			throw new IllegalArgumentException("connectionString is an invalid argument");
+			return new ArrayList<>();
 		}
+	}
+
+	@Override
+	public List<ChatMessageImpl> get(int requestId)
+	{
+		Query query = new Query(where("requestId").is(requestId));
 		
-		this.databaseName = databaseName;
-		this.collectionName = collectionName;
-		this.connectionString = connectionString;
-	}
-	
-	@Override
-	public final void initialize()
-	{
-		this.client = com.mongodb.async.client.MongoClients.create(this.connectionString);
-		this.database = this.client.getDatabase(this.databaseName);
-		this.chatCollection = this.database.getCollection(this.collectionName);
-	}
-	
-	@Override
-	public final void terminate()
-	{
-		this.client.close();
-	}
-
-	@Override
-	public Set<ChatMessageImpl> get(int requestForQuoteId,
-			int fromThisSequenceId)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<ChatMessageImpl> get(int requestForQuoteId)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void save(ChatMessageImpl message)
-	{
-		Document doc = new Document("content", message.getContent())
-        .append("sequenceId", message.getSequenceId())
-        .append("requestId", message.getRequestId())
-        .append("timestamp", message.getTimeStamp())
-        .append("owner", message.getOwner().getUserId())
-		.append("recipients", message.getRecipients());
-		
-		this.chatCollection.insertOne(doc, (Void result, final Throwable t) ->
+		try
 		{
-			if(logger.isDebugEnabled())
-			{
-				logger.debug("inserted" + message);
-			}
-		});
+			return this.chatMongoDBTemplate.find(query, ChatMessageImpl.class, this.collectionName);
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to get chat messages with request ID: " + requestId + " due to exception: " + e);
+			
+			return new ArrayList<>();
+		}
+	}
+
+	@Override
+	public boolean insert(ChatMessageImpl message)
+	{
+		try
+		{
+			this.chatMongoDBTemplate.insert(message, this.collectionName);
+			
+			return true;
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to insert chat message: " + message + " due to exception: " + e);
+			
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean delete(int requestId)
+	{
+		Query query = new Query(where("requestId").is(requestId));
+		
+		try
+		{
+			this.chatMongoDBTemplate.remove(query, ChatMessageImpl.class, this.collectionName);
+			
+			return true;
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to delete chat messages with request ID: " + requestId + " due to exception: " + e);
+			
+			return false;
+		}
+	}
+	
+	@Override
+	public boolean delete(int requestId, LocalDateTime timeStamp)
+	{
+		Query query = new Query(where("requestId").is(requestId))
+		.addCriteria(where("timeStamp").is(timeStamp));
+		
+		try
+		{
+			this.chatMongoDBTemplate.remove(query, ChatMessageImpl.class, this.collectionName);
+			
+			return true;
+		}
+		catch(Exception e)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("Failed to delete chat messages with request ID: " + requestId + " and timestamp: "
+						+ timeStamp + " due to exception: " + e);
+			
+			return false;
+		}
 	}
 }

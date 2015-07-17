@@ -1,19 +1,22 @@
 package com.leon.rfq.repositories;
 
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import com.leon.rfq.domains.ChatMessageImpl;
 
 
 public interface ChatDao
 {
-	Set<ChatMessageImpl> get(int requestForQuoteId, int fromThisSequenceId);
+	List<ChatMessageImpl> get(int requestId, LocalDateTime fromTimestamp);
 	
-	Set<ChatMessageImpl> get(int requestForQuoteId);
+	List<ChatMessageImpl> get(int requestId);
+	
+	boolean insert(ChatMessageImpl message);
+	
+	boolean delete(int requestId);
 
-	void save(ChatMessageImpl message);
+	boolean delete(int requestId, LocalDateTime fromTimeStamp);
 
 	void initialize();
-
-	void terminate();
 }

@@ -4,53 +4,61 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.data.annotation.Id;
+
 public final class ChatMessageImpl
 {
-	private final UserDetailImpl owner;
-	private final Set<UserDetailImpl> recipients;
+	private final String owner;
+	private final Set<String> recipients;
 	private final String content;
 	private final LocalDateTime timeStamp;
-	private static long sequenceId = 0L;
 	private final int requestId;
+	
+	@Id
+	private String id;
 
-	public ChatMessageImpl(UserDetailImpl sender, Set<UserDetailImpl> recipients, String content, int requestId)
+	public ChatMessageImpl(String owner, Set<String> recipients, String content, int requestId)
 	{
-		this.owner = sender;
+		this.owner = owner;
 		this.recipients = new HashSet<>(recipients);
 		this.content = content;
 		this.timeStamp = LocalDateTime.now();
 		this.requestId = requestId;
-		++sequenceId;
 	}
-			
-	public UserDetailImpl getOwner()
+
+	public String getOwner()
 	{
 		return this.owner;
 	}
 
-	public Set<UserDetailImpl> getRecipients()
+
+	public Set<String> getRecipients()
 	{
-		return new HashSet<>(this.recipients);
+		return this.recipients;
 	}
+
 
 	public String getContent()
 	{
 		return this.content;
 	}
 
+
 	public LocalDateTime getTimeStamp()
 	{
 		return this.timeStamp;
 	}
 
-	public long getSequenceId()
-	{
-		return sequenceId;
-	}
 
 	public int getRequestId()
 	{
 		return this.requestId;
+	}
+
+
+	public String getId()
+	{
+		return this.id;
 	}
 
 	@Override
@@ -65,10 +73,10 @@ public final class ChatMessageImpl
 		builder.append(this.content);
 		builder.append(", timeStamp=");
 		builder.append(this.timeStamp);
-		builder.append(", sequenceId=");
-		builder.append(sequenceId);
 		builder.append(", requestId=");
 		builder.append(this.requestId);
+		builder.append(", id=");
+		builder.append(this.id);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -79,10 +87,13 @@ public final class ChatMessageImpl
 		final int prime = 31;
 		int result = 1;
 		result = (prime * result) + ((this.content == null) ? 0 : this.content.hashCode());
+		result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
 		result = (prime * result) + ((this.owner == null) ? 0 : this.owner.hashCode());
-		result = (prime * result)	+ ((this.recipients == null) ? 0 : this.recipients.hashCode());
-		result = (prime * result)	+ ((this.timeStamp == null) ? 0 : this.timeStamp.hashCode());
+		result = (prime * result)
+				+ ((this.recipients == null) ? 0 : this.recipients.hashCode());
 		result = (prime * result) + this.requestId;
+		result = (prime * result)
+				+ ((this.timeStamp == null) ? 0 : this.timeStamp.hashCode());
 		return result;
 	}
 
@@ -109,6 +120,16 @@ public final class ChatMessageImpl
 				return false;
 			}
 		} else if (!this.content.equals(other.content))
+		{
+			return false;
+		}
+		if (this.id == null)
+		{
+			if (other.id != null)
+			{
+				return false;
+			}
+		} else if (!this.id.equals(other.id))
 		{
 			return false;
 		}
@@ -148,4 +169,5 @@ public final class ChatMessageImpl
 		}
 		return true;
 	}
+	
 }

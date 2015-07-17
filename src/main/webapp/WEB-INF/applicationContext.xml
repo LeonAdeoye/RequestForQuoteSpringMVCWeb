@@ -2,6 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"	
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans 
@@ -9,7 +10,16 @@
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-4.0.xsd
 		http://www.springframework.org/schema/mvc
-        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+        http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+        http://www.springframework.org/schema/data/mongo 
+        http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+        
+    <mongo:mongo host="localhost" port="27017"/>
+    
+	<bean id="chatMongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+	    <constructor-arg name="mongo" ref="mongo" />
+	    <constructor-arg name="databaseName" value="rfq_dev" />
+	</bean>
         
     <mvc:annotation-driven validator="validator"/>
     
@@ -34,6 +44,11 @@
       	<property name="suffix" value=".jsp" />
 	</bean>
 	
+	<!-- TODO -->
+	<!--<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+		<property name="prettyPrint" value="true"/>
+	</bean>-->
+		
  	<bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
 		<property name="defaultViews">
 			<list>
@@ -50,19 +65,13 @@
 	<context:component-scan base-package="com.leon.rfq.products" />
 	<context:component-scan base-package="com.leon.rfq.simulators" />
 
-	<bean id="chatDaoImpl" class="com.leon.rfq.repositories.ChatDaoImpl" init-method="initialize" destroy-method="terminate">
-		<constructor-arg value="rfq_dev"/>
-		<constructor-arg value="chat"/>
-		<constructor-arg value="mongodb://localhost:27017"/>
+ 	<bean id="chatDaoImpl" class="com.leon.rfq.repositories.ChatDaoImpl" init-method="initialize">
+		<constructor-arg name="collectionName" value="chat_messages"/>
 	</bean>
 
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
 	</bean>
-	
-<!-- 	<bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-		<property name="prettyPrint" value="true"/>
-	</bean> -->
 	
 	<bean id="xmlView" class="org.springframework.web.servlet.view.xml.MarshallingView">
 		<constructor-arg>
@@ -78,6 +87,7 @@
 						<value>com.leon.rfq.domains.RequestDetailImpl</value>
 						<value>com.leon.rfq.domains.OptionDetailImpl</value>
 						<value>com.leon.rfq.domains.SearchCriterionImpl</value>
+						<value>com.leon.rfq.domains.ChatMessageImpl</value>
 					</list>
 				</property>
 			</bean>

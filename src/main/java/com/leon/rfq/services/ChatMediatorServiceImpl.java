@@ -1,26 +1,33 @@
 package com.leon.rfq.services;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.leon.rfq.domains.ChatMessageImpl;
 import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.repositories.ChatDao;
 
+@Service
 public final class ChatMediatorServiceImpl implements ChatMediatorService
 {
 	private static final Logger logger = LoggerFactory.getLogger(ChatMediatorServiceImpl.class);
 	private final Map<Integer, Set<UserDetailImpl>> chatRooms = new ConcurrentSkipListMap<>();
 	
 	@Autowired(required=true)
-	private final ChatDao chatDao;
+	private ChatDao chatDao;
+	
+	public ChatMediatorServiceImpl() {}
 
 	public ChatMediatorServiceImpl(ChatDao chatDao)
 	{
@@ -36,7 +43,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public boolean sendMessage(int requestForQuoteId, UserDetailImpl sender, String content)
+	public boolean sendMessage(int requestId, UserDetailImpl sender, String content)
 	{
 		if((sender == null))
 		{
@@ -60,15 +67,17 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		{
 			lock.lock();
 			
-			Set<UserDetailImpl> recipients = this.chatRooms.get(requestForQuoteId);
-			ChatMessageImpl message = new ChatMessageImpl(sender, recipients, content, requestForQuoteId);
+			Set<UserDetailImpl> recipients = this.chatRooms.get(requestId);
+			
+			Set<String> recipientIds = this.chatRooms.get(requestId).stream()
+					.map(UserDetailImpl::getUserId).collect(Collectors.toSet());
+			
+			ChatMessageImpl message = new ChatMessageImpl(sender.getUserId(), recipientIds, content, requestId);
 			
 			recipients.stream().filter(recipient -> !recipient.equals(sender))
 				.forEach(recipient -> recipient.receive(message));
 			
-			this.chatDao.save(message);
-			
-			return true;
+			return this.chatDao.insert(message);
 		}
 		finally
 		{
@@ -77,7 +86,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public void registerParticipant(int requestForQuoteId, UserDetailImpl participant)
+	public void registerParticipant(int requestId, UserDetailImpl participant)
 	{
 		if(participant == null)
 		{
@@ -87,9 +96,9 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 			throw new NullPointerException("participant is an invalid argument");
 		}
 
-		if(this.chatRooms.containsKey(requestForQuoteId))
+		if(this.chatRooms.containsKey(requestId))
 		{
-			Set<UserDetailImpl> participants = this.chatRooms.get(requestForQuoteId);
+			Set<UserDetailImpl> participants = this.chatRooms.get(requestId);
 			
 			if(!participants.contains(participant))
 				participants.add(participant);
@@ -99,12 +108,12 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 			Set<UserDetailImpl> participants = new HashSet<>();
 			participants.add(participant);
 			
-			this.chatRooms.put(requestForQuoteId, participants);
+			this.chatRooms.put(requestId, participants);
 		}
 	}
 
 	@Override
-	public boolean isParticipantRegistered(int requestForQuoteId, UserDetailImpl participant)
+	public boolean isParticipantRegistered(int requestId, UserDetailImpl participant)
 	{
 		if(participant == null)
 		{
@@ -120,8 +129,8 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		{
 			lock.lock();
 			
-			if(this.chatRooms.containsKey(requestForQuoteId))
-				return this.chatRooms.get(requestForQuoteId).contains(participant);
+			if(this.chatRooms.containsKey(requestId))
+				return this.chatRooms.get(requestId).contains(participant);
 			
 			return false;
 		}
@@ -132,13 +141,13 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public Set<ChatMessageImpl> getChatMessages(int requestForQuoteId, int fromThisSequenceId)
+	public List<ChatMessageImpl> getChatMessages(int requestId, LocalDateTime fromTimeStamp)
 	{
-		return this.chatDao.get(requestForQuoteId, fromThisSequenceId);
+		return this.chatDao.get(requestId, fromTimeStamp);
 	}
 
 	@Override
-	public boolean unregisterParticipant(int requestForQuoteId, UserDetailImpl participant)
+	public boolean unregisterParticipant(int requestId, UserDetailImpl participant)
 	{
 		if(participant == null)
 		{
@@ -154,8 +163,8 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		{
 			lock.lock();
 			
-			if(this.chatRooms.containsKey(requestForQuoteId))
-				return this.chatRooms.get(requestForQuoteId).remove(participant);
+			if(this.chatRooms.containsKey(requestId))
+				return this.chatRooms.get(requestId).remove(participant);
 					
 			return false;
 		}
@@ -170,7 +179,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		return this.chatRooms.size();
 	}
 
-	public int getChatRoomSize(int requestForQuoteId)
+	public int getChatRoomSize(int requestId)
 	{
 		ReentrantLock lock = new ReentrantLock();
 		
@@ -178,8 +187,8 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		{
 			lock.lock();
 			
-			if(this.chatRooms.containsKey(requestForQuoteId))
-				return this.chatRooms.get(requestForQuoteId).size();
+			if(this.chatRooms.containsKey(requestId))
+				return this.chatRooms.get(requestId).size();
 	
 			return 0;
 		}
