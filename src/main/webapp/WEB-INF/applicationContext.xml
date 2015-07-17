@@ -50,6 +50,12 @@
 	<context:component-scan base-package="com.leon.rfq.products" />
 	<context:component-scan base-package="com.leon.rfq.simulators" />
 
+	<bean id="chatDaoImpl" class="com.leon.rfq.repositories.ChatDaoImpl" init-method="initialize" destroy-method="terminate">
+		<constructor-arg value="rfq_dev"/>
+		<constructor-arg value="chat"/>
+		<constructor-arg value="mongodb://localhost:27017"/>
+	</bean>
+
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="en" />
 	</bean>

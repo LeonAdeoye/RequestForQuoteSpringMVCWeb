@@ -2,9 +2,6 @@ package com.leon.rfq.repositories;
 
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,21 +18,49 @@ public class ChatDaoImpl implements ChatDao
 	private MongoDatabase database;
 	private MongoCollection<Document> chatCollection;
 	
-	public ChatDaoImpl()
+	private final String connectionString;
+	private final String databaseName;
+	private final String collectionName;
+	
+	public ChatDaoImpl(String databaseName, String collectionName, String connectionString)
 	{
+		if((databaseName == null) || databaseName.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("databaseName is an invalid argument");
+			
+			throw new IllegalArgumentException("databaseName is an invalid argument");
+		}
 		
+		if((collectionName == null) || collectionName.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("collectionName is an invalid argument");
+			
+			throw new IllegalArgumentException("collectionName is an invalid argument");
+		}
+		
+		if((connectionString == null) || connectionString.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("connectionString is an invalid argument");
+			
+			throw new IllegalArgumentException("connectionString is an invalid argument");
+		}
+		
+		this.databaseName = databaseName;
+		this.collectionName = collectionName;
+		this.connectionString = connectionString;
 	}
 	
 	@Override
-	@PostConstruct
 	public final void initialize()
 	{
-		this.client = com.mongodb.async.client.MongoClients.create("mongodb://localhost:27017");
-		this.database = this.client.getDatabase("rfq_chat");
-		this.chatCollection = this.database.getCollection("chats");
+		this.client = com.mongodb.async.client.MongoClients.create(this.connectionString);
+		this.database = this.client.getDatabase(this.databaseName);
+		this.chatCollection = this.database.getCollection(this.collectionName);
 	}
 	
-	@PreDestroy
 	@Override
 	public final void terminate()
 	{

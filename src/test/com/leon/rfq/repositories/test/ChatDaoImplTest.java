@@ -19,7 +19,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import com.leon.rfq.domains.ChatMessageImpl;
 import com.leon.rfq.domains.UserDetailImpl;
-import com.leon.rfq.repositories.ChatDaoImpl;
+import com.leon.rfq.repositories.ChatDao;
 
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
@@ -29,6 +29,9 @@ public class ChatDaoImplTest extends AbstractJUnit4SpringContextTests
 	private DataSourceTransactionManager transactionManager;
 	
 	private TransactionStatus status;
+	
+	@Autowired(required=true)
+	private ChatDao chatDao;
 	
 	@BeforeClass
 	public static void setup()
@@ -57,10 +60,6 @@ public class ChatDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void save_Message_ShouldBeSaved()
 	{
-		// Arrange
-		ChatDaoImpl chatDaoImpl = new ChatDaoImpl();
-		chatDaoImpl.initialize();
-		
 		UserDetailImpl owner = new UserDetailImpl();
 		owner.setUserId("testSender");
 		UserDetailImpl recipient = new UserDetailImpl();
@@ -71,7 +70,7 @@ public class ChatDaoImplTest extends AbstractJUnit4SpringContextTests
 		recipients.add(recipient);
 		
 		// Act
-		chatDaoImpl.save(new ChatMessageImpl(owner, recipients, "Test message", Integer.MAX_VALUE));
+		this.chatDao.save(new ChatMessageImpl(owner, recipients, "Test message", Integer.MAX_VALUE));
 	}
 	
 }
