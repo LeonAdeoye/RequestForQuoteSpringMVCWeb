@@ -29,7 +29,8 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	
 	public ChatMediatorServiceImpl() {}
 
-	public ChatMediatorServiceImpl(ChatDao chatDao)
+	@Override
+	public void setDao(ChatDao chatDao)
 	{
 		if(chatDao == null)
 		{
@@ -154,7 +155,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 			if(logger.isErrorEnabled())
 				logger.error("participant is an invalid argument");
 			
-			throw new IllegalArgumentException("participant is an invalid argument");
+			throw new NullPointerException("participant is an invalid argument");
 		}
 		
 		ReentrantLock lock = new ReentrantLock();
