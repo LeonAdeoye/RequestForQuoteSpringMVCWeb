@@ -324,14 +324,41 @@ $(document).ready(function()
 	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
 	$(".dateTxtBox").datepicker();
 	
+	function addRequestFromDialog()
+	{
+		$("#newRequestDialog").dialog("close");
+	}
+	
 	$("#requests_add_more_button").click(function()
 	{
-		$("#newRequestDialog").dialog();
+		$("#newRequestDialog").dialog(
+		{	
+			modal : true, 
+			buttons: 
+			{ 
+				Add: addRequestFromDialog, 
+				Cancel: function()
+				{
+					$(this).dialog("close");
+				}
+			}
+		});
 	});
 	
 	$("#requests_chart_chart_btn").click(function()
 	{
-		$("#chartDialog").dialog();
+		$("#chartDialog").dialog(
+		{
+			minWidth : 700, 
+			minHeight : 600, 
+			buttons : 
+			{  
+				Cancel: function()
+				{
+					$(this).dialog("close");
+				}
+			}			
+		});
 	});	
 	
     function showLoadIndicator() 
@@ -830,7 +857,7 @@ $(document).ready(function()
         		break;
         	case "chart":
         		$("#requestsInlineChartPanel").show();
-        		return;        		
+        		break;        		
     	}
     	
     	requestsGrid.setTopPanelVisibility(true);

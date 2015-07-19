@@ -264,7 +264,7 @@
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div>
 				
-		<div id="newRequestDialog" style="display:none;">
+		<div id="newRequestDialog" title="Add new request for quote"style="display:none;">
 			<input id="dialog_requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
 			<input id="dialog_requests_strike" class="new_request" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
 			<input id="dialog_requests_maturity_date" class="new_request" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
@@ -272,8 +272,8 @@
 			<input id="dialog_requests_underlying_price" class="new_request" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
 		</div>
 		
-		<div id="chartDialog" style="width:700px; height:500px; display:none;">
-			<div id="chart_display" style="background-color:grey; width:700px; height:400px"></div>			
+		<div id="chartDialog" title="Request For Quote Chart" style="width:700px; height:600px; display:none;">
+			<div id="chart_display"></div>			
 		</div>				
 
 	</body>
