@@ -225,9 +225,10 @@
 			</div>
 			<div class="addNew" id="requests_add_new">
 				<input id="requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
+				<button id="requests_add_more_button" class="btn">...</Button>
 				<input id="requests_client" class="new_request requests_client_autocomplete" path="clientId" value="Select client name..." type="text" default_value="Select client name..." />
 				<input id="requests_bookCode" class="new_request requests_book_autocomplete" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." />
-				<button id="requests_add_button" class="btn"><spring:message code="requests.addRequest.button.label"/></Button>
+				<button id="requests_add_button" class="btn"><spring:message code="requests.addRequest.button.label"/></Button>				
 				<button id="requests_clear_button" class="btn"><spring:message code="requests.clearRequest.button.label"/></Button>																		
 				<button id="requests_filter_button" data="filter" class="btn toggleTopPanel"><spring:message code="requests.filterRequest.button.label"/></Button>
 				<button id="requests_search_button" data="search" class="btn toggleTopPanel"><spring:message code="requests.searchRequest.button.label"/></Button>
@@ -243,6 +244,18 @@
 		<div style="width:1330px;">
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div>
+				
+		<div id="newRequestDialog">
+			<input id="dialog_requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
+			<input id="dialog_requests_strike" class="new_request" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
+			<input id="dialog_requests_maturity_date" class="new_request" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
+			<input id="dialog_requests_underlying_ric" class="new_request" path="underlying_ric" value="Enter underlying RIC..." type="text" default_value="Enter underlying RIC..." />
+			<input id="dialog_requests_underlying_price" class="new_request" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
+		</div>
+		
+		<div id="chartDialog">
+			<div id="chart_display"></div>
+		</div>				
 
 	</body>
 </html>

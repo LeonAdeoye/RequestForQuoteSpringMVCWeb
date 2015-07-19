@@ -324,6 +324,11 @@ $(document).ready(function()
 	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
 	$(".dateTxtBox").datepicker();
 	
+	$("#requests_add_more_button").click(function()
+	{
+		$("#newRequestDialog").dialog();
+	});
+	
     function showLoadIndicator() 
     {
         if (!loadingIndicator) 
