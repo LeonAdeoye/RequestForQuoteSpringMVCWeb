@@ -329,6 +329,11 @@ $(document).ready(function()
 		$("#newRequestDialog").dialog();
 	});
 	
+	$("#requests_chart_chart_btn").click(function()
+	{
+		$("#chartDialog").dialog();
+	});	
+	
     function showLoadIndicator() 
     {
         if (!loadingIndicator) 
@@ -799,6 +804,7 @@ $(document).ready(function()
 		$("#requestsInlineGroupByPanel").appendTo(requestsGrid.getTopPanel());
 		$("#requestsInlineSearchPanel").appendTo(requestsGrid.getTopPanel());
 		$("#requestsInlineFilterPanel").appendTo(requestsGrid.getTopPanel());
+		$("#requestsInlineChartPanel").appendTo(requestsGrid.getTopPanel());
 	}
 	
 	appendToTopPanel();		
@@ -823,8 +829,7 @@ $(document).ready(function()
         		$("#requestsInlineFilterPanel").show();
         		break;
         	case "chart":
-        		requestsGrid.setTopPanelVisibility(false);
-        		alert("Sorry, charting operation has not yet been implemented!");
+        		$("#requestsInlineChartPanel").show();
         		return;        		
     	}
     	

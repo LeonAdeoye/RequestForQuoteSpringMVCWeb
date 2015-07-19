@@ -193,6 +193,25 @@
 		  	</div>		  			  
 		</div>
 		
+		<div id="requestsInlineChartPanel" class="inlinePanel" style="display:none;">
+			<div>
+		  		<div class="requests_configure_item">
+				  	<input type="radio" id="profitAndLossChart" name="chart.profitAndLoss" checked="checked"><label for="profitAndLossChart">Profit and loss chart</label>
+				</div>
+		  		<div class="requests_configure_item">
+				  	<input type="radio" id="deltaChart" name="chart.delta" checked="checked"><label for="deltaChart">Delta chart</label>
+				</div>
+		  		<div class="requests_configure_item">
+				  	<input type="radio" id="gammaChart" name="chart.delta" checked="checked"><label for="gammaChart">Gamma chart</label>
+				</div>								
+			</div>
+		  	<div class="requests_configure_item">
+		  		<Button id="requests_chart_chart_btn" class="btn"><spring:message code="requests.chart.chart.button.label"/></Button>
+		  		<Button id="requests_chart_clear_btn" class="btn requests_filter_search_clear_btn"><spring:message code="requests.chart.clear.button.label"/></Button>
+		  		<Button class="filter_search_close_btn hideTopPanel btn"><spring:message code="requests.close.button.label"/></Button>
+		  	</div>		  			  
+		</div>
+		
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>		
 
 		<ul id="statusContextMenu" class="contextMenu" style="display:none;position:absolute">
@@ -245,7 +264,7 @@
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div>
 				
-		<div id="newRequestDialog">
+		<div id="newRequestDialog" style="display:none;">
 			<input id="dialog_requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
 			<input id="dialog_requests_strike" class="new_request" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
 			<input id="dialog_requests_maturity_date" class="new_request" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
@@ -253,8 +272,8 @@
 			<input id="dialog_requests_underlying_price" class="new_request" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
 		</div>
 		
-		<div id="chartDialog">
-			<div id="chart_display"></div>
+		<div id="chartDialog" style="width:700px; height:500px; display:none;">
+			<div id="chart_display" style="background-color:grey; width:700px; height:400px"></div>			
 		</div>				
 
 	</body>
