@@ -1,6 +1,7 @@
 package com.leon.rfq.services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,24 +16,37 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import com.leon.rfq.common.CalculationConstants;
 import com.leon.rfq.common.EnumTypes.SideEnum;
 import com.leon.rfq.common.OptionConstants;
 import com.leon.rfq.common.TriFunction;
 import com.leon.rfq.domains.OptionDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.events.PriceUpdateEvent;
+import com.leon.rfq.products.BlackScholesModelImpl;
 import com.leon.rfq.products.PricingModel;
 import com.leon.rfq.products.RangeParameters;
 
 @Component
-public class CalculationServiceImpl implements CalculationService, ApplicationListener<PriceUpdateEvent>
+public class CalculationServiceImpl implements CalculationService
 {
 	private static final Logger logger = LoggerFactory.getLogger(CalculationServiceImpl.class);
 	
 	private CalculationServiceImpl() {}
+	
+	private static final List<String> ALL_REQUIRED_OUTPUT = new ArrayList<>(7);
+	
+	static
+	{
+		ALL_REQUIRED_OUTPUT.add(OptionConstants.PNL);
+		ALL_REQUIRED_OUTPUT.add(OptionConstants.DELTA);
+		ALL_REQUIRED_OUTPUT.add(OptionConstants.GAMMA);
+		ALL_REQUIRED_OUTPUT.add(OptionConstants.THETA);
+		ALL_REQUIRED_OUTPUT.add(OptionConstants.RHO);
+		ALL_REQUIRED_OUTPUT.add(OptionConstants.VEGA);
+		ALL_REQUIRED_OUTPUT.add(OptionConstants.THEORETICAL_VALUE);
+	}
 	
 	// TODO - should all of these methods be synchronized? Definitely NOT!!!
 	// Stage 2: Need to revisit and optimize/limit all synchronization blocks here
@@ -353,7 +367,7 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 	
 	
 	@Override
-	public synchronized Map<BigDecimal, Map<String, Optional<BigDecimal>>> calculateRange(PricingModel model,
+	public synchronized Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model,
 			Map<String, BigDecimal> inputs, RangeParameters rangeParameters)
 	{
 		if(model == null)
@@ -380,7 +394,7 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 			throw new NullPointerException("rangeParameters is an invalid argument");
 		}
 		
-		Map<BigDecimal, Map<String, Optional<BigDecimal>>> result = new TreeMap<>();
+		Map<BigDecimal, Map<String, BigDecimal>> result = new TreeMap<>();
 		
 		for(BigDecimal rangeValue = rangeParameters.getStartValue();
 				rangeValue.compareTo(rangeParameters.getEndValue()) <= 0;
@@ -394,9 +408,41 @@ public class CalculationServiceImpl implements CalculationService, ApplicationLi
 	}
 
 	@Override
-	public void onApplicationEvent(PriceUpdateEvent arg0)
+	public Map<BigDecimal, Map<String, BigDecimal>> chartData(RequestDetailImpl request)
 	{
+		Map<String, BigDecimal> inputs;
 		
+		BigDecimal increment = request.getUnderlyingPrice().divide(CalculationConstants.ONE_HUNDRED,
+				CalculationConstants.SCALE_OF_THREE, RoundingMode.HALF_UP);
+		
+		BigDecimal maximumRange = request.getUnderlyingPrice().multiply(CalculationConstants.TWO);
+		
+		BigDecimal minimumRange = BigDecimal.ZERO.add(increment);
+				
+		RangeParameters rangeParameters = new RangeParameters(minimumRange, maximumRange,
+				increment, OptionConstants.UNDERLYING_PRICE, ALL_REQUIRED_OUTPUT);
+		
+		PricingModel model = new BlackScholesModelImpl();
+		
+		Map<BigDecimal, Map<String, BigDecimal>> rangeResult = new HashMap<>();
+		
+		for(OptionDetailImpl leg : request.getLegs())
+		{
+			model = new BlackScholesModelImpl();
+			inputs = extractModelInputs(leg);
+			model.configure(inputs);
+			//aggregate(rangeResult, calculateRange(model, inputs, rangeParameters));
+			return calculateRange(model, inputs, rangeParameters);
+			//return rangeResult;
+		}
+		
+		return rangeResult;
+	}
+
+	private void aggregate(	Map<BigDecimal, Map<String, BigDecimal>> rangeResult,
+			Map<BigDecimal, Map<String, BigDecimal>> calculatedRange)
+	{
+		rangeResult = calculatedRange;
 	}
 }
 

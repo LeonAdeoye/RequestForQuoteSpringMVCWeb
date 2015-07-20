@@ -1,0 +1,53 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+		
+		<script type="text/javascript" src="../../resources/cupertino/js/jquery-2.1.3.min.js" /></script>
+		<script type="text/javascript" src="../../resources/cupertino/js/jquery-ui.min.js" /></script>				
+		<script type="text/javascript" src="../../resources/cupertino/js/jquery.browser.min.js" /></script>
+	</head>
+	<body>				
+		<div id="newRequestDialog" title="Add new request for quote"style="display:none;">
+			<input id="dialog_requests_snippet" class="new-requests-dialog new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
+			<input id="dialog_requests_strike" class="new-requests-dialog new_request" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
+		</div>
+		
+		<Button id="clone-btn">Clone</Button>
+		
+		<div class="chart-to-clone" title="Request For Quote Chart" style="width:100px; height:200px; background:grey; display:none;">
+			<ul>
+				<li><a href="#pnl">PnL</a></li>
+				<li><a href="#delta">Delta</a></li>
+				<li><a href="#gamma">Gamma</a></li>
+				<li><a href="#vega">Vega</a></li>
+				<li><a href="#theta">Theta</a></li>
+				<li><a href="#rho">Rho</a></li>
+			</ul>
+			<div id="pnl"></div>
+			<div id="delta"></div>
+			<div id="gamma"></div>
+			<div id="vega"></div>
+			<div id="theta"></div>
+			<div id="rho"></div>
+		</div>		
+				
+	</body>
+	<script type="text/javascript">
+		var dynamicChartDialogOptions = 
+		{
+			minWidth : 100, 
+			minHeight : 200,
+			beforeClose: function()
+			{
+				$(this).remove();
+			}			
+		};
+		
+		var chartCount = 0;
+		$("#clone-btn").click(function()
+		{
+			var newChartId = "dynamic-chart-" + chartCount++;
+			$(".chart-to-clone").clone().attr("id", newChartId).removeClass("chart-to-clone").tabs().dialog(dynamicChartDialogOptions);
+		});
+	</script>
+</html>

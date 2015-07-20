@@ -31,6 +31,9 @@
 		
 		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>
+		
+<%-- 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  		<script type="text/javascript" src="<c:url value="/resources/js/lineChart.js" />"></script> --%>		
 						
 		<script type="text/javascript">
 			var contextPath='<%=request.getContextPath()%>' /* needed for all ajax calls */			
@@ -264,7 +267,7 @@
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div
 				
-		<div id="newRequestDialog" title="Add new request for quote"style="display:none;">
+		<div id="new-request-dialog-parent" title="Add new request for quote" style="display:none;" >
 			<input id="dialog_requests_snippet" class="new-requests-dialog new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
 			<input id="dialog_requests_strike" class="new-requests-dialog new_request" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
 			<input id="dialog_requests_maturity_date" class="new-requests-dialog new_request" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
@@ -272,7 +275,25 @@
 			<input id="dialog_requests_underlying_price" class="new-requests-dialog new_request" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
 		</div>
 		
-		<div class="chart-to-clone" title="Request For Quote Chart" style="width:700px; height:600px; display:none;">		
+		<div class="chart-to-clone" title="Request For Quote Chart"> 
+			<div class="chart-content" >
+				<ul>
+					<li><a href="#pnl">PnL</a></li>
+					<li><a href="#delta">Delta</a></li>
+					<li><a href="#gamma">Gamma</a></li>
+					<li><a href="#vega">Vega</a></li>
+					<li><a href="#theta">Theta</a></li>
+					<li><a href="#rho">Rho</a></li>
+				</ul>
+				<div id="pnl">
+					<div id="linechart_material"></div>
+				</div>
+				<div id="delta"></div>
+				<div id="gamma"></div>
+				<div id="vega"></div>
+				<div id="theta"></div>
+				<div id="rho"></div>
+			</div				
 		</div>
 
 	</body>

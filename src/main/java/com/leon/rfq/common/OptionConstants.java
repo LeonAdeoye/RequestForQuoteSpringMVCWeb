@@ -2,6 +2,7 @@ package com.leon.rfq.common;
 
 public final class OptionConstants
 {
+	public static final String PNL = "PROFIT_AND_LOSS";
 	public static final String DELTA = "DELTA";
 	public static final String GAMMA = "GAMMA";
 	public static final String VEGA = "VEGA";

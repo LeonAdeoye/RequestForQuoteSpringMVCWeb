@@ -328,12 +328,12 @@ $(document).ready(function()
 	
 	function addRequestFromDialog()
 	{
-		$("#newRequestDialog").dialog("close");
+		$("#new-request-dialog-parent").dialog("close");
 	}
 	
 	$("#requests_add_more_button").click(function()
 	{
-		$("#newRequestDialog").dialog(
+		$("#new-request-dialog-parent").dialog(
 		{	
 			modal : true, 
 			buttons: 
@@ -343,7 +343,11 @@ $(document).ready(function()
 				Cancel: function()
 				{
 					$(this).dialog("close");
-				}
+				},
+				Clear: function()
+				{
+					alert("not yet supported");
+				}		
 			}
 		});
 	});
@@ -370,11 +374,19 @@ $(document).ready(function()
     {    	
     	if(requestId !== undefined)
 		{
-    		var newChartId = "dynamic-chart-" + chartCount++;
-    		$(".chart-to-clone").clone().attr("id", newChartId)
+    		showLoadIndicator();
+    		
+    		ajaxGetChartData(requestId);
+    		
+    		var dynamicChartId = "dynamic-chart-" + chartCount++;
+    		$(".chart-to-clone").clone().attr("id", dynamicChartId)
     			.removeClass("chart-to-clone")
     			.attr("title", "Chart for request for quote: " + requestId)
     			.dialog(dynamicChartDialogOptions);
+    		
+    		$("#" + dynamicChartId).children(".chart-content").tabs({heightStyle: "fill", event: "mouseover"});
+    		
+    		loadingIndicator.fadeOut();
 		}		
     }	
 		
@@ -524,6 +536,44 @@ $(document).ready(function()
 		
 		dataView.endUpdate();
 		requestsGrid.render();
+	}
+	
+	function processChartData(requestId, chartData)
+	{
+		
+	}
+	
+	function ajaxGetChartData(requestId)
+	{
+		$.ajax(
+		{
+		    url: contextPath + "/requests/ajaxGetChartData", 
+		    type: 'POST',
+		    data: JSON.stringify(requestId),
+		    dataType: 'json',  
+		    contentType: 'application/json', 
+		    mimeType: 'application/json',
+		    timeout: 300000,
+		    cache: false,
+		    success: function(chartData) 
+		    {
+		    	if(chartData)
+		    		processChartData(requestId, chartData);
+		    },
+	        error: function (xhr, textStatus, errorThrown) 
+	        {
+	        	if(textStatus != "timeout")
+        		{
+	        		if(xhr.status == 404) 
+	        			alert('Failed to get chart data because the server is no longer available. Please try to reload the page.');
+	        		else
+	        			alert('Failed to get chart data for request: ' + requestId + ' because of a server error.');   
+        		}
+	        	else
+	        		alert('Failed to get chart data because of a timeout after five seconds');
+	        }
+		});		
+		
 	}
 	
 	$("#requests_add_button").click(function(event)

@@ -53,8 +53,8 @@ public class BlackScholesModelImpl implements PricingModel
         public void calculateSeedValues()
         {
         	this.piCalcVal = BigDecimal.ONE.divide(squareRoot(TWO.multiply(BigDecimal.valueOf(Math.PI))), this.scale, RoundingMode.HALF_UP);
-        	this.timeToExpirySquareRoot = squareRoot(this.timeToExpiryInYears);
-        	this.expInterestRate = BigDecimal.valueOf(Math.exp((negate(this.interestRate).multiply(this.timeToExpiryInYears)).doubleValue()));
+        	this.timeToExpirySquareRoot = scale(squareRoot(this.timeToExpiryInYears));
+        	this.expInterestRate = scale(BigDecimal.valueOf(Math.exp((negate(this.interestRate).multiply(this.timeToExpiryInYears)).doubleValue())));
         	BigDecimal logCalc = BigDecimal.valueOf(Math.log(this.underlyingPrice.divide(this.strike, this.scale, RoundingMode.HALF_UP).doubleValue()));
         	BigDecimal volSq = this.volatility.multiply(this.timeToExpirySquareRoot);
         	BigDecimal volPow = this.volatility.pow(2).divide(TWO, this.scale, RoundingMode.HALF_UP);
@@ -75,6 +75,8 @@ public class BlackScholesModelImpl implements PricingModel
                        
         private BigDecimal calculateTheoreticalValue() throws Exception
         {
+        	this.theoreticalValue = BigDecimal.ZERO;
+        	
             if (this.isCallOption)
             	this.theoreticalValue = scale(this.underlyingPrice.multiply(cummulativeNormalDensity(this.d1))
             	.subtract(this.strike.multiply(this.expInterestRate.multiply(cummulativeNormalDensity(this.d2)))));
@@ -87,6 +89,8 @@ public class BlackScholesModelImpl implements PricingModel
        
         private BigDecimal calculateDelta() throws Exception
         {
+        	this.delta = BigDecimal.ZERO;
+        	
         	this.delta = scale(this.isCallOption ? cummulativeNormalDensity(this.d1) : negate(cummulativeNormalDensity(negate(this.d1))));
         	
         	return this.delta;
@@ -94,6 +98,8 @@ public class BlackScholesModelImpl implements PricingModel
        
         private BigDecimal calculateGamma() throws Exception
         {
+        	this.gamma = BigDecimal.ZERO;
+        	
         	this.gamma = normalDensity(this.d1).divide(this.underlyingPrice.multiply(this.volatility)
         			.multiply(this.timeToExpirySquareRoot), this.scale, RoundingMode.HALF_UP);
         	
@@ -102,6 +108,8 @@ public class BlackScholesModelImpl implements PricingModel
        
         private BigDecimal calculateVega() throws Exception
         {
+        	this.vega = BigDecimal.ZERO;
+        	
         	this.vega = (normalDensity(this.d1).multiply(this.underlyingPrice
         			.multiply(this.timeToExpirySquareRoot)).divide(HUNDRED, this.scale, RoundingMode.HALF_UP));
         	
@@ -110,6 +118,8 @@ public class BlackScholesModelImpl implements PricingModel
        
         private BigDecimal calculateTheta() throws Exception
         {
+        	this.theta = BigDecimal.ZERO;
+        	
             BigDecimal left = negate((this.underlyingPrice
             		.multiply(this.volatility).multiply(normalDensity(this.d1)))
             		.divide(TWO.multiply(this.timeToExpirySquareRoot), this.scale, RoundingMode.HALF_UP));
@@ -127,6 +137,8 @@ public class BlackScholesModelImpl implements PricingModel
        
         private BigDecimal calculateRho() throws Exception
         {
+        	this.rho = BigDecimal.ZERO;
+        	
             if (this.isCallOption)
             	this.rho = this.timeToExpiryInYears.multiply(this.strike).multiply(this.expInterestRate)
             		.multiply(cummulativeNormalDensity(this.d2)).divide(HUNDRED, this.scale, RoundingMode.HALF_UP);
@@ -139,6 +151,8 @@ public class BlackScholesModelImpl implements PricingModel
         
         private BigDecimal calculateLambda() throws Exception
         {
+        	this.lambda = BigDecimal.ZERO;
+        	
         	this.lambda = this.underlyingPrice.multiply(this.delta).divide(this.theoreticalValue, this.scale, RoundingMode.HALF_DOWN);
         	
         	return this.lambda;
@@ -152,7 +166,7 @@ public class BlackScholesModelImpl implements PricingModel
         
         public static BigDecimal calculateIntrinsicValue(boolean isCallOption, BigDecimal underlyingPrice, BigDecimal strike)
         {
-        	BigDecimal intrinsicValue;
+        	BigDecimal intrinsicValue = BigDecimal.ZERO;
         	intrinsicValue = isCallOption ? underlyingPrice.subtract(strike) : strike.subtract(underlyingPrice);
         	intrinsicValue = intrinsicValue.compareTo(BigDecimal.ZERO) > 0 ? intrinsicValue : BigDecimal.ZERO;
         	
@@ -161,6 +175,8 @@ public class BlackScholesModelImpl implements PricingModel
         
         private BigDecimal calculateTimeValue() throws Exception
         {
+        	this.timeValue = BigDecimal.ZERO;
+        	
         	this.timeValue = calculateTheoreticalValue().subtract(calculateIntrinsicValue());
         	this.timeValue =  scale(this.timeValue.compareTo(BigDecimal.ZERO) > 0 ? this.timeValue : BigDecimal.ZERO);
         	
@@ -282,11 +298,11 @@ public class BlackScholesModelImpl implements PricingModel
 		
 
 		@Override
-		public Map<String, Optional<BigDecimal>> calculate(List<String> listOfRequiredOutputs)
+		public Map<String, BigDecimal> calculate(List<String> listOfRequiredOutputs)
 		{
 			try
 			{
-				Map<String, Optional<BigDecimal>> result = new HashMap<>();
+				Map<String, BigDecimal> result = new HashMap<>();
 				
 				calculateSeedValues();
 				
@@ -295,31 +311,31 @@ public class BlackScholesModelImpl implements PricingModel
 					switch(requiredOutput)
 					{
 						case OptionConstants.THEORETICAL_VALUE:
-							result.put(OptionConstants.THEORETICAL_VALUE, Optional.ofNullable(calculateTheoreticalValue()));
+							result.put(OptionConstants.THEORETICAL_VALUE, calculateTheoreticalValue());
 							continue;
 						case OptionConstants.INTRINSIC_VALUE:
-							result.put(OptionConstants.INTRINSIC_VALUE, Optional.ofNullable(calculateIntrinsicValue()));
+							result.put(OptionConstants.INTRINSIC_VALUE, calculateIntrinsicValue());
 							continue;
 						case OptionConstants.TIME_VALUE:
-							result.put(OptionConstants.TIME_VALUE, Optional.ofNullable(calculateTimeValue()));
+							result.put(OptionConstants.TIME_VALUE, calculateTimeValue());
 							continue;
 						case OptionConstants.DELTA:
-							result.put(OptionConstants.DELTA, Optional.ofNullable(calculateDelta()));
+							result.put(OptionConstants.DELTA, calculateDelta());
 							continue;
 						case OptionConstants.GAMMA:
-							result.put(OptionConstants.GAMMA, Optional.ofNullable(calculateGamma()));
+							result.put(OptionConstants.GAMMA, calculateGamma());
 							continue;
 						case OptionConstants.VEGA:
-							result.put(OptionConstants.VEGA, Optional.ofNullable(calculateVega()));
+							result.put(OptionConstants.VEGA, calculateVega());
 							continue;
 						case OptionConstants.THETA:
-							result.put(OptionConstants.THETA, Optional.ofNullable(calculateTheta()));
+							result.put(OptionConstants.THETA, calculateTheta());
 							continue;
 						case OptionConstants.RHO:
-							result.put(OptionConstants.RHO, Optional.ofNullable(calculateRho()));
+							result.put(OptionConstants.RHO, calculateRho());
 							continue;
 						case OptionConstants.LAMBDA:
-							result.put(OptionConstants.LAMBDA, Optional.ofNullable(calculateLambda()));
+							result.put(OptionConstants.LAMBDA, calculateLambda());
 							continue;
 					}
 				}
@@ -331,7 +347,7 @@ public class BlackScholesModelImpl implements PricingModel
 				logger.isErrorEnabled();
 					logger.error("Failed to complete Black and Scholes calculation using following inputs: " + this);
 				
-				return new HashMap<String, Optional<BigDecimal>>();
+				return new HashMap<String, BigDecimal>();
 			}
 		}
 

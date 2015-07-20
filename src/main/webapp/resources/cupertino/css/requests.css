@@ -216,8 +216,15 @@ fieldset
 
 .new-requests-dialog
 {
-	padding:2px;
-	border:1px;
-	margin:3px;
-	width:200px;
-}	
+	padding: 2px;
+	border: 1px;
+	margin: 3px;
+	width: 200px;
+}
+
+.chart-to-clone
+{
+	width: 600px; 
+	height: 500px;
+	display: none;
+}

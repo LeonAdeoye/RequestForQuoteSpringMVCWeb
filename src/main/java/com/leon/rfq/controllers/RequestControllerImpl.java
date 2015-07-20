@@ -34,6 +34,7 @@ import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
 import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.services.BookService;
+import com.leon.rfq.services.CalculationService;
 import com.leon.rfq.services.ClientService;
 import com.leon.rfq.services.RequestService;
 import com.leon.rfq.validators.RequestValidatorImpl;
@@ -51,6 +52,9 @@ public class RequestControllerImpl
 	
 	@Autowired(required=true)
 	ClientService clientService;
+	
+	@Autowired(required=true)
+	private CalculationService calculationService;
 	
 	@Autowired(required=true)
 	private RequestValidatorImpl requestValidator;
@@ -260,9 +264,18 @@ public class RequestControllerImpl
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object search(@RequestBody Set<SearchCriterionImpl> criteria)
 	{
-		if(logger.isDebugEnabled())
-			logger.debug("Received search request: " + criteria);
 		
 		return this.requestService.search(criteria);
+	}
+	
+	@RequestMapping(value = "requests/ajaxGetChartData", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object ajaxGetChartData(@RequestBody int requestId)
+	{
+		if(logger.isDebugEnabled())
+			logger.debug("Received chart data for request ID: " + requestId);
+		
+		return this.calculationService.chartData(this.requestService.get(requestId));
 	}
 }

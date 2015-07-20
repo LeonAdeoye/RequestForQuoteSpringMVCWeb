@@ -27,7 +27,7 @@ public interface CalculationService
 
 	void extractModelOutputs(Map<String, Optional<BigDecimal>> outputs,	OptionDetailImpl leg);
 
-	Map<BigDecimal, Map<String, Optional<BigDecimal>>> calculateRange(
+	Map<BigDecimal, Map<String, BigDecimal>> calculateRange(
 			PricingModel model, Map<String, BigDecimal> inputs,	RangeParameters rangeParameters);
 
 	void calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request);
@@ -36,4 +36,6 @@ public interface CalculationService
 			SortedSet<BigDecimal> pointsOfInterest, String input, String output,
 			TriFunction<OptionDetailImpl, BigDecimal, BigDecimal, BigDecimal> sideAggregator,
 			Function<BigDecimal, BigDecimal> massageFunction);
+
+	Map<BigDecimal, Map<String, BigDecimal>> chartData(RequestDetailImpl request);
 }
