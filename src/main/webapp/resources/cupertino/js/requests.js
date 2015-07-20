@@ -284,6 +284,8 @@ $(document).ready(function()
 	var priceUpdateTimeout = 5000;
 	var statusUpdateTimeout = 5000;
 	
+	var chartCount = 0;
+	
 	var loadingIndicator = null;
 
 	var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
@@ -336,7 +338,8 @@ $(document).ready(function()
 			modal : true, 
 			buttons: 
 			{ 
-				Add: addRequestFromDialog, 
+				Add: addRequestFromDialog,
+			    resizable: false,
 				Cancel: function()
 				{
 					$(this).dialog("close");
@@ -345,20 +348,39 @@ $(document).ready(function()
 		});
 	});
 	
+	var chartDialogOptions = 
+	{
+		minWidth : 700, 
+		minHeight : 600,
+	    resizable: false			
+	};
+	
+	var dynamicChartDialogOptions = 
+	{
+		minWidth : 700, 
+		minHeight : 600,
+	    resizable: false,
+		beforeClose: function()
+		{
+			$(this).remove();
+		}			
+	};
+	
+    function createChartDialog(requestId)
+    {    	
+    	if(requestId !== undefined)
+		{
+    		var newChartId = "dynamic-chart-" + chartCount++;
+    		$(".chart-to-clone").clone().attr("id", newChartId)
+    			.removeClass("chart-to-clone")
+    			.attr("title", "Chart for request for quote: " + requestId)
+    			.dialog(dynamicChartDialogOptions);
+		}		
+    }	
+		
 	$("#requests_chart_chart_btn").click(function()
 	{
-		$("#chartDialog").dialog(
-		{
-			minWidth : 700, 
-			minHeight : 600, 
-			buttons : 
-			{  
-				Cancel: function()
-				{
-					$(this).dialog("close");
-				}
-			}			
-		});
+		createChartDialog();
 	});	
 	
     function showLoadIndicator() 
@@ -1411,7 +1433,10 @@ $(document).ready(function()
     	{
         	case "PICKED_UP":
         		ajaxSendStatusUpdate(row, "PICKED_UP");	
-        		break; 
+        		break;
+        	case "CHART":
+        		createChartDialog(dataView.getItem(row).identifier);
+        		break;        		
         	default: 
         		alert("Sorry, this operation is yet to be supported!");
     	}    	

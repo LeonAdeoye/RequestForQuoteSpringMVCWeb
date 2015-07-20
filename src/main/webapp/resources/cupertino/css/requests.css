@@ -203,3 +203,21 @@ fieldset
 	font-weight: bolder;
 	padding: 0px;
 }
+
+.ui-dialog.ui-widget-content
+{
+	background: rgb(215,215,215);
+}
+
+.ui-dialog-buttonpane.ui-widget-content
+{
+	background: rgb(215,215,215);
+}
+
+.new-requests-dialog
+{
+	padding:2px;
+	border:1px;
+	margin:3px;
+	width:200px;
+}	
