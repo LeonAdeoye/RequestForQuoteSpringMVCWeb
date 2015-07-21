@@ -3,13 +3,12 @@ package com.leon.rfq.services;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.SortedSet;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -35,7 +34,9 @@ public class CalculationServiceImpl implements CalculationService
 	
 	private CalculationServiceImpl() {}
 	
-	private static final List<String> ALL_REQUIRED_OUTPUT = new ArrayList<>(7);
+	private static final int ALL_REQUIRED_OUTPUT_COUNT = 7;
+	
+	private static final List<String> ALL_REQUIRED_OUTPUT = new ArrayList<>(ALL_REQUIRED_OUTPUT_COUNT);
 	
 	static
 	{
@@ -51,7 +52,7 @@ public class CalculationServiceImpl implements CalculationService
 	// TODO - should all of these methods be synchronized? Definitely NOT!!!
 	// Stage 2: Need to revisit and optimize/limit all synchronization blocks here
 	@Override
-	public synchronized Map<String, Optional<BigDecimal>> calculate(PricingModel model, Map<String, BigDecimal> inputs)
+	public synchronized Map<String, BigDecimal> calculate(PricingModel model, Map<String, BigDecimal> inputs)
 	{
 		if(model == null)
 		{
@@ -210,8 +211,7 @@ public class CalculationServiceImpl implements CalculationService
 				inputs.put(input, pointOfInterest);
 				model.configure(inputs);
 				
-				BigDecimal requiredResult = model.calculate(output).orElse(BigDecimal.ZERO)
-						.multiply(BigDecimal.valueOf(leg.getQuantity()));
+				BigDecimal requiredResult = model.calculate(output).multiply(BigDecimal.valueOf(leg.getQuantity()));
 				
 				sumOfOutputAtPoint = sideAggregator.apply(leg, sumOfOutputAtPoint, requiredResult);
 			}
@@ -235,51 +235,34 @@ public class CalculationServiceImpl implements CalculationService
 		
 		if((request.getLegs() != null) || (request.getLegs().size() != 0))
 		{
-			request.setDelta(request.getLegs().stream().map(leg ->
-				(leg.getDelta().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
-				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+			request.setDelta(request.getLegs().stream().map(leg -> leg.getDelta())
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setGamma(request.getLegs().stream().map(leg ->
-				(leg.getGamma().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
-				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+			request.setGamma(request.getLegs().stream().map(leg -> leg.getGamma())
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setVega(request.getLegs().stream().map(leg ->
-				(leg.getVega().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
-				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+			request.setVega(request.getLegs().stream().map(leg -> leg.getVega())
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setTheta(request.getLegs().stream().map(leg ->
-				(leg.getTheta().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
-				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+			request.setTheta(request.getLegs().stream().map(leg -> leg.getTheta())
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setRho(request.getLegs().stream().map(leg ->
-				(leg.getRho().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.ONE : BigDecimal.valueOf(-1))
-				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+			request.setRho(request.getLegs().stream().map(leg -> leg.getRho())
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setIntrinsicValue(request.getLegs().stream().map(leg ->
-				(leg.getIntrinsicValue().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.valueOf(-1) : BigDecimal.ONE)
-				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+			request.setIntrinsicValue(request.getLegs().stream().map(leg ->	leg.getIntrinsicValue())
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setTimeValue(request.getLegs().stream().map(leg ->
-				(leg.getTimeValue().multiply(leg.getSide() == SideEnum.BUY ?  BigDecimal.valueOf(-1) : BigDecimal.ONE)
-				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+			request.setTimeValue(request.getLegs().stream().map(leg -> leg.getTimeValue())
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 			
-			request.setPremiumAmount(request.getLegs().stream().map(leg ->
-				(leg.getPremium().multiply(leg.getSide() == SideEnum.BUY ? BigDecimal.valueOf(-1) : BigDecimal.ONE)
-				.multiply(BigDecimal.valueOf(leg.getQuantity()))))
+			request.setPremiumAmount(request.getLegs().stream().map(leg -> leg.getPremium())
 				.reduce(BigDecimal.ZERO, BigDecimal::add));
 		}
 		
+		// Lambda may not be additive
 		if((request.getLegs() != null) && (request.getLegs().size() == 1))
-		{
 			request.setLambda(request.getLegs().get(0).getLambda());
-		}
 	}
 	
 	
@@ -325,6 +308,8 @@ public class CalculationServiceImpl implements CalculationService
 		inputs.put(OptionConstants.TIME_TO_EXPIRY, leg.getYearsToExpiry());
 		inputs.put(OptionConstants.IS_CALL_OPTION, leg.getIsCall() ? BigDecimal.valueOf(1) : BigDecimal.valueOf(0));
 		inputs.put(OptionConstants.IS_EUROPEAN_OPTION, leg.getIsEuropean() ? BigDecimal.valueOf(1) : BigDecimal.valueOf(0));
+		inputs.put(OptionConstants.SIDE_MULTIPLIER, leg.getSide() == SideEnum.BUY ? BigDecimal.valueOf(1) : BigDecimal.valueOf(-1));
+		inputs.put(OptionConstants.QTY_MULTIPLIER, BigDecimal.valueOf(leg.getQuantity()));
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Option model input: " + inputs.toString());
@@ -333,7 +318,7 @@ public class CalculationServiceImpl implements CalculationService
 	}
 	
 	@Override
-	public synchronized void extractModelOutputs(Map<String, Optional<BigDecimal>> outputs, OptionDetailImpl leg)
+	public synchronized void extractModelOutputs(Map<String, BigDecimal> outputs, OptionDetailImpl leg)
 	{
 		if(leg == null)
 		{
@@ -351,15 +336,15 @@ public class CalculationServiceImpl implements CalculationService
 			throw new NullPointerException("outputs is an invalid argument");
 		}
 		
-		leg.setPremium(outputs.get(OptionConstants.THEORETICAL_VALUE).orElse(BigDecimal.ZERO));
-		leg.setDelta(outputs.get(OptionConstants.DELTA).orElse(BigDecimal.ZERO));
-		leg.setGamma(outputs.get(OptionConstants.GAMMA).orElse(BigDecimal.ZERO));
-		leg.setVega(outputs.get(OptionConstants.VEGA).orElse(BigDecimal.ZERO));
-		leg.setTheta(outputs.get(OptionConstants.THETA).orElse(BigDecimal.ZERO));
-		leg.setRho(outputs.get(OptionConstants.RHO).orElse(BigDecimal.ZERO));
-		leg.setIntrinsicValue(outputs.get(OptionConstants.INTRINSIC_VALUE).orElse(BigDecimal.ZERO));
-		leg.setLambda(outputs.get(OptionConstants.LAMBDA).orElse(BigDecimal.ZERO));
-		leg.setTimeValue(outputs.get(OptionConstants.TIME_VALUE).orElse(BigDecimal.ZERO));
+		leg.setPremium(outputs.get(OptionConstants.THEORETICAL_VALUE));
+		leg.setDelta(outputs.get(OptionConstants.DELTA));
+		leg.setGamma(outputs.get(OptionConstants.GAMMA));
+		leg.setVega(outputs.get(OptionConstants.VEGA));
+		leg.setTheta(outputs.get(OptionConstants.THETA));
+		leg.setRho(outputs.get(OptionConstants.RHO));
+		leg.setIntrinsicValue(outputs.get(OptionConstants.INTRINSIC_VALUE));
+		leg.setLambda(outputs.get(OptionConstants.LAMBDA));
+		leg.setTimeValue(outputs.get(OptionConstants.TIME_VALUE));
 		
 		if(logger.isDebugEnabled())
 			logger.debug("Option model outputs: " + outputs.toString());
@@ -367,7 +352,7 @@ public class CalculationServiceImpl implements CalculationService
 	
 	
 	@Override
-	public synchronized Map<BigDecimal, Map<String, BigDecimal>> calculateRange(PricingModel model,
+	public synchronized Map<String, Map<String, List<BigDecimal>>> calculateRange(PricingModel model,
 			Map<String, BigDecimal> inputs, RangeParameters rangeParameters)
 	{
 		if(model == null)
@@ -394,26 +379,44 @@ public class CalculationServiceImpl implements CalculationService
 			throw new NullPointerException("rangeParameters is an invalid argument");
 		}
 		
-		Map<BigDecimal, Map<String, BigDecimal>> result = new TreeMap<>();
+		Map<String, Map<String, List<BigDecimal>>> rangeResult = new HashMap<>();
+		Map<String, List<BigDecimal>> range = new HashMap<>();
+				
+		rangeParameters.getListOfRequiredOutput().forEach(output -> range.put(output, new ArrayList<>()));
+		range.put(rangeParameters.getRangeVariableName(), new ArrayList<>());
 		
+		// TODO Convert this to a parallel calculation and validate optimization by measuring time taken
 		for(BigDecimal rangeValue = rangeParameters.getStartValue();
 				rangeValue.compareTo(rangeParameters.getEndValue()) <= 0;
 				rangeValue = rangeValue.add(rangeParameters.getIncrement()))
 		{
 			inputs.put(rangeParameters.getRangeVariableName(), rangeValue);
 			model.configure(inputs);
-			result.put(rangeValue, model.calculate(rangeParameters.getListOfRequiredOutput()));
+
+			range.get(rangeParameters.getRangeVariableName()).add(rangeValue);
+						
+			model.calculate(rangeParameters.getListOfRequiredOutput()).entrySet()
+				.forEach(entry -> range.get(entry.getKey()).add(entry.getValue()));
 		}
-		return result;
+		
+		rangeResult.put(rangeParameters.getRangeVariableName(), range);
+
+		return rangeResult;
 	}
 
 	@Override
-	public Map<BigDecimal, Map<String, BigDecimal>> chartData(RequestDetailImpl request)
+	public Map<String, Map<String, List<BigDecimal>>>  chartData(RequestDetailImpl request)
 	{
-		Map<String, BigDecimal> inputs;
+		if(request == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("request is an invalid argument");
+			
+			throw new NullPointerException("request is an invalid argument");
+		}
 		
 		BigDecimal increment = request.getUnderlyingPrice().divide(CalculationConstants.ONE_HUNDRED,
-				CalculationConstants.SCALE_OF_THREE, RoundingMode.HALF_UP);
+				CalculationConstants.SCALE_OF_FOUR, RoundingMode.HALF_UP);
 		
 		BigDecimal maximumRange = request.getUnderlyingPrice().multiply(CalculationConstants.TWO);
 		
@@ -424,25 +427,38 @@ public class CalculationServiceImpl implements CalculationService
 		
 		PricingModel model = new BlackScholesModelImpl();
 		
-		Map<BigDecimal, Map<String, BigDecimal>> rangeResult = new HashMap<>();
+		Map<String, Map<String, List<BigDecimal>>> rangeResult = new HashMap<>();
 		
 		for(OptionDetailImpl leg : request.getLegs())
-		{
-			model = new BlackScholesModelImpl();
-			inputs = extractModelInputs(leg);
-			model.configure(inputs);
-			//aggregate(rangeResult, calculateRange(model, inputs, rangeParameters));
-			return calculateRange(model, inputs, rangeParameters);
-			//return rangeResult;
-		}
+			aggregate(rangeResult, calculateRange(model, extractModelInputs(leg), rangeParameters));
 		
 		return rangeResult;
 	}
 
-	private void aggregate(	Map<BigDecimal, Map<String, BigDecimal>> rangeResult,
-			Map<BigDecimal, Map<String, BigDecimal>> calculatedRange)
+	@Override
+	public void aggregate(Map<String, Map<String, List<BigDecimal>>> rangeResult,
+			Map<String, Map<String, List<BigDecimal>>> calculatedRange)
 	{
-		rangeResult = calculatedRange;
+		if(rangeResult.size() == 0)
+		{
+			rangeResult.putAll(calculatedRange);
+			return;
+		}
+		
+		for(Map.Entry<String, Map<String, List<BigDecimal>>> rangeVariableEntry : calculatedRange.entrySet())
+		{
+			for(Map.Entry<String, List<BigDecimal>> rangeValueListEntry : rangeVariableEntry.getValue().entrySet())
+			{
+				int numberOfElements = rangeValueListEntry.getValue().size();
+				BigDecimal[] sumOfTwoRanges = new BigDecimal[numberOfElements];
+				BigDecimal[] first = rangeResult.get(rangeVariableEntry.getKey()).get(rangeValueListEntry.getKey()).toArray(new BigDecimal[numberOfElements]);
+				BigDecimal[] second = rangeValueListEntry.getValue().toArray(new BigDecimal[numberOfElements]);
+				
+				Arrays.setAll(sumOfTwoRanges, i -> first[i].add(second[i]));
+				
+				rangeResult.get(rangeVariableEntry.getKey()).put(rangeValueListEntry.getKey(), Arrays.asList(sumOfTwoRanges));
+			}
+		}
 	}
 }
 

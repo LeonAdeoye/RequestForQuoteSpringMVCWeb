@@ -3,7 +3,6 @@ package com.leon.rfq.services;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.function.Function;
 
@@ -15,7 +14,7 @@ import com.leon.rfq.products.RangeParameters;
 
 public interface CalculationService
 {
-	Map<String, Optional<BigDecimal>> calculate(PricingModel model,	Map<String, BigDecimal> inputs);
+	Map<String, BigDecimal> calculate(PricingModel model,	Map<String, BigDecimal> inputs);
 
 	void calculate(PricingModel model, RequestDetailImpl request);
 
@@ -23,11 +22,7 @@ public interface CalculationService
 
 	void calculate(PricingModel model, OptionDetailImpl leg);
 
-	Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg);
-
-	void extractModelOutputs(Map<String, Optional<BigDecimal>> outputs,	OptionDetailImpl leg);
-
-	Map<BigDecimal, Map<String, BigDecimal>> calculateRange(
+	Map<String, Map<String, List<BigDecimal>>> calculateRange(
 			PricingModel model, Map<String, BigDecimal> inputs,	RangeParameters rangeParameters);
 
 	void calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request);
@@ -37,5 +32,12 @@ public interface CalculationService
 			TriFunction<OptionDetailImpl, BigDecimal, BigDecimal, BigDecimal> sideAggregator,
 			Function<BigDecimal, BigDecimal> massageFunction);
 
-	Map<BigDecimal, Map<String, BigDecimal>> chartData(RequestDetailImpl request);
+	Map<String, Map<String, List<BigDecimal>>> chartData(RequestDetailImpl request);
+
+	void aggregate(Map<String, Map<String, List<BigDecimal>>> rangeResult,
+			Map<String, Map<String, List<BigDecimal>>> calculatedRange);
+
+	Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg);
+
+	void extractModelOutputs(Map<String, BigDecimal> outputs, OptionDetailImpl leg);
 }

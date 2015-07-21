@@ -7,7 +7,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -199,4 +201,35 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 		assertEquals("Should return three points", 3, request.getProfitAndLossPoints().size());
 	}
 	
+	@Test
+	public void aggregate_ValidInput_CorrectResultReturned() throws Exception
+	{
+		Map<String, Map<String, List<BigDecimal>>> actualResult = new HashMap<>();
+		Map<String, Map<String, List<BigDecimal>>> expectedResult = new HashMap<>();
+		Map<String, Map<String, List<BigDecimal>>> interimValue = new HashMap<>();
+		Map<String, List<BigDecimal>> output = new HashMap<>();
+		
+		List<BigDecimal> startinglist = new ArrayList<>();
+		for(int i = 1; i < 10; i++)
+			startinglist.add(BigDecimal.ONE.multiply(BigDecimal.valueOf(i)));
+
+		output.put("1", startinglist);
+		output.put("2", startinglist);
+		output.put("3", startinglist);
+		interimValue.put("A", output);
+		
+		this.calculationService.aggregate(actualResult, interimValue);
+		this.calculationService.aggregate(actualResult, interimValue);
+		
+		List<BigDecimal> resultlist = new ArrayList<>();
+		for(int i = 1; i < 10; i++)
+			resultlist.add(BigDecimal.valueOf(3).multiply(BigDecimal.valueOf(i)));
+		
+		output.put("1", resultlist);
+		output.put("2", resultlist);
+		output.put("3", resultlist);
+		expectedResult.put("A", output);
+		
+		assertEquals("both maps should be equal", expectedResult, actualResult);
+	}
 }

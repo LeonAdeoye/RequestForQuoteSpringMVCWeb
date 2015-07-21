@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,23 +28,25 @@ public class BlackScholesModelImplTest extends AbstractJUnit4SpringContextTests
 		inputs.put(OptionConstants.INTEREST_RATE, BigDecimal.valueOf(0.05));
 		inputs.put(OptionConstants.TIME_TO_EXPIRY, BigDecimal.valueOf(1));
 		inputs.put(OptionConstants.IS_CALL_OPTION, BigDecimal.valueOf(1));
+		inputs.put(OptionConstants.SIDE_MULTIPLIER, BigDecimal.valueOf(1));
+		inputs.put(OptionConstants.QTY_MULTIPLIER, BigDecimal.valueOf(1));
 		
-		Map<String, Optional<BigDecimal>> expectedOutput = new HashMap<>();
-		expectedOutput.put(OptionConstants.DELTA, Optional.of(BigDecimal.valueOf(0.4299)));
-		expectedOutput.put(OptionConstants.GAMMA, Optional.of(BigDecimal.valueOf(0.0218)));
-		expectedOutput.put(OptionConstants.VEGA, Optional.of(BigDecimal.valueOf(0.3535)));
-		expectedOutput.put(OptionConstants.TIME_VALUE, Optional.of(BigDecimal.valueOf(5.1007)));
-		expectedOutput.put(OptionConstants.THEORETICAL_VALUE, Optional.of(BigDecimal.valueOf(5.1007)));
-		expectedOutput.put(OptionConstants.INTRINSIC_VALUE, Optional.of(BigDecimal.valueOf(0).setScale(4)));
-		expectedOutput.put(OptionConstants.THETA, Optional.of(BigDecimal.valueOf(-0.0521)));
-		expectedOutput.put(OptionConstants.RHO, Optional.of(BigDecimal.valueOf(0.3359)));
-		expectedOutput.put(OptionConstants.LAMBDA, Optional.of(BigDecimal.valueOf(7.5854)));
+		Map<String, BigDecimal> expectedOutput = new HashMap<>();
+		expectedOutput.put(OptionConstants.DELTA, BigDecimal.valueOf(0.4299));
+		expectedOutput.put(OptionConstants.GAMMA, BigDecimal.valueOf(0.0218));
+		expectedOutput.put(OptionConstants.VEGA, BigDecimal.valueOf(0.3535));
+		expectedOutput.put(OptionConstants.TIME_VALUE, BigDecimal.valueOf(5.1017));
+		expectedOutput.put(OptionConstants.THEORETICAL_VALUE, BigDecimal.valueOf(-5.1017));
+		expectedOutput.put(OptionConstants.INTRINSIC_VALUE, BigDecimal.valueOf(0).setScale(4));
+		expectedOutput.put(OptionConstants.THETA, BigDecimal.valueOf(-0.0521));
+		expectedOutput.put(OptionConstants.RHO, BigDecimal.valueOf(0.3359));
+		expectedOutput.put(OptionConstants.LAMBDA, BigDecimal.valueOf(7.5839));
 		
 		PricingModel model = new BlackScholesModelImpl();
 		
 		//Act
 		model.configure(inputs);
-		Map<String, Optional<BigDecimal>> actualOutput = model.calculate();
+		Map<String, BigDecimal> actualOutput = model.calculate();
 		
 		// Assert
 		assertEquals("Delta calculated from model should match expectations", expectedOutput.get(OptionConstants.DELTA), actualOutput.get(OptionConstants.DELTA));
@@ -71,6 +72,9 @@ public class BlackScholesModelImplTest extends AbstractJUnit4SpringContextTests
 		inputs.put(OptionConstants.INTEREST_RATE, BigDecimal.valueOf(0));
 		inputs.put(OptionConstants.TIME_TO_EXPIRY, BigDecimal.valueOf(0));
 		inputs.put(OptionConstants.IS_CALL_OPTION, BigDecimal.valueOf(1));
+		inputs.put(OptionConstants.SIDE_MULTIPLIER, BigDecimal.valueOf(-1));
+		inputs.put(OptionConstants.QTY_MULTIPLIER, BigDecimal.valueOf(1));
+		
 		
 		Map<String, BigDecimal> outputs = new HashMap<>();
 		PricingModel model = new BlackScholesModelImpl();

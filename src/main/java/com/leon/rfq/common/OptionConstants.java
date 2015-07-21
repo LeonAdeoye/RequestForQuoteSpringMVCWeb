@@ -20,6 +20,8 @@ public final class OptionConstants
 	public static final  String TIME_TO_EXPIRY = "TIME_TO_EXPIRY";
 	public static final  String IS_CALL_OPTION = "IS_CALL_OPTION";
 	public static final  String IS_EUROPEAN_OPTION = "IS_EUROPEAN_OPTION";
-    
+	public static final String SIDE_MULTIPLIER = "SIDE_MULTIPLIER";
+	public static final String QTY_MULTIPLIER = "QTY_MULTIPLIER";
+	
 	private OptionConstants() {}
 }
