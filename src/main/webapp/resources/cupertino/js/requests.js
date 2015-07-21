@@ -536,12 +536,45 @@ $(document).ready(function()
 		
 		dataView.endUpdate();
 		requestsGrid.render();
-	}
-	
-	function processChartData(requestId, chartData)
-	{
+	}	
+
+    function drawChart()
+    {
+    	var data = new google.visualization.DataTable();
+    	
+		var underlyingPriceData = chartData["UNDERLYING_PRICE"];		
+		var underlyingColumn = underlyingPriceData["UNDERLYING_PRICE"];
+		var deltaColumn = underlyingPriceData["DELTA"];
+		var chartLineNames = ["Underlying Price", "Delta"];
+		var chartLineData = [];
 		
-	}
+		for(var i = 0; i < underlyingColumn.length; i++)
+		{
+			var row = new Array(underlyingColumn[i], deltaColumn[i]);
+			chartLineData[i] = row;
+		}
+    	      
+    	for (var i = 0; i < chartLineNames.length; i++)
+    		data.addColumn('number', chartLineNames[i]);
+      
+    	data.addRows(charLineData);
+
+    	var options = 
+    	{
+    		chart: 
+    		{
+    			title: 'Underlying Price Charts'
+    		},
+    		width: 700,
+    		height: 450
+    	};
+
+    	var chart = new google.charts.Line(document.getElementById("underlying-price-charts-content"));
+
+    	chart.draw(data, options);
+    }
+    
+    var chartData = {};
 	
 	function ajaxGetChartData(requestId)
 	{
@@ -555,10 +588,13 @@ $(document).ready(function()
 		    mimeType: 'application/json',
 		    timeout: 300000,
 		    cache: false,
-		    success: function(chartData) 
+		    success: function(data) 
 		    {
-		    	if(chartData)
-		    		processChartData(requestId, chartData);
+		    	if(data)
+		    		chartData = data;
+		    	
+		    	google.load('visualization', '1.1', {packages: ['line']});
+		    	google.setOnLoadCallback(drawChart);
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {

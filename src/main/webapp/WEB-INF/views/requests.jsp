@@ -32,11 +32,10 @@
 		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/requests.js" />"></script>
 		
-<%-- 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-  		<script type="text/javascript" src="<c:url value="/resources/js/lineChart.js" />"></script> --%>		
+ 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>		
 						
 		<script type="text/javascript">
-			var contextPath='<%=request.getContextPath()%>' /* needed for all ajax calls */			
+			var contextPath='<%=request.getContextPath()%>'		
 		</script>
 					
 	<title><spring:message code="requests.title.label"/></title>
@@ -278,21 +277,19 @@
 		<div class="chart-to-clone" title="Request For Quote Chart"> 
 			<div class="chart-content" >
 				<ul>
-					<li><a href="#pnl">PnL</a></li>
-					<li><a href="#delta">Delta</a></li>
-					<li><a href="#gamma">Gamma</a></li>
-					<li><a href="#vega">Vega</a></li>
-					<li><a href="#theta">Theta</a></li>
-					<li><a href="#rho">Rho</a></li>
+					<li><a href="#underlying-price-charts">Underlying Price</a></li>
+					<li><a href="#volatility-charts">Volatility</a></li>
+					<li><a href="#time-to-expiry-charts">Time To Expiry</a></li>
 				</ul>
-				<div id="pnl">
-					<div id="linechart_material"></div>
+				<div id="underlying-price-charts">
+					<div id="underlying-price-charts-content"></div>
 				</div>
-				<div id="delta"></div>
-				<div id="gamma"></div>
-				<div id="vega"></div>
-				<div id="theta"></div>
-				<div id="rho"></div>
+				<div id="volatility-charts">
+					<div id="volatility-charts-content"></div>
+				</div>
+				<div id="time-to-expiry-charts">
+					<div id="time-to-expiry-charts-content"></div>
+				</div>
 			</div				
 		</div>
 

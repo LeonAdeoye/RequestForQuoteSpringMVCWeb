@@ -352,7 +352,7 @@ public class CalculationServiceImpl implements CalculationService
 	
 	
 	@Override
-	public synchronized Map<String, Map<String, List<BigDecimal>>> calculateRange(PricingModel model,
+	public synchronized Map<String, List<BigDecimal>> calculateRange(PricingModel model,
 			Map<String, BigDecimal> inputs, RangeParameters rangeParameters)
 	{
 		if(model == null)
@@ -379,7 +379,6 @@ public class CalculationServiceImpl implements CalculationService
 			throw new NullPointerException("rangeParameters is an invalid argument");
 		}
 		
-		Map<String, Map<String, List<BigDecimal>>> rangeResult = new HashMap<>();
 		Map<String, List<BigDecimal>> range = new HashMap<>();
 				
 		rangeParameters.getListOfRequiredOutput().forEach(output -> range.put(output, new ArrayList<>()));
@@ -399,13 +398,11 @@ public class CalculationServiceImpl implements CalculationService
 				.forEach(entry -> range.get(entry.getKey()).add(entry.getValue()));
 		}
 		
-		rangeResult.put(rangeParameters.getRangeVariableName(), range);
-
-		return rangeResult;
+		return range;
 	}
-
+	
 	@Override
-	public Map<String, Map<String, List<BigDecimal>>>  chartData(RequestDetailImpl request)
+	public Map<String, Map<String, List<BigDecimal>>> chartData(RequestDetailImpl request)
 	{
 		if(request == null)
 		{
@@ -415,19 +412,53 @@ public class CalculationServiceImpl implements CalculationService
 			throw new NullPointerException("request is an invalid argument");
 		}
 		
-		BigDecimal increment = request.getUnderlyingPrice().divide(CalculationConstants.ONE_HUNDRED,
+		Map<String, Map<String, List<BigDecimal>>> resultRange = new HashMap<>();
+						
+		resultRange.put(OptionConstants.TIME_TO_EXPIRY, chartDataForSpecificRangeVariable(request,
+				request.getLegs().get(0).getYearsToExpiry(),OptionConstants.TIME_TO_EXPIRY));
+		
+		resultRange.put(OptionConstants.UNDERLYING_PRICE, chartDataForSpecificRangeVariable(request,
+				request.getUnderlyingPrice(), OptionConstants.UNDERLYING_PRICE));
+		
+		resultRange.put(OptionConstants.VOLATILITY, chartDataForSpecificRangeVariable(request,
+				request.getLegs().get(0).getVolatility(), OptionConstants.VOLATILITY));
+		
+		return resultRange;
+	}
+	
+	@Override
+	public Map<String, List<BigDecimal>> chartDataForSpecificRangeVariable(RequestDetailImpl request,
+			BigDecimal rangeSeed, String rangeVar)
+	{
+		if(rangeSeed == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("rangeSeed is an invalid argument");
+			
+			throw new NullPointerException("rangeSeed is an invalid argument");
+		}
+				
+		if((rangeVar == null) || rangeVar.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("rangeVar is an invalid argument");
+			
+			throw new IllegalArgumentException("rangeVar is an invalid argument");
+		}
+		
+		BigDecimal incr = rangeSeed.divide(CalculationConstants.ONE_HUNDRED,
 				CalculationConstants.SCALE_OF_FOUR, RoundingMode.HALF_UP);
 		
-		BigDecimal maximumRange = request.getUnderlyingPrice().multiply(CalculationConstants.TWO);
+		BigDecimal max = rangeSeed.multiply(CalculationConstants.TWO);
 		
-		BigDecimal minimumRange = BigDecimal.ZERO.add(increment);
+		BigDecimal min = BigDecimal.ZERO.add(incr);
 				
-		RangeParameters rangeParameters = new RangeParameters(minimumRange, maximumRange,
-				increment, OptionConstants.UNDERLYING_PRICE, ALL_REQUIRED_OUTPUT);
+		RangeParameters rangeParameters = new RangeParameters(min, max,
+				incr, rangeVar, ALL_REQUIRED_OUTPUT);
 		
 		PricingModel model = new BlackScholesModelImpl();
 		
-		Map<String, Map<String, List<BigDecimal>>> rangeResult = new HashMap<>();
+		Map<String, List<BigDecimal>> rangeResult = new HashMap<>();
 		
 		for(OptionDetailImpl leg : request.getLegs())
 			aggregate(rangeResult, calculateRange(model, extractModelInputs(leg), rangeParameters));
@@ -436,8 +467,8 @@ public class CalculationServiceImpl implements CalculationService
 	}
 
 	@Override
-	public void aggregate(Map<String, Map<String, List<BigDecimal>>> rangeResult,
-			Map<String, Map<String, List<BigDecimal>>> calculatedRange)
+	public void aggregate(Map<String, List<BigDecimal>> rangeResult,
+			Map<String, List<BigDecimal>> calculatedRange)
 	{
 		if(rangeResult.size() == 0)
 		{
@@ -445,19 +476,16 @@ public class CalculationServiceImpl implements CalculationService
 			return;
 		}
 		
-		for(Map.Entry<String, Map<String, List<BigDecimal>>> rangeVariableEntry : calculatedRange.entrySet())
+		for(Map.Entry<String, List<BigDecimal>> rangeValueListEntry : calculatedRange.entrySet())
 		{
-			for(Map.Entry<String, List<BigDecimal>> rangeValueListEntry : rangeVariableEntry.getValue().entrySet())
-			{
-				int numberOfElements = rangeValueListEntry.getValue().size();
-				BigDecimal[] sumOfTwoRanges = new BigDecimal[numberOfElements];
-				BigDecimal[] first = rangeResult.get(rangeVariableEntry.getKey()).get(rangeValueListEntry.getKey()).toArray(new BigDecimal[numberOfElements]);
-				BigDecimal[] second = rangeValueListEntry.getValue().toArray(new BigDecimal[numberOfElements]);
-				
-				Arrays.setAll(sumOfTwoRanges, i -> first[i].add(second[i]));
-				
-				rangeResult.get(rangeVariableEntry.getKey()).put(rangeValueListEntry.getKey(), Arrays.asList(sumOfTwoRanges));
-			}
+			int numberOfElements = rangeValueListEntry.getValue().size();
+			BigDecimal[] sumOfTwoRanges = new BigDecimal[numberOfElements];
+			BigDecimal[] first = rangeResult.get(rangeValueListEntry.getKey()).toArray(new BigDecimal[numberOfElements]);
+			BigDecimal[] second = rangeValueListEntry.getValue().toArray(new BigDecimal[numberOfElements]);
+			
+			Arrays.setAll(sumOfTwoRanges, i -> first[i].add(second[i]));
+			
+			rangeResult.put(rangeValueListEntry.getKey(), Arrays.asList(sumOfTwoRanges));
 		}
 	}
 }

@@ -204,20 +204,19 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 	@Test
 	public void aggregate_ValidInput_CorrectResultReturned() throws Exception
 	{
-		Map<String, Map<String, List<BigDecimal>>> actualResult = new HashMap<>();
-		Map<String, Map<String, List<BigDecimal>>> expectedResult = new HashMap<>();
-		Map<String, Map<String, List<BigDecimal>>> interimValue = new HashMap<>();
-		Map<String, List<BigDecimal>> output = new HashMap<>();
+		Map<String, List<BigDecimal>> actualResult = new HashMap<>();
+		Map<String, List<BigDecimal>> expectedResult = new HashMap<>();
+		Map<String, List<BigDecimal>> interimValue = new HashMap<>();
 		
 		List<BigDecimal> startinglist = new ArrayList<>();
 		for(int i = 1; i < 10; i++)
 			startinglist.add(BigDecimal.ONE.multiply(BigDecimal.valueOf(i)));
 
-		output.put("1", startinglist);
-		output.put("2", startinglist);
-		output.put("3", startinglist);
-		interimValue.put("A", output);
+		interimValue.put("1", startinglist);
+		interimValue.put("2", startinglist);
+		interimValue.put("3", startinglist);
 		
+		this.calculationService.aggregate(actualResult, interimValue);
 		this.calculationService.aggregate(actualResult, interimValue);
 		this.calculationService.aggregate(actualResult, interimValue);
 		
@@ -225,11 +224,10 @@ public class CalculationEngineImplTest extends AbstractJUnit4SpringContextTests
 		for(int i = 1; i < 10; i++)
 			resultlist.add(BigDecimal.valueOf(3).multiply(BigDecimal.valueOf(i)));
 		
-		output.put("1", resultlist);
-		output.put("2", resultlist);
-		output.put("3", resultlist);
-		expectedResult.put("A", output);
-		
+		expectedResult.put("1", resultlist);
+		expectedResult.put("2", resultlist);
+		expectedResult.put("3", resultlist);
+
 		assertEquals("both maps should be equal", expectedResult, actualResult);
 	}
 }

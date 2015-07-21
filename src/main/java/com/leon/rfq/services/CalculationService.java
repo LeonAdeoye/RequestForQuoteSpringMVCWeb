@@ -22,7 +22,7 @@ public interface CalculationService
 
 	void calculate(PricingModel model, OptionDetailImpl leg);
 
-	Map<String, Map<String, List<BigDecimal>>> calculateRange(
+	Map<String, List<BigDecimal>> calculateRange(
 			PricingModel model, Map<String, BigDecimal> inputs,	RangeParameters rangeParameters);
 
 	void calculateProfitAndLossPoints(PricingModel model, RequestDetailImpl request);
@@ -34,10 +34,13 @@ public interface CalculationService
 
 	Map<String, Map<String, List<BigDecimal>>> chartData(RequestDetailImpl request);
 
-	void aggregate(Map<String, Map<String, List<BigDecimal>>> rangeResult,
-			Map<String, Map<String, List<BigDecimal>>> calculatedRange);
-
 	Map<String, BigDecimal> extractModelInputs(OptionDetailImpl leg);
 
 	void extractModelOutputs(Map<String, BigDecimal> outputs, OptionDetailImpl leg);
+
+	void aggregate(Map<String, List<BigDecimal>> rangeResult,
+			Map<String, List<BigDecimal>> calculatedRange);
+
+	Map<String, List<BigDecimal>> chartDataForSpecificRangeVariable(
+			RequestDetailImpl request, BigDecimal rangeSeed, String rangeVar);
 }
