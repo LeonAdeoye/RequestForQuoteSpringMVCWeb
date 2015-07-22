@@ -221,7 +221,6 @@ public class CalculationServiceImpl implements CalculationService
 		return result;
 	}
 	
-	
 	@Override
 	public synchronized void aggregate(RequestDetailImpl request)
 	{

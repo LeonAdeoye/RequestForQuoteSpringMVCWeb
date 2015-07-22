@@ -376,15 +376,15 @@ $(document).ready(function()
 		{
     		showLoadIndicator();
     		
-    		ajaxGetChartData(requestId);
-    		
     		var dynamicChartId = "dynamic-chart-" + chartCount++;
     		$(".chart-to-clone").clone().attr("id", dynamicChartId)
     			.removeClass("chart-to-clone")
     			.attr("title", "Chart for request for quote: " + requestId)
     			.dialog(dynamicChartDialogOptions);
     		
-    		$("#" + dynamicChartId).children(".chart-content").tabs({heightStyle: "fill", event: "mouseover"});
+    		$("#" + dynamicChartId).children(".chart-content").tabs({heightStyle: "fill"});
+    		
+    		ajaxGetChartData(requestId);
     		
     		loadingIndicator.fadeOut();
 		}		
@@ -538,26 +538,37 @@ $(document).ready(function()
 		requestsGrid.render();
 	}	
 
-    function drawChart()
+    function drawChart(chartData)
     {
     	var data = new google.visualization.DataTable();
     	
-		var underlyingPriceData = chartData["UNDERLYING_PRICE"];		
+		var underlyingPriceData = chartData["UNDERLYING_PRICE"];
+		
 		var underlyingColumn = underlyingPriceData["UNDERLYING_PRICE"];
 		var deltaColumn = underlyingPriceData["DELTA"];
-		var chartLineNames = ["Underlying Price", "Delta"];
-		var chartLineData = [];
+		var gammaColumn = underlyingPriceData["GAMMA"];
+		var vegaColumn = underlyingPriceData["VEGA"];
+		var thetaColumn = underlyingPriceData["THETA"];
+		var rhoColumn = underlyingPriceData["RHO"];
 		
+		var chartLineNames = ["Underlying Price", "Delta", "Gamma", "Vega", "Theta", "Rho"];
+    	
+		for (var i = 0; i < chartLineNames.length; i++)
+    		data.addColumn('number', chartLineNames[i]);
+    	
+		var chartLineData = [];
+		var j = 0;
 		for(var i = 0; i < underlyingColumn.length; i++)
 		{
-			var row = new Array(underlyingColumn[i], deltaColumn[i]);
-			chartLineData[i] = row;
-		}
-    	      
-    	for (var i = 0; i < chartLineNames.length; i++)
-    		data.addColumn('number', chartLineNames[i]);
-      
-    	data.addRows(charLineData);
+			if((deltaColumn[i] != 0) || (gammaColumn[i] != 0) || (vegaColumn[i] != 0) ||
+				(thetaColumn[i] != 0) || (rhoColumn[i] != 0))
+			{
+				chartLineData[j++] = new Array(underlyingColumn[i], deltaColumn[i], gammaColumn[i], 
+						vegaColumn[i], thetaColumn[i], rhoColumn[i]);			
+			}
+		}     
+
+    	data.addRows(chartLineData);
 
     	var options = 
     	{
@@ -565,17 +576,18 @@ $(document).ready(function()
     		{
     			title: 'Underlying Price Charts'
     		},
-    		width: 700,
-    		height: 450
+    		width: 500,
+    		height: 400
     	};
 
+    	// TODO
+    	// Can use JQuery here to get div ID must be a descendent of spec ific dailog otherwise all will be the same I guess
+    	// $("dyanmic-charts-01 #underlying-price-charts-content").get(0) MAY NEED GET as wrapped set only is returned.
     	var chart = new google.charts.Line(document.getElementById("underlying-price-charts-content"));
 
     	chart.draw(data, options);
     }
     
-    var chartData = {};
-	
 	function ajaxGetChartData(requestId)
 	{
 		$.ajax(
@@ -590,11 +602,7 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(data) 
 		    {
-		    	if(data)
-		    		chartData = data;
-		    	
-		    	google.load('visualization', '1.1', {packages: ['line']});
-		    	google.setOnLoadCallback(drawChart);
+		    	drawChart(data);
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {

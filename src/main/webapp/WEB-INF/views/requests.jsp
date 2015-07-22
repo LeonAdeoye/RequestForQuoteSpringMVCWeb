@@ -35,10 +35,15 @@
  		<script type="text/javascript" src="https://www.google.com/jsapi"></script>		
 						
 		<script type="text/javascript">
-			var contextPath='<%=request.getContextPath()%>'		
+			var contextPath='<%=request.getContextPath()%>'
+			
+			google.load('visualization', '1.1', {packages: ['line'], callback: function()
+			{
+				console.log("Google charts loaded");
+			}});
 		</script>
 					
-	<title><spring:message code="requests.title.label"/></title>
+		<title><spring:message code="requests.title.label"/></title>
 	</head>
 	<body>
 		<div id="requestsInlineConfigurePanel" class="inlinePanel" style="display:none;">
