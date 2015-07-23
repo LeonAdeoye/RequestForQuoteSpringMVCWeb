@@ -37,7 +37,7 @@
 		<script type="text/javascript">
 			var contextPath='<%=request.getContextPath()%>'
 			
-			google.load('visualization', '1.1', {packages: ['line'], callback: function()
+			google.load('visualization', '1', {packages: ['line'], callback: function()
 			{
 				console.log("Google charts loaded");
 			}});
@@ -288,12 +288,21 @@
 				</ul>
 				<div id="underlying-price-charts">
 					<div id="underlying-price-charts-content"></div>
+					<label><spring:message code="requests.chart.line.filter.label"/></label>
+					<div>
+						<input type="checkbox" id="display-delta" class="chart-line-display" column_index=1 checked><label for="display-delta"><spring:message code="requests.chart.delta.label"/></label>
+						<input type="checkbox" id="display-gamma" class="chart-line-display" column_index=2 checked><label for="display-gamma"><spring:message code="requests.chart.gamma.label"/></label>
+						<input type="checkbox" id="display-vega" class="chart-line-display" column_index=3 checked><label for="display-vega"><spring:message code="requests.chart.vega.label"/></label>
+						<input type="checkbox" id="display-theta" class="chart-line-display" column_index=4 checked><label for="display-theta"><spring:message code="requests.chart.theta.label"/></label>
+						<input type="checkbox" id="display-rho" class="chart-line-display" column_index=5 checked><label for="display-rho"><spring:message code="requests.chart.rho.label"/></label>
+						<!-- <input type="checkbox" id="display-theoVal" class="chart-line-display" column_index=6><label for="display-theoVal"><spring:message code="requests.chart.theoVal.label"/></label> -->
+					</div>					
 				</div>
 				<div id="volatility-charts">
-					<div id="volatility-charts-content"></div>
+					<div id="volatility-charts-content" ></div>
 				</div>
 				<div id="time-to-expiry-charts">
-					<div id="time-to-expiry-charts-content"></div>
+					<div id="time-to-expiry-charts-content" ></div>
 				</div>
 			</div				
 		</div>

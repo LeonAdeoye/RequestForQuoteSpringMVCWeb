@@ -379,7 +379,7 @@ $(document).ready(function()
     		var dynamicChartId = "dynamic-chart-" + chartCount++;
     		$(".chart-to-clone").clone().attr("id", dynamicChartId)
     			.removeClass("chart-to-clone")
-    			.attr("title", "Chart for request for quote: " + requestId)
+    			.attr("title", "Charts for request for quote: " + requestId)
     			.dialog(dynamicChartDialogOptions);
     		
     		$("#" + dynamicChartId).children(".chart-content").tabs({heightStyle: "fill"});
@@ -536,7 +536,23 @@ $(document).ready(function()
 		
 		dataView.endUpdate();
 		requestsGrid.render();
-	}	
+	}
+	
+	var chart, draw;
+	
+	// TODO
+    $('input.chart-line-display').change(function() 
+    {	
+    	var colsToHide = $('input.chart-line-display:not(:checked)').map(function()
+    	{
+    		return parseInt($(this).attr("column_index"));
+    	}).get();
+    	
+    	view.hideColumns(colsToHide);
+    	chart.draw(view);
+    	
+    	console.log(colsToHide);
+    });	
 
     function drawChart(chartData)
     {
@@ -566,7 +582,7 @@ $(document).ready(function()
 				chartLineData[j++] = new Array(underlyingColumn[i], deltaColumn[i], gammaColumn[i], 
 						vegaColumn[i], thetaColumn[i], rhoColumn[i]);			
 			}
-		}     
+		}
 
     	data.addRows(chartLineData);
 
@@ -576,16 +592,39 @@ $(document).ready(function()
     		{
     			title: 'Underlying Price Charts'
     		},
-    		width: 500,
-    		height: 400
+            hAxis: 
+            {
+                title: 'Underlying Price'
+            },
+            titlePosition: 'in',
+            chartArea:
+            {
+            	left:200,
+            	top:200,
+            	width:'100%',
+            	height:'100%'
+            },
+            height: 450,
+            width: 550,
+            legend:
+            { 
+            	position: 'bottom' 
+            },
+    		backgroundColor: '#80800',
+    		tooltip: 
+    		{
+    			trigger: focus,
+    			showColorCode: true
+    		}
     	};
+    	
+    	view = new google.visualization.DataView(data);	    	
 
     	// TODO
     	// Can use JQuery here to get div ID must be a descendent of spec ific dailog otherwise all will be the same I guess
     	// $("dyanmic-charts-01 #underlying-price-charts-content").get(0) MAY NEED GET as wrapped set only is returned.
-    	var chart = new google.charts.Line(document.getElementById("underlying-price-charts-content"));
-
-    	chart.draw(data, options);
+    	chart = new google.charts.Line(document.getElementById("underlying-price-charts-content"));
+    	chart.draw(view, options);    	
     }
     
 	function ajaxGetChartData(requestId)
