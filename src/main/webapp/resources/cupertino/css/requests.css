@@ -229,3 +229,7 @@ fieldset
 	display: none;
 }
 
+.new-requests-dialog
+{
+	display:none;
+}

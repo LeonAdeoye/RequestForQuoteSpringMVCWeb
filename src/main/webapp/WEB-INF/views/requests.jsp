@@ -272,7 +272,7 @@
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div
 				
-		<div id="new-request-dialog-parent" title="Add new request for quote" style="display:none;" >
+		<div id="new-request-dialog-parent" title="Add new request for quote"  class="new-requests-dialog" >
 			<input id="dialog_requests_snippet" class="new-requests-dialog new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
 			<input id="dialog_requests_strike" class="new-requests-dialog new_request" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
 			<input id="dialog_requests_maturity_date" class="new-requests-dialog new_request" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
@@ -280,31 +280,50 @@
 			<input id="dialog_requests_underlying_price" class="new-requests-dialog new_request" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
 		</div>
 		
-		<div class="chart-to-clone" title="Request For Quote Chart"> 
+		<div class="chart-to-clone"> 
 			<div class="chart-content" >
 				<ul>
 					<li><a href="#underlying-price-charts">Underlying Price</a></li>
 					<li><a href="#volatility-charts">Volatility</a></li>
 					<li><a href="#time-to-expiry-charts">Time To Expiry</a></li>
+					<li><a href="#theoretical-value-charts">Theoretical Value</a></li>
 				</ul>
 				<div id="underlying-price-charts">
 					<div id="underlying-price-charts-content"></div>
 					<label><spring:message code="requests.chart.line.filter.label"/></label>
 					<div>
-						<input type="checkbox" id="display-delta" class="chart-line-display" column_index=1 checked><label for="display-delta"><spring:message code="requests.chart.delta.label"/></label>
-						<input type="checkbox" id="display-gamma" class="chart-line-display" column_index=2 checked><label for="display-gamma"><spring:message code="requests.chart.gamma.label"/></label>
-						<input type="checkbox" id="display-vega" class="chart-line-display" column_index=3 checked><label for="display-vega"><spring:message code="requests.chart.vega.label"/></label>
-						<input type="checkbox" id="display-theta" class="chart-line-display" column_index=4 checked><label for="display-theta"><spring:message code="requests.chart.theta.label"/></label>
-						<input type="checkbox" id="display-rho" class="chart-line-display" column_index=5 checked><label for="display-rho"><spring:message code="requests.chart.rho.label"/></label>
-						<!-- <input type="checkbox" id="display-theoVal" class="chart-line-display" column_index=6><label for="display-theoVal"><spring:message code="requests.chart.theoVal.label"/></label> -->
+						<input type="checkbox" id="underlying-display-delta" class="chart-line-display" column_index=1 checked><label for="display-delta"><spring:message code="requests.chart.delta.label"/></label>
+						<input type="checkbox" id="underlying-display-gamma" class="chart-line-display" column_index=2 checked><label for="display-gamma"><spring:message code="requests.chart.gamma.label"/></label>
+						<input type="checkbox" id="underlying-display-vega" class="chart-line-display" column_index=3 checked><label for="display-vega"><spring:message code="requests.chart.vega.label"/></label>
+						<input type="checkbox" id="underlying-display-theta" class="chart-line-display" column_index=4 checked><label for="display-theta"><spring:message code="requests.chart.theta.label"/></label>
+						<input type="checkbox" id="underlying-display-rho" class="chart-line-display" column_index=5 checked><label for="display-rho"><spring:message code="requests.chart.rho.label"/></label>
 					</div>					
 				</div>
 				<div id="volatility-charts">
 					<div id="volatility-charts-content" ></div>
+					<label><spring:message code="requests.chart.line.filter.label"/></label>
+					<div>
+						<input type="checkbox" id="vol-display-delta" class="chart-line-display" column_index=1 checked><label for="display-delta"><spring:message code="requests.chart.delta.label"/></label>
+						<input type="checkbox" id="vol-display-gamma" class="chart-line-display" column_index=2 checked><label for="display-gamma"><spring:message code="requests.chart.gamma.label"/></label>
+						<input type="checkbox" id="vol-display-vega" class="chart-line-display" column_index=3 checked><label for="display-vega"><spring:message code="requests.chart.vega.label"/></label>
+						<input type="checkbox" id="vol-display-theta" class="chart-line-display" column_index=4 checked><label for="display-theta"><spring:message code="requests.chart.theta.label"/></label>
+						<input type="checkbox" id="vol-display-rho" class="chart-line-display" column_index=5 checked><label for="display-rho"><spring:message code="requests.chart.rho.label"/></label>
+					</div>					
 				</div>
 				<div id="time-to-expiry-charts">
 					<div id="time-to-expiry-charts-content" ></div>
+					<label><spring:message code="requests.chart.line.filter.label"/></label>
+					<div>
+						<input type="checkbox" id="time-display-delta" class="chart-line-display" column_index=1 checked><label for="display-delta"><spring:message code="requests.chart.delta.label"/></label>
+						<input type="checkbox" id="time-display-gamma" class="chart-line-display" column_index=2 checked><label for="display-gamma"><spring:message code="requests.chart.gamma.label"/></label>
+						<input type="checkbox" id="time-display-vega" class="chart-line-display" column_index=3 checked><label for="display-vega"><spring:message code="requests.chart.vega.label"/></label>
+						<input type="checkbox" id="time-display-theta" class="chart-line-display" column_index=4 checked><label for="display-theta"><spring:message code="requests.chart.theta.label"/></label>
+						<input type="checkbox" id="time-display-rho" class="chart-line-display" column_index=5 checked><label for="display-rho"><spring:message code="requests.chart.rho.label"/></label>
+					</div>					
 				</div>
+				<div id="theoretical-value-charts">
+					<div id="theoretical-value-charts-content" ></div>
+				</div>				
 			</div				
 		</div>
 

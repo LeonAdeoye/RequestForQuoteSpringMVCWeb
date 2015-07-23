@@ -284,7 +284,7 @@ $(document).ready(function()
 	var priceUpdateTimeout = 5000;
 	var statusUpdateTimeout = 5000;
 	
-	var chartCount = 0;
+
 	
 	var loadingIndicator = null;
 
@@ -370,6 +370,8 @@ $(document).ready(function()
 		}			
 	};
 	
+	var chartCount = 0;
+	
     function createChartDialog(requestId)
     {    	
     	if(requestId !== undefined)
@@ -384,9 +386,7 @@ $(document).ready(function()
     		
     		$("#" + dynamicChartId).children(".chart-content").tabs({heightStyle: "fill"});
     		
-    		ajaxGetChartData(requestId);
-    		
-    		loadingIndicator.fadeOut();
+    		ajaxGetChartData(requestId, dynamicChartId);
 		}		
     }	
 		
@@ -537,97 +537,225 @@ $(document).ready(function()
 		dataView.endUpdate();
 		requestsGrid.render();
 	}
+	    
+	var underlyingPriceChartOptions = 
+	{
+		chart: 
+		{
+			title: 'Underlying Price Charts'
+		},
+        hAxis: 
+        {
+            title: 'Underlying Price'
+        },
+        titlePosition: 'in',
+        chartArea:
+        {
+        	left:200,
+        	top:200,
+        	width:'100%',
+        	height:'100%'
+        },
+        height: 450,
+        width: 550,
+        legend:
+        { 
+        	position: 'bottom' 
+        },
+		backgroundColor: '#80800',
+		tooltip: 
+		{
+			trigger: focus,
+			showColorCode: true
+		}
+	};
 	
-	var chart, draw;
+	var volatilityChartOptions = 
+	{
+		chart: 
+		{
+			title: 'Volatility Charts'
+		},
+        hAxis: 
+        {
+            title: 'Volatility'
+        },
+        titlePosition: 'in',
+        chartArea:
+        {
+        	left:200,
+        	top:200,
+        	width:'100%',
+        	height:'100%'
+        },
+        height: 450,
+        width: 550,
+        legend:
+        { 
+        	position: 'bottom' 
+        },
+		backgroundColor: '#80800',
+		tooltip: 
+		{
+			trigger: focus,
+			showColorCode: true
+		}
+	};
 	
-	// TODO
-    $('input.chart-line-display').change(function() 
-    {	
-    	var colsToHide = $('input.chart-line-display:not(:checked)').map(function()
-    	{
-    		return parseInt($(this).attr("column_index"));
-    	}).get();
-    	
-    	view.hideColumns(colsToHide);
-    	chart.draw(view);
-    	
-    	console.log(colsToHide);
-    });	
+	var timeToExpiryChartOptions = 
+	{
+		chart: 
+		{
+			title: 'Time To Expiry Charts'
+		},
+        hAxis: 
+        {
+            title: 'Time to expiry'
+        },
+        titlePosition: 'in',
+        chartArea:
+        {
+        	left:200,
+        	top:200,
+        	width:'100%',
+        	height:'100%'
+        },
+        height: 450,
+        width: 550,
+        legend:
+        { 
+        	position: 'bottom' 
+        },
+		backgroundColor: '#80800',
+		tooltip: 
+		{
+			trigger: focus,
+			showColorCode: true
+		}
+	};
+	
+	var theoreticalValueChartOptions = 
+	{
+		chart: 
+		{
+			title: 'Theoretical Value'
+		},
+        hAxis: 
+        {
+            title: 'Underlying Price'
+        },
+        titlePosition: 'in',
+        chartArea:
+        {
+        	left:200,
+        	top:200,
+        	width:'100%',
+        	height:'100%'
+        },
+        height: 450,
+        width: 550,
+        legend:
+        { 
+        	position: 'bottom' 
+        },
+		backgroundColor: '#80800',
+		tooltip: 
+		{
+			trigger: focus,
+			showColorCode: true
+		}
+	};	
 
-    function drawChart(chartData)
+    function drawGreekCharts(chartData, dataID, chartContainerId, horizontalAxisLabel, chartOptions)
     {
     	var data = new google.visualization.DataTable();
     	
-		var underlyingPriceData = chartData["UNDERLYING_PRICE"];
+		var columnData = chartData[dataID];
 		
-		var underlyingColumn = underlyingPriceData["UNDERLYING_PRICE"];
-		var deltaColumn = underlyingPriceData["DELTA"];
-		var gammaColumn = underlyingPriceData["GAMMA"];
-		var vegaColumn = underlyingPriceData["VEGA"];
-		var thetaColumn = underlyingPriceData["THETA"];
-		var rhoColumn = underlyingPriceData["RHO"];
+		var firstColumn = columnData[dataID];
+		var deltaColumn = columnData["DELTA"];
+		var gammaColumn = columnData["GAMMA"];
+		var vegaColumn = columnData["VEGA"];
+		var thetaColumn = columnData["THETA"];
+		var rhoColumn = columnData["RHO"];
 		
-		var chartLineNames = ["Underlying Price", "Delta", "Gamma", "Vega", "Theta", "Rho"];
+		var chartLineNames = [horizontalAxisLabel, "Delta", "Gamma", "Vega", "Theta", "Rho"];
     	
 		for (var i = 0; i < chartLineNames.length; i++)
     		data.addColumn('number', chartLineNames[i]);
     	
 		var chartLineData = [];
-		var j = 0;
-		for(var i = 0; i < underlyingColumn.length; i++)
+		for(var i = 0; i < firstColumn.length; i++)
 		{
-			if((deltaColumn[i] != 0) || (gammaColumn[i] != 0) || (vegaColumn[i] != 0) ||
-				(thetaColumn[i] != 0) || (rhoColumn[i] != 0))
-			{
-				chartLineData[j++] = new Array(underlyingColumn[i], deltaColumn[i], gammaColumn[i], 
-						vegaColumn[i], thetaColumn[i], rhoColumn[i]);			
-			}
+			chartLineData[i] = new Array(firstColumn[i], deltaColumn[i], gammaColumn[i], 
+					vegaColumn[i], thetaColumn[i], rhoColumn[i]);			
 		}
 
     	data.addRows(chartLineData);
-
-    	var options = 
-    	{
-    		chart: 
-    		{
-    			title: 'Underlying Price Charts'
-    		},
-            hAxis: 
-            {
-                title: 'Underlying Price'
-            },
-            titlePosition: 'in',
-            chartArea:
-            {
-            	left:200,
-            	top:200,
-            	width:'100%',
-            	height:'100%'
-            },
-            height: 450,
-            width: 550,
-            legend:
-            { 
-            	position: 'bottom' 
-            },
-    		backgroundColor: '#80800',
-    		tooltip: 
-    		{
-    			trigger: focus,
-    			showColorCode: true
-    		}
-    	};
     	
-    	view = new google.visualization.DataView(data);	    	
+    	var view = new google.visualization.DataView(data);	    	
 
-    	// TODO
-    	// Can use JQuery here to get div ID must be a descendent of spec ific dailog otherwise all will be the same I guess
-    	// $("dyanmic-charts-01 #underlying-price-charts-content").get(0) MAY NEED GET as wrapped set only is returned.
-    	chart = new google.charts.Line(document.getElementById("underlying-price-charts-content"));
-    	chart.draw(view, options);    	
+    	var chart = new google.charts.Line($("#" + chartContainerId).get(0));
+    	chart.draw(view, chartOptions);
+    	
+        $('input.chart-line-display').change(function() 
+	    {	
+	    	var colsToHide = $('input.chart-line-display:not(:checked)').map(function()
+	    	{
+	    		return parseInt($(this).attr("column_index"));
+	    	}).get();
+	    	
+	    	view.hideColumns(colsToHide);
+	    	chart.draw(view);
+	    	
+	    	console.log(colsToHide);
+	    });    	
+    	
+    	loadingIndicator.fadeOut();
     }
     
-	function ajaxGetChartData(requestId)
+    function drawTheoreticalValueChart(chartData, dataID, chartContainerId, horizontalAxisLabel, chartOptions)
+    {
+    	var data = new google.visualization.DataTable();
+    	
+		var columnData = chartData[dataID];
+		
+		var firstColumn = columnData[dataID];
+		var theoColumn = columnData["THEORETICAL_VALUE"];
+		
+		var chartLineNames = [horizontalAxisLabel, "Theoretical Value"];
+    	
+		for (var i = 0; i < chartLineNames.length; i++)
+    		data.addColumn('number', chartLineNames[i]);
+    	
+		var chartLineData = [];
+		for(var i = 0; i < firstColumn.length; i++)
+			chartLineData[i] = new Array(firstColumn[i], theoColumn[i]);
+
+    	data.addRows(chartLineData);
+    	
+    	var view = new google.visualization.DataView(data);	    	
+
+    	var chart = new google.charts.Line($("#" + chartContainerId).get(0));
+    	chart.draw(view, chartOptions);
+    	
+        $('input.chart-line-display').change(function() 
+	    {	
+	    	var colsToHide = $('input.chart-line-display:not(:checked)').map(function()
+	    	{
+	    		return parseInt($(this).attr("column_index"));
+	    	}).get();
+	    	
+	    	view.hideColumns(colsToHide);
+	    	chart.draw(view);
+	    	
+	    	console.log(colsToHide);
+	    });    	
+    	
+    	loadingIndicator.fadeOut();
+    }    
+    
+	function ajaxGetChartData(requestId, chartContainerId)
 	{
 		$.ajax(
 		{
@@ -641,7 +769,17 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(data) 
 		    {
-		    	drawChart(data);
+		    	drawGreekCharts(data, "UNDERLYING_PRICE", chartContainerId + " #underlying-price-charts-content",
+		    			"Underlying Price", underlyingPriceChartOptions);
+		    	
+		    	drawGreekCharts(data, "VOLATILITY", chartContainerId + " #volatility-charts-content",
+		    			"Volatility", volatilityChartOptions);
+		    	
+		    	drawGreekCharts(data, "TIME_TO_EXPIRY", chartContainerId + " #time-to-expiry-charts-content",
+		    			"Time To Expiry", timeToExpiryChartOptions);
+		    	
+		    	drawTheoreticalValueChart(data, "UNDERLYING_PRICE", chartContainerId + " #theoretical-value-charts-content",
+		    			"Underlying Price", theoreticalValueChartOptions);		    	
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
@@ -654,6 +792,8 @@ $(document).ready(function()
         		}
 	        	else
 	        		alert('Failed to get chart data because of a timeout after five seconds');
+	        	
+	        	loadingIndicator.fadeOut();
 	        }
 		});		
 		
