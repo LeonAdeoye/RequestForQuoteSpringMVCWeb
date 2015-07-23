@@ -243,6 +243,7 @@
 		  <li data="FREEZE"><spring:message code="contextMenu.operation.freeze.menuitem"/></li>
 		  <li data="CHART"><spring:message code="contextMenu.operation.chart.menuitem"/></li>
 		  <li data="CLONE"><spring:message code="contextMenu.operation.clone.menuitem"/></li>
+		  <li data="CUT_AND_PASTE"><spring:message code="contextMenu.operation.cutAndPaste.menuitem"/></li>
 		  <li data="DELETE"><spring:message code="contextMenu.operation.delete.menuitem"/></li>
 		</ul>
 		<div id="requests_bar">

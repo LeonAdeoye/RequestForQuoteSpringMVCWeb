@@ -659,18 +659,10 @@ $(document).ready(function()
 		
 	}
 	
-	$("#requests_add_button").click(function(event)
+	function ajaxSendNewRequest(snippet, bookCode, client, lastUpdatedBy)
 	{
-		disableAddButton();
-		
-		var snippet = $('#requests_snippet').val();
-	    var bookCode = $('#requests_bookCode').val();
-	    var client = clientHashIndexedByDesc[$('#requests_client').val()];
-	    var lastUpdatedBy = "ladeoye"; // TODO
 	    var json = { "request" : snippet, "bookCode" : bookCode, "clientId": client , "lastUpdatedBy" : lastUpdatedBy};
 	    
-	    clearNewRequestInputFields();
-		
 		$.ajax({
 		    url: contextPath + "/requests/createNewRequest", 
 		    type: 'POST',
@@ -698,6 +690,20 @@ $(document).ready(function()
 	        		alert('Failed to add new request because of timeout after five seconds');
 	        }
 		});		
+	}
+	
+	$("#requests_add_button").click(function(event)
+	{
+		disableAddButton();
+	    
+		var snippet = $('#requests_snippet').val();
+	    var bookCode = $('#requests_bookCode').val();
+	    var client = clientHashIndexedByDesc[$('#requests_client').val()];
+	    var lastUpdatedBy = "ladeoye"; // TODO
+	    
+	    clearNewRequestInputFields();	    
+		
+	    ajaxSendNewRequest(snippet, bookCode, client, lastUpdatedBy);
 	});
 	
 	function getPriceUpdates() 
@@ -1569,7 +1575,19 @@ $(document).ready(function()
         		break;
         	case "CHART":
         		createChartDialog(dataView.getItem(row).identifier);
-        		break;        		
+        		break;
+        	case "CLONE":
+        		var snippet = dataView.getItem(row).request;
+        		var bookCode = dataView.getItem(row).bookCode;
+        		var client = dataView.getItem(row).clientId;
+        		var lastUpdatedBy = "ladeoye" // TODO
+        		ajaxSendNewRequest(snippet, bookCode, client, lastUpdatedBy);
+        		break;
+        	case "CUT_AND_PASTE":
+        		$("#requests_snippet").val(dataView.getItem(row).request);
+        		$("#requests_bookCode").val(dataView.getItem(row).bookCode);
+        		$("#requests_client").val(clientHashIndexedById[dataView.getItem(row).clientId]);
+        		break;          		
         	default: 
         		alert("Sorry, this operation is yet to be supported!");
     	}    	
