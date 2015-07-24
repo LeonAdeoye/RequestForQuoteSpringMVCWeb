@@ -699,19 +699,14 @@ $(document).ready(function()
     	chart.draw(view, chartOptions);
     	
         $('input.chart-line-display').change(function() 
-	    {	
+	    {
 	    	var colsToHide = $('input.chart-line-display:not(:checked)').map(function()
 	    	{
 	    		return parseInt($(this).attr("column_index"));
 	    	}).get();
 	    	
 	    	view.hideColumns(colsToHide);
-	    	chart.draw(view);
-	    	
-	    	console.log(colsToHide);
-	    });    	
-    	
-    	loadingIndicator.fadeOut();
+	    });
     }
     
     function drawTheoreticalValueChart(chartData, dataID, chartContainerId, horizontalAxisLabel, chartOptions)
@@ -738,21 +733,6 @@ $(document).ready(function()
 
     	var chart = new google.charts.Line($("#" + chartContainerId).get(0));
     	chart.draw(view, chartOptions);
-    	
-        $('input.chart-line-display').change(function() 
-	    {	
-	    	var colsToHide = $('input.chart-line-display:not(:checked)').map(function()
-	    	{
-	    		return parseInt($(this).attr("column_index"));
-	    	}).get();
-	    	
-	    	view.hideColumns(colsToHide);
-	    	chart.draw(view);
-	    	
-	    	console.log(colsToHide);
-	    });    	
-    	
-    	loadingIndicator.fadeOut();
     }    
     
 	function ajaxGetChartData(requestId, chartContainerId)
@@ -779,7 +759,9 @@ $(document).ready(function()
 		    			"Time To Expiry", timeToExpiryChartOptions);
 		    	
 		    	drawTheoreticalValueChart(data, "UNDERLYING_PRICE", chartContainerId + " #theoretical-value-charts-content",
-		    			"Underlying Price", theoreticalValueChartOptions);		    	
+		    			"Underlying Price", theoreticalValueChartOptions);
+		    	
+		    	loadingIndicator.fadeOut();
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
