@@ -652,17 +652,16 @@ $(document).ready(function()
         	width:'100%',
         	height:'100%'
         },
-        height: 450,
-        width: 550,
+        height: 500,
+        width: 600,
         legend:
         { 
-        	position: 'bottom' 
+        	position: 'none' 
         },
 		backgroundColor: '#80800',
 		tooltip: 
 		{
-			trigger: focus,
-			showColorCode: true
+			trigger: focus
 		}
 	};	
 
@@ -706,33 +705,30 @@ $(document).ready(function()
 	    	}).get();
 	    	
 	    	view.hideColumns(colsToHide);
+	    	chart.draw(view, chartOptions);
 	    });
     }
     
     function drawTheoreticalValueChart(chartData, dataID, chartContainerId, horizontalAxisLabel, chartOptions)
     {
     	var data = new google.visualization.DataTable();
-    	
 		var columnData = chartData[dataID];
-		
 		var firstColumn = columnData[dataID];
-		var theoColumn = columnData["THEORETICAL_VALUE"];
 		
+		var theoColumn = columnData["THEORETICAL_VALUE"];
 		var chartLineNames = [horizontalAxisLabel, "Theoretical Value"];
     	
-		for (var i = 0; i < chartLineNames.length; i++)
-    		data.addColumn('number', chartLineNames[i]);
+		data.addColumn('number', horizontalAxisLabel);
+		data.addColumn('number', "Theoretical Value");
     	
 		var chartLineData = [];
 		for(var i = 0; i < firstColumn.length; i++)
 			chartLineData[i] = new Array(firstColumn[i], theoColumn[i]);
 
-    	data.addRows(chartLineData);
-    	
-    	var view = new google.visualization.DataView(data);	    	
+    	data.addRows(chartLineData);   	
 
     	var chart = new google.charts.Line($("#" + chartContainerId).get(0));
-    	chart.draw(view, chartOptions);
+    	chart.draw(data, chartOptions);
     }    
     
 	function ajaxGetChartData(requestId, chartContainerId)
