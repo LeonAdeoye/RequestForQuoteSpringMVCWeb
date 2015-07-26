@@ -802,7 +802,7 @@ $(document).ready(function()
 	        		if(xhr.status == 404)
 	        			alert('Failed to add request because the server is no longer available. Please try to reload the page.');
 	        		else
-	        			alert('Failed to add request [' + snippet + '] because of error: ' + (xhr.responseText !== "" ? xhr.responseText : textStatus));   
+	        			alert('Failed to add request [' + snippet + '] because of a server error.');   
         		}
 	        	else
 	        		alert('Failed to add new request because of timeout after five seconds');
@@ -854,7 +854,7 @@ $(document).ready(function()
 		        		if(xhr.status == 404)
 		        			alert('Price updates failed because the server is no longer available. Please try to reload the page.');
 		        		else
-		        			alert('Price updates failed due to error: ' + xhr.responseText);   		        			
+		        			alert('Price updates failed because of a server error.');   		        			
 	        		}
 	            	else
 	            		alert("Price updates timed-out after " + priceUpdateTimeout + " milliseconds. Retrigger manually.");
@@ -895,7 +895,7 @@ $(document).ready(function()
 		        		if(xhr.status == 404)
 		        			alert('Calculation updates failed because the server is no longer available. Please try to reload the page.');
 		        		else
-		        			alert('Calculation updates failed due to error: ' + xhr.responseText);   		        			
+		        			alert('Calculation updates failed because of a server error.');   		        			
 	        		}
 	            	else
 	            		alert('Calculation updates timed-out after ' + calculationUpdateTimeout + ' milliseconds. Retriggger manually.');
@@ -937,7 +937,7 @@ $(document).ready(function()
 		        		if(xhr.status == 404)
 		        			alert('Status updates failed because the server is no longer available. Please try to reload the page.');
 		        		else
-		        			alert('Status updates failed due to error: ' + xhr.responseText);   		        			
+		        			alert('Status updates failed because of a server error.');   		        			
 	        		}
 	            	else
 	            		alert('Status updates timed-out after ' + statusUpdateTimeout + ' milliseconds. Retrigger manually.');
@@ -1263,7 +1263,7 @@ $(document).ready(function()
 		    }, 
             error: function (xhr, textStatus, errorThrown) 
             {
-                alert('Failed to get list of statuses. Error: ' + xhr.responseText);
+                alert('Failed to get list of statuses because of a server error.');
             }
 		});	
 	}
@@ -1284,7 +1284,7 @@ $(document).ready(function()
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
-                alert('Failed to get list of underlyings. Error: ' + xhr.responseText);
+                alert('Failed to get list of underlyings because of a server error.');
             }
 		});	
 	}
@@ -1305,7 +1305,7 @@ $(document).ready(function()
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
-                alert('Failed to get list of books. Error: ' + xhr.responseText);
+                alert('Failed to get list of books because of a server error.');
                 loadingIndicator.fadeOut();
             }
 		});	
@@ -1332,7 +1332,7 @@ $(document).ready(function()
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
-                alert('Failed to get list of Clients. Error: ' + xhr.responseText);
+                alert('Failed to get list of Clients because of a server error.');
                 loadingIndicator.fadeOut();
             }
 		});	
@@ -1378,7 +1378,7 @@ $(document).ready(function()
                 },
                 error: function (xhr, textStatus, errorThrown) 
                 {
-                    alert('Failed to retrieve book autocomplete data. Error: ' + xhr.responseText);
+                    alert('Failed to retrieve book autocomplete data because of a server error.');
                 },
                 success: function (data) 
                 {
@@ -1410,7 +1410,7 @@ $(document).ready(function()
                 },
                 error: function (xhr, textStatus, errorThrown) 
                 {
-                    alert('Failed to retrieve client autocomplete data. Error: ' + xhr.responseText);
+                    alert('Failed to retrieve client autocomplete data because of a server error.');
                 },              
                 success: function (clients)
                 {
@@ -1461,7 +1461,7 @@ $(document).ready(function()
                 },
                 error: function (xhr, textStatus, errorThrown) 
                 {
-                    alert('Failed to retrieve underlying autocomplete data. Error: ' + xhr.responseText);
+                    alert('Failed to retrieve underlying autocomplete data because of a server error.');
                 },
                 success: function (underlyings) 
                 {
@@ -1493,7 +1493,7 @@ $(document).ready(function()
                 },
                 error: function (xhr, textStatus, errorThrown) 
                 {
-                    alert('Failed to retrieve status autocomplete data. Error: ' + xhr.responseText);
+                    alert('Failed to retrieve status autocomplete data because of a server error.');
                 },
                 success: function (statuses) 
                 {
@@ -1557,7 +1557,7 @@ $(document).ready(function()
 	        	if(textStatus == "timeout")
 	        		alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + ". Status update timed-out after five seconds.");
 	        	else
-	            	alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + ". Error: " + xhr.responseText);                	
+	            	alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + " because of a server error.");                	
 	        }
 		});
 	}	
@@ -1585,7 +1585,7 @@ $(document).ready(function()
 	        	if(textStatus == "timeout")
 	        		alert("Failed to save the searches. Timed-out after five seconds.");
 	        	else
-	            	alert("Failed to save the searches. Error: " + xhr.responseText);                	
+	            	alert("Failed to save the searches because of a server error.");                	
 	        }
 		});		
 	}
@@ -1659,7 +1659,7 @@ $(document).ready(function()
 	        	if(textStatus == "timeout")
 	        		alert("Failed to retrieve result of search. Timed-out after 1 minute.");
 	        	else
-	            	alert("Failed to retrieve search results. Error: " + xhr.responseText);                	
+	            	alert("Failed to retrieve search results because of a server error.");                	
 	        }
 		});		
 	}	
