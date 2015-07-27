@@ -1326,8 +1326,7 @@ $(document).ready(function()
                 $.map(clients, function (client) 
                 {
                 	clientHashIndexedByDesc[client.name] = client.clientId;
-                	clientHashIndexedById[client.clientId] = client.name;
-                	
+                	clientHashIndexedById[client.clientId] = client.name;                	
                 });		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
@@ -1425,89 +1424,86 @@ $(document).ready(function()
             });
         }
     });
-	
-	function displayClientLabel(event, ui)
+		
+	function displayLabel(event, ui)
 	{
         event.preventDefault();
-        $(".requests_client_autocomplete").val(ui.item.label);
-	}
-	
-	function displayStatusLabel(event, ui)
-	{
-        event.preventDefault();
-        $(".requests_status_autocomplete").val(ui.item.label);
+        $(event.currentTarget).val(ui.item.label);
 	}	
 	
-	$( ".requests_client_autocomplete" ).on("autocompleteselect", displayClientLabel);
-	$( ".requests_client_autocomplete" ).on("autocompletefocus", displayClientLabel);
-
-	$( ".requests_status_autocomplete" ).on("autocompleteselect", displayStatusLabel);
-	$( ".requests_status_autocomplete" ).on("autocompletefocus", displayStatusLabel);
+	$(".requests_client_autocomplete").on("autocompleteselect", displayLabel);
+	$(".requests_client_autocomplete").on("autocompletefocus", displayLabel);	
 	
+	$(".requests_status_autocomplete").on("autocompleteselect", displayLabel);
+	$(".requests_status_autocomplete").on("autocompletefocus", displayLabel);	
 	
+	function ajaxUnderlyingAutocomplete(request, response) 
+    {
+        $.ajax(
+        {
+            type: "GET",
+            url: contextPath + "/underlyings/matchingUnderlyingTags?pattern=" + request.term,
+            dataType: "json", 
+            data: 
+            {
+                term: request.termCode
+            },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+                alert('Failed to retrieve underlying autocomplete data because of a server error.');
+            },
+            success: function (underlyings) 
+            {
+                response($.map(underlyings, function (underlying) 
+                {
+                    return {
+                        		label: underlying.value + "  (" + underlying.label + ")",
+                        		value: underlying.value
+                    		}
+                }));
+            }
+        });
+    }	
+		
 	$(".requests_underlying_autocomplete").autocomplete(
 	{
 		minLength:1,
-        source: function (request, response) 
-        {
-            $.ajax(
-            {
-                type: "GET",
-                url: contextPath + "/underlyings/matchingUnderlyingTags?pattern=" + request.term,
-                dataType: "json", 
-                data: 
-                {
-                    term: request.termCode
-                },
-                error: function (xhr, textStatus, errorThrown) 
-                {
-                    alert('Failed to retrieve underlying autocomplete data because of a server error.');
-                },
-                success: function (underlyings) 
-                {
-                    response($.map(underlyings, function (underlying) 
-                    {
-                        return {
-                            		label: underlying.value + "  (" + underlying.label + ")",
-                            		value: underlying.value
-                        		}
-                    }));
-                }
-            });
-        }
+        source: ajaxUnderlyingAutocomplete
     });
+	
+	function ajaxStatusAutocomplete(request, response) 
+    {
+        $.ajax(
+        {
+            type: "GET",
+            url: contextPath + "/requests/matchingStatusTags?pattern=" + request.term,
+            dataType: "json", 
+            data: 
+            {
+                term: request.termCode
+            },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+                alert('Failed to retrieve status autocomplete data because of a server error.');
+            },
+            success: function (statuses) 
+            {
+                response($.map(statuses, function (status) 
+                {
+                    return {
+                        		label: status.label,
+                        		value: status.value
+                    		}
+                }));
+            }
+        });
+    }	
 	
 	$(".requests_status_autocomplete").autocomplete(
 	{
 		minLength:1,
-        source: function (request, response) 
-        {
-            $.ajax(
-            {
-                type: "GET",
-                url: contextPath + "/requests/matchingStatusTags?pattern=" + request.term,
-                dataType: "json", 
-                data: 
-                {
-                    term: request.termCode
-                },
-                error: function (xhr, textStatus, errorThrown) 
-                {
-                    alert('Failed to retrieve status autocomplete data because of a server error.');
-                },
-                success: function (statuses) 
-                {
-                    response($.map(statuses, function (status) 
-                    {
-                        return {
-                            		label: status.label,
-                            		value: status.value
-                        		}
-                    }));
-                }
-            });
-        }
-    });	
+        source: ajaxStatusAutocomplete
+    });		
 	
 	function updateStatusInGrid(updatedRequest, row, oldStatus, newStatus)
 	{	
