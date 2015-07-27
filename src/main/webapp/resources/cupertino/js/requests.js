@@ -1733,7 +1733,8 @@ $(document).ready(function()
 
 	$("#requests_clear_button").click(function()
 	{
-		clearSearchFilterInputFields();
+		clearFilterInputFields();
+		clearSearchInputFields();
 		clearFilter();
 		clearNewRequestInputFields();		
 		disableAddButton();
@@ -1761,26 +1762,36 @@ $(document).ready(function()
 			$(this).val($(this).attr("default_value"));
 	});
 	
-	function clearSearchFilterInputFields()
+	function clearFilterInputFields()
 	{				
-		$(".filter_search_textBox").each(function(index)
+		$("div#requestsFilter input.filter_search_textBox").each(function(index)
 		{
 			$(this).val($(this).attr("default_value"));
 		});		
 	}
 	
+	function clearSearchInputFields()
+	{				
+		$("div#requestsSearch input.filter_search_textBox").each(function(index)
+		{
+			$(this).val($(this).attr("default_value"));
+		});		
+	}	
+	
 	$(".requests_filter_search_clear_btn").click(function()
 	{
-		clearSearchFilterInputFields();
-		
 		if($(this).is("#requests_filter_clear_btn"))
 		{
+			clearFilterInputFields();
 			$("#requests_filter_button").removeClass("filter_on");
 			clearFilter();
 		}
 
 		if($(this).is("#requests_search_clear_btn"))
+		{
+			clearSearchInputFields();
 			$("#requests_search_button").removeClass("filter_on");
+		}
 		
 		getRequestsFromTodayOnly();
 	});
