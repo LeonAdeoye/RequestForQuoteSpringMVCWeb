@@ -219,7 +219,7 @@ fieldset
 	padding: 2px;
 	border: 1px;
 	margin: 3px;
-	width: 200px;
+	width: 125px;
 }
 
 .chart-to-clone
@@ -229,7 +229,12 @@ fieldset
 	display: none;
 }
 
-.new-requests-dialog
+#new-request-dialog-add
+{
+	width: 25px;
+}
+
+.new-requests-dialog-hide
 {
 	display:none;
 }

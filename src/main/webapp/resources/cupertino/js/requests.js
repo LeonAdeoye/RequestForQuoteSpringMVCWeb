@@ -333,7 +333,9 @@ $(document).ready(function()
 	
 	$("#requests_add_more_button").click(function()
 	{
-		$("#new-request-dialog-parent").dialog(
+		$(".new-requests-dialog").toggleClass("new-requests-dialog-hide");
+		
+		$("div#new-request-dialog-parent").dialog(
 		{	
 			modal : true, 
 			buttons: 
@@ -343,6 +345,7 @@ $(document).ready(function()
 				Cancel: function()
 				{
 					$(this).dialog("close");
+					$(".new-requests-dialog").toggleClass("new-requests-dialog-hide");
 				},
 				Clear: function()
 				{
