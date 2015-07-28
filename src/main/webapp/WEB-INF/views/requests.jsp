@@ -270,23 +270,35 @@
 		
 		<div style="width:1330px;">
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
-		</div
+		</div>
 				
-		<div id="new-request-dialog-parent" title="Add new request for quote"  class="new-requests-dialog-hide new-requests-dialog" >
-			<div id="new-request-dialog-snippet-breakdown" class="new-requests-dialog new-requests-dialog-hide clone-this">
-				<input id="new-request-dialog-type" class="new-requests-dialog new-requests-dialog-hide new_request" path="request" value="Enter product type..." type="text" default_value="Enter product type..." />
-				<input id="new-request-dialog-qty" class="new-requests-dialog new-requests-dialog-hide new_request" path="request" value="Enter quantity..." type="text" default_value="Enter quantity..." />
-				<div class="new-request-dialog-side" class="new-requests-dialog new-requests-dialog-hide new_request">
-				  	<input type="radio" id="new-request-dialog-side-buy" class="new-requests-dialog new-requests-dialog-hide new_request" name="requests.buy" checked="checked"><label for="new-request-dialog-side-buy"><spring:message code="new.request.dialog.side.buy.label"/></label>
-				  	<input type="radio" id="new-request-dialog-side-sell" class="new-requests-dialog new-requests-dialog-hide new_request" name="requests.sell"><label for="new-request-dialog-side-sell"><spring:message code="new.request.dialog.side.sell.label"/></label>				  	
-				</div>
-				<button id="new-request-dialog-add" class="new-requests-dialog new-requests-dialog-hide">+</button>			
+		<div id="new-request-dialog-parent" title="Add new request for quote:"  class="new-requests-dialog-hide new-requests-dialog" >
+			<div id="new-request-dialog-snippet-breakdown" class="new-request-dialog-snippet-breakdown-class new-requests-dialog new-requests-dialog-hide float-left clone-this-snippet">
+				<select id="new-request-dialog-type" class=" new-requests-dialog new-requests-dialog-hide float-left">
+					<option value="call">Call</option>
+					<option value="put">Put</option>
+					<option value="straddle">Straddle</option>
+					<option value="strangle">Strangle</option>
+					<option value="butterfly">Butterfly</option>
+				</select>
+				<input id="new-request-dialog-qty" class="new-requests-dialog new-requests-dialog-hide new_request float-left" path="request" value="Enter quantity..." type="text" default_value="Enter quantity..." />
+				<input id="new-request-dialog-strike" class="new-requests-dialog new_request new-requests-dialog-hide float-left" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
+				<select id="new-request-dialog-side" class=" new-requests-dialog new-requests-dialog-hide">
+					<option value="buy">Buy</option>
+					<option value="sell">Sell</option>
+				</select>
+				<button id="new-request-dialog-add" class="new-requests-dialog new-requests-dialog-hide float-right clone-snippet">+</button>			
 			</div>
+			<div class="float-left" style="clear:right;">			
+				<input id="new-request-dialog-maturity-date" class="new-requests-dialog new_request new-requests-dialog-hide float-left" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
+			</div>
+			<br />
 			<div>
-				<input id="new-request-dialog-strike" class="new-requests-dialog new_request new-requests-dialog-hide" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
-				<input id="new-request-dialog-maturity-date" class="new-requests-dialog new_request new-requests-dialog-hide" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
-				<input id="new-request-dialog-underlying-ric" class="new-requests-dialog new_request new-requests-dialog-hide" path="underlying_ric" value="Enter underlying RIC..." type="text" default_value="Enter underlying RIC..." />
-				<input id="new-request-dialog-underlying-price" class="new-requests-dialog new_request new-requests-dialog-hide" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />			
+				<input id="new-request-dialog-underlying-ric" class="new-requests-dialog new_request new-requests-dialog-hide float-left" path="underlying_ric" value="Enter underlying RIC..." type="text" default_value="Enter underlying RIC..." />
+			</div>
+			<br />
+			<div class="float-left" style="clear:right;">
+				<input id="new-request-dialog-underlying-price" class="new-requests-dialog new_request new-requests-dialog-hide float-left" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
 			</div>
 		</div>
 		

@@ -328,32 +328,60 @@ $(document).ready(function()
 	
 	function addRequestFromDialog()
 	{
+		// Create snippet here...
+		
+		// Last thing to do is close the dialog
 		$("#new-request-dialog-parent").dialog("close");
+		$(".new-requests-dialog").addClass("new-requests-dialog-hide");
+	}
+	
+	function clearAddNewRequestDialog()
+	{
+		$(".cloned-snippet").remove();
+		$("input.new-requests-dialog").each(function() 
+		{
+			$(this).val($(this).attr("default_value"));
+		});		
 	}
 	
 	$("#requests_add_more_button").click(function()
 	{
-		$(".new-requests-dialog").toggleClass("new-requests-dialog-hide");
+		$(".new-requests-dialog").removeClass("new-requests-dialog-hide");
 		
 		$("div#new-request-dialog-parent").dialog(
 		{	
-			modal : true, 
+			modal : true,
+		    resizable: true,
+		    width: 370,
+			beforeClose: function()
+			{
+				clearAddNewRequestDialog();
+			},		    
 			buttons: 
 			{ 
 				Add: addRequestFromDialog,
-			    resizable: false,
 				Cancel: function()
 				{
 					$(this).dialog("close");
-					$(".new-requests-dialog").toggleClass("new-requests-dialog-hide");
+					$(".new-requests-dialog").addClass("new-requests-dialog-hide");
 				},
-				Clear: function()
-				{
-					alert("not yet supported");
-				}		
+				Clear: clearAddNewRequestDialog					
 			}
 		});
 	});
+	
+	var legCount = 0;
+	$("button.clone-snippet").click(function()
+	{
+		var newLeg = "new-request-dialog-snippet-breakdown" + legCount++;
+		$("#new-request-dialog-snippet-breakdown")
+			.clone(true).attr("id", newLeg)
+			.removeClass("clone-this-snippet")
+			.removeClass("new-requests-dialog-hide")
+			.addClass("cloned-snippet")
+			.insertBefore("#new-request-dialog-maturity-date");
+	});
+	
 	
 	var chartDialogOptions = 
 	{

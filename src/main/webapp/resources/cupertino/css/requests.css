@@ -219,7 +219,7 @@ fieldset
 	padding: 2px;
 	border: 1px;
 	margin: 3px;
-	width: 125px;
+	width: 140px;
 }
 
 .chart-to-clone
@@ -237,4 +237,62 @@ fieldset
 .new-requests-dialog-hide
 {
 	display:none;
+}
+
+.float-left
+{
+	float:left;
+}
+
+.float-right
+{
+	float:right;
+}
+
+
+.new-request-dialog-snippet-breakdown-class
+{
+	float:left;
+	height:22px;
+	clear:right;
+	width:inherit;
+	margin:0px;
+}
+
+#new-request-dialog-side
+{
+	width:48px;
+	padding:1px;
+	margin:1px;
+}
+
+#new-request-dialog-strike
+{
+	width:80px;
+	padding:2px;
+	margin:1px;	
+}
+
+#new-request-dialog-qty
+{
+	width:95px;
+	padding:2px;
+	margin:1px;
+}
+
+#new-request-dialog-type
+{
+	width:75px;
+	padding:1px;
+	margin:1px;
+}
+
+#new-request-dialog-add
+{
+    padding: 0px;
+    margin-left: 0px;
+    margin-top: 1px;
+    background-color: olive;
+    height: 17px;
+    width:17px;		
 }
