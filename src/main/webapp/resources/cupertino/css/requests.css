@@ -252,6 +252,7 @@ fieldset
 .clear-both
 {
 	clear:both;
+	margin-top:0px;
 }
 
 .new-request-dialog-snippet-breakdown-class

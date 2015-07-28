@@ -368,6 +368,13 @@ $(document).ready(function()
 				Clear: clearAddNewRequestDialog					
 			}
 		});
+		
+		// Initialize after dialog creation because autocomplete menu's z-index is incorrect.
+		$(".dialog_underlying_autocomplete").autocomplete(
+		{
+			minLength:1,
+	        source: ajaxUnderlyingAutocomplete
+	    });	
 	});
 	
 	var legCount = 0;
@@ -1422,7 +1429,7 @@ $(document).ready(function()
                 }
             });
         }
-    });
+    });	
 	
 	$(".requests_client_autocomplete").autocomplete(
 	{
