@@ -249,6 +249,10 @@ fieldset
 	float:right;
 }
 
+.clear-both
+{
+	clear:both;
+}
 
 .new-request-dialog-snippet-breakdown-class
 {

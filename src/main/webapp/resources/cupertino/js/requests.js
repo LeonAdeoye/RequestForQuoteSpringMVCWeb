@@ -326,7 +326,7 @@ $(document).ready(function()
 	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
 	$(".dateTxtBox").datepicker();
 	
-	function addRequestFromDialog()
+	function pasteRequestSnippetFromDialog()
 	{
 		// Create snippet here...
 		
@@ -359,7 +359,7 @@ $(document).ready(function()
 			},		    
 			buttons: 
 			{ 
-				Add: addRequestFromDialog,
+				Paste: pasteRequestSnippetFromDialog,
 				Cancel: function()
 				{
 					$(this).dialog("close");

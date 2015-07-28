@@ -272,7 +272,7 @@
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div>
 				
-		<div id="new-request-dialog-parent" title="Add new request for quote:"  class="new-requests-dialog-hide new-requests-dialog" >
+		<div id="new-request-dialog-parent" title="Paste new request for quote:"  class="new-requests-dialog-hide new-requests-dialog" >
 			<div id="new-request-dialog-snippet-breakdown" class="new-request-dialog-snippet-breakdown-class new-requests-dialog new-requests-dialog-hide float-left clone-this-snippet">
 				<select id="new-request-dialog-type" class=" new-requests-dialog new-requests-dialog-hide float-left">
 					<option value="call">Call</option>
@@ -289,16 +289,14 @@
 				</select>
 				<button id="new-request-dialog-add" class="new-requests-dialog new-requests-dialog-hide float-right clone-snippet">+</button>			
 			</div>
-			<div class="float-left" style="clear:right;">			
-				<input id="new-request-dialog-maturity-date" class="new-requests-dialog new_request new-requests-dialog-hide float-left" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
+			<div class="clear-both">			
+				<input id="new-request-dialog-maturity-date" class="new-requests-dialog new_request new-requests-dialog-hide clear-both" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
 			</div>
-			<br />
-			<div>
-				<input id="new-request-dialog-underlying-ric" class="new-requests-dialog new_request new-requests-dialog-hide float-left" path="underlying_ric" value="Enter underlying RIC..." type="text" default_value="Enter underlying RIC..." />
+			<div class="clear-both">
+				<input id="new-request-dialog-underlying-ric" class="new-requests-dialog new_request new-requests-dialog-hide clear-both" path="underlying_ric" value="Enter underlying RIC..." type="text" default_value="Enter underlying RIC..." />
 			</div>
-			<br />
-			<div class="float-left" style="clear:right;">
-				<input id="new-request-dialog-underlying-price" class="new-requests-dialog new_request new-requests-dialog-hide float-left" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
+			<div class="clear-both">
+				<input id="new-request-dialog-underlying-price" class="new-requests-dialog new_request new-requests-dialog-hide clear-both" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
 			</div>
 		</div>
 		
