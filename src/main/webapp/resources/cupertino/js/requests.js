@@ -351,8 +351,8 @@ $(document).ready(function()
 		$("div#new-request-dialog-parent").dialog(
 		{	
 			modal : true,
-		    resizable: true,
-		    width: 370,
+		    resizable: false,
+		    width: 390,
 			beforeClose: function()
 			{
 				clearAddNewRequestDialog();
@@ -378,7 +378,7 @@ $(document).ready(function()
 	});
 	
 	var legCount = 0;
-	$("button.clone-snippet").click(function()
+	$("button.clone-snippet-add").click(function()
 	{
 		var newLeg = "new-request-dialog-snippet-breakdown" + legCount++;
 		$("#new-request-dialog-snippet-breakdown")
@@ -389,6 +389,11 @@ $(document).ready(function()
 			.insertBefore("#new-request-dialog-maturity-date");
 	});
 	
+
+	$("button.clone-snippet-remove").click(function()
+	{
+		$(this).parent("div.new-request-dialog-snippet-breakdown-class.cloned-snippet").remove();
+	})	
 	
 	var chartDialogOptions = 
 	{

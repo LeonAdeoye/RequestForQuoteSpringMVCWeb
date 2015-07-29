@@ -301,3 +301,18 @@ fieldset
     height: 17px;
     width:17px;		
 }
+
+#new-request-dialog-remove
+{
+    padding: 0px;
+    margin-left: 0px;
+    margin-top: 1px;
+    background-color: olive;
+    height: 17px;
+    width:17px;		
+}
+
+#new-request-dialog-snippet-breakdown.clone-this-snippet button#new-request-dialog-remove.clone-snippet-remove
+{
+	display:none;
+}

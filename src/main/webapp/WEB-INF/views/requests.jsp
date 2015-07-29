@@ -287,7 +287,8 @@
 					<option value="buy">Buy</option>
 					<option value="sell">Sell</option>
 				</select>
-				<button id="new-request-dialog-add" class="new-requests-dialog new-requests-dialog-hide float-right clone-snippet">+</button>			
+				<button id="new-request-dialog-add" class="new-requests-dialog new-requests-dialog-hide clone-snippet-add">+</button>
+				<button id="new-request-dialog-remove" class="new-requests-dialog new-requests-dialog-hide float-right clone-snippet-remove">-</button>
 			</div>
 			<div class="clear-both">			
 				<input id="new-request-dialog-maturity-date" class="dateTxtBox new-requests-dialog new_request new-requests-dialog-hide clear-both" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
