@@ -321,34 +321,55 @@ $(document).ready(function()
 			alert('Invalid date! "YYYY-DD-MM" date format expected. For example: 2012-12-23.');
 			$(this).val($(this).attr("default_value"));
 		}		
-	}	
+	}
 	
 	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
 	$(".dateTxtBox").datepicker();
 	
+	var originalTitle  = "",  callPutSnippet  = "", strikeSnippet, = "", maturityDateSnippet = "", underlyingSnippet = "";
+	
+	$(".new-request-dialog-snippet-breakdown-class input.new-requests-dialog", 
+		".new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(constructSnippet);
+	
+	function constructSnippet()
+	{
+		maturitySnippet = $("#new-request-dialog-maturity-date").val();
+		underlyingSnippet = $("#new-request-dialog-underlying-ric").val();
+		
+		$(".new-request-dialog-snippet-breakdown-class").each(function()
+		{
+			$(this);
+		})
+		
+		snippet = callPutSnippet + " " + strikeSnippet + " " + maturityDateSnippet + " " + underlyingSnippet;
+		$("#new-request-dialog-parent").attr("title", originalTitle + snippet);
+	}
+		
 	function pasteRequestSnippetFromDialog()
 	{
-		// Create snippet here...
-		
-		// Last thing to do is close the dialog
+		if(snippetMatches(snippet))
+			$("#request_snippet").val(snippet);
+
 		$("#new-request-dialog-parent").dialog("close");
 		$(".new-requests-dialog").addClass("new-requests-dialog-hide");
 	}
 	
 	function clearAddNewRequestDialog()
-	{
+	{		
 		$(".cloned-snippet").remove();
 		$("input.new-requests-dialog").each(function() 
 		{
 			$(this).val($(this).attr("default_value"));
-		});		
+		});
+		
+		$("#new-request-dialog-parent").attr("title", originalTitle);
 	}
 	
 	$("#requests_add_more_button").click(function()
-	{
+	{	
 		$(".new-requests-dialog").removeClass("new-requests-dialog-hide");
 		
-		$("div#new-request-dialog-parent").dialog(
+		$("#new-request-dialog-parent").dialog(
 		{	
 			modal : true,
 		    resizable: false,
@@ -366,15 +387,24 @@ $(document).ready(function()
 					$(".new-requests-dialog").addClass("new-requests-dialog-hide");
 				},
 				Clear: clearAddNewRequestDialog					
-			}
+			}			
 		});
 		
 		// Initialize after dialog creation because autocomplete menu's z-index is incorrect.
 		$(".dialog_underlying_autocomplete").autocomplete(
 		{
 			minLength:1,
-	        source: ajaxUnderlyingAutocomplete
-	    });	
+	        source: ajaxUnderlyingAutocomplete,
+	        change: constructSnippet
+	    });
+		
+		$("#new-request-dialog-maturity-date").datepicker(
+		{
+			dateFormat : "ddmmmyyyy", 
+			onClose : constructSnippet 
+		});
+		
+		originalTitle = $("#new-request-dialog-parent").attr("title");
 	});
 	
 	var legCount = 0;

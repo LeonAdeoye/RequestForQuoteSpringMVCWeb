@@ -274,7 +274,7 @@
 				
 		<div id="new-request-dialog-parent" title="Paste new request for quote:"  class="new-requests-dialog-hide new-requests-dialog" >
 			<div id="new-request-dialog-snippet-breakdown" class="new-request-dialog-snippet-breakdown-class new-requests-dialog new-requests-dialog-hide float-left clone-this-snippet">
-				<select id="new-request-dialog-type" class=" new-requests-dialog new-requests-dialog-hide float-left">
+				<select id="new-request-dialog-type" class="new-requests-dialog new-requests-dialog-hide float-left">
 					<option value="call">Call</option>
 					<option value="put">Put</option>
 					<option value="straddle">Straddle</option>
