@@ -284,10 +284,7 @@ $(document).ready(function()
 	var priceUpdateTimeout = 5000;
 	var statusUpdateTimeout = 5000;
 	
-
-	
 	var loadingIndicator = null;
-
 	var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
 	
 	var dataView = new Slick.Data.DataView(
@@ -336,10 +333,36 @@ $(document).ready(function()
 		maturitySnippet = $("#new-request-dialog-maturity-date").val();
 		underlyingSnippet = $("#new-request-dialog-underlying-ric").val();
 		
-		$(".new-request-dialog-snippet-breakdown-class").each(function()
+		var tempSnippet = ""
+		
+		$("div.new-request-dialog-snippet-breakdown-class").each(function()
 		{
-			$(this);
-		})
+			$(this).children("select.new-request-dialog-type-class:first").each(function()
+			{
+				tempSnippet = $(this).val();
+			});
+			
+			$(this).children("select.new-request-dialog-expiry-type-class:first").each(function()
+			{
+				if($(this).val() == "A")
+					tempSnippet = tempSnippet.toUpperCase();
+			});
+			
+			$(this).children("select.new-request-dialog-qty-class:first").each(function()
+			{
+				tempSnippet = $(this).val() + tempSnippet;
+			});
+			
+			$(this).children("select.new-request-dialog-side-class:first").each(function()
+			{
+				if($(this).val() == "Sell")
+					tempSnippet = "-" + tempSnippet;
+				else
+					tempSnippet = "+" + tempSnippet;
+			});				
+		});
+		
+		callPutSnippet = tempSnippet; // redundant variable?
 		
 		snippet = callPutSnippet + " " + strikeSnippet + " " + maturityDateSnippet + " " + underlyingSnippet;
 		$("#new-request-dialog-parent").attr("title", originalTitle + snippet);

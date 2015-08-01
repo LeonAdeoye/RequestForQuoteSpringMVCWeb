@@ -274,16 +274,20 @@
 				
 		<div id="new-request-dialog-parent" title="Paste new request for quote:"  class="new-requests-dialog-hide new-requests-dialog" >
 			<div id="new-request-dialog-snippet-breakdown" class="new-request-dialog-snippet-breakdown-class new-requests-dialog new-requests-dialog-hide float-left clone-this-snippet">
-				<select id="new-request-dialog-type" class="new-requests-dialog new-requests-dialog-hide float-left">
-					<option value="call">Call</option>
-					<option value="put">Put</option>
+				<select id="new-request-dialog-type" class="new-request-dialog-type-class new-requests-dialog new-requests-dialog-hide float-left">
+					<option value="C">Call</option>
+					<option value="P">Put</option>
 					<option value="straddle">Straddle</option>
 					<option value="strangle">Strangle</option>
 					<option value="butterfly">Butterfly</option>
 				</select>
-				<input id="new-request-dialog-qty" class="new-requests-dialog new-requests-dialog-hide new_request float-left" path="request" value="Enter quantity..." type="text" default_value="Enter quantity..." />
-				<input id="new-request-dialog-strike" class="new-requests-dialog new_request new-requests-dialog-hide float-left" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
-				<select id="new-request-dialog-side" class=" new-requests-dialog new-requests-dialog-hide">
+				<select id="new-request-dialog-expiry-type" class="new-request-dialog-expiry-type-class new-requests-dialog new-requests-dialog-hide float-left">
+					<option value="A">American</option>
+					<option value="E">European</option>
+				</select>				
+				<input id="new-request-dialog-qty" class="new-request-dialog-qty-class new-requests-dialog new-requests-dialog-hide new_request float-left" path="request" value="Enter quantity..." type="text" default_value="Enter quantity..." />
+				<input id="new-request-dialog-strike" class="new-request-dialog-strike-class new-requests-dialog new_request new-requests-dialog-hide float-left" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
+				<select id="new-request-dialog-side" class="new-request-dialog-side-class new-requests-dialog new-requests-dialog-hide">
 					<option value="buy">Buy</option>
 					<option value="sell">Sell</option>
 				</select>
