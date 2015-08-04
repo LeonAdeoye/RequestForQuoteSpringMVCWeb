@@ -295,13 +295,10 @@
 				<button id="new-request-dialog-remove" class="new-requests-dialog new-requests-dialog-hide float-right clone-snippet-remove">-</button>
 			</div>
 			<div class="clear-both">			
-				<input id="new-request-dialog-maturity-date" class="dateTxtBox new-requests-dialog new_request new-requests-dialog-hide clear-both" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
+				<input id="new-request-dialog-maturity-date" class="new-requests-dialog new_request new-requests-dialog-hide clear-both" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
 			</div>
 			<div class="clear-both">
 				<input id="new-request-dialog-underlying-ric" class="dialog_underlying_autocomplete new-requests-dialog new_request new-requests-dialog-hide clear-both" path="underlying_ric" value="Enter underlying RIC..." type="text" default_value="Enter underlying RIC..." />
-			</div>
-			<div class="clear-both">
-				<input id="new-request-dialog-underlying-price" class="new-requests-dialog new_request new-requests-dialog-hide clear-both" path="underlying_price" value="Enter underlying price..." type="text" default_value="Enter underlying price..." />
 			</div>
 		</div>
 		

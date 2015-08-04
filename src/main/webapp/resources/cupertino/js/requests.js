@@ -376,7 +376,7 @@ $(document).ready(function()
 		
 	function pasteRequestSnippetFromDialog()
 	{
-		$("#request_snippet").val(snippet);
+		$("#requests_snippet").val(snippet);
 		$("#new-request-dialog-parent").dialog("close");
 		$(".new-requests-dialog").addClass("new-requests-dialog-hide");
 	}
@@ -430,7 +430,7 @@ $(document).ready(function()
 		
 		$("#new-request-dialog-maturity-date").datepicker(
 		{
-			dateFormat : "ddmmmyyyy", 
+			dateFormat : "ddMyy", 
 			onClose : constructSnippet 
 		});
 		
