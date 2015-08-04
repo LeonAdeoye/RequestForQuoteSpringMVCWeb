@@ -288,8 +288,8 @@
 				<input id="new-request-dialog-qty" class="new-request-dialog-qty-class new-requests-dialog new-requests-dialog-hide new_request float-left" path="request" value="Enter quantity..." type="text" default_value="Enter quantity..." />
 				<input id="new-request-dialog-strike" class="new-request-dialog-strike-class new-requests-dialog new_request new-requests-dialog-hide float-left" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
 				<select id="new-request-dialog-side" class="new-request-dialog-side-class new-requests-dialog new-requests-dialog-hide">
-					<option value="buy">Buy</option>
-					<option value="sell">Sell</option>
+					<option value="Buy">Buy</option>
+					<option value="Sell">Sell</option>
 				</select>
 				<button id="new-request-dialog-add" class="new-requests-dialog new-requests-dialog-hide clone-snippet-add">+</button>
 				<button id="new-request-dialog-remove" class="new-requests-dialog new-requests-dialog-hide float-right clone-snippet-remove">-</button>

@@ -292,6 +292,13 @@ fieldset
 	margin:1px;
 }
 
+#new-request-dialog-expiry-type
+{
+	width:95px;
+	padding:1px;
+	margin:1px;	
+}
+
 #new-request-dialog-add
 {
     padding: 0px;

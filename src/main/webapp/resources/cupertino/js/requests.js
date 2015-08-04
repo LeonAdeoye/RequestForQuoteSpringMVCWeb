@@ -323,17 +323,14 @@ $(document).ready(function()
 	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
 	$(".dateTxtBox").datepicker();
 	
-	var originalTitle  = "",  callPutSnippet  = "", strikeSnippet, = "", maturityDateSnippet = "", underlyingSnippet = "";
-	
-	$(".new-request-dialog-snippet-breakdown-class input.new-requests-dialog", 
-		".new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(constructSnippet);
-	
+	var snippet = "", originalTitle = "";
+		
 	function constructSnippet()
 	{
-		maturitySnippet = $("#new-request-dialog-maturity-date").val();
-		underlyingSnippet = $("#new-request-dialog-underlying-ric").val();
+		var tempSnippet = "", strikeSnippet = "", callPutSnippet = "";
 		
-		var tempSnippet = ""
+		var maturityDateSnippet = $("#new-request-dialog-maturity-date").val();
+		var underlyingSnippet = $("#new-request-dialog-underlying-ric").val();
 		
 		$("div.new-request-dialog-snippet-breakdown-class").each(function()
 		{
@@ -348,9 +345,10 @@ $(document).ready(function()
 					tempSnippet = tempSnippet.toUpperCase();
 			});
 			
-			$(this).children("select.new-request-dialog-qty-class:first").each(function()
+			$(this).children("input.new-request-dialog-qty-class:first").each(function()
 			{
-				tempSnippet = $(this).val() + tempSnippet;
+				if($(this).val() != "1")
+					tempSnippet = $(this).val() + tempSnippet;
 			});
 			
 			$(this).children("select.new-request-dialog-side-class:first").each(function()
@@ -359,10 +357,18 @@ $(document).ready(function()
 					tempSnippet = "-" + tempSnippet;
 				else
 					tempSnippet = "+" + tempSnippet;
-			});				
+			});
+			
+			$(this).children("input.new-request-dialog-strike-class:first").each(function()
+			{
+				if(strikeSnippet == "")
+					strikeSnippet = $(this).val();
+				else
+					strikeSnippet = strikeSnippet + "," + $(this).val();					
+			});
+			
+			callPutSnippet = callPutSnippet + tempSnippet; 
 		});
-		
-		callPutSnippet = tempSnippet; // redundant variable?
 		
 		snippet = callPutSnippet + " " + strikeSnippet + " " + maturityDateSnippet + " " + underlyingSnippet;
 		$("#new-request-dialog-parent").attr("title", originalTitle + snippet);
@@ -370,9 +376,7 @@ $(document).ready(function()
 		
 	function pasteRequestSnippetFromDialog()
 	{
-		if(snippetMatches(snippet))
-			$("#request_snippet").val(snippet);
-
+		$("#request_snippet").val(snippet);
 		$("#new-request-dialog-parent").dialog("close");
 		$(".new-requests-dialog").addClass("new-requests-dialog-hide");
 	}
@@ -396,7 +400,7 @@ $(document).ready(function()
 		{	
 			modal : true,
 		    resizable: false,
-		    width: 390,
+		    width: 480,
 			beforeClose: function()
 			{
 				clearAddNewRequestDialog();
@@ -412,6 +416,9 @@ $(document).ready(function()
 				Clear: clearAddNewRequestDialog					
 			}			
 		});
+		
+		$("div.new-request-dialog-snippet-breakdown-class input.new-requests-dialog", 
+		"div.new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(constructSnippet);		
 		
 		// Initialize after dialog creation because autocomplete menu's z-index is incorrect.
 		$(".dialog_underlying_autocomplete").autocomplete(
