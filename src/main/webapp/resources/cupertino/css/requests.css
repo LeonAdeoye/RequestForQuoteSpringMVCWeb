@@ -295,8 +295,6 @@ fieldset
 #new-request-dialog-expiry-type
 {
 	width:95px;
-	padding:1px;
-	margin:1px;	
 }
 
 #new-request-dialog-add
@@ -322,4 +320,12 @@ fieldset
 #new-request-dialog-snippet-breakdown.clone-this-snippet button#new-request-dialog-remove.clone-snippet-remove
 {
 	display:none;
+}
+
+#new-request-dialog-constructed-snippet
+{
+	color: olive;
+	font-weight: bolder;
+	font-style:italic;
+	font-size:larger;
 }

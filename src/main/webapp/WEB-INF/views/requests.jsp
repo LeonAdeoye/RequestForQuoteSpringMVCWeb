@@ -272,7 +272,9 @@
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div>
 				
-		<div id="new-request-dialog-parent" title="Paste new request for quote:"  class="new-requests-dialog-hide new-requests-dialog" >
+		<div id="new-request-dialog-parent" title="Request Snippet Construction Helper"  class="new-requests-dialog-hide new-requests-dialog" >
+			<div id="new-request-dialog-constructed-snippet"></div>
+			<br>
 			<div id="new-request-dialog-snippet-breakdown" class="new-request-dialog-snippet-breakdown-class new-requests-dialog new-requests-dialog-hide float-left clone-this-snippet">
 				<select id="new-request-dialog-type" class="new-request-dialog-type-class new-requests-dialog new-requests-dialog-hide float-left">
 					<option value="C">Call</option>
@@ -280,10 +282,6 @@
 					<option value="straddle">Straddle</option>
 					<option value="strangle">Strangle</option>
 					<option value="butterfly">Butterfly</option>
-				</select>
-				<select id="new-request-dialog-expiry-type" class="new-request-dialog-expiry-type-class new-requests-dialog new-requests-dialog-hide float-left">
-					<option value="A">American</option>
-					<option value="E">European</option>
 				</select>				
 				<input id="new-request-dialog-qty" class="new-request-dialog-qty-class new-requests-dialog new-requests-dialog-hide new_request float-left" path="request" value="Enter quantity..." type="text" default_value="Enter quantity..." />
 				<input id="new-request-dialog-strike" class="new-request-dialog-strike-class new-requests-dialog new_request new-requests-dialog-hide float-left" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
@@ -293,6 +291,12 @@
 				</select>
 				<button id="new-request-dialog-add" class="new-requests-dialog new-requests-dialog-hide clone-snippet-add">+</button>
 				<button id="new-request-dialog-remove" class="new-requests-dialog new-requests-dialog-hide float-right clone-snippet-remove">-</button>
+			</div>
+			<div class="clear-both">			
+				<select id="new-request-dialog-expiry-type" class="new-request-dialog-expiry-type-class new-requests-dialog new-requests-dialog-hide float-left">
+					<option value="A">American</option>
+					<option value="E">European</option>
+				</select>
 			</div>
 			<div class="clear-both">			
 				<input id="new-request-dialog-maturity-date" class="new-requests-dialog new_request new-requests-dialog-hide clear-both" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />

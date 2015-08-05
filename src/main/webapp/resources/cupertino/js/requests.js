@@ -323,7 +323,7 @@ $(document).ready(function()
 	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
 	$(".dateTxtBox").datepicker();
 	
-	var snippet = "", originalTitle = "";
+	var snippet = "";
 		
 	function constructSnippet()
 	{
@@ -337,12 +337,6 @@ $(document).ready(function()
 			$(this).children("select.new-request-dialog-type-class:first").each(function()
 			{
 				tempSnippet = $(this).val();
-			});
-			
-			$(this).children("select.new-request-dialog-expiry-type-class:first").each(function()
-			{
-				if($(this).val() == "A")
-					tempSnippet = tempSnippet.toUpperCase();
 			});
 			
 			$(this).children("input.new-request-dialog-qty-class:first").each(function()
@@ -361,7 +355,7 @@ $(document).ready(function()
 			
 			$(this).children("input.new-request-dialog-strike-class:first").each(function()
 			{
-				if(strikeSnippet == "")
+				if(strikeSnippet == "" || strikeSnippet == $(this).val())
 					strikeSnippet = $(this).val();
 				else
 					strikeSnippet = strikeSnippet + "," + $(this).val();					
@@ -370,26 +364,36 @@ $(document).ready(function()
 			callPutSnippet = callPutSnippet + tempSnippet; 
 		});
 		
+		if($("#new-request-dialog-expiry-type").val() == "A")
+			callPutSnippet = callPutSnippet.toUpperCase();
+		else
+			callPutSnippet = callPutSnippet.toLowerCase();
+		
 		snippet = callPutSnippet + " " + strikeSnippet + " " + maturityDateSnippet + " " + underlyingSnippet;
-		$("#new-request-dialog-parent").attr("title", originalTitle + snippet);
+		
+		$("#new-request-dialog-constructed-snippet").html("Snippet:   " + snippet);
 	}
 		
 	function pasteRequestSnippetFromDialog()
 	{
-		$("#requests_snippet").val(snippet);
-		$("#new-request-dialog-parent").dialog("close");
-		$(".new-requests-dialog").addClass("new-requests-dialog-hide");
+		if(snippetMatches(snippet))
+		{
+			$("#requests_snippet").val(snippet);
+			$("#new-request-dialog-parent").dialog("close");
+			$(".new-requests-dialog").addClass("new-requests-dialog-hide");		
+		}
+		else
+			alert("The snippet is incomplete and invalid. Pls set the other properties.");
 	}
 	
 	function clearAddNewRequestDialog()
-	{		
+	{
+		$("#new-request-dialog-constructed-snippet").html("");		
 		$(".cloned-snippet").remove();
 		$("input.new-requests-dialog").each(function() 
 		{
 			$(this).val($(this).attr("default_value"));
 		});
-		
-		$("#new-request-dialog-parent").attr("title", originalTitle);
 	}
 	
 	$("#requests_add_more_button").click(function()
@@ -400,7 +404,7 @@ $(document).ready(function()
 		{	
 			modal : true,
 		    resizable: false,
-		    width: 480,
+		    width: 395,
 			beforeClose: function()
 			{
 				clearAddNewRequestDialog();
@@ -418,10 +422,15 @@ $(document).ready(function()
 		});
 		
 		$("div.new-request-dialog-snippet-breakdown-class input.new-requests-dialog", 
-		"div.new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(constructSnippet);		
+			"div.new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(constructSnippet);
+		
+		$("div.new-request-dialog-snippet-breakdown-class input.new-requests-dialog", 
+		"div.new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(function() {
+			alert("");
+		});		
 		
 		// Initialize after dialog creation because autocomplete menu's z-index is incorrect.
-		$(".dialog_underlying_autocomplete").autocomplete(
+		$("input.dialog_underlying_autocomplete").autocomplete(
 		{
 			minLength:1,
 	        source: ajaxUnderlyingAutocomplete,
@@ -433,26 +442,34 @@ $(document).ready(function()
 			dateFormat : "ddMyy", 
 			onClose : constructSnippet 
 		});
-		
-		originalTitle = $("#new-request-dialog-parent").attr("title");
 	});
 	
 	var legCount = 0;
 	$("button.clone-snippet-add").click(function()
 	{
+		constructSnippet();
+		
 		var newLeg = "new-request-dialog-snippet-breakdown" + legCount++;
 		$("#new-request-dialog-snippet-breakdown")
 			.clone(true).attr("id", newLeg)
 			.removeClass("clone-this-snippet")
 			.removeClass("new-requests-dialog-hide")
 			.addClass("cloned-snippet")
-			.insertBefore("#new-request-dialog-maturity-date");
+			.insertBefore("#new-request-dialog-expiry-type");
+		
+		// After cloning set values back to default. 
+		var qty_default = $("#" + newLeg + " " + "input.new-request-dialog-qty-class").attr("default_value");
+		$("#" + newLeg + " " + "input.new-request-dialog-qty-class").val(qty_default);
+		
+		var strike_default = $("#" + newLeg + " " + "input.new-request-dialog-strike-class").attr("default_value");
+		$("#" + newLeg + " " + "input.new-request-dialog-strike-class").val(strike_default);
 	});
 	
 
 	$("button.clone-snippet-remove").click(function()
 	{
 		$(this).parent("div.new-request-dialog-snippet-breakdown-class.cloned-snippet").remove();
+		constructSnippet();
 	})	
 	
 	var chartDialogOptions = 
