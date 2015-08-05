@@ -327,10 +327,13 @@ $(document).ready(function()
 		
 	function constructSnippet()
 	{
-		var tempSnippet = "", strikeSnippet = "", callPutSnippet = "";
+		var tempSnippet = "", strikeSnippet = "", callPutSnippet = "", maturityDateSnippet = "", underlyingSnippet = ""
 		
-		var maturityDateSnippet = $("#new-request-dialog-maturity-date").val();
-		var underlyingSnippet = $("#new-request-dialog-underlying-ric").val();
+		if($("#new-request-dialog-maturity-date").val() != $("#new-request-dialog-maturity-date").attr("default_value"))
+			maturityDateSnippet = $("#new-request-dialog-maturity-date").val();
+		
+		if($("#new-request-dialog-underlying-ric").val() != $("#new-request-dialog-underlying-ric").attr("default_value"))
+			underlyingSnippet = $("#new-request-dialog-underlying-ric").val();
 		
 		$("div.new-request-dialog-snippet-breakdown-class").each(function()
 		{
@@ -341,7 +344,7 @@ $(document).ready(function()
 			
 			$(this).children("input.new-request-dialog-qty-class:first").each(function()
 			{
-				if($(this).val() != "1")
+				if($(this).val() != "1" && ($(this).val() != $(this).attr("default_value")))
 					tempSnippet = $(this).val() + tempSnippet;
 			});
 			
@@ -355,10 +358,13 @@ $(document).ready(function()
 			
 			$(this).children("input.new-request-dialog-strike-class:first").each(function()
 			{
-				if(strikeSnippet == "" || strikeSnippet == $(this).val())
-					strikeSnippet = $(this).val();
-				else
-					strikeSnippet = strikeSnippet + "," + $(this).val();					
+				if($(this).val() != $(this).attr("default_value"))
+				{
+					if(strikeSnippet == "" || strikeSnippet == $(this).val())
+						strikeSnippet = $(this).val();
+					else
+						strikeSnippet = strikeSnippet + "," + $(this).val();					
+				}
 			});
 			
 			callPutSnippet = callPutSnippet + tempSnippet; 
@@ -371,7 +377,18 @@ $(document).ready(function()
 		
 		snippet = callPutSnippet + " " + strikeSnippet + " " + maturityDateSnippet + " " + underlyingSnippet;
 		
-		$("#new-request-dialog-constructed-snippet").html("Snippet:   " + snippet);
+		var snippetSet = $("#new-request-dialog-constructed-snippet").html(snippet);
+		
+		if(snippetMatches(snippet))
+		{
+			snippetSet.addClass("new-request-dialog-constructed-snippet-correct");
+			snippetSet.removeClass("new-request-dialog-constructed-snippet-incorrect");
+		}
+		else
+		{
+			snippetSet.addClass("new-request-dialog-constructed-snippet-incorrect");
+			snippetSet.removeClass("new-request-dialog-constructed-snippet-correct");		
+		}
 	}
 		
 	function pasteRequestSnippetFromDialog()
@@ -421,14 +438,11 @@ $(document).ready(function()
 			}			
 		});
 		
-		$("div.new-request-dialog-snippet-breakdown-class input.new-requests-dialog", 
-			"div.new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(constructSnippet);
+		$("div.new-request-dialog-snippet-breakdown-class input.new-requests-dialog").change(constructSnippet); 
+		$("div.new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(constructSnippet);
+		$("#new-request-dialog-expiry-type").change(constructSnippet);
 		
-		$("div.new-request-dialog-snippet-breakdown-class input.new-requests-dialog", 
-		"div.new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(function() {
-			alert("");
-		});		
-		
+				
 		// Initialize after dialog creation because autocomplete menu's z-index is incorrect.
 		$("input.dialog_underlying_autocomplete").autocomplete(
 		{

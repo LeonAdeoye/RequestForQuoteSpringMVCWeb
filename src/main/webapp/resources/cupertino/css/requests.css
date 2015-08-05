@@ -322,9 +322,17 @@ fieldset
 	display:none;
 }
 
-#new-request-dialog-constructed-snippet
+.new-request-dialog-constructed-snippet-correct
 {
-	color: olive;
+	color: green;
+	font-weight: bolder;
+	font-style:italic;
+	font-size:larger;
+}
+
+.new-request-dialog-constructed-snippet-incorrect
+{
+	color: red;
 	font-weight: bolder;
 	font-style:italic;
 	font-size:larger;
