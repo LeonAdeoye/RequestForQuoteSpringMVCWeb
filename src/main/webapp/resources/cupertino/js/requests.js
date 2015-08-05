@@ -323,6 +323,34 @@ $(document).ready(function()
 	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
 	$(".dateTxtBox").datepicker();
 	
+	$("#requests_search_save_btn").click(function()
+	{
+		$(".save-search-dialog").removeClass("dialog-hide");
+		
+		$("#save-search-dialog-parent").dialog(
+		{	
+			modal : true,
+		    resizable: false,
+		    width: 270,
+			beforeClose: function()
+			{
+			},		    
+			buttons: 
+			{ 
+				Save: function()
+				{
+					$(this).dialog("close");
+					$(".save-search-dialog").addClass("dialog-hide");					
+				},
+				Cancel: function()
+				{
+					$(this).dialog("close");
+					$(".save-search-dialog").addClass("dialog-hide");
+				}				
+			}			
+		});
+	});	
+	
 	var snippet = "";
 		
 	function constructSnippet()
@@ -400,7 +428,7 @@ $(document).ready(function()
 			$(".new-requests-dialog").addClass("new-requests-dialog-hide");		
 		}
 		else
-			alert("The snippet is incomplete and invalid. Pls set the other properties.");
+			alert("The snippet is incomplete and invalid. Pls set the other properties in order to paste it.");
 	}
 	
 	function clearAddNewRequestDialog()
@@ -415,7 +443,7 @@ $(document).ready(function()
 	
 	$("#requests_add_more_button").click(function()
 	{	
-		$(".new-requests-dialog").removeClass("new-requests-dialog-hide");
+		$(".new-requests-dialog").removeClass("dialog-hide");
 		
 		$("#new-request-dialog-parent").dialog(
 		{	
@@ -432,7 +460,7 @@ $(document).ready(function()
 				Cancel: function()
 				{
 					$(this).dialog("close");
-					$(".new-requests-dialog").addClass("new-requests-dialog-hide");
+					$(".new-requests-dialog").addClass("dialog-hide");
 				},
 				Clear: clearAddNewRequestDialog					
 			}			
@@ -441,7 +469,6 @@ $(document).ready(function()
 		$("div.new-request-dialog-snippet-breakdown-class input.new-requests-dialog").change(constructSnippet); 
 		$("div.new-request-dialog-snippet-breakdown-class select.new-requests-dialog").change(constructSnippet);
 		$("#new-request-dialog-expiry-type").change(constructSnippet);
-		
 				
 		// Initialize after dialog creation because autocomplete menu's z-index is incorrect.
 		$("input.dialog_underlying_autocomplete").autocomplete(
@@ -467,7 +494,7 @@ $(document).ready(function()
 		$("#new-request-dialog-snippet-breakdown")
 			.clone(true).attr("id", newLeg)
 			.removeClass("clone-this-snippet")
-			.removeClass("new-requests-dialog-hide")
+			.removeClass("dialog-hide")
 			.addClass("cloned-snippet")
 			.insertBefore("#new-request-dialog-expiry-type");
 		
@@ -479,7 +506,6 @@ $(document).ready(function()
 		$("#" + newLeg + " " + "input.new-request-dialog-strike-class").val(strike_default);
 	});
 	
-
 	$("button.clone-snippet-remove").click(function()
 	{
 		$(this).parent("div.new-request-dialog-snippet-breakdown-class.cloned-snippet").remove();

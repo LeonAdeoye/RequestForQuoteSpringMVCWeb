@@ -234,7 +234,7 @@ fieldset
 	width: 25px;
 }
 
-.new-requests-dialog-hide
+.dialog-hide
 {
 	display:none;
 }
@@ -336,4 +336,15 @@ fieldset
 	font-weight: bolder;
 	font-style:italic;
 	font-size:larger;
+}
+
+#save-search-enter-name
+{
+	width:240px;
+}
+
+.save-search-widget
+{
+	padding:2px;
+	margin:2px;	
 }

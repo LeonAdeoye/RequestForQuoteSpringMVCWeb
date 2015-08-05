@@ -272,37 +272,49 @@
     		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
 		</div>
 				
-		<div id="new-request-dialog-parent" title="Request Snippet Construction Helper"  class="new-requests-dialog-hide new-requests-dialog" >
+		<div id="new-request-dialog-parent" title="Request Snippet Construction Helper"  class="dialog-hide new-requests-dialog" >
 			<div id="new-request-dialog-constructed-snippet"></div>
 			<br>
-			<div id="new-request-dialog-snippet-breakdown" class="new-request-dialog-snippet-breakdown-class new-requests-dialog new-requests-dialog-hide float-left clone-this-snippet">
-				<select id="new-request-dialog-type" class="new-request-dialog-type-class new-requests-dialog new-requests-dialog-hide float-left">
+			<div id="new-request-dialog-snippet-breakdown" class="new-request-dialog-snippet-breakdown-class new-requests-dialog dialog-hide float-left clone-this-snippet">
+				<select id="new-request-dialog-type" class="new-request-dialog-type-class new-requests-dialog dialog-hide float-left">
 					<option value="C">Call</option>
 					<option value="P">Put</option>
 					<option value="straddle">Straddle</option>
 					<option value="strangle">Strangle</option>
 					<option value="butterfly">Butterfly</option>
 				</select>				
-				<input id="new-request-dialog-qty" class="new-request-dialog-qty-class new-requests-dialog new-requests-dialog-hide new_request float-left" path="request" value="Enter quantity..." type="text" default_value="Enter quantity..." />
-				<input id="new-request-dialog-strike" class="new-request-dialog-strike-class new-requests-dialog new_request new-requests-dialog-hide float-left" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
-				<select id="new-request-dialog-side" class="new-request-dialog-side-class new-requests-dialog new-requests-dialog-hide">
+				<input id="new-request-dialog-qty" class="new-request-dialog-qty-class new-requests-dialog dialog-hide new_request float-left" path="request" value="Enter quantity..." type="text" default_value="Enter quantity..." />
+				<input id="new-request-dialog-strike" class="new-request-dialog-strike-class new-requests-dialog new_request dialog-hide float-left" path="strike" value="Enter strike..." type="text" default_value="Enter strike..." />
+				<select id="new-request-dialog-side" class="new-request-dialog-side-class new-requests-dialog dialog-hide">
 					<option value="Buy">Buy</option>
 					<option value="Sell">Sell</option>
 				</select>
-				<button id="new-request-dialog-add" class="new-requests-dialog new-requests-dialog-hide clone-snippet-add">+</button>
-				<button id="new-request-dialog-remove" class="new-requests-dialog new-requests-dialog-hide float-right clone-snippet-remove">-</button>
+				<button id="new-request-dialog-add" class="new-requests-dialog dialog-hide clone-snippet-add">+</button>
+				<button id="new-request-dialog-remove" class="new-requests-dialog dialog-hide float-right clone-snippet-remove">-</button>
 			</div>
 			<div class="clear-both">			
-				<select id="new-request-dialog-expiry-type" class="new-request-dialog-expiry-type-class new-requests-dialog new-requests-dialog-hide float-left">
+				<select id="new-request-dialog-expiry-type" class="new-request-dialog-expiry-type-class new-requests-dialog dialog-hide float-left">
 					<option value="A">American</option>
 					<option value="E">European</option>
 				</select>
 			</div>
 			<div class="clear-both">			
-				<input id="new-request-dialog-maturity-date" class="new-requests-dialog new_request new-requests-dialog-hide clear-both" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
+				<input id="new-request-dialog-maturity-date" class="new-requests-dialog new_request dialog-hide clear-both" path="maturity_date" value="Enter maturity date..." type="text" default_value="Enter maturity date..." />
 			</div>
 			<div class="clear-both">
-				<input id="new-request-dialog-underlying-ric" class="dialog_underlying_autocomplete new-requests-dialog new_request new-requests-dialog-hide clear-both" path="underlying_ric" value="Enter underlying RIC..." type="text" default_value="Enter underlying RIC..." />
+				<input id="new-request-dialog-underlying-ric" class="dialog_underlying_autocomplete new-requests-dialog new_request dialog-hide clear-both" path="underlying_ric" value="Enter underlying RIC..." type="text" default_value="Enter underlying RIC..." />
+			</div>
+		</div>
+		
+		<div id="save-search-dialog-parent" title="Details of search criteria to be saved:"  class="save-search-dialog dialog-hide" >
+			<div class="clear-both">			
+				<select id="save-search-privacy-type" class="save-search-widget save-search-dialog dialog-hide float-left">
+					<option value="Private">Private</option>
+					<option value="Public">Public</option>
+				</select>
+			</div>
+			<div class="clear-both">			
+				<input id="save-search-enter-name" class="save-search-widget save-search-dialog dialog-hide clear-both" path="searchName" value="Enter the name of the search criteria..." type="text" default_value="Enter the name of the search criteria..." />
 			</div>
 		</div>
 		
