@@ -339,6 +339,13 @@ $(document).ready(function()
 			{ 
 				Save: function()
 				{
+					// TODO ladeoye
+					if($("#save-search-enter-name").val() != $("#save-search-enter-name").attr("default_value"))
+						saveSearch("ladeoye", $("#save-search-enter-name").val(), 
+								$("#save-search-privacy-type").val() == "Private");
+					else
+						alert("Cannot save: invalid name for search criteria.");
+					
 					$(this).dialog("close");
 					$(".save-search-dialog").addClass("dialog-hide");					
 				},
@@ -349,7 +356,19 @@ $(document).ready(function()
 				}				
 			}			
 		});
-	});	
+	});
+	
+	$("#save-search-enter-name").click(function()
+	{
+		if($(this).val() == $(this).attr("default_value"))
+			$(this).val("");
+	});
+
+	$("#save-search-enter-name").focusout(function()
+	{
+		if(trimSpaces($(this).val()) == "")
+			$(this).val($(this).attr("default_value"));
+	});
 	
 	var snippet = "";
 		
@@ -1718,12 +1737,12 @@ $(document).ready(function()
 		});
 	}	
 	
-	function saveSearch()
+	function saveSearch(owner, key, isPrivate)
 	{
 		$.ajax({
-		    url: contextPath + "/searches/ajaxInsert", 
+		    url: contextPath + "/searches/ajaxSaveSearch", 
 		    type: 'POST',
-		    data: JSON.stringify(json),
+		    data: JSON.stringify(collateCriteria(owner, key, isPrivate)),
 		    dataType: 'json',  
 		    contentType: 'application/json', 
 		    mimeType: 'application/json',
@@ -1746,37 +1765,39 @@ $(document).ready(function()
 		});		
 	}
 	
-	function addCriterionToCriteria(criterionOwner, criterionName, criterionValue)
+	function addCriterionToCriteria(criterionOwner, criterionKey, criterionName, criterionValue, criterionPrivacy)
 	{
 		var criterion = {};
 		criterion["owner"] = criterionOwner;
+		criterion["searchKey"] = criterionKey;
 		criterion["name"] = criterionName;
-		criterion["value"] = criterionValue;		
+		criterion["value"] = criterionValue;
+		criterion["isPrivate"] = criterionPrivacy;
 		return criterion;
 	}
 	
-	function collateCriteria()
+	function collateCriteria(owner, key, isPrivate)
 	{
 		var criteria = [];
 		
 		$(".requests_search_collate").each(function()
 		{
 			if($(this).val() !== $(this).attr("default_value"))
-				criteria.push(addCriterionToCriteria("NO_OWNER", $(this).attr("criterion_name"), $(this).val()));
+				criteria.push(addCriterionToCriteria(owner, key, $(this).attr("criterion_name"), $(this).val(), isPrivate));
 		});
 		
 		// Transformation from client description to client ID is required....
 		if($("#requests_search_client").val() !== $("#requests_search_client").attr("default_value"))
 		{
-			criteria.push(addCriterionToCriteria("NO_OWNER", $("#requests_search_client").attr("criterion_name"), 
-					clientHashIndexedByDesc[$("#requests_search_client").val()]));
+			criteria.push(addCriterionToCriteria(owner, key, $("#requests_search_client").attr("criterion_name"), 
+					clientHashIndexedByDesc[$("#requests_search_client").val(), isPrivate]));
 		}
 		
 		// Transformation from status description to status enum is required....		
 		if($("#requests_search_status").val() !== $("#requests_search_status").attr("default_value"))
 		{			
-			criteria.push(addCriterionToCriteria("NO_OWNER", $("#requests_search_status").attr("criterion_name"), 
-					statusHashIndexedByDesc[$("#requests_search_status").val()]));
+			criteria.push(addCriterionToCriteria(owner, key, $("#requests_search_status").attr("criterion_name"), 
+					statusHashIndexedByDesc[$("#requests_search_status").val()], isPrivate));
 		}
 				
 		return criteria;
@@ -1789,7 +1810,7 @@ $(document).ready(function()
 		$.ajax({
 		    url: contextPath + "/requests/ajaxSearch", 
 		    type: 'POST',
-		    data: JSON.stringify(collateCriteria()),
+		    data: JSON.stringify(collateCriteria("NO_OWNER", "NO_KEY", true)),
 		    dataType: 'json',  
 		    contentType: 'application/json', 
 		    mimeType: 'application/json',

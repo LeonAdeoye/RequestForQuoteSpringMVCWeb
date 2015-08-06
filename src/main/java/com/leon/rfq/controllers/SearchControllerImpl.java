@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -100,11 +101,15 @@ public class SearchControllerImpl
 		return "redirect:/searches";
 	}
 	
-	@RequestMapping(value="/ajaxInsert", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody boolean insert(@RequestParam String owner, @RequestParam String searchKey,
-			@RequestParam String name, @RequestParam String value, @RequestParam boolean isPrivate)
+	@RequestMapping(value="/ajaxSaveSearch", method=RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object insert(@RequestBody Set<SearchCriterionImpl> criteria)
 	{
-		return this.searchService.insert(owner, searchKey, name, value, isPrivate);
+		criteria.forEach(criterion -> this.searchService.insert(criterion.getOwner(), criterion.getSearchKey(),
+				criterion.getName(), criterion.getValue(), criterion.getIsPrivate()));
+		
+		return true;
 	}
 	
 	@RequestMapping("/deleteForOwner")

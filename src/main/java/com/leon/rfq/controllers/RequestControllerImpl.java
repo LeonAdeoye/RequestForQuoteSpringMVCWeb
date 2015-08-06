@@ -264,7 +264,6 @@ public class RequestControllerImpl
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object search(@RequestBody Set<SearchCriterionImpl> criteria)
 	{
-		
 		return this.requestService.search(criteria);
 	}
 	
