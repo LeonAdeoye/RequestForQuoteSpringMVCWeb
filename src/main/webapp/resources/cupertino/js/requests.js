@@ -327,6 +327,8 @@ $(document).ready(function()
 	{
 		$(".save-search-dialog").removeClass("dialog-hide");
 		
+		$("#save-search-enter-name").val($("#save-search-enter-name").attr("default_value"));
+		
 		$("#save-search-dialog-parent").dialog(
 		{	
 			modal : true,
