@@ -12,8 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.services.SearchService;
-import com.leon.rfq.validators.SearchValidatorImpl;
 
 @Controller
 @RequestMapping("/searches")
@@ -31,16 +28,6 @@ public class SearchControllerImpl
 {
 	@Autowired(required=true)
 	SearchService searchService;
-	
-	@Autowired(required=true)
-	private SearchValidatorImpl searchValidator;
-	
-	@InitBinder
-	public void initialiseBinder(WebDataBinder binder)
-	{
-		binder.setAllowedFields("searchCode", "description", "isValid");
-		binder.setValidator(this.searchValidator);
-	}
 	
 	@RequestMapping(value="/ajaxForOwner", method=RequestMethod.GET,
 			consumes = MediaType.APPLICATION_JSON_VALUE,

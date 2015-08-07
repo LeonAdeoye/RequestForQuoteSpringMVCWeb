@@ -262,7 +262,7 @@ public final class SearchServiceImpl implements SearchService
 		}
 		
 		if(logger.isDebugEnabled())
-			logger.debug("Inserting the search with search ID" + searchKey);
+			logger.debug("Inserting the search with search ID: " + searchKey);
 		
 		ReentrantLock lock = new ReentrantLock();
 		

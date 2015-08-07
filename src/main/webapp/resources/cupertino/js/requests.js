@@ -940,6 +940,7 @@ $(document).ready(function()
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
+	        	console.log(xhr.responseText);
 	        	if(textStatus != "timeout")
         		{
 	        		if(xhr.status == 404) 
@@ -976,6 +977,7 @@ $(document).ready(function()
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
+	        	console.log(xhr.responseText);
 	        	if(textStatus != "timeout")
         		{
 	        		if(xhr.status == 404)
@@ -1025,6 +1027,7 @@ $(document).ready(function()
 			    },
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
+	            	console.log(xhr.responseText);
 	            	$("#turnOnPriceUpdates").prop('checked', false);
 	            	window.clearInterval(priceUpdateInterval);
 	            	
@@ -1066,6 +1069,7 @@ $(document).ready(function()
 			    },
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
+	            	console.log(xhr.responseText);
 	            	$("#turnOnCalculationUpdates").prop('checked', false);
 	            	window.clearInterval(calculationUpdateInterval);
 	            	
@@ -1108,6 +1112,7 @@ $(document).ready(function()
 			    },
 	            error: function (xhr, textStatus, errorThrown) 
 	            {
+	            	console.log(xhr.responseText);
 	            	$("#turnOnStatusUpdates").prop('checked', false);
 	            	window.clearInterval(statusUpdateInterval);
 	            	
@@ -1442,6 +1447,7 @@ $(document).ready(function()
 		    }, 
             error: function (xhr, textStatus, errorThrown) 
             {
+            	console.log(xhr.responseText);
                 alert('Failed to get list of statuses because of a server error.');
             }
 		});	
@@ -1463,6 +1469,7 @@ $(document).ready(function()
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
+            	console.log(xhr.responseText);
                 alert('Failed to get list of underlyings because of a server error.');
             }
 		});	
@@ -1484,6 +1491,7 @@ $(document).ready(function()
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
+            	console.log(xhr.responseText);
                 alert('Failed to get list of books because of a server error.');
                 loadingIndicator.fadeOut();
             }
@@ -1510,6 +1518,7 @@ $(document).ready(function()
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
+            	console.log(xhr.responseText);
                 alert('Failed to get list of Clients because of a server error.');
                 loadingIndicator.fadeOut();
             }
@@ -1534,6 +1543,7 @@ $(document).ready(function()
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
+            	console.log(xhr.responseText);
                 alert('Error: ' + xhr.responseText);
                 loadingIndicator.fadeOut();
             }
@@ -1556,6 +1566,7 @@ $(document).ready(function()
                 },
                 error: function (xhr, textStatus, errorThrown) 
                 {
+                	console.log(xhr.responseText);
                     alert('Failed to retrieve book autocomplete data because of a server error.');
                 },
                 success: function (data) 
@@ -1588,6 +1599,7 @@ $(document).ready(function()
                 },
                 error: function (xhr, textStatus, errorThrown) 
                 {
+                	console.log(xhr.responseText);
                     alert('Failed to retrieve client autocomplete data because of a server error.');
                 },              
                 success: function (clients)
@@ -1629,6 +1641,7 @@ $(document).ready(function()
             },
             error: function (xhr, textStatus, errorThrown) 
             {
+            	console.log(xhr.responseText);
                 alert('Failed to retrieve underlying autocomplete data because of a server error.');
             },
             success: function (underlyings) 
@@ -1663,6 +1676,7 @@ $(document).ready(function()
             },
             error: function (xhr, textStatus, errorThrown) 
             {
+            	console.log(xhr.responseText);
                 alert('Failed to retrieve status autocomplete data because of a server error.');
             },
             success: function (statuses) 
@@ -1729,6 +1743,8 @@ $(document).ready(function()
 		    },		    
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
+	        	console.log(xhr.responseText);
+	        	
 	        	if(textStatus == "timeout")
 	        		alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + ". Status update timed-out after five seconds.");
 	        	else
@@ -1748,15 +1764,14 @@ $(document).ready(function()
 		    mimeType: 'application/json',
 		    timeout: 5000,
 		    cache: false,
-		    success: function(savedSearches) 
+		    success: function() 
 		    {
-		    	if(savedSearches)
-	    		{
-	    		
-	    		}
+		    	alert("Search criteria successfully persisted.");
 		    },		    
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
+	        	console.log(xhr.responseText);
+	        	
 	        	if(textStatus == "timeout")
 	        		alert("Failed to save the searches. Timed-out after five seconds.");
 	        	else
@@ -1790,7 +1805,7 @@ $(document).ready(function()
 		if($("#requests_search_client").val() !== $("#requests_search_client").attr("default_value"))
 		{
 			criteria.push(addCriterionToCriteria(owner, key, $("#requests_search_client").attr("criterion_name"), 
-					clientHashIndexedByDesc[$("#requests_search_client").val(), isPrivate]));
+					clientHashIndexedByDesc[$("#requests_search_client").val()], isPrivate));
 		}
 		
 		// Transformation from status description to status enum is required....		
@@ -1831,6 +1846,7 @@ $(document).ready(function()
 		    },		    
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
+	        	console.log(xhr.responseText);	        	
 	        	loadingIndicator.fadeOut();
 	        	
 	        	if(textStatus == "timeout")

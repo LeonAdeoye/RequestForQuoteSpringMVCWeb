@@ -38,8 +38,5 @@ public class SearchValidatorImpl implements Validator
 			String message = constraintViolation.getMessage();
 			errors.rejectValue(propertyPath, "", message);
 		}
-		
-		SearchCriterionImpl search = (SearchCriterionImpl) target;
-		// TODO
 	}
 }
