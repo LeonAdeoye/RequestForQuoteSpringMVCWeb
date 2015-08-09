@@ -595,6 +595,7 @@ $(document).ready(function()
 	showLoadIndicator();
 	getStatusList();
 	getUnderlyingList();
+	getSavedSearchList("ladeoye"); // TODO
 	getBookList();
 	getClientList();	
 	getRequestsFromTodayOnly();
@@ -1476,6 +1477,30 @@ $(document).ready(function()
             }
 		});	
 	}
+	
+	// TODO - decide if this is needed
+	function getSavedSearchList(owner)
+	{
+		$.ajax({
+		    url: contextPath + "/searches/ajaxSavedSearchesWithOwner", 
+		    type: 'POST', 
+		    dataType: 'json',
+		    data: owner,
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(savedSearches) 
+		    {
+		    	console.log(savedSearches);
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	console.log(xhr.responseText);
+                alert('Failed to get list of saved searches because of a server error.');
+            }
+		});	
+	}	
 	
 	// TODO - decide if this is needed	
 	function getBookList()

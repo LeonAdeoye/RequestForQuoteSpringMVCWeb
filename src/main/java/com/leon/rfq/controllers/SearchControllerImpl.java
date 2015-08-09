@@ -1,6 +1,5 @@
 package com.leon.rfq.controllers;
 
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,18 +32,18 @@ public class SearchControllerImpl
 	@Autowired(required=true)
 	RequestService requestService;
 	
-	@RequestMapping(value="/ajaxForOwner", method=RequestMethod.GET,
+	@RequestMapping(value="/ajaxSavedSearchesWithOwner", method=RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Map<String,Set<SearchCriterionImpl>> get(@RequestParam String owner)
+	public @ResponseBody Object get(@RequestBody String owner)
 	{
 		return this.searchService.get(owner);
 	}
 	
-	@RequestMapping(value="/ajaxForKey", method=RequestMethod.GET,
+	@RequestMapping(value="/ajaxSavedSearchesWithKey", method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Set<SearchCriterionImpl> get(@RequestParam String owner, @RequestParam String searchKey)
+	public @ResponseBody Set<SearchCriterionImpl> get(@RequestBody String owner, @RequestBody String searchKey)
 	{
 		return this.searchService.get(owner, searchKey);
 	}

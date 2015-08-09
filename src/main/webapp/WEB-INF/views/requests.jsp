@@ -161,6 +161,11 @@
 			<Label><spring:message code="requests.search.title.label"/></Label>
 			<br>
 			<br>
+			<div id="saved-searches">
+				<select id="saved-searches-select" size="20" name="searchCriteria">
+					
+				</select>
+			</div>			
 		  	<div id="requestsSearch">
 		  		<div class="requests_search_item">
 				  	<input id="requests_search_bookCode" class="search_textBox requests_search_collate filter_search_textBox requests_book_autocomplete" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." criterion_name="bookCode" />
@@ -234,6 +239,7 @@
 		  <li data="FILLED_BID"><spring:message code="contextMenu.status.filled_bid.menuitem"/></li>		  
 		  <li data="INVALID"><spring:message code="contextMenu.status.invalid.menuitem"/></li>
 		</ul>
+		
 		<ul id="requestContextMenu" class="contextMenu" style="display:none;position:absolute">
 		  <b><spring:message code="contextMenu.operation.title.label"/></b>
 		  <li data="VIEW_DETAILS"><spring:message code="contextMenu.operation.view.menuitem"/></li>
@@ -246,6 +252,7 @@
 		  <li data="CUT_AND_PASTE"><spring:message code="contextMenu.operation.cutAndPaste.menuitem"/></li>
 		  <li data="DELETE"><spring:message code="contextMenu.operation.delete.menuitem"/></li>
 		</ul>
+		
 		<div id="requests_bar">
 			<div id="requests_title">
 				<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
