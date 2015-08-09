@@ -1503,7 +1503,15 @@ $(document).ready(function()
                 alert('Failed to get list of saved searches because of a server error.');
             }
 		});	
-	}	
+	}
+	
+	$("#saved-searches-select").dblclick(function()
+	{
+		$("#saved-searches-select option:selected").each(function () 
+		{
+			ajaxPerformSearch(addCriterionToCriteria("ladeoye", this.value, null, null, null));
+		});		
+	});
 	
 	// TODO - decide if this is needed	
 	function getBookList()
