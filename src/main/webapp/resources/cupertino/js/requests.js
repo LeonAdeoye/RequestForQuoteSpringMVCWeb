@@ -34,7 +34,7 @@ var statusHashIndexedByStatusEnum = {}, statusHashIndexedByDesc = {}, clientHash
 
 function dateFormatter(row, cell, value, columnDef, dataContext)
 {
-    if (value != null)
+    if (value !== null)
     {	
     	var theDate = new Date(value);
     	if(theDate !== NaN)
@@ -45,7 +45,7 @@ function dateFormatter(row, cell, value, columnDef, dataContext)
 
 function clientFormatter(row, cell, value, columnDef, dataContext)
 {
-    if (value == null)
+    if (value === null)
         return "";
     else
     	return clientHashIndexedById[value];
@@ -53,7 +53,7 @@ function clientFormatter(row, cell, value, columnDef, dataContext)
 
 function statusFormatter(row, cell, value, columnDef, dataContext)
 {
-    if (value == null)
+    if (value === null)
         return "";
     else
     	return statusHashIndexedByStatusEnum[value];
@@ -61,7 +61,7 @@ function statusFormatter(row, cell, value, columnDef, dataContext)
 
 function pascalCaseFormatter(row, cell, value, columnDef, dataContext)
 {
-    if (value == null)
+    if (value === null)
         return "";
     else
     	return value.toPascalCase();
@@ -69,7 +69,7 @@ function pascalCaseFormatter(row, cell, value, columnDef, dataContext)
 
 function decimalFormatter(row, cell, value, columnDef, dataContext)
 {
-    if (value == null)
+    if (value === null)
         return "0.000";
     else
     	return value.toFixed(3);     
@@ -79,7 +79,7 @@ function sumTotalsFormatter(totals, columnDef)
 {
 	var val = totals.sum && totals.sum[columnDef.field];
 	
-	if (val != null)
+	if (val !== null)
 		return "total: " + ((Math.round(parseFloat(val)*100)/100));
 	
 	return "";
@@ -92,7 +92,7 @@ function waitingFormatter(value)
 
 function requiredFieldValidator(value) 
 {
-	if (value == null || value == undefined || !value.length) 
+	if (value === null || value === undefined || !value.length) 
 	{
 		return {valid: false, msg: "This is a required field"};
 	}
@@ -235,36 +235,36 @@ function convertToDate(dateToConvert)
 
 function requestsFilter(item, args)
 {		
-	if (args.startTradeDate != "" && !validateAgainstStartDate(new Date(args.startTradeDate), convertToDate(item["tradeDate"])))
+	if (args.startTradeDate !== "" && !validateAgainstStartDate(new Date(args.startTradeDate), convertToDate(item["tradeDate"])))
 		return false;
 	
-	if (args.endTradeDate != "" && !validateAgainstEndDate(new Date(args.endTradeDate),	convertToDate(item["tradeDate"])))
+	if (args.endTradeDate !== "" && !validateAgainstEndDate(new Date(args.endTradeDate),	convertToDate(item["tradeDate"])))
 		return false;
 	
-	if (args.startTradeDate != "" && args.endTradeDate != "" && !validateAgainstBothDates(new Date(args.startTradeDate), 
+	if (args.startTradeDate !== "" && args.endTradeDate !== "" && !validateAgainstBothDates(new Date(args.startTradeDate), 
 			new Date(args.endTradeDate)))
 		return false;
 	
-	if (args.startMaturityDate != "" && !validateAgainstStartDate(new Date(args.startMaturityDate), convertToDate(item["expiryDate"])))
+	if (args.startMaturityDate !== "" && !validateAgainstStartDate(new Date(args.startMaturityDate), convertToDate(item["expiryDate"])))
 		return false;
 	
-	if (args.endMaturityDate != "" && !validateAgainstEndDate(new Date(args.endMaturityDate),	convertToDate(item["expiryDate"])))
+	if (args.endMaturityDate !== "" && !validateAgainstEndDate(new Date(args.endMaturityDate),	convertToDate(item["expiryDate"])))
 		return false;
 	
-	if (args.startMaturityDate != "" && args.endMaturityDate != "" && !validateAgainstBothDates(new Date(args.startMaturityDate), 
+	if (args.startMaturityDate !== "" && args.endMaturityDate !== "" && !validateAgainstBothDates(new Date(args.startMaturityDate), 
 			new Date(args.endMaturityDate)))
 		return false;	
 	
-	if (args.bookCode != "" && item["bookCode"].indexOf(args.bookCode) == -1)
+	if (args.bookCode !== "" && item["bookCode"].indexOf(args.bookCode) === -1)
 	    return false;		
 	
-	if (args.status != "" && statusHashIndexedByStatusEnum && (statusHashIndexedByStatusEnum[item["status"]].toUpperCase()).indexOf(args.status.toUpperCase()) == -1)
+	if (args.status !== "" && statusHashIndexedByStatusEnum && (statusHashIndexedByStatusEnum[item["status"]].toUpperCase()).indexOf(args.status.toUpperCase()) === -1)
 	    return false;
 	
-	if (args.clientId != "" && clientHashIndexedById && (clientHashIndexedById[item["clientId"]].toUpperCase()).indexOf(args.clientId.toUpperCase()) == -1)
+	if (args.clientId !== "" && clientHashIndexedById && (clientHashIndexedById[item["clientId"]].toUpperCase()).indexOf(args.clientId.toUpperCase()) === -1)
 		return false;
 	
-	if (args.underlyingRIC != "" && item["underlyingRIC"].indexOf(args.underlyingRIC) == -1)
+	if (args.underlyingRIC !== "" && item["underlyingRIC"].indexOf(args.underlyingRIC) === -1)
 	    return false;		
 	
 	return true;
@@ -342,9 +342,9 @@ $(document).ready(function()
 				Save: function()
 				{
 					// TODO ladeoye
-					if($("#save-search-enter-name").val() != $("#save-search-enter-name").attr("default_value"))
-						saveSearch("ladeoye", $("#save-search-enter-name").val(), 
-								$("#save-search-privacy-type").val() == "Private");
+					if($("#save-search-enter-name").val() !== $("#save-search-enter-name").attr("default_value"))
+						ajaxSaveSearch("ladeoye", $("#save-search-enter-name").val(), 
+								$("#save-search-privacy-type").val() === "Private");
 					else
 						alert("Cannot save: invalid name for search criteria.");
 					
@@ -362,13 +362,13 @@ $(document).ready(function()
 	
 	$("#save-search-enter-name").click(function()
 	{
-		if($(this).val() == $(this).attr("default_value"))
+		if($(this).val() === $(this).attr("default_value"))
 			$(this).val("");
 	});
 
 	$("#save-search-enter-name").focusout(function()
 	{
-		if(trimSpaces($(this).val()) == "")
+		if(trimSpaces($(this).val()) === "")
 			$(this).val($(this).attr("default_value"));
 	});
 	
@@ -393,13 +393,13 @@ $(document).ready(function()
 			
 			$(this).children("input.new-request-dialog-qty-class:first").each(function()
 			{
-				if($(this).val() != "1" && ($(this).val() != $(this).attr("default_value")))
+				if($(this).val() !== "1" && ($(this).val() !== $(this).attr("default_value")))
 					tempSnippet = $(this).val() + tempSnippet;
 			});
 			
 			$(this).children("select.new-request-dialog-side-class:first").each(function()
 			{
-				if($(this).val() == "Sell")
+				if($(this).val() === "Sell")
 					tempSnippet = "-" + tempSnippet;
 				else
 					tempSnippet = "+" + tempSnippet;
@@ -407,9 +407,9 @@ $(document).ready(function()
 			
 			$(this).children("input.new-request-dialog-strike-class:first").each(function()
 			{
-				if($(this).val() != $(this).attr("default_value"))
+				if($(this).val() !== $(this).attr("default_value"))
 				{
-					if(strikeSnippet == "" || strikeSnippet == $(this).val())
+					if(strikeSnippet === "" || strikeSnippet === $(this).val())
 						strikeSnippet = $(this).val();
 					else
 						strikeSnippet = strikeSnippet + "," + $(this).val();					
@@ -419,7 +419,7 @@ $(document).ready(function()
 			callPutSnippet = callPutSnippet + tempSnippet; 
 		});
 		
-		if($("#new-request-dialog-expiry-type").val() == "A")
+		if($("#new-request-dialog-expiry-type").val() === "A")
 			callPutSnippet = callPutSnippet.toUpperCase();
 		else
 			callPutSnippet = callPutSnippet.toLowerCase();
@@ -650,7 +650,7 @@ $(document).ready(function()
 		
 	function processStatusUpdates(setOfRequests)
 	{
-		if(!$("#groupByNothing").is(":checked") || !$('#turnOnStatusUpdates').is(':checked') || setOfRequests.length == 0)
+		if(!$("#groupByNothing").is(":checked") || !$('#turnOnStatusUpdates').is(':checked') || setOfRequests.length === 0)
 			return;
 		
 		dataView.beginUpdate();
@@ -660,7 +660,7 @@ $(document).ready(function()
 			var request = setOfRequests[i];			
 			var gridItem = dataView.getItemById(request["identifier"]);
 			
-			if((gridItem !== undefined) && (request !== undefined) && (gridItem["status"] != request["status"]))
+			if((gridItem !== undefined) && (request !== undefined) && (gridItem["status"] !== request["status"]))
 			{
 				gridItem["status"] = request["status"];
 				gridItem["pickedUpBy"] = request["pickedUpBy"];
@@ -675,7 +675,7 @@ $(document).ready(function()
 	
 	function processCalculationUpdates(calculations)
 	{
-		if(!$("#groupByNothing").is(":checked") || !$('#turnOnCalculationUpdates').is(':checked') || calculations.length == 0)
+		if(!$("#groupByNothing").is(":checked") || !$('#turnOnCalculationUpdates').is(':checked') || calculations.length === 0)
 			return;
 		
 		alert("Not yet implemented: " + calculations);
@@ -683,7 +683,7 @@ $(document).ready(function()
 	
 	function processPriceUpdates(prices)
 	{
-		if(!$("#groupByNothing").is(":checked") || (prices.length == 0) || !$('#turnOnPriceUpdates').is(':checked'))
+		if(!$("#groupByNothing").is(":checked") || (prices.length === 0) || !$('#turnOnPriceUpdates').is(':checked'))
 			return;
 	
 		dataView.beginUpdate();
@@ -695,7 +695,7 @@ $(document).ready(function()
 			var item = dataView.getItemByIdx(i);
 			if((item !== undefined) && (prices[item["underlyingRIC"]] !== undefined))
 			{
-				if(item["underlyingPrice"] != prices[item["underlyingRIC"]].lastPrice)
+				if(item["underlyingPrice"] !== prices[item["underlyingRIC"]].lastPrice)
 				{
 					if(prices[item["underlyingRIC"]].lastPrice > item["underlyingPrice"])
 						increaseInPrice = true;
@@ -943,9 +943,9 @@ $(document).ready(function()
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
 	        	console.log(xhr.responseText);
-	        	if(textStatus != "timeout")
+	        	if(textStatus !== "timeout")
         		{
-	        		if(xhr.status == 404) 
+	        		if(xhr.status === 404) 
 	        			alert('Failed to get chart data because the server is no longer available. Please try to reload the page.');
 	        		else
 	        			alert('Failed to get chart data for request: ' + requestId + ' because of a server error.');   
@@ -980,9 +980,9 @@ $(document).ready(function()
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
 	        	console.log(xhr.responseText);
-	        	if(textStatus != "timeout")
+	        	if(textStatus !== "timeout")
         		{
-	        		if(xhr.status == 404)
+	        		if(xhr.status === 404)
 	        			alert('Failed to add request because the server is no longer available. Please try to reload the page.');
 	        		else
 	        			alert('Failed to add request [' + snippet + '] because of a server error.');   
@@ -1033,9 +1033,9 @@ $(document).ready(function()
 	            	$("#turnOnPriceUpdates").prop('checked', false);
 	            	window.clearInterval(priceUpdateInterval);
 	            	
-	            	if(textStatus != "timeout")
+	            	if(textStatus !== "timeout")
 	        		{
-		        		if(xhr.status == 404)
+		        		if(xhr.status === 404)
 		        			alert('Price updates failed because the server is no longer available. Please try to reload the page.');
 		        		else
 		        			alert('Price updates failed because of a server error.');   		        			
@@ -1075,9 +1075,9 @@ $(document).ready(function()
 	            	$("#turnOnCalculationUpdates").prop('checked', false);
 	            	window.clearInterval(calculationUpdateInterval);
 	            	
-	            	if(textStatus != "timeout")
+	            	if(textStatus !== "timeout")
 	        		{
-		        		if(xhr.status == 404)
+		        		if(xhr.status === 404)
 		        			alert('Calculation updates failed because the server is no longer available. Please try to reload the page.');
 		        		else
 		        			alert('Calculation updates failed because of a server error.');   		        			
@@ -1118,9 +1118,9 @@ $(document).ready(function()
 	            	$("#turnOnStatusUpdates").prop('checked', false);
 	            	window.clearInterval(statusUpdateInterval);
 	            	
-	            	if(textStatus != "timeout")
+	            	if(textStatus !== "timeout")
 	        		{
-		        		if(xhr.status == 404)
+		        		if(xhr.status === 404)
 		        			alert('Status updates failed because the server is no longer available. Please try to reload the page.');
 		        		else
 		        			alert('Status updates failed because of a server error.');   		        			
@@ -1141,16 +1141,16 @@ $(document).ready(function()
 		function lexographicComparer(a, b)
 		{
 			var x = a[sortColumn], y = b[sortColumn];
-			return (x == y ? 0 : (x > y ? 1 : -1));
+			return (x === y ? 0 : (x > y ? 1 : -1));
 		}
 		
 		function dateComparer(a, b)
 		{
 			var x = a[sortColumn], y = b[sortColumn];
 			
-			if(x.year == y.year)
+			if(x.year === y.year)
 			{
-				if(x.monthValue == y.monthValue)
+				if(x.monthValue === y.monthValue)
 					return x.dayOfMonth - y.dayOfMonth; 
 				else
 					return x.monthValue - y.monthValue;
@@ -1187,7 +1187,7 @@ $(document).ready(function()
 		"value" : 1000,
 	    "slide": function (event, ui)
 	    {
-	    	if (priceUpdateIntervalTime != ui.value)
+	    	if (priceUpdateIntervalTime !== ui.value)
 	    	{
 	    		priceUpdateIntervalTime = ui.value;
 	    		$("#priceFrequencySliderValue").html(" = " + priceUpdateIntervalTime + " ms");
@@ -1206,7 +1206,7 @@ $(document).ready(function()
 		"value" : 1000,
 	    "slide": function (event, ui)
 	    {
-	    	if (calculationUpdateIntervalTime != ui.value)
+	    	if (calculationUpdateIntervalTime !== ui.value)
 	    	{
 	    		calculationUpdateIntervalTime = ui.value;
 	    		$("#calculationFrequencySliderValue").html(" = " + calculationUpdateIntervalTime + " ms");
@@ -1225,7 +1225,7 @@ $(document).ready(function()
 		"value" : 1000,
 	    "slide": function (event, ui)
 	    {
-	    	if (statusUpdateIntervalTime != ui.value)
+	    	if (statusUpdateIntervalTime !== ui.value)
 	    	{
 	    		statusUpdateIntervalTime = ui.value;
 	    		$("#statusFrequencySliderValue").html(" = " + statusUpdateIntervalTime + " ms");
@@ -1244,7 +1244,7 @@ $(document).ready(function()
 		"value" : 5000,
 	    "slide": function (event, ui)
 	    {
-	    	if (priceUpdateTimeout != ui.value)
+	    	if (priceUpdateTimeout !== ui.value)
 			{
 	    		priceUpdateTimeout = ui.value;
 	    		$("#priceTimeoutSliderValue").html(" = " + priceUpdateTimeout + " ms");
@@ -1263,7 +1263,7 @@ $(document).ready(function()
 		"value" : 5000,
 	    "slide": function (event, ui)
 	    {
-	    	if (statusUpdateTimeout != ui.value)
+	    	if (statusUpdateTimeout !== ui.value)
 			{
 	    		statusUpdateTimeout = ui.value;
 	    		$("#statusTimeoutSliderValue").html(" = " + statusUpdateTimeout + " ms");
@@ -1282,7 +1282,7 @@ $(document).ready(function()
 		"value" : 5000,
 	    "slide": function (event, ui)
 	    {
-	    	if (calculationUpdateTimeout != ui.value)
+	    	if (calculationUpdateTimeout !== ui.value)
 			{
 	    		calculationUpdateTimeout = ui.value;
 	    		$("#calculationTimeoutSliderValue").html(" = " + calculationUpdateTimeout + " ms");
@@ -1336,13 +1336,13 @@ $(document).ready(function()
 		{			
 			$(".filter_textBox").each(function(index)
 			{
-				if($(this).val() != $(this).attr("default_value"))
+				if($(this).val() !== $(this).attr("default_value"))
 					$("#requests_filter_button").addClass("filter_on");					
 			})
 			
 			$(".search_textBox").each(function(index)
 			{
-				if($(this).val() != $(this).attr("default_value"))
+				if($(this).val() !== $(this).attr("default_value"))
 					$("#requests_search_button").addClass("filter_on");					
 			})			
 		}
@@ -1702,8 +1702,8 @@ $(document).ready(function()
 	
 	function updateStatusInGrid(updatedRequest, row, oldStatus, newStatus)
 	{	
-    	var isPickedUpByChanging = ((oldStatus != "PICKED_UP") && (newStatus == "PICKED_UP")) 
-			|| ((oldStatus != "PENDING") && (newStatus == "PENDING"));
+    	var isPickedUpByChanging = ((oldStatus !== "PICKED_UP") && (newStatus === "PICKED_UP")) 
+			|| ((oldStatus !== "PENDING") && (newStatus === "PENDING"));
     		
     	dataView.getItem(row).status = newStatus;
     	
@@ -1747,7 +1747,7 @@ $(document).ready(function()
 	        {
 	        	console.log(xhr.responseText);
 	        	
-	        	if(textStatus == "timeout")
+	        	if(textStatus === "timeout")
 	        		alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + ". Status update timed-out after five seconds.");
 	        	else
 	            	alert("Failed to update the status of request: "  + identifier + " from: " + oldStatus + " to: " + newStatus + " because of a server error.");                	
@@ -1755,7 +1755,7 @@ $(document).ready(function()
 		});
 	}	
 	
-	function saveSearch(owner, key, isPrivate)
+	function ajaxSaveSearch(owner, key, isPrivate)
 	{
 		$.ajax({
 		    url: contextPath + "/searches/ajaxSaveSearch", 
@@ -1774,7 +1774,7 @@ $(document).ready(function()
 	        {
 	        	console.log(xhr.responseText);
 	        	
-	        	if(textStatus == "timeout")
+	        	if(textStatus === "timeout")
 	        		alert("Failed to save the searches. Timed-out after five seconds.");
 	        	else
 	            	alert("Failed to save the searches because of a server error.");                	
@@ -1818,16 +1818,16 @@ $(document).ready(function()
 		}
 				
 		return criteria;
-	}
+	}	
 	
-	function performSearch()
+	function ajaxPerformSearch(searchCriteria)
 	{
 		showLoadIndicator();
 
 		$.ajax({
 		    url: contextPath + "/requests/ajaxSearch", 
 		    type: 'POST',
-		    data: JSON.stringify(collateCriteria("NO_OWNER", "NO_KEY", true)),
+		    data: searchCriteria,
 		    dataType: 'json',  
 		    contentType: 'application/json', 
 		    mimeType: 'application/json',
@@ -1851,7 +1851,7 @@ $(document).ready(function()
 	        	console.log(xhr.responseText);	        	
 	        	loadingIndicator.fadeOut();
 	        	
-	        	if(textStatus == "timeout")
+	        	if(textStatus === "timeout")
 	        		alert("Failed to retrieve result of search. Timed-out after 1 minute.");
 	        	else
 	            	alert("Failed to retrieve search results because of a server error.");                	
@@ -1915,7 +1915,7 @@ $(document).ready(function()
 
 	$(".new_request").click(function()
 	{
-		if($(this).val() == $(this).attr("default_value"))
+		if($(this).val() === $(this).attr("default_value"))
 		{
 			$(this).val("");
 			
@@ -1926,7 +1926,7 @@ $(document).ready(function()
 
 	$(".new_request").focusout(function()
 	{
-		if(trimSpaces($(this).val()) == "")
+		if(trimSpaces($(this).val()) === "")
 			$(this).val($(this).attr("default_value"));
 	});	
 
@@ -1944,12 +1944,12 @@ $(document).ready(function()
 	
 	$("#requests_search_search_btn").click(function()
 	{		
-		performSearch();
+		ajaxPerformSearch(JSON.stringify(collateCriteria("NO_OWNER", "NO_KEY", true)));
 	});	
 	
 	$(".filter_search_textBox").click(function()
 	{
-		if($(this).val() == $(this).attr("default_value"))
+		if($(this).val() === $(this).attr("default_value"))
 		{
 			$(this).val("");			
 		}
@@ -1957,7 +1957,7 @@ $(document).ready(function()
 
 	$(".filter_search_textBox").focusout(function()
 	{
-		if(trimSpaces($(this).val()) == "")
+		if(trimSpaces($(this).val()) === "")
 			$(this).val($(this).attr("default_value"));
 	});
 	

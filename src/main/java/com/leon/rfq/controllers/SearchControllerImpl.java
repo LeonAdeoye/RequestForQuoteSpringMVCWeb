@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.leon.rfq.domains.SearchCriterionImpl;
+import com.leon.rfq.services.RequestService;
 import com.leon.rfq.services.SearchService;
 
 @Controller
@@ -28,6 +29,9 @@ public class SearchControllerImpl
 {
 	@Autowired(required=true)
 	SearchService searchService;
+	
+	@Autowired(required=true)
+	RequestService requestService;
 	
 	@RequestMapping(value="/ajaxForOwner", method=RequestMethod.GET,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -97,6 +101,14 @@ public class SearchControllerImpl
 				criterion.getName(), criterion.getValue(), criterion.getIsPrivate()));
 		
 		return true;
+	}
+	
+	@RequestMapping(value="/ajaxPerformSearch", method=RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object get(@RequestBody SearchCriterionImpl criterion)
+	{
+		return this.requestService.search(this.searchService.get(criterion.getOwner(), criterion.getSearchKey()));
 	}
 	
 	@RequestMapping("/deleteForOwner")
