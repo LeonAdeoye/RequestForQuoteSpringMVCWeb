@@ -348,3 +348,8 @@ fieldset
 	padding:2px;
 	margin:2px;	
 }
+
+#saved-searches-select
+{
+	width: 300px;
+}

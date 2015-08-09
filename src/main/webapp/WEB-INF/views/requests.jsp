@@ -162,7 +162,7 @@
 			<br>
 			<br>
 			<div id="saved-searches">
-				<select id="saved-searches-select" size="20" name="searchCriteria">
+				<select id="saved-searches-select" size="10" name="searchCriteria">
 					
 				</select>
 			</div>			

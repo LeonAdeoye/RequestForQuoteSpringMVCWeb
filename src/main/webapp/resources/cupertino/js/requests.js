@@ -1491,8 +1491,11 @@ $(document).ready(function()
 		    timeout: 5000,
 		    cache: false,
 		    success: function(savedSearches) 
-		    {
-		    	console.log(savedSearches);
+		    {		    	
+		    	$.map(savedSearches, function(value, key) 
+		    	{
+		    		$("#saved-searches-select").append('<option value="' + key + '">' + key + '</option>');
+		    	});
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
