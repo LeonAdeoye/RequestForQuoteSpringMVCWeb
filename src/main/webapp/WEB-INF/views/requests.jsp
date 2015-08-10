@@ -161,43 +161,43 @@
 			<Label><spring:message code="requests.search.title.label"/></Label>
 			<br>
 			<br>
-			<div id="saved-searches">
-				<select id="saved-searches-select" size="10" name="searchCriteria">
-					
-				</select>
-			</div>			
-		  	<div id="requestsSearch">
-		  		<div class="requests_search_item">
-				  	<input id="requests_search_bookCode" class="search_textBox requests_search_collate filter_search_textBox requests_book_autocomplete" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." criterion_name="bookCode" />
-				  	<input id="requests_search_client" class="search_textBox rhs filter_search_textBox requests_client_autocomplete" path="clientId" value="Select client name..." type="text" default_value="Select client name..." criterion_name="clientId" />				  	
-				</div>
-				<br>
-				<div class="requests_search_item">
-				  	<input id="requests_search_tradeDate_start" class="search_textBox requests_search_collate filter_search_textBox dateTxtBox" value="Select start trade date..." type="text" default_value="Select start trade date..." criterion_name="startTradeDate" />
-				  	<input id="requests_search_tradeDate_end" class="search_textBox requests_search_collate rhs filter_search_textBox dateTxtBox" value="Select end trade date..." type="text" default_value="Select end trade date..." criterion_name="endTradeDate" />
-				</div>
-				<br>
-				<div class="requests_search_item">
-				  	<input id="requests_search_maturityDate_start" class="search_textBox requests_search_collate filter_search_textBox dateTxtBox" value="Select start maturity date..." type="text" default_value="Select start maturity date..." criterion_name="startMaturityDate" />
-				  	<input id="requests_search_maturityDate_end" class="search_textBox requests_search_collate rhs filter_search_textBox dateTxtBox" value="Select end maturity date..." type="text" default_value="Select end maturity date..." criterion_name="endMaturityDate" />
-				</div>
-				<br>
-		  		<div class="requests_search_item">
-				  	<input id="requests_search_status" path="status" class="search_textBox filter_search_textBox requests_status_autocomplete" value="Select status code..." type="text" default_value="Select status code..." criterion_name="status"/>
-				  	<input id="requests_search_underlying" path="underlying" class="search_textBox requests_search_collate rhs filter_search_textBox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." criterion_name="underlyingRIC"/>				  	
-				</div>
-				<br>
-				<div class="requests_search_item">
-					<label><spring:message code="requests.search.tier.label"/></label>
-					<div>
-						<input type="checkbox" id="requestSearchTopTierClient"><label for="requestSearchTopTierClient"><spring:message code="requests.search.topTier.label"/></label>
-						<input type="checkbox" id="requestSearchMiddleTierClient"><label for="requestSearchMiddleTierClient"><spring:message code="requests.search.middleTier.label"/></label>
-						<input type="checkbox" id="requestSearchBottomTierClient"><label for="requestSearchBottomTierClient"><spring:message code="requests.search.bottomTier.label"/></label>					
+			<div style>			
+			  	<div id="requestsSearch">
+			  		<div class="requests_search_item">
+					  	<input id="requests_search_bookCode" class="search_textBox requests_search_collate filter_search_textBox requests_book_autocomplete" path="bookCode" value="Select book code..." type="text" default_value="Select book code..." criterion_name="bookCode" />
+					  	<input id="requests_search_client" class="search_textBox rhs filter_search_textBox requests_client_autocomplete" path="clientId" value="Select client name..." type="text" default_value="Select client name..." criterion_name="clientId" />				  	
 					</div>
-				</div>				
+					<br>
+					<div class="requests_search_item">
+					  	<input id="requests_search_tradeDate_start" class="search_textBox requests_search_collate filter_search_textBox dateTxtBox" value="Select start trade date..." type="text" default_value="Select start trade date..." criterion_name="startTradeDate" />
+					  	<input id="requests_search_tradeDate_end" class="search_textBox requests_search_collate rhs filter_search_textBox dateTxtBox" value="Select end trade date..." type="text" default_value="Select end trade date..." criterion_name="endTradeDate" />
+					</div>
+					<br>
+					<div class="requests_search_item">
+					  	<input id="requests_search_maturityDate_start" class="search_textBox requests_search_collate filter_search_textBox dateTxtBox" value="Select start maturity date..." type="text" default_value="Select start maturity date..." criterion_name="startMaturityDate" />
+					  	<input id="requests_search_maturityDate_end" class="search_textBox requests_search_collate rhs filter_search_textBox dateTxtBox" value="Select end maturity date..." type="text" default_value="Select end maturity date..." criterion_name="endMaturityDate" />
+					</div>
+					<br>
+			  		<div class="requests_search_item">
+					  	<input id="requests_search_status" path="status" class="search_textBox filter_search_textBox requests_status_autocomplete" value="Select status code..." type="text" default_value="Select status code..." criterion_name="status"/>
+					  	<input id="requests_search_underlying" path="underlying" class="search_textBox requests_search_collate rhs filter_search_textBox requests_underlying_autocomplete" value="Select underlying code..." type="text" default_value="Select underlying code..." criterion_name="underlyingRIC"/>				  	
+					</div>
+					<br>
+					<div class="requests_search_item">
+						<label><spring:message code="requests.search.tier.label"/></label>
+						<div>
+							<input type="checkbox" id="requestSearchTopTierClient"><label for="requestSearchTopTierClient"><spring:message code="requests.search.topTier.label"/></label>
+							<input type="checkbox" id="requestSearchMiddleTierClient"><label for="requestSearchMiddleTierClient"><spring:message code="requests.search.middleTier.label"/></label>
+							<input type="checkbox" id="requestSearchBottomTierClient"><label for="requestSearchBottomTierClient"><spring:message code="requests.search.bottomTier.label"/></label>					
+						</div>
+					</div>				
+			  	</div>
+				<div id="saved-searches">
+					<select id="saved-searches-select" size="8" name="searchCriteria"></select>
+				</div>		  	
 		  	</div>
 			<br>
-		  	<div class="requests_configure_item">
+		  	<div id="search-buttons-set" class="requests_configure_item" >
 		  		<Button id="requests_search_search_btn" class="btn"><spring:message code="requests.search.search.button.label"/></Button>
 		  		<Button id="requests_search_save_btn" class="btn"><spring:message code="requests.search.save.button.label"/></Button>
 		  		<Button id="requests_search_clear_btn" class="btn requests_filter_search_clear_btn"><spring:message code="requests.search.clear.button.label"/></Button>
