@@ -32,7 +32,6 @@ import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.PriceDetailImpl;
 import com.leon.rfq.domains.RequestDetailImpl;
-import com.leon.rfq.domains.SearchCriterionImpl;
 import com.leon.rfq.services.BookService;
 import com.leon.rfq.services.CalculationService;
 import com.leon.rfq.services.ClientService;
@@ -257,14 +256,6 @@ public class RequestControllerImpl
 		List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
 		
 		return listOfStatus.stream().collect(Collectors.toMap(status -> status, status -> status.getDescription()));
-	}
-	
-	@RequestMapping(value = "requests/ajaxSearch", method = RequestMethod.POST,
-			produces = MediaType.APPLICATION_JSON_VALUE,
-			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object search(@RequestBody Set<SearchCriterionImpl> criteria)
-	{
-		return this.requestService.search(criteria);
 	}
 	
 	@RequestMapping(value = "requests/ajaxGetChartData", method = RequestMethod.POST,

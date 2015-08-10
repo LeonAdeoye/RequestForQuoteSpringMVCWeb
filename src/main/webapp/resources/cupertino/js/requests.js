@@ -1505,14 +1505,6 @@ $(document).ready(function()
 		});	
 	}
 	
-	$("#saved-searches-select").dblclick(function()
-	{
-		$("#saved-searches-select option:selected").each(function () 
-		{
-			ajaxPerformSearch(addCriterionToCriteria("ladeoye", this.value, null, null, null));
-		});		
-	});
-	
 	// TODO - decide if this is needed	
 	function getBookList()
 	{
@@ -1804,7 +1796,7 @@ $(document).ready(function()
 		    cache: false,
 		    success: function() 
 		    {
-		    	alert("Search criteria successfully persisted.");
+		    	$("#saved-searches-select").append('<option value="' + key + '">' + key + '</option>');
 		    },		    
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
@@ -1817,6 +1809,15 @@ $(document).ready(function()
 	        }
 		});		
 	}
+	
+	$("#saved-searches-select").dblclick(function()
+	{
+		$("#saved-searches-select option:selected").each(function () 
+		{
+			ajaxPerformSearch(JSON.stringify(addCriterionToCriteria("ladeoye", this.value, null, null, null)),
+					"/searches/ajaxPerformSearchUsingOwnerAndKey");
+		});		
+	});	
 	
 	function addCriterionToCriteria(criterionOwner, criterionKey, criterionName, criterionValue, criterionPrivacy)
 	{
@@ -1856,12 +1857,12 @@ $(document).ready(function()
 		return criteria;
 	}	
 	
-	function ajaxPerformSearch(searchCriteria)
+	function ajaxPerformSearch(searchCriteria, querySuffix)
 	{
 		showLoadIndicator();
 
 		$.ajax({
-		    url: contextPath + "/requests/ajaxSearch", 
+		    url: contextPath + querySuffix, 
 		    type: 'POST',
 		    data: searchCriteria,
 		    dataType: 'json',  
@@ -1980,7 +1981,8 @@ $(document).ready(function()
 	
 	$("#requests_search_search_btn").click(function()
 	{		
-		ajaxPerformSearch(JSON.stringify(collateCriteria("NO_OWNER", "NO_KEY", true)));
+		ajaxPerformSearch(JSON.stringify(collateCriteria("NO_OWNER", "NO_KEY", true)), 
+				"/searches/ajaxPerformSearchUsingCriteria");
 	});	
 	
 	$(".filter_search_textBox").click(function()

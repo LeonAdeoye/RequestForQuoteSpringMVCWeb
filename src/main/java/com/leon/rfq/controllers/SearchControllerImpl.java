@@ -102,12 +102,20 @@ public class SearchControllerImpl
 		return true;
 	}
 	
-	@RequestMapping(value="/ajaxPerformSearch", method=RequestMethod.POST,
+	@RequestMapping(value="/ajaxPerformSearchUsingOwnerAndKey", method=RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object get(@RequestBody SearchCriterionImpl criterion)
 	{
 		return this.requestService.search(this.searchService.get(criterion.getOwner(), criterion.getSearchKey()));
+	}
+	
+	@RequestMapping(value="/ajaxPerformSearchUsingCriteria", method=RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object search(@RequestBody Set<SearchCriterionImpl> criteria)
+	{
+		return this.requestService.search(criteria);
 	}
 	
 	@RequestMapping("/deleteForOwner")
