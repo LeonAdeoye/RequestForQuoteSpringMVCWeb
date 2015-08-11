@@ -301,8 +301,8 @@
 			</div>
 			<div class="clear-both">			
 				<select id="new-request-dialog-expiry-type" class="new-request-dialog-expiry-type-class new-requests-dialog dialog-hide float-left">
-					<option value="A">American</option>
 					<option value="E">European</option>
+					<option value="A">American</option>
 				</select>
 			</div>
 			<div class="clear-both">			

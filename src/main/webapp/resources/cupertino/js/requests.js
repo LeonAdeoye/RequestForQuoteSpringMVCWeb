@@ -90,6 +90,11 @@ function waitingFormatter(value)
 	return "Wait...";
 }
 
+function linkFormatter(row, cell, value, columnDef, dataContext)
+{
+	return '<a href="/requestForQuote/request' + dataContext['identifier'] + '">' + value + '</a>';
+}
+
 function requiredFieldValidator(value) 
 {
 	if (value === null || value === undefined || !value.length) 
@@ -109,7 +114,7 @@ function renderSparkline(cellNode, row, dataContext, colDef)
 
 var columns = 
 [
- 	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
+ 	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier", formatter: linkFormatter},
 	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
 	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request.", formatter: statusFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "Request picked up by user:"},
@@ -134,7 +139,7 @@ var columns =
 
 var allColumns = 
 [
- 	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier"},
+ 	{id: "requestId", name: "Request ID", field: "identifier", sortable: true, toolTip: "Request unique identifier", formatter: linkFormatter},
 	{id: "snippet", name: "Snippet", field: "request", cssClass: "cell-title", minWidth: 220, validator: requiredFieldValidator, toolTip: "Request snippet"},
 	{id: "status", name: "Status", field: "status", sortable: true, toolTip: "Current status of request", formatter: statusFormatter},
 	{id: "pickedUpBy", name: "Picked Up By", field: "pickedUpBy", sortable: true, toolTip: "User who picked up the request"},
