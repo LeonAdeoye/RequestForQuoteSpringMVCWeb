@@ -38,9 +38,18 @@
 	</head>
 	<body>
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
+
+		<ul id="bookContextMenu" class="contextMenu">
+		  <b><spring:message code="contextMenu.operation.title.label"/></b>
+		  <li data="VALIDATE"><spring:message code="contextMenu.operation.validate.menuitem"/></li>
+		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
+		  <li data="CREATE"><spring:message code="contextMenu.operation.create.menuitem"/></li>
+		  <li data="CUT_AND_PASTE"><spring:message code="contextMenu.operation.cutAndPaste.menuitem"/></li>
+		  <li data="DELETE"><spring:message code="contextMenu.operation.delete.menuitem"/></li>
+		</ul>
 		
-		<div style="width:360px;">
-    		<div id="booksGrid" style="width:360px;height:595px;"></div>
+		<div style="width:340px;">
+    		<div id="booksGrid" style="width:340px;height:595px;"></div>
 		</div>
 	</body>
 </html>

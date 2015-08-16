@@ -1,13 +1,13 @@
 function validityFormatter(row, cell, value, columnDef, dataContext)
 {
-	return value;
+	return value ? "Valid" : "Invalid";
 }
 
 var columns = 
 [
  	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book Code"},
 	{id: "entity", name: "Entity", field: "entity", sortable: true, toolTip: "Entity"},
-	{id: "isValid", name: "Valid", field: "isValid", sortable: true, toolTip: "Validity", formatter: validityFormatter},
+	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Validity", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "last updated by user"}
 ];
 
@@ -19,8 +19,7 @@ var options =
     enableAddRow: false,
     asyncEditorLoading: true,
     autoEdit: false,
-    forceFitColumns: false,
-    topPanelHeight:230
+    forceFitColumns: false
 };
 
 $(document).ready(function()
@@ -66,7 +65,7 @@ $(document).ready(function()
 		    dataType: 'json',  
 		    contentType: 'application/json',
 		    mimeType: 'application/json',
-		    timeout: 5000,
+		    timeout: bookUpdateTimeout,
 		    cache: false,
 		    success: function(books) 
 		    {
@@ -113,5 +112,33 @@ $(document).ready(function()
 				
 	dataView.refresh();
 	booksGrid.render()
+	
+    $("#bookContextMenu").click(function (e) 
+    {
+    	if (!$(e.target).is("li")) 
+    		return;
+      
+    	if (!requestsGrid.getEditorLock().commitCurrentEdit())
+    		return;
+      
+    	var row = $(this).data("row");
+    	var operation = $(e.target).attr("data");
+    	
+    	switch (operation) 
+    	{
+        	case "VALIDATE":
+        		alert("Sorry, this operation is yet to be supported!");	
+        		break;
+        	case "INVALIDATE":
+        		alert("Sorry, this operation is yet to be supported!");
+        		break;
+        	case "CUT_AND_PASTE":
+        		alert("Sorry, this operation is yet to be supported!");
+        		break;          		
+        	default: 
+        		alert("Sorry, this operation is yet to be supported!");
+    	}    	
+
+    });	    
 	
 });

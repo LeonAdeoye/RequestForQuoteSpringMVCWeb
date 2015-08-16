@@ -50,3 +50,8 @@
 	background: url('../slickGrid/images/ajax-loader-small.gif') no-repeat center left;
 }
 
+#booksContextMenu
+{
+	display:none;
+	position:absolute;
+}
