@@ -39,8 +39,8 @@
 	<body>
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
 		
-		<div style="width:800px;">
-    		<div id="booksGrid" style="width:800px;height:595px;"></div>
+		<div style="width:360px;">
+    		<div id="booksGrid" style="width:360px;height:595px;"></div>
 		</div>
 	</body>
 </html>
