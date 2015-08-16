@@ -92,7 +92,7 @@ function waitingFormatter(value)
 
 function linkFormatter(row, cell, value, columnDef, dataContext)
 {
-	return '<a href="/requestForQuote/request' + dataContext['identifier'] + '">' + value + '</a>';
+	return '<a href="/requestForQuote/requests/request?requestId=' + dataContext['identifier'] + '">' + value + '</a>';
 }
 
 function requiredFieldValidator(value) 

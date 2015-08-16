@@ -1,0 +1,52 @@
+.contextMenu 
+{
+	background: rgb(215,215,215);
+	border: 1px solid gray;
+	padding: 2px;
+	display: inline-block;
+	min-width: 100px;
+	-moz-box-shadow: 2px 2px 2px silver;
+	-webkit-box-shadow: 2px 2px 2px silver;
+	z-index: 99999;
+}
+.contextMenu li 
+{
+	padding: 4px 4px 4px 14px;
+	list-style: none;
+	cursor: pointer;
+	background: url("../slickGrid/images/arrow_right_peppermint.png") no-repeat center left;
+}
+.contextMenu li:hover
+{
+  	background-color: white;
+}
+
+.cellFlash 
+{
+	border: 1px solid black;
+	background: olive;
+}
+
+.loading-indicator 
+{
+	display: inline-block;
+	padding: 12px;
+	background: white;
+	-opacity: 0.5;
+	color: black;
+	font-weight: bold;
+	z-index: 9999;
+	border: 1px solid olive;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	-moz-box-shadow: 0 0 5px olive;
+	-webkit-box-shadow: 0px 0px 5px olive;
+	-text-shadow: 1px 1px 1px white;
+}
+    
+.loading-indicator label
+{
+	padding-left: 20px;
+	background: url('../slickGrid/images/ajax-loader-small.gif') no-repeat center left;
+}
+
