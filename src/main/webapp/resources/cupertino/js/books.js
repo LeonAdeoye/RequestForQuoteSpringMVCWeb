@@ -60,7 +60,30 @@ $(document).ready(function()
 	function getListOfBooks() 
 	{		
 		$.ajax({
-		    url: contextPath + "/books/all", 
+		    url: contextPath + "/books/ajaxUpdateValidity", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: bookUpdateTimeout,
+		    cache: false,
+		    success: function(result) 
+		    {
+		    	loadingIndicator.fadeOut();
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	console.log(xhr.responseText);
+            	alert('Failed to update the validity details because of a server error.');
+                loadingIndicator.fadeOut();
+            }
+		});
+	}
+	
+	function updateBookValidity(bookCode, validity, updatedByUser) 
+	{		
+		$.ajax({
+		    url: contextPath + "/books/ajaxUpdateValidity", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',
@@ -69,18 +92,16 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(books) 
 		    {
-		    	dataView.setItems(books, "bookCode");
-		    	// TODO add sort
 		    	loadingIndicator.fadeOut();
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
             	console.log(xhr.responseText);
-            	alert('Failed to retrieve book details because of a server error.');
+            	alert('Failed to update the validity details because of a server error.');
                 loadingIndicator.fadeOut();
             }
 		});
-	}
+	}	
 	
 	showLoadIndicator();
 	getListOfBooks();

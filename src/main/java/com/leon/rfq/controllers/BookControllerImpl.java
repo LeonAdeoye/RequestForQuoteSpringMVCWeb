@@ -108,6 +108,15 @@ public class BookControllerImpl
 		return "redirect:/books";
 	}
 	
+	@RequestMapping(value = "/ajaxUpdateValidity", method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object ajaxUpdateValidity(@RequestParam String bookCode,
+			@RequestParam boolean isValid, @RequestParam String updatedByUser)
+	{
+		return this.bookService.updateValidity(bookCode, isValid, updatedByUser);
+	}
+	
 	@RequestMapping(value = "/matchingBookTags", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody Object getBookMatches(@RequestParam String pattern)
 	{
