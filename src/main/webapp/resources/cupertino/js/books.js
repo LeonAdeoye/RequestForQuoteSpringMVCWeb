@@ -8,7 +8,7 @@ var columns =
  	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book Code"},
 	{id: "entity", name: "Entity", field: "entity", sortable: true, toolTip: "Entity"},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Validity", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "last updated by user"}
+	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "last updated by user", width: 90}
 ];
 
 var options = 
@@ -21,6 +21,31 @@ var options =
     autoEdit: false,
     forceFitColumns: false
 };
+
+function enableAddButton()
+{
+	$("#new-book-add").removeAttr('disabled');
+}
+
+function disableAddButton()
+{
+	$("#new-book-add").attr('disabled', 'disabled');
+}
+
+function toggleAddButtonState()
+{
+	if(($("#new-book-bookCode").val() != "" && $("#new-book-bookCode").val() != $("#new-book-bookCode").attr("default_value"))
+			&& ($("#new-book-entity").val() != "" && $("#new-book-entity").val() != $("#new-book-entity").attr("default_value")))
+		enableAddButton();
+	else
+		disableAddButton();
+}
+
+function clearNewBookInputFields()
+{
+	$("#new-book-bookCode").val($("#new-book-bookCode").attr("default_value"));
+	$("#new-book-entity").val($("#new-book-entity").attr("default_value"));	
+}
 
 $(document).ready(function()
 {
@@ -42,6 +67,42 @@ $(document).ready(function()
 	booksGrid.registerPlugin(groupItemMetadataProvider);	
 	booksGrid.setSelectionModel(new Slick.RowSelectionModel());
 	booksGrid.setTopPanelVisibility(false);
+	
+	$(".new-book-btn").button();
+	disableAddButton();	
+	$("#new-book-bookCode").keyup(toggleAddButtonState);
+	$("#new-book-bookCode").focusout(toggleAddButtonState);
+	$("#new-book-entity").keyup(toggleAddButtonState);
+	$("#new-book-entity").focusout(toggleAddButtonState);
+	
+	$("input.new-book-input-class").click(function()
+	{
+		if($(this).val() === $(this).attr("default_value"))
+		{
+			$(this).val("");
+			
+			if($(this).is("#new-book-bookCode"))
+				disableAddButton();
+		}
+	});
+
+	$("input.new-book-input-class").focusout(function()
+	{
+		if(trimSpaces($(this).val()) === "")
+			$(this).val($(this).attr("default_value"));
+	});	
+
+	$("new-book-clear").click(function()
+	{
+		clearNewBookInputFields();		
+		disableAddButton();
+	});
+	
+	$("new-book-add").click(function()
+	{
+		disableAddButton();
+		clearNewBookInputFields();		
+	});		
 	
     function showLoadIndicator() 
     {

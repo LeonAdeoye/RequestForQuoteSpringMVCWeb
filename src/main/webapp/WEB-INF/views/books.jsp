@@ -37,6 +37,15 @@
 		<title>Book Maintenance</title>
 	</head>
 	<body>
+		
+		<div id="books-new-book" class="new-book-class float-left">				
+			<input id="new-book-bookCode" class="float-left new-book-input-class" path="bookCode" value="Enter book code..." type="text" default_value="Enter book code..." />
+			<input id="new-book-entity" class="float-left new-book-input-class" path="entity" value="Enter entity..." type="text" default_value="Enter entity..." />
+			<button id="new-book-add" class="new-book-btn new-book-input-class"><spring:message code="books.add.button.label"/></button>
+			<button id="new-book-clear" class="new-book-btn new-book-input-class float-right"><spring:message code="books.clear.button.label"/></button>
+			<button id="new-book-import" class="new-book-btn new-book-input-class float-right"><spring:message code="books.import.button.label"/></button>
+		</div>
+			
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
 
 		<ul id="bookContextMenu" class="contextMenu">
@@ -44,11 +53,10 @@
 		  <li data="VALIDATE"><spring:message code="contextMenu.operation.validate.menuitem"/></li>
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
 		  <li data="CREATE"><spring:message code="contextMenu.operation.create.menuitem"/></li>
-		  <li data="DELETE"><spring:message code="contextMenu.operation.delete.menuitem"/></li>
 		</ul>
 		
-		<div style="width:340px;">
-    		<div id="booksGrid" style="width:340px;height:595px;"></div>
+		<div style="width:330px;">
+    		<div id="booksGrid" style="width:330px;height:595px;"></div>
 		</div>
 	</body>
 </html>
