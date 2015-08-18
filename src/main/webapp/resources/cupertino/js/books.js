@@ -60,30 +60,7 @@ $(document).ready(function()
 	function getListOfBooks() 
 	{		
 		$.ajax({
-		    url: contextPath + "/books/ajaxUpdateValidity", 
-		    type: 'GET', 
-		    dataType: 'json',  
-		    contentType: 'application/json',
-		    mimeType: 'application/json',
-		    timeout: bookUpdateTimeout,
-		    cache: false,
-		    success: function(result) 
-		    {
-		    	loadingIndicator.fadeOut();
-		    },
-            error: function (xhr, textStatus, errorThrown) 
-            {
-            	console.log(xhr.responseText);
-            	alert('Failed to update the validity details because of a server error.');
-                loadingIndicator.fadeOut();
-            }
-		});
-	}
-	
-	function updateBookValidity(bookCode, validity, updatedByUser) 
-	{		
-		$.ajax({
-		    url: contextPath + "/books/ajaxUpdateValidity", 
+		    url: contextPath + "/books/all", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',
@@ -92,13 +69,42 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(books) 
 		    {
+		    	dataView.setItems(books, "bookCode");
 		    	loadingIndicator.fadeOut();
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
+            	loadingIndicator.fadeOut();
             	console.log(xhr.responseText);
-            	alert('Failed to update the validity details because of a server error.');
-                loadingIndicator.fadeOut();
+            	alert('Failed to retrieve list of books because of a server error.');                
+            }
+		});
+	}
+	
+	function updateBookValidity(bookCode, validity, updatedByUser) 
+	{
+		var bookDetails = { "bookCode" : bookCode, "validity" : validity, "updatedByUser" : updatedByUser };
+		
+		$.ajax({
+		    url: contextPath + "/books/ajaxUpdateValidity", 
+		    type: 'GET', 
+		    dataType: 'json',
+		    data: JSON.stringify(bookDetails),
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: bookUpdateTimeout,
+		    cache: false,
+		    success: function(result) 
+		    {
+		    	loadingIndicator.fadeOut();
+		    	if(!result)
+		    		alert("Failed to update the validity.");		    	
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	loadingIndicator.fadeOut();
+            	console.log(xhr.responseText);
+            	alert('Failed to update the validity details because of a server error.');                
             }
 		});
 	}	
@@ -132,34 +138,64 @@ $(document).ready(function()
 	});
 				
 	dataView.refresh();
-	booksGrid.render()
+	booksGrid.render();
+	
+	booksGrid.onContextMenu.subscribe(function (e) 
+	{
+        var cell = booksGrid.getCellFromEvent(e);
+        var item = dataView.getItem(cell.row);
+        e.preventDefault();
+    	
+    	$("#bookContextMenu li").each(function(index)
+		{
+    		if((item["Validity"] === "Valid") && ($(this).attr("data") === "VALIDATE") ||
+    				(item["Validity"] === "Invalid") && ($(this).attr("data") === "INVALIDATE"))
+        		$(this).hide();
+    		else
+    			$(this).show();
+		});        	
+    	
+        $("#bookContextMenu")
+            .data("row", cell.row)
+            .css("top", e.pageY)
+            .css("left", e.pageX)
+            .show();
+    
+        $("body").one("click", function() 
+        {
+          $("#bookContextMenu").hide();
+        });
+    });
+	
 	
     $("#bookContextMenu").click(function (e) 
     {
     	if (!$(e.target).is("li")) 
     		return;
       
-    	if (!requestsGrid.getEditorLock().commitCurrentEdit())
+    	if (!booksGrid.getEditorLock().commitCurrentEdit())
     		return;
       
     	var row = $(this).data("row");
     	var operation = $(e.target).attr("data");
+    	var updatedByUser = "ladeoye";    	
+    	var bookCode = dataView.getItem(row).bookCode;
     	
     	switch (operation) 
     	{
         	case "VALIDATE":
-        		alert("Sorry, this operation is yet to be supported!");	
+        		showLoadIndicator();
+        		updateBookValidity(bookCode, true, updatedByUser);	
         		break;
         	case "INVALIDATE":
-        		alert("Sorry, this operation is yet to be supported!");
+        		showLoadIndicator();
+        		updateBookValidity(bookCode, false, updatedByUser);        		
         		break;
-        	case "CUT_AND_PASTE":
+        	case "CREATE":
         		alert("Sorry, this operation is yet to be supported!");
         		break;          		
         	default: 
         		alert("Sorry, this operation is yet to be supported!");
     	}    	
-
-    });	    
-	
+    });	    	
 });
