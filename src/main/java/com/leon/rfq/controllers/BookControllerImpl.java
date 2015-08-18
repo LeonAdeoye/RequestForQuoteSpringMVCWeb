@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -111,8 +112,8 @@ public class BookControllerImpl
 	@RequestMapping(value = "/ajaxUpdateValidity", method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxUpdateValidity(@RequestParam String bookCode,
-			@RequestParam boolean isValid, @RequestParam String updatedByUser)
+	public @ResponseBody Object ajaxUpdateValidity(@RequestBody String bookCode,
+			@RequestBody boolean isValid, @RequestBody String updatedByUser)
 	{
 		return this.bookService.updateValidity(bookCode, isValid, updatedByUser);
 	}

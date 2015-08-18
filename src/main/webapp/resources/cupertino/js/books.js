@@ -58,7 +58,9 @@ $(document).ready(function()
     }	
 	
 	function getListOfBooks() 
-	{		
+	{
+		showLoadIndicator();
+		
 		$.ajax({
 		    url: contextPath + "/books/all", 
 		    type: 'GET', 
@@ -83,7 +85,7 @@ $(document).ready(function()
 	
 	function updateBookValidity(bookCode, validity, updatedByUser) 
 	{
-		var bookDetails = { "bookCode" : bookCode, "validity" : validity, "updatedByUser" : updatedByUser };
+		var bookDetails = { "bookCode" : bookCode, "isValid" : validity, "updatedByUser" : updatedByUser };
 		
 		$.ajax({
 		    url: contextPath + "/books/ajaxUpdateValidity", 
@@ -108,8 +110,7 @@ $(document).ready(function()
             }
 		});
 	}	
-	
-	showLoadIndicator();
+		
 	getListOfBooks();
 	
 	booksGrid.onSort.subscribe(function(e, args)
@@ -178,18 +179,17 @@ $(document).ready(function()
       
     	var row = $(this).data("row");
     	var operation = $(e.target).attr("data");
-    	var updatedByUser = "ladeoye";    	
-    	var bookCode = dataView.getItem(row).bookCode;
+    	var updatedByUser = "ladeoye";
     	
     	switch (operation) 
     	{
-        	case "VALIDATE":
+        	case "VALIDATE":        		
         		showLoadIndicator();
-        		updateBookValidity(bookCode, true, updatedByUser);	
+        		updateBookValidity(dataView.getItem(row).bookCode, true, updatedByUser);	
         		break;
         	case "INVALIDATE":
         		showLoadIndicator();
-        		updateBookValidity(bookCode, false, updatedByUser);        		
+        		updateBookValidity(dataView.getItem(row).bookCode, false, updatedByUser);        		
         		break;
         	case "CREATE":
         		alert("Sorry, this operation is yet to be supported!");
