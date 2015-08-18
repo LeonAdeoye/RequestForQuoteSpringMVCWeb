@@ -118,7 +118,7 @@ $(document).ready(function()
         loadingIndicator.show();
     }	
 	
-	function getListOfBooks() 
+	function ajaxGetListOfBooks() 
 	{
 		showLoadIndicator();
 		
@@ -144,7 +144,7 @@ $(document).ready(function()
 		});
 	}
 	
-	function updateBookValidity(bookCode, validity, updatedByUser) 
+	function ajaxUpdateBookValidity(bookCode, validity, updatedByUser) 
 	{
 		var bookDetails = { "bookCode" : bookCode, "isValid" : validity, "updatedByUser" : updatedByUser };
 		
@@ -162,6 +162,34 @@ $(document).ready(function()
 		    	loadingIndicator.fadeOut();
 		    	if(!result)
 		    		alert("Failed to update the validity.");		    	
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	loadingIndicator.fadeOut();
+            	console.log(xhr.responseText);
+            	alert('Failed to update the validity details because of a server error.');                
+            }
+		});
+	}
+	
+	function ajaxAddNewBook(bookCode, entity, updatedByUser) 
+	{
+		var bookDetails = { "bookCode" : bookCode, "entity" : entity, "updatedByUser" : updatedByUser };
+		
+		$.ajax({
+		    url: contextPath + "/books/ajaxAddNewBook", 
+		    type: 'GET', 
+		    dataType: 'json',
+		    data: JSON.stringify(bookDetails),
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: bookUpdateTimeout,
+		    cache: false,
+		    success: function(result) 
+		    {
+		    	loadingIndicator.fadeOut();
+		    	if(!result)
+		    		alert("Failed to insert the new book because of a server error.");		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {

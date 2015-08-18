@@ -49,7 +49,7 @@ public class BookControllerImpl
 	@RequestMapping(value="/ajaxGetListOfBooks", method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Set<BookDetailImpl> getAllBook()
+	public @ResponseBody Set<BookDetailImpl> ajaxGetListOfBooks()
 	{
 		return this.bookService.getAllFromCacheOnly();
 	}
@@ -63,10 +63,10 @@ public class BookControllerImpl
 		return this.bookService.updateValidity(bookCode, isValid, updatedByUser);
 	}
 	
-	@RequestMapping(value = "/ajaxAddBook", method = RequestMethod.GET,
+	@RequestMapping(value = "/ajaxAddNewBook", method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxAddBook(@RequestBody String bookCode,
+	public @ResponseBody Object ajaxAddNewBook(@RequestBody String bookCode,
 			@RequestBody String entity, @RequestBody String updatedByUser)
 	{
 		return this.bookService.insert(bookCode, entity, true, updatedByUser);
