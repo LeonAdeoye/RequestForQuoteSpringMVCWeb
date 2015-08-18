@@ -1514,7 +1514,7 @@ $(document).ready(function()
 	function getBookList()
 	{
 		$.ajax({
-		    url: contextPath + "/books/all", 
+		    url: contextPath + "/books/ajaxGetListOfBooks", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',

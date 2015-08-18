@@ -92,13 +92,13 @@ $(document).ready(function()
 			$(this).val($(this).attr("default_value"));
 	});	
 
-	$("new-book-clear").click(function()
+	$("#new-book-clear").click(function()
 	{
 		clearNewBookInputFields();		
 		disableAddButton();
 	});
 	
-	$("new-book-add").click(function()
+	$("#new-book-add").click(function()
 	{
 		disableAddButton();
 		clearNewBookInputFields();		
@@ -123,7 +123,7 @@ $(document).ready(function()
 		showLoadIndicator();
 		
 		$.ajax({
-		    url: contextPath + "/books/all", 
+		    url: contextPath + "/books/ajaxGetListOfBooks", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',
@@ -228,8 +228,7 @@ $(document).ready(function()
           $("#bookContextMenu").hide();
         });
     });
-	
-	
+		
     $("#bookContextMenu").click(function (e) 
     {
     	if (!$(e.target).is("li")) 
@@ -252,9 +251,6 @@ $(document).ready(function()
         		showLoadIndicator();
         		updateBookValidity(dataView.getItem(row).bookCode, false, updatedByUser);        		
         		break;
-        	case "CREATE":
-        		alert("Sorry, this operation is yet to be supported!");
-        		break;          		
         	default: 
         		alert("Sorry, this operation is yet to be supported!");
     	}    	

@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/plugins/slick.rowselectionmodel.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/controls/slick.columnpicker.js" />"></script>
 		
+		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/books.js" />"></script>		
 				
 		<script type="text/javascript">		
@@ -52,7 +53,6 @@
 		  <b><spring:message code="contextMenu.operation.title.label"/></b>
 		  <li data="VALIDATE"><spring:message code="contextMenu.operation.validate.menuitem"/></li>
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
-		  <li data="CREATE"><spring:message code="contextMenu.operation.create.menuitem"/></li>
 		</ul>
 		
 		<div style="width:330px;">
