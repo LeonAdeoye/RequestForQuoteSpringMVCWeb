@@ -5,8 +5,9 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 
 var columns = 
 [
- 	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book Code"},
-	{id: "entity", name: "Entity", field: "entity", sortable: true, toolTip: "Entity"},
+ 	{id: "clientId", name: "client ID", field: "clientId", sortable: true, toolTip: "client Identifier"},
+	{id: "name", name: "name", field: "name", sortable: true, toolTip: "name"},
+	{id: "tier", name: "tier", field: "tier", sortable: true, toolTip: "name"},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Validity", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "last updated by user", width: 90}
 ];
@@ -24,34 +25,34 @@ var options =
 
 function enableAddButton()
 {
-	$("#new-book-add").removeAttr('disabled');
+	$("#new-client-add").removeAttr('disabled');
 }
 
 function disableAddButton()
 {
-	$("#new-book-add").attr('disabled', 'disabled');
+	$("#new-client-add").attr('disabled', 'disabled');
 }
 
 function toggleAddButtonState()
 {
-	if(($("#new-book-bookCode").val() != "" && $("#new-book-bookCode").val() != $("#new-book-bookCode").attr("default_value"))
-			&& ($("#new-book-entity").val() != "" && $("#new-book-entity").val() != $("#new-book-entity").attr("default_value")))
+	if(($("#new-client-clientId").val() != "" && $("#new-client-clientId").val() != $("#new-client-clientId").attr("default_value"))
+			&& ($("#new-client-name").val() != "" && $("#new-client-name").val() != $("#new-client-name").attr("default_value")))
 		enableAddButton();
 	else
 		disableAddButton();
 }
 
-function clearNewBookInputFields()
+function clearNewclientInputFields()
 {
-	$("#new-book-bookCode").val($("#new-book-bookCode").attr("default_value"));
-	$("#new-book-entity").val($("#new-book-entity").attr("default_value"));	
+	$("#new-client-clientId").val($("#new-client-clientId").attr("default_value"));
+	$("#new-client-name").val($("#new-client-name").attr("default_value"));	
 }
 
 $(document).ready(function()
 {
-	var bookUpdateAjaxLock = false;
-	var bookUpdateIntervalTime = 1000;
-	var bookUpdateTimeout = 5000;
+	var clientUpdateAjaxLock = false;
+	var clientUpdateIntervalTime = 1000;
+	var clientUpdateTimeout = 5000;
 	
 	var loadingIndicator = null;
 	var groupItemMetadataProvider = new Slick.Data.GroupItemMetadataProvider();
@@ -62,51 +63,51 @@ $(document).ready(function()
 	    inlineFilters: true
 	});
 	
-	var booksGrid = new Slick.Grid("#booksGrid", dataView, columns, options);
+	var clientsGrid = new Slick.Grid("#clientsGrid", dataView, columns, options);
 	
-	booksGrid.registerPlugin(groupItemMetadataProvider);	
-	booksGrid.setSelectionModel(new Slick.RowSelectionModel());
-	booksGrid.setTopPanelVisibility(false);
+	clientsGrid.registerPlugin(groupItemMetadataProvider);	
+	clientsGrid.setSelectionModel(new Slick.RowSelectionModel());
+	clientsGrid.setTopPanelVisibility(false);
 	
-	$(".new-book-btn").button();
+	$(".new-client-btn").button();
 	disableAddButton();	
-	$("#new-book-bookCode").keyup(toggleAddButtonState);
-	$("#new-book-bookCode").focusout(toggleAddButtonState);
-	$("#new-book-entity").keyup(toggleAddButtonState);
-	$("#new-book-entity").focusout(toggleAddButtonState);
+	$("#new-client-clientId").keyup(toggleAddButtonState);
+	$("#new-client-clientId").focusout(toggleAddButtonState);
+	$("#new-client-name").keyup(toggleAddButtonState);
+	$("#new-client-name").focusout(toggleAddButtonState);
 	
-	$("input.new-book-input-class").click(function()
+	$("input.new-client-input-class").click(function()
 	{
 		if($(this).val() === $(this).attr("default_value"))
 		{
 			$(this).val("");
 			
-			if($(this).is("#new-book-bookCode"))
+			if($(this).is("#new-client-clientId"))
 				disableAddButton();
 		}
 	});
 
-	$("input.new-book-input-class").focusout(function()
+	$("input.new-client-input-class").focusout(function()
 	{
 		if(trimSpaces($(this).val()) === "")
 			$(this).val($(this).attr("default_value"));
 	});	
 
-	$("#new-book-clear").click(function()
+	$("#new-client-clear").click(function()
 	{
-		clearNewBookInputFields();		
+		clearNewclientInputFields();		
 		disableAddButton();
 	});
 	
-	$("#new-book-add").click(function()
+	$("#new-client-add").click(function()
 	{
-		var bookCode = $("#new-book-bookCode").val();
-		var entity = $("#new-book-entity").val();
+		var clientId = $("#new-client-clientId").val();
+		var name = $("#new-client-name").val();
 		var updatedByUser = "ladeoye";
 		
-		ajaxAddNewBook(bookCode, entity, updatedByUser);
+		ajaxAddNewclient(clientId, name, updatedByUser);
 		disableAddButton();
-		clearNewBookInputFields();		
+		clearNewclientInputFields();		
 	});		
 	
     function showLoadIndicator() 
@@ -114,7 +115,7 @@ $(document).ready(function()
         if (!loadingIndicator) 
         {
         	loadingIndicator = $(".loading-indicator").appendTo(document.body);
-        	var $g = $("#booksGrid");
+        	var $g = $("#clientsGrid");
         	loadingIndicator
             	.css("position", "absolute")
             	.css("top", $g.position().top + $g.height() / 2 - loadingIndicator.height() / 2)
@@ -123,44 +124,44 @@ $(document).ready(function()
         loadingIndicator.show();
     }	
 	
-	function ajaxGetListOfBooks() 
+	function ajaxGetListOfclients() 
 	{
 		showLoadIndicator();
 		
 		$.ajax({
-		    url: contextPath + "/books/ajaxGetListOfBooks", 
+		    url: contextPath + "/clients/ajaxGetListOfClients", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',
 		    mimeType: 'application/json',
-		    timeout: bookUpdateTimeout,
+		    timeout: clientUpdateTimeout,
 		    cache: false,
-		    success: function(books) 
+		    success: function(clients) 
 		    {
-		    	dataView.setItems(books, "bookCode");
+		    	dataView.setItems(clients, "clientId");
 		    	loadingIndicator.fadeOut();
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
             	loadingIndicator.fadeOut();
             	console.log(xhr.responseText);
-            	alert('Failed to retrieve list of books because of a server error.');                
+            	alert('Failed to retrieve list of clients because of a server error.');                
             }
 		});
 	}
 	
-	function ajaxUpdateBookValidity(bookCode, validity, updatedByUser) 
+	function ajaxUpdateclientValidity(clientId, validity, updatedByUser) 
 	{
-		var bookDetails = { "bookCode" : bookCode, "isValid" : validity, "updatedByUser" : updatedByUser };
+		var clientDetails = { "clientId" : clientId, "isValid" : validity, "updatedByUser" : updatedByUser };
 		
 		$.ajax({
-		    url: contextPath + "/books/ajaxUpdateValidity", 
+		    url: contextPath + "/clients/ajaxUpdateValidity", 
 		    type: 'GET', 
 		    dataType: 'json',
-		    data: JSON.stringify(bookDetails),
+		    data: JSON.stringify(clientDetails),
 		    contentType: 'application/json',
 		    mimeType: 'application/json',
-		    timeout: bookUpdateTimeout,
+		    timeout: clientUpdateTimeout,
 		    cache: false,
 		    success: function(result) 
 		    {
@@ -177,37 +178,37 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxAddNewBook(bookCode, entity, updatedByUser) 
+	function ajaxAddNewclient(clientId, name, updatedByUser) 
 	{
-		var bookDetails = { "bookCode" : bookCode, "entity" : entity, "updatedByUser" : updatedByUser };
+		var clientDetails = { "clientId" : clientId, "name" : name, "updatedByUser" : updatedByUser };
 		
 		$.ajax({
-		    url: contextPath + "/books/ajaxAddNewBook", 
+		    url: contextPath + "/clients/ajaxAddNewClient", 
 		    type: 'GET', 
 		    dataType: 'json',
-		    data: JSON.stringify(bookDetails),
+		    data: JSON.stringify(clientDetails),
 		    contentType: 'application/json',
 		    mimeType: 'application/json',
-		    timeout: bookUpdateTimeout,
+		    timeout: clientUpdateTimeout,
 		    cache: false,
 		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
 		    	if(!result)
-		    		alert("Failed to insert the new book because of a server error.");		    	
+		    		alert("Failed to insert the new client because of a server error.");		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
             	loadingIndicator.fadeOut();
             	console.log(xhr.responseText);
-            	alert('Failed to insert the new book because of a server error.');                
+            	alert('Failed to insert the new client because of a server error.');                
             }
 		});
 	}	
 		
-	ajaxGetListOfBooks();
+	ajaxGetListOfclients();
 	
-	booksGrid.onSort.subscribe(function(e, args)
+	clientsGrid.onSort.subscribe(function(e, args)
 	{
 	    sortColumn = args.sortCol.field;
 	    
@@ -222,26 +223,26 @@ $(document).ready(function()
 	
 	dataView.onRowCountChanged.subscribe(function (e, args)
 	{
-		booksGrid.updateRowCount();
-		booksGrid.render();
+		clientsGrid.updateRowCount();
+		clientsGrid.render();
 	});
 
 	dataView.onRowsChanged.subscribe(function (e, args) 
 	{
-		booksGrid.invalidateRows(args.rows);
-		booksGrid.render();
+		clientsGrid.invalidateRows(args.rows);
+		clientsGrid.render();
 	});
 				
 	dataView.refresh();
-	booksGrid.render();
+	clientsGrid.render();
 	
-	booksGrid.onContextMenu.subscribe(function (e) 
+	clientsGrid.onContextMenu.subscribe(function (e) 
 	{
-        var cell = booksGrid.getCellFromEvent(e);
+        var cell = clientsGrid.getCellFromEvent(e);
         var item = dataView.getItem(cell.row);
         e.preventDefault();
     	
-    	$("#bookContextMenu li").each(function(index)
+    	$("#clientContextMenu li").each(function(index)
 		{
     		if((item["Validity"] === "Valid") && ($(this).attr("data") === "VALIDATE") ||
     				(item["Validity"] === "Invalid") && ($(this).attr("data") === "INVALIDATE"))
@@ -250,7 +251,7 @@ $(document).ready(function()
     			$(this).show();
 		});        	
     	
-        $("#bookContextMenu")
+        $("#clientContextMenu")
             .data("row", cell.row)
             .css("top", e.pageY)
             .css("left", e.pageX)
@@ -258,16 +259,16 @@ $(document).ready(function()
     
         $("body").one("click", function() 
         {
-          $("#bookContextMenu").hide();
+          $("#clientContextMenu").hide();
         });
     });
 		
-    $("#bookContextMenu").click(function (e) 
+    $("#clientContextMenu").click(function (e) 
     {
     	if (!$(e.target).is("li")) 
     		return;
       
-    	if (!booksGrid.getEditorLock().commitCurrentEdit())
+    	if (!clientsGrid.getEditorLock().commitCurrentEdit())
     		return;
       
     	var row = $(this).data("row");
@@ -278,11 +279,11 @@ $(document).ready(function()
     	{
         	case "VALIDATE":        		
         		showLoadIndicator();
-        		ajaxUpdateBookValidity(dataView.getItem(row).bookCode, true, updatedByUser);	
+        		ajaxUpdateclientValidity(dataView.getItem(row).clientId, true, updatedByUser);	
         		break;
         	case "INVALIDATE":
         		showLoadIndicator();
-        		ajaxUpdateBookValidity(dataView.getItem(row).bookCode, false, updatedByUser);        		
+        		ajaxUpdateclientValidity(dataView.getItem(row).clientId, false, updatedByUser);        		
         		break;
         	default: 
         		alert("Sorry, this operation is yet to be supported!");

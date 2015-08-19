@@ -29,6 +29,7 @@ public class BookControllerImpl
 	@Autowired(required=true)
 	BookService bookService;
 	
+	
 	@Autowired(required=true)
 	private BookValidatorImpl bookValidator;
 	
@@ -38,7 +39,7 @@ public class BookControllerImpl
 		binder.setAllowedFields("bookCode", "description", "isValid");
 		binder.setValidator(this.bookValidator);
 	}
-		
+	
 	@RequestMapping()
 	public String getAll(Model model)
 	{

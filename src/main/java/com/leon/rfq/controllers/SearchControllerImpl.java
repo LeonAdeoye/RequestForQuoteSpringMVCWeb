@@ -135,13 +135,13 @@ public class SearchControllerImpl
 	}
 	
 	@RequestMapping(value="/ajaxDeleteForOwner", method=RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody boolean delete(@RequestParam String owner)
+	public @ResponseBody boolean delete(@RequestBody String owner)
 	{
 		return this.searchService.delete(owner);
 	}
 	
 	@RequestMapping(value="/ajaxDeleteForKey", method=RequestMethod.DELETE, consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody boolean delete(@RequestParam String owner, @RequestParam String searchKey)
+	public @ResponseBody boolean delete(@RequestBody String owner, @RequestBody String searchKey)
 	{
 		return this.searchService.delete(owner, searchKey);
 	}
