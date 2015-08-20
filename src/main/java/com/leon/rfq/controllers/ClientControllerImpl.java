@@ -39,12 +39,6 @@ public class ClientControllerImpl
 		binder.setAllowedFields("ric", "description", "isValid");
 		binder.setValidator(this.clientValidator);
 	}
-	
-	@RequestMapping(value="/all", method=RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Set<ClientDetailImpl> getAllClient()
-	{
-		return this.clientService.getAllFromCacheOnly();
-	}
 		
 	@RequestMapping()
 	public String getAll(Model model)
@@ -52,18 +46,11 @@ public class ClientControllerImpl
 		model.addAttribute("clients", this.clientService.getAll());
 		return "clients";
 	}
-	
-	@RequestMapping("/client")
-	public String get(@RequestParam String ric, Model model)
-	{
-		model.addAttribute("client", this.clientService.get(ric));
-		return "client";
-	}
 		
-	@RequestMapping(value="/ajaxGetListOfClients", method=RequestMethod.GET,
+	@RequestMapping(value="/ajaxGetListOfAllClients", method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Set<ClientDetailImpl> ajaxGetListOfClients()
+	public @ResponseBody Set<ClientDetailImpl> ajaxGetListOfAllClients()
 	{
 		return this.clientService.getAllFromCacheOnly();
 	}

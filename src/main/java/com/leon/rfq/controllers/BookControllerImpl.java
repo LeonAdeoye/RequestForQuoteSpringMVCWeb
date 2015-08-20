@@ -47,10 +47,10 @@ public class BookControllerImpl
 		return "books";
 	}
 	
-	@RequestMapping(value="/ajaxGetListOfBooks", method=RequestMethod.GET,
+	@RequestMapping(value="/ajaxGetListOfAllBooks", method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Set<BookDetailImpl> ajaxGetListOfBooks()
+	public @ResponseBody Set<BookDetailImpl> ajaxGetListOfAllBooks()
 	{
 		return this.bookService.getAllFromCacheOnly();
 	}

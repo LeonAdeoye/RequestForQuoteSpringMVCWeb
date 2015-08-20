@@ -9,7 +9,7 @@ var columns =
 	{id: "name", name: "name", field: "name", sortable: true, toolTip: "Client's name", width: 125},
 	{id: "tier", name: "tier", field: "tier", sortable: true, toolTip: "Client's tier"},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Client's validity status", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "Client was last updated by user", width: 90}
+	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the client", width: 90}
 ];
 
 var options = 
@@ -131,7 +131,7 @@ $(document).ready(function()
 		showLoadIndicator();
 		
 		$.ajax({
-		    url: contextPath + "/clients/ajaxGetListOfClients", 
+		    url: contextPath + "/clients/ajaxGetListOfAllClients", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',

@@ -5,10 +5,10 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 
 var columns = 
 [
- 	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Book Code"},
-	{id: "entity", name: "Entity", field: "entity", sortable: true, toolTip: "Entity"},
-	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Validity", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "last updated by user", width: 90}
+ 	{id: "bookCode", name: "Book Code", field: "bookCode", sortable: true, toolTip: "Unique book code"},
+	{id: "entity", name: "Entity", field: "entity", sortable: true, toolTip: "Book's entity"},
+	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Books's validity status", formatter: validityFormatter},
+	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the book", width: 90}
 ];
 
 var options = 
@@ -129,7 +129,7 @@ $(document).ready(function()
 		showLoadIndicator();
 		
 		$.ajax({
-		    url: contextPath + "/books/ajaxGetListOfBooks", 
+		    url: contextPath + "/books/ajaxGetListOfAllBooks", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',

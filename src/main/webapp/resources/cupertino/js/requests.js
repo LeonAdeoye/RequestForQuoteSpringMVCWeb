@@ -1514,7 +1514,7 @@ $(document).ready(function()
 	function getBookList()
 	{
 		$.ajax({
-		    url: contextPath + "/books/ajaxGetListOfBooks", 
+		    url: contextPath + "/books/ajaxGetListOfAllBooks", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',
@@ -1536,7 +1536,7 @@ $(document).ready(function()
 	function getClientList()
 	{
 		$.ajax({
-		    url: contextPath + "/clients/all", 
+		    url: contextPath + "/clients/ajaxGetListOfAllClients", 
 		    type: 'GET', 
 		    dataType: 'json',  
 		    contentType: 'application/json',
