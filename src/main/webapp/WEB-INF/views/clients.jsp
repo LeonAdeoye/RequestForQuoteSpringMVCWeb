@@ -39,9 +39,13 @@
 	</head>
 	<body>
 		
-		<div id="clients-new-client" class="new-client-class float-left">				
-			<input id="new-client-clientCode" class="float-left new-client-input-class" path="clientCode" value="Enter client code..." type="text" default_value="Enter client code..." />
+		<div id="clients-new-client" class="new-client-class float-left">
 			<input id="new-client-entity" class="float-left new-client-input-class" path="entity" value="Enter client name..." type="text" default_value="Enter client name..." />
+			<select id="new-client-tier" class="float-left new-client-input-class">
+				<option value="Top">Top</option>
+				<option value="Middle">Middle</option>
+				<option value="Bottom">Bottom</option>
+			</select>							
 			<button id="new-client-add" class="new-client-btn new-client-input-class"><spring:message code="clients.add.button.label"/></button>
 			<button id="new-client-clear" class="new-client-btn new-client-input-class float-right"><spring:message code="clients.clear.button.label"/></button>
 			<button id="new-client-import" class="new-client-btn new-client-input-class float-right"><spring:message code="clients.import.button.label"/></button>
@@ -55,8 +59,8 @@
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
 		</ul>
 		
-		<div style="width:410px;">
-    		<div id="clientsGrid" style="width:410px;height:595px;"></div>
+		<div style="width:455px;">
+    		<div id="clientsGrid" style="width:455px;height:595px;"></div>
 		</div>
 	</body>
 </html>

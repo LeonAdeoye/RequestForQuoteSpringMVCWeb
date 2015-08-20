@@ -5,11 +5,11 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 
 var columns = 
 [
- 	{id: "clientId", name: "client ID", field: "clientId", sortable: true, toolTip: "client Identifier"},
-	{id: "name", name: "name", field: "name", sortable: true, toolTip: "name"},
-	{id: "tier", name: "tier", field: "tier", sortable: true, toolTip: "name"},
-	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Validity", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "last updated by user", width: 90}
+ 	{id: "clientId", name: "client ID", field: "clientId", sortable: true, toolTip: "Client's unique identifier"},
+	{id: "name", name: "name", field: "name", sortable: true, toolTip: "Client's name", width: 125},
+	{id: "tier", name: "tier", field: "tier", sortable: true, toolTip: "Client's tier"},
+	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Client's validity status", formatter: validityFormatter},
+	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "Client was last updated by user", width: 90}
 ];
 
 var options = 
@@ -35,8 +35,7 @@ function disableAddButton()
 
 function toggleAddButtonState()
 {
-	if(($("#new-client-clientId").val() != "" && $("#new-client-clientId").val() != $("#new-client-clientId").attr("default_value"))
-			&& ($("#new-client-name").val() != "" && $("#new-client-name").val() != $("#new-client-name").attr("default_value")))
+	if(($("#new-client-name").val() != "") && ($("#new-client-name").val() != $("#new-client-name").attr("default_value")))
 		enableAddButton();
 	else
 		disableAddButton();
@@ -44,7 +43,6 @@ function toggleAddButtonState()
 
 function clearNewclientInputFields()
 {
-	$("#new-client-clientId").val($("#new-client-clientId").attr("default_value"));
 	$("#new-client-name").val($("#new-client-name").attr("default_value"));	
 }
 
@@ -71,19 +69,15 @@ $(document).ready(function()
 	
 	$(".new-client-btn").button();
 	disableAddButton();	
-	$("#new-client-clientId").keyup(toggleAddButtonState);
-	$("#new-client-clientId").focusout(toggleAddButtonState);
 	$("#new-client-name").keyup(toggleAddButtonState);
 	$("#new-client-name").focusout(toggleAddButtonState);
 	
-	$("input.new-client-input-class").click(function()
+	$("#new-client-name").click(function()
 	{
 		if($(this).val() === $(this).attr("default_value"))
 		{
 			$(this).val("");
-			
-			if($(this).is("#new-client-clientId"))
-				disableAddButton();
+			disableAddButton();
 		}
 	});
 
@@ -101,11 +95,9 @@ $(document).ready(function()
 	
 	$("#new-client-add").click(function()
 	{
-		var clientId = $("#new-client-clientId").val();
 		var name = $("#new-client-name").val();
 		var updatedByUser = "ladeoye";
-		
-		ajaxAddNewclient(clientId, name, updatedByUser);
+		ajaxAddNewclient(name, updatedByUser);				
 		disableAddButton();
 		clearNewclientInputFields();		
 	});		
@@ -178,9 +170,9 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxAddNewclient(clientId, name, updatedByUser) 
+	function ajaxAddNewclient(name, updatedByUser) 
 	{
-		var clientDetails = { "clientId" : clientId, "name" : name, "updatedByUser" : updatedByUser };
+		var clientDetails = { "name" : name, "updatedByUser" : updatedByUser };
 		
 		$.ajax({
 		    url: contextPath + "/clients/ajaxAddNewClient", 
@@ -191,11 +183,17 @@ $(document).ready(function()
 		    mimeType: 'application/json',
 		    timeout: clientUpdateTimeout,
 		    cache: false,
-		    success: function(result) 
+		    success: function(newClientId) 
 		    {
 		    	loadingIndicator.fadeOut();
-		    	if(!result)
-		    		alert("Failed to insert the new client because of a server error.");		    	
+		    	
+				if(newClientId)
+				{
+					dataView.insertItem(0, {"clientId": newClientId, "name": name , "tier": tier, 
+						"isValid" : true, "updatedByUser" : updatedByUser});		
+				}
+				else
+					alert("Failed to insert the new client because of a server error.");
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {

@@ -104,7 +104,7 @@ $(document).ready(function()
 		var entity = $("#new-book-entity").val();
 		var updatedByUser = "ladeoye";
 		
-		ajaxAddNewBook(bookCode, entity, updatedByUser);
+		ajaxAddNewBook(bookCode.toUpperCase(), entity, updatedByUser);
 		disableAddButton();
 		clearNewBookInputFields();		
 	});		
@@ -165,7 +165,12 @@ $(document).ready(function()
 		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
-		    	if(!result)
+				if(result)
+				{
+					dataView.insertItem(0, { "bookCode": bookCode, "entity": entity , 
+						"isValid" : true, "updatedByUser" : updatedByUser });		
+				}
+				else
 		    		alert("Failed to update the validity.");		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
