@@ -20,8 +20,18 @@ var options =
     enableAddRow: false,
     asyncEditorLoading: true,
     autoEdit: false,
+    cellFlashingCssClass: "cellFlash",
     forceFitColumns: false
 };
+
+function flashNewClientRow(clientId)
+{
+	var columns = grid.getColumns();
+	var size = columns.length;
+	
+	for(var index = 0; index < size; index++)
+		clientsGrid.flashCell(dataView.getRowById(clientId), clientsGrid.getColumnIndex(columns[index].name), 100);
+}
 
 function enableAddButton()
 {
@@ -158,6 +168,8 @@ $(document).ready(function()
 		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
+		    	clientsGrid.flashCell(dataView.getRowById(clientId), clientsGrid.getColumnIndex("isValid"), 100);
+		    	
 		    	if(!result)
 		    		alert("Failed to update the validity.");		    	
 		    },
@@ -190,7 +202,9 @@ $(document).ready(function()
 				if(newClientId)
 				{
 					dataView.insertItem(0, {"clientId": newClientId, "name": name , "tier": tier, 
-						"isValid" : true, "updatedByUser" : updatedByUser});		
+						"isValid" : true, "updatedByUser" : updatedByUser});
+					
+					flashClientRow(newClientId);
 				}
 				else
 					alert("Failed to insert the new client because of a server error.");

@@ -19,6 +19,7 @@ var options =
     enableAddRow: false,
     asyncEditorLoading: true,
     autoEdit: false,
+    cellFlashingCssClass: "cellFlash",
     forceFitColumns: false
 };
 
@@ -165,11 +166,9 @@ $(document).ready(function()
 		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
-				if(result)
-				{
-					dataView.insertItem(0, { "bookCode": bookCode, "entity": entity , 
-						"isValid" : true, "updatedByUser" : updatedByUser });		
-				}
+		    	
+		    	if(result)
+					booksGrid.flashCell(0, booksGrid.getColumnIndex("isValid"), 100);
 				else
 		    		alert("Failed to update the validity.");		    	
 		    },
@@ -181,6 +180,15 @@ $(document).ready(function()
             }
 		});
 	}
+	
+	function flashNewBookRow(bookCode)
+	{
+		var columns = booksGrid.getColumns();
+		var size = columns.length;
+		
+		for(var index = 0; index < size; index++)
+			booksGrid.flashCell(dataView.getRowById(bookCode), booksGrid.getColumnIndex(columns[index].name), 100);
+	}	
 	
 	function ajaxAddNewBook(bookCode, entity, updatedByUser) 
 	{
@@ -198,7 +206,14 @@ $(document).ready(function()
 		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
-		    	if(!result)
+				if(result)
+				{
+					dataView.insertItem(0, { "bookCode": bookCode, "entity": entity , 
+						"isValid" : true, "updatedByUser" : updatedByUser });
+					
+					flashNewBookRow(bookCode);
+				}
+				else
 		    		alert("Failed to insert the new book because of a server error.");		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
