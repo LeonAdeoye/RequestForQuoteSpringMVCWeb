@@ -6,6 +6,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
 		
+		<link href="<c:url value="/resources/css/common.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/requests.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/jquery-ui.min.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/examples.css" />" rel="stylesheet" type="text/css">

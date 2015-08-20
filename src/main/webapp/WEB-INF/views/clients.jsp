@@ -5,6 +5,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
 		
+		<link href="<c:url value="/resources/css/common.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/clients.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/jquery-ui.min.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/examples.css" />" rel="stylesheet" type="text/css">
@@ -40,7 +41,7 @@
 	<body>
 		
 		<div id="clients-new-client" class="new-client-class float-left">
-			<input id="new-client-entity" class="float-left new-client-input-class" path="entity" value="Enter client name..." type="text" default_value="Enter client name..." />
+			<input id="new-client-name" class="float-left new-client-input-class" path="name" value="Enter client name..." type="text" default_value="Enter client name..." />
 			<select id="new-client-tier" class="float-left new-client-input-class">
 				<option value="Top">Top</option>
 				<option value="Middle">Middle</option>
