@@ -150,15 +150,15 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxUpdateBookValidity(bookCode, validity, updatedByUser) 
+	function ajaxUpdateBookValidity(bookCode, validity, lastUpdatedBy) 
 	{
-		var bookDetails = { "bookCode" : bookCode, "isValid" : validity, "updatedByUser" : updatedByUser };
+		var bookToUpdate = { "bookCode" : bookCode, "isValid" : validity, "lastUpdatedBy" : lastUpdatedBy };
 		
 		$.ajax({
 		    url: contextPath + "/books/ajaxUpdateValidity", 
-		    type: 'GET', 
+		    type: 'POST', 
 		    dataType: 'json',
-		    data: JSON.stringify(bookDetails),
+		    data: JSON.stringify(bookToUpdate),
 		    contentType: 'application/json',
 		    mimeType: 'application/json',
 		    timeout: bookUpdateTimeout,
@@ -168,7 +168,12 @@ $(document).ready(function()
 		    	loadingIndicator.fadeOut();
 		    	
 		    	if(result)
-					booksGrid.flashCell(0, booksGrid.getColumnIndex("isValid"), 100);
+		    	{
+		    		var item = dataView.getItemById(bookCode);
+		    		item["isValid"] = validity;
+		    		dataView.updateItem(bookCode, item);		    		
+					booksGrid.flashCell(dataView.getRowById(bookCode), booksGrid.getColumnIndex("isValid"), 100);
+		    	}
 				else
 		    		alert("Failed to update the validity.");		    	
 		    },
@@ -187,18 +192,18 @@ $(document).ready(function()
 		var size = columns.length;
 		
 		for(var index = 0; index < size; index++)
-			booksGrid.flashCell(dataView.getRowById(bookCode), booksGrid.getColumnIndex(columns[index].name), 100);
+			booksGrid.flashCell(dataView.getRowById(bookCode), booksGrid.getColumnIndex(columns[index].id), 100);
 	}	
 	
-	function ajaxAddNewBook(bookCode, entity, updatedByUser) 
+	function ajaxAddNewBook(bookCode, entity, lastUpdatedBy) 
 	{
-		var bookDetails = { "bookCode" : bookCode, "entity" : entity, "updatedByUser" : updatedByUser };
+		var newBook = { "bookCode" : bookCode, "entity" : entity, "isValid" : true, "lastUpdatedBy" : lastUpdatedBy };
 		
 		$.ajax({
 		    url: contextPath + "/books/ajaxAddNewBook", 
-		    type: 'GET', 
+		    type: 'POST', 
 		    dataType: 'json',
-		    data: JSON.stringify(bookDetails),
+		    data: JSON.stringify(newBook),
 		    contentType: 'application/json',
 		    mimeType: 'application/json',
 		    timeout: bookUpdateTimeout,
@@ -208,8 +213,7 @@ $(document).ready(function()
 		    	loadingIndicator.fadeOut();
 				if(result)
 				{
-					dataView.insertItem(0, { "bookCode": bookCode, "entity": entity , 
-						"isValid" : true, "updatedByUser" : updatedByUser });
+					dataView.insertItem(0, { "bookCode" : bookCode, "entity" : entity, "isValid" : true, "lastUpdatedBy" : lastUpdatedBy });
 					
 					flashNewBookRow(bookCode);
 				}
@@ -264,7 +268,7 @@ $(document).ready(function()
     	$("#bookContextMenu li").each(function(index)
 		{
     		if((item["Validity"] === "Valid") && ($(this).attr("data") === "VALIDATE") ||
-    				(item["Validity"] === "Invalid") && ($(this).attr("data") === "INVALIDATE"))
+    			(item["Validity"] === "Invalid") && ($(this).attr("data") === "INVALIDATE"))
         		$(this).hide();
     		else
     			$(this).show();

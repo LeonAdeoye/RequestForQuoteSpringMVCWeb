@@ -5,9 +5,9 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 
 var columns = 
 [
- 	{id: "clientId", name: "client ID", field: "clientId", sortable: true, toolTip: "Client's unique identifier"},
-	{id: "name", name: "name", field: "name", sortable: true, toolTip: "Client's name", width: 125},
-	{id: "tier", name: "tier", field: "tier", sortable: true, toolTip: "Client's tier"},
+ 	{id: "clientId", name: "Client ID", field: "clientId", sortable: true, toolTip: "Client's unique identifier"},
+	{id: "name", name: "Name", field: "name", sortable: true, toolTip: "Client's name", width: 125},
+	{id: "tier", name: "Tier", field: "tier", sortable: true, toolTip: "Client's tier"},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Client's validity status", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the client", width: 90}
 ];
@@ -30,7 +30,7 @@ function flashNewClientRow(clientId)
 	var size = columns.length;
 	
 	for(var index = 0; index < size; index++)
-		clientsGrid.flashCell(dataView.getRowById(clientId), clientsGrid.getColumnIndex(columns[index].name), 100);
+		clientsGrid.flashCell(dataView.getRowById(clientId), clientsGrid.getColumnIndex(columns[index].id), 100);
 }
 
 function enableAddButton()
@@ -152,13 +152,13 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxUpdateclientValidity(clientId, validity, updatedByUser) 
+	function ajaxUpdateClientValidity(clientId, validity, updatedByUser) 
 	{
 		var clientDetails = { "clientId" : clientId, "isValid" : validity, "updatedByUser" : updatedByUser };
 		
 		$.ajax({
-		    url: contextPath + "/clients/ajaxUpdateValidity", 
-		    type: 'GET', 
+		    url: contextPath + "/clients/ajaxUpdateClientValidity", 
+		    type: 'POST', 
 		    dataType: 'json',
 		    data: JSON.stringify(clientDetails),
 		    contentType: 'application/json',
@@ -182,15 +182,82 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxAddNewclient(name, updatedByUser) 
+	// TODO
+	function ajaxUpdateClientTier(clientId, tier, updatedByUser) 
 	{
-		var clientDetails = { "name" : name, "updatedByUser" : updatedByUser };
+		var clientDetails = { "clientId" : clientId, "isValid" : validity, "updatedByUser" : updatedByUser };
+		
+		$.ajax({
+		    url: contextPath + "/clients/ajaxUpdateClientTier", 
+		    type: 'POST', 
+		    dataType: 'json',
+		    data: JSON.stringify(clientDetails),
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: clientUpdateTimeout,
+		    cache: false,
+		    success: function(result) 
+		    {
+		    	loadingIndicator.fadeOut();
+		    	clientsGrid.flashCell(dataView.getRowById(clientId), clientsGrid.getColumnIndex("isValid"), 100);
+		    	
+		    	if(!result)
+		    		alert("Failed to update the validity.");		    	
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	loadingIndicator.fadeOut();
+            	console.log(xhr.responseText);
+            	alert('Failed to update the validity details because of a server error.');                
+            }
+		});
+	}	
+
+	// TODO
+	function ajaxGetAnyNewClients()
+	{
+		$.ajax({
+		    url: contextPath + "/clients/ajaxGetAnyNewClients", 
+		    type: 'GET', 
+		    dataType: 'json',
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: clientUpdateTimeout,
+		    cache: false,
+		    success: function(newClients) 
+		    {
+		    	loadingIndicator.fadeOut();		    	
+		    	
+				if(newClients)
+				{
+				 	var length = newClients.length;				 	
+					for(var index = 0; index < length; index++)
+					{
+						dataView.insertItem(0, {"clientId": newClients[index].clientId, "name": newClients[index].name , "tier": newClients[index].tier, 
+							"isValid" : newClients[index].isValid, "updatedByUser" : newClients[index].updatedByUser});
+					
+						flashClientRow(newClients[index].clientId);
+					}
+				}
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	loadingIndicator.fadeOut();
+            	console.log(xhr.responseText);
+            	alert('Failed to get an update of any new clients because of a server error.');                
+            }
+		});		
+	}
+	
+	function ajaxAddNewclient(name, tier, updatedByUser) 
+	{
+		var newClient = { "name" : name, "tier": tier, "lastUpdatedBy" : lastUpdatedBy };
 		
 		$.ajax({
 		    url: contextPath + "/clients/ajaxAddNewClient", 
-		    type: 'GET', 
+		    type: 'POST', 
 		    dataType: 'json',
-		    data: JSON.stringify(clientDetails),
+		    data: JSON.stringify(newClient),
 		    contentType: 'application/json',
 		    mimeType: 'application/json',
 		    timeout: clientUpdateTimeout,
@@ -201,8 +268,8 @@ $(document).ready(function()
 		    	
 				if(newClientId)
 				{
-					dataView.insertItem(0, {"clientId": newClientId, "name": name , "tier": tier, 
-						"isValid" : true, "updatedByUser" : updatedByUser});
+					dataView.insertItem(0, {"clientId" : newClientId, "name" : name , "tier" : tier, 
+						"isValid" : true, "lastUpdatedBy" : lastUpdatedBy });
 					
 					flashClientRow(newClientId);
 				}
@@ -291,11 +358,11 @@ $(document).ready(function()
     	{
         	case "VALIDATE":        		
         		showLoadIndicator();
-        		ajaxUpdateclientValidity(dataView.getItem(row).clientId, true, updatedByUser);	
+        		ajaxUpdateClientValidity(dataView.getItem(row).clientId, true, updatedByUser);	
         		break;
         	case "INVALIDATE":
         		showLoadIndicator();
-        		ajaxUpdateclientValidity(dataView.getItem(row).clientId, false, updatedByUser);        		
+        		ajaxUpdateClientValidity(dataView.getItem(row).clientId, false, updatedByUser);        		
         		break;
         	default: 
         		alert("Sorry, this operation is yet to be supported!");

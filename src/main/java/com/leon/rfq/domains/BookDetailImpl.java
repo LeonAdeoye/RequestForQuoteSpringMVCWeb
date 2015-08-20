@@ -18,16 +18,16 @@ public final class BookDetailImpl
 	@NotNull(message="{book.validation.entity.notNull}")
 	@Size(min=1, max=10, message="{book.validation.entity.size}")
 	private String entity;
-	private String lastUpdatedByUser;
+	private String lastUpdatedBy;
 
 	public BookDetailImpl() {}
 
-	public BookDetailImpl(String bookCode, String entity, boolean isValid, String lastUpdatedByUser)
+	public BookDetailImpl(String bookCode, String entity, boolean isValid, String lastUpdatedBy)
 	{
 		this.bookCode = bookCode;
 		this.entity = entity;
 		this.isValid = isValid;
-		this.lastUpdatedByUser = lastUpdatedByUser;
+		this.lastUpdatedBy = lastUpdatedBy;
 	}
 
 	public String getBookCode()
@@ -42,12 +42,12 @@ public final class BookDetailImpl
 	
 	public String getLastUpdatedBy()
 	{
-		return this.lastUpdatedByUser;
+		return this.lastUpdatedBy;
 	}
 
-	public void setLastUpdatedBy(String lastUpdatedByUser)
+	public void setLastUpdatedBy(String lastUpdatedBy)
 	{
-		this.lastUpdatedByUser = lastUpdatedByUser;
+		this.lastUpdatedBy = lastUpdatedBy;
 	}
 
 	public String getEntity()
@@ -77,8 +77,8 @@ public final class BookDetailImpl
 		buf.append(this.bookCode);
 		buf.append(", Entity: ");
 		buf.append(this.entity);
-		buf.append(", LastUpdatedByUser: ");
-		buf.append(this.lastUpdatedByUser);
+		buf.append(", LastUpdatedBy: ");
+		buf.append(this.lastUpdatedBy);
 		buf.append(", Is Valid: ");
 		buf.append(this.isValid ? "TRUE" : "FALSE");
 		return buf.toString();
@@ -93,7 +93,7 @@ public final class BookDetailImpl
 				+ ((this.bookCode == null) ? 0 : this.bookCode.hashCode());
 		result = (prime * result) + ((this.entity == null) ? 0 : this.entity.hashCode());
 		result = (prime * result) + (this.isValid ? 1231 : 1237);
-		result = (prime * result)	+ ((this.lastUpdatedByUser == null) ? 0 : this.lastUpdatedByUser.hashCode());
+		result = (prime * result)	+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
 		return result;
 	}
 
@@ -137,13 +137,13 @@ public final class BookDetailImpl
 		{
 			return false;
 		}
-		if (this.lastUpdatedByUser == null)
+		if (this.lastUpdatedBy == null)
 		{
-			if (other.lastUpdatedByUser != null)
+			if (other.lastUpdatedBy != null)
 			{
 				return false;
 			}
-		} else if (!this.lastUpdatedByUser.equals(other.lastUpdatedByUser))
+		} else if (!this.lastUpdatedBy.equals(other.lastUpdatedBy))
 		{
 			return false;
 		}

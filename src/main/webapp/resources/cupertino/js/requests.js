@@ -967,7 +967,7 @@ $(document).ready(function()
 	
 	function ajaxSendNewRequest(snippet, bookCode, client, lastUpdatedBy)
 	{
-	    var json = { "request" : snippet, "bookCode" : bookCode, "clientId": client , "lastUpdatedBy" : lastUpdatedBy};
+	    var json = { "request" : snippet, "bookCode" : bookCode, "clientId" : client , "lastUpdatedBy" : lastUpdatedBy};
 	    
 		$.ajax({
 		    url: contextPath + "/requests/createNewRequest", 

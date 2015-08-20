@@ -55,22 +55,20 @@ public class BookControllerImpl
 		return this.bookService.getAllFromCacheOnly();
 	}
 	
-	@RequestMapping(value = "/ajaxUpdateValidity", method = RequestMethod.GET,
+	@RequestMapping(value = "/ajaxUpdateValidity", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxUpdateValidity(@RequestBody String bookCode,
-			@RequestBody boolean isValid, @RequestBody String updatedByUser)
+	public @ResponseBody Object ajaxUpdateValidity(@RequestBody BookDetailImpl newBook)
 	{
-		return this.bookService.updateValidity(bookCode, isValid, updatedByUser);
+		return this.bookService.updateValidity(newBook.getBookCode(), newBook.getIsValid(), newBook.getLastUpdatedBy());
 	}
 	
-	@RequestMapping(value = "/ajaxAddNewBook", method = RequestMethod.GET,
+	@RequestMapping(value = "/ajaxAddNewBook", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxAddNewBook(@RequestBody String bookCode,
-			@RequestBody String entity, @RequestBody String updatedByUser)
+	public @ResponseBody Object ajaxAddNewBook(@RequestBody BookDetailImpl newBook)
 	{
-		return this.bookService.insert(bookCode, entity, true, updatedByUser);
+		return this.bookService.insert(newBook.getBookCode(), newBook.getEntity(), newBook.getIsValid(), newBook.getLastUpdatedBy());
 	}
 	
 	@RequestMapping(value = "/matchingBookTags", method = RequestMethod.GET,

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.leon.rfq.common.EnumTypes.ClientTierEnum;
 import com.leon.rfq.domains.ClientDetailImpl;
 import com.leon.rfq.services.ClientService;
 import com.leon.rfq.validators.ClientValidatorImpl;
@@ -55,23 +54,21 @@ public class ClientControllerImpl
 		return this.clientService.getAllFromCacheOnly();
 	}
 	
-	@RequestMapping(value = "/ajaxUpdateValidity", method = RequestMethod.GET,
+	@RequestMapping(value = "/ajaxUpdateClientValidity", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxUpdateValidity(@RequestBody int clientId, @RequestBody String clientName,
-			@RequestBody boolean isValid, @RequestBody String tier, @RequestBody String updatedByUser)
+	public @ResponseBody Object ajaxUpdateValidity(@RequestBody ClientDetailImpl clientToUpdate)
 	{
-		return this.clientService.update(clientId, clientName, ClientTierEnum.valueOf(tier),
-				true, updatedByUser);
+		return this.clientService.update(clientToUpdate.getClientId(), clientToUpdate.getName(),
+				clientToUpdate.getTier(), clientToUpdate.getIsValid(), clientToUpdate.getLastUpdatedBy());
 	}
 	
-	@RequestMapping(value = "/ajaxAddNewClient", method = RequestMethod.GET,
+	@RequestMapping(value = "/ajaxAddNewClient", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxAddNewBook(@RequestBody String name,
-			@RequestBody String tier, @RequestBody String updatedByUser)
+	public @ResponseBody Object ajaxAddNewBook(@RequestBody ClientDetailImpl newClient)
 	{
-		return this.clientService.insert(name, ClientTierEnum.valueOf(tier), true, updatedByUser);
+		return this.clientService.insert(newClient.getName(), newClient.getTier(), true, newClient.getLastUpdatedBy());
 	}
 	
 	@RequestMapping(value = "/matchingClientTags", method = RequestMethod.GET, produces = "application/json")
