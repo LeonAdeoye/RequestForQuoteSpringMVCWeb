@@ -54,10 +54,10 @@ public class ClientControllerImpl
 		return this.clientService.getAllFromCacheOnly();
 	}
 	
-	@RequestMapping(value = "/ajaxUpdateClientValidity", method = RequestMethod.POST,
+	@RequestMapping(value = "/ajaxUpdateClient", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxUpdateValidity(@RequestBody ClientDetailImpl clientToUpdate)
+	public @ResponseBody Object ajaxUpdateClient(@RequestBody ClientDetailImpl clientToUpdate)
 	{
 		return this.clientService.update(clientToUpdate.getClientId(), clientToUpdate.getName(),
 				clientToUpdate.getTier(), clientToUpdate.getIsValid(), clientToUpdate.getLastUpdatedBy());

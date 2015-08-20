@@ -107,7 +107,8 @@ $(document).ready(function()
 	{
 		var name = $("#new-client-name").val();
 		var updatedByUser = "ladeoye";
-		ajaxAddNewclient(name, updatedByUser);				
+		var tier = $("#new-client-tier").val();
+		ajaxAddNewClient(name, tier, updatedByUser);				
 		disableAddButton();
 		clearNewclientInputFields();		
 	});		
@@ -152,12 +153,13 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxUpdateClientValidity(clientId, validity, updatedByUser) 
+	function ajaxUpdateClient(clientId, name, tier, validity, lastUpdatedBy) 
 	{
-		var clientDetails = { "clientId" : clientId, "isValid" : validity, "updatedByUser" : updatedByUser };
+		var clientDetails = { "clientId" : clientId, "name": name, "tier" : tier, 
+			"isValid" : validity, "lastUpdatedBy" : lastUpdatedBy };
 		
 		$.ajax({
-		    url: contextPath + "/clients/ajaxUpdateClientValidity", 
+		    url: contextPath + "/clients/ajaxUpdateClient", 
 		    type: 'POST', 
 		    dataType: 'json',
 		    data: JSON.stringify(clientDetails),
@@ -168,6 +170,9 @@ $(document).ready(function()
 		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
+	    		var item = dataView.getItemById(clientId);
+	    		item["isValid"] = validity;
+	    		dataView.updateItem(clientId, item);		    				    	
 		    	clientsGrid.flashCell(dataView.getRowById(clientId), clientsGrid.getColumnIndex("isValid"), 100);
 		    	
 		    	if(!result)
@@ -182,37 +187,6 @@ $(document).ready(function()
 		});
 	}
 	
-	// TODO
-	function ajaxUpdateClientTier(clientId, tier, updatedByUser) 
-	{
-		var clientDetails = { "clientId" : clientId, "isValid" : validity, "updatedByUser" : updatedByUser };
-		
-		$.ajax({
-		    url: contextPath + "/clients/ajaxUpdateClientTier", 
-		    type: 'POST', 
-		    dataType: 'json',
-		    data: JSON.stringify(clientDetails),
-		    contentType: 'application/json',
-		    mimeType: 'application/json',
-		    timeout: clientUpdateTimeout,
-		    cache: false,
-		    success: function(result) 
-		    {
-		    	loadingIndicator.fadeOut();
-		    	clientsGrid.flashCell(dataView.getRowById(clientId), clientsGrid.getColumnIndex("isValid"), 100);
-		    	
-		    	if(!result)
-		    		alert("Failed to update the validity.");		    	
-		    },
-            error: function (xhr, textStatus, errorThrown) 
-            {
-            	loadingIndicator.fadeOut();
-            	console.log(xhr.responseText);
-            	alert('Failed to update the validity details because of a server error.');                
-            }
-		});
-	}	
-
 	// TODO
 	function ajaxGetAnyNewClients()
 	{
@@ -234,7 +208,7 @@ $(document).ready(function()
 					for(var index = 0; index < length; index++)
 					{
 						dataView.insertItem(0, {"clientId": newClients[index].clientId, "name": newClients[index].name , "tier": newClients[index].tier, 
-							"isValid" : newClients[index].isValid, "updatedByUser" : newClients[index].updatedByUser});
+							"isValid" : newClients[index].isValid, "lastUpdatedBy" : newClients[index].lastUpdatedBy });
 					
 						flashClientRow(newClients[index].clientId);
 					}
@@ -249,9 +223,9 @@ $(document).ready(function()
 		});		
 	}
 	
-	function ajaxAddNewclient(name, tier, updatedByUser) 
+	function ajaxAddNewClient(name, tier, lastUpdatedBy) 
 	{
-		var newClient = { "name" : name, "tier": tier, "lastUpdatedBy" : lastUpdatedBy };
+		var newClient = { "name" : name, "tier": tier, "isValid" : true, "lastUpdatedBy" : lastUpdatedBy };
 		
 		$.ajax({
 		    url: contextPath + "/clients/ajaxAddNewClient", 
@@ -266,7 +240,7 @@ $(document).ready(function()
 		    {
 		    	loadingIndicator.fadeOut();
 		    	
-				if(newClientId)
+				if(newClientId) // TODO - get the client ID
 				{
 					dataView.insertItem(0, {"clientId" : newClientId, "name" : name , "tier" : tier, 
 						"isValid" : true, "lastUpdatedBy" : lastUpdatedBy });
@@ -352,17 +326,19 @@ $(document).ready(function()
       
     	var row = $(this).data("row");
     	var operation = $(e.target).attr("data");
-    	var updatedByUser = "ladeoye";
+    	var lastUpdatedBy = "ladeoye";
     	
     	switch (operation) 
     	{
         	case "VALIDATE":        		
         		showLoadIndicator();
-        		ajaxUpdateClientValidity(dataView.getItem(row).clientId, true, updatedByUser);	
+        		ajaxUpdateClient(dataView.getItem(row).clientId, dataView.getItem(row).name, 
+        				dataView.getItem(row).tier, true, lastUpdatedBy);	
         		break;
         	case "INVALIDATE":
         		showLoadIndicator();
-        		ajaxUpdateClientValidity(dataView.getItem(row).clientId, false, updatedByUser);        		
+        		ajaxUpdateClient(dataView.getItem(row).clientId, dataView.getItem(row).name, 
+        				dataView.getItem(row).tier, false, lastUpdatedBy);	        		
         		break;
         	default: 
         		alert("Sorry, this operation is yet to be supported!");
