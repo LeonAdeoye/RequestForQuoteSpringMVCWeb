@@ -24,13 +24,13 @@ var options =
     forceFitColumns: false
 };
 
-function flashNewClientRow(clientId)
+function flashNewClientRow(newClientId)
 {
-	var columns = grid.getColumns();
+	var columns = clientsGrid.getColumns();
 	var size = columns.length;
 	
 	for(var index = 0; index < size; index++)
-		clientsGrid.flashCell(dataView.getRowById(clientId), clientsGrid.getColumnIndex(columns[index].id), 100);
+		clientsGrid.flashCell(dataView.getRowById(newClientId), clientsGrid.getColumnIndex(columns[index].id), 100);
 }
 
 function enableAddButton()
@@ -240,12 +240,12 @@ $(document).ready(function()
 		    {
 		    	loadingIndicator.fadeOut();
 		    	
-				if(newClientId) // TODO - get the client ID
+				if(newClientId)
 				{
 					dataView.insertItem(0, {"clientId" : newClientId, "name" : name , "tier" : tier, 
 						"isValid" : true, "lastUpdatedBy" : lastUpdatedBy });
 					
-					flashClientRow(newClientId);
+					flashNewClientRow(newClientId);
 				}
 				else
 					alert("Failed to insert the new client because of a server error.");

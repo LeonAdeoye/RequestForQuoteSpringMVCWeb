@@ -9,7 +9,7 @@ public interface ClientDao
 {
 	boolean delete(String clientName);
 
-	boolean insert(String clientName,
+	int insert(String clientName,
 			ClientTierEnum tier,
 			boolean isValid,
 			String savedByUser);

@@ -123,7 +123,7 @@ public final class ClientServiceImpl implements ClientService
 	}
 
 	@Override
-	public boolean insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser)
+	public int insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser)
 	{
 		if((clientName == null) || clientName.isEmpty())
 		{
@@ -147,7 +147,7 @@ public final class ClientServiceImpl implements ClientService
 			return this.clientDao.insert(clientName, tier, isValid, savedByUser);
 		}
 			
-		return false;
+		return -1;
 	}
 
 	@Override

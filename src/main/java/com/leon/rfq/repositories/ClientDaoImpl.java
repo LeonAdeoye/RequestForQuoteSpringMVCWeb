@@ -39,7 +39,7 @@ public class ClientDaoImpl implements ClientDao
 	}
 
 	@Override
-	public boolean insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser)
+	public int insert(String clientName, ClientTierEnum tier, boolean isValid, String savedByUser)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Inserting a new client with clientName: " + clientName);
@@ -47,14 +47,17 @@ public class ClientDaoImpl implements ClientDao
 		try
 		{
 			ClientDetailImpl newClient = new ClientDetailImpl(clientName, tier, isValid, savedByUser);
-			return this.clientMapper.insert(newClient) == 1;
+			if(this.clientMapper.insert(newClient) == 1)
+				return newClient.getClientId();
+			else
+				return -1;
 		}
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("Failed to insert the client with clientId " + clientName + " because of exception: " + e);
+				logger.error("Failed to insert the client with name: " + clientName + " because of exception: " + e);
 			
-			return false;
+			return -1;
 		}
 	}
 	

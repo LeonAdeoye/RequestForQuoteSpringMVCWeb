@@ -72,7 +72,7 @@ public class ClientDaoImplTest extends AbstractJUnit4SpringContextTests
 	@Test
     public void insert_ValidParameters_SavesClientAndReturnsTrue()
 	{
-		assertTrue("Insert method should save a valid client and return true", this.clientDaoImpl.insert("testClient", ClientTierEnum.Top, true, "testUser"));
+		assertTrue("Insert method should save a valid client and return an identifier greater than zero", this.clientDaoImpl.insert("testClient", ClientTierEnum.Top, true, "testUser") > 0);
 		assertEquals("get method should return the newly added client for the saved client name", "testClient", this.clientDaoImpl.get("testClient").getName());
 	}
 	
@@ -80,13 +80,13 @@ public class ClientDaoImplTest extends AbstractJUnit4SpringContextTests
     public void insert_duplicatedClientName_SaveFailsAndReturnsFalse()
 	{
 		this.clientDaoImpl.insert("testClient", ClientTierEnum.Top, true, "testUser");
-		assertFalse("second save method should return false because clientId already exists", this.clientDaoImpl.insert("testClient", ClientTierEnum.Top, true, "testUser"));
+		assertEquals("second save method should return -1 because clientId already exists", -1, this.clientDaoImpl.insert("testClient", ClientTierEnum.Top, true, "testUser"));
 	}
 	
 	@Test
     public void update_ValidUpdateParameters_ClientPropertiesShouldBeUpdated()
 	{
-		assertTrue("Insert method should save a valid client and return true", this.clientDaoImpl.insert("testClient", ClientTierEnum.Top, true, "insertUser"));
+		assertTrue("Insert method should save a valid client and return an identifier greater than zero", this.clientDaoImpl.insert("testClient", ClientTierEnum.Top, true, "insertUser") > 0);
 		ClientDetailImpl newlyAddedClient = this.clientDaoImpl.get("testClient");
 		assertTrue("Update should return true", this.clientDaoImpl.update(newlyAddedClient.getClientId(), "updatedClientName", ClientTierEnum.Bottom , false, "updateUser"));
 		assertNull("Client with previous client name now updated should NOT be returned", this.clientDaoImpl.get("testClient"));
