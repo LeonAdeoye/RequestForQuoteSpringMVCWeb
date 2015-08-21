@@ -24,15 +24,6 @@ var options =
     forceFitColumns: false
 };
 
-function flashNewClientRow(newClientId)
-{
-	var columns = clientsGrid.getColumns();
-	var size = columns.length;
-	
-	for(var index = 0; index < size; index++)
-		clientsGrid.flashCell(dataView.getRowById(newClientId), clientsGrid.getColumnIndex(columns[index].id), 100);
-}
-
 function enableAddButton()
 {
 	$("#new-client-add").removeAttr('disabled');
@@ -111,7 +102,16 @@ $(document).ready(function()
 		ajaxAddNewClient(name, tier, updatedByUser);				
 		disableAddButton();
 		clearNewclientInputFields();		
-	});		
+	});
+	
+	function flashNewClientRow(newClientId)
+	{
+		var columns = clientsGrid.getColumns();
+		var size = columns.length;
+		
+		for(var index = 0; index < size; index++)
+			clientsGrid.flashCell(dataView.getRowById(newClientId), clientsGrid.getColumnIndex(columns[index].id), 100);
+	}
 	
     function showLoadIndicator() 
     {
