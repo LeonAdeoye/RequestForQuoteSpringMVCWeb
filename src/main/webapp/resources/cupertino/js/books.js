@@ -298,18 +298,7 @@ $(document).ready(function()
     	var operation = $(e.target).attr("data");
     	var updatedByUser = "ladeoye";
     	
-    	switch (operation) 
-    	{
-        	case "VALIDATE":        		
-        		showLoadIndicator();
-        		ajaxUpdateBookValidity(dataView.getItem(row).bookCode, true, updatedByUser);	
-        		break;
-        	case "INVALIDATE":
-        		showLoadIndicator();
-        		ajaxUpdateBookValidity(dataView.getItem(row).bookCode, false, updatedByUser);        		
-        		break;
-        	default: 
-        		alert("Sorry, this operation is yet to be supported!");
-    	}    	
+		showLoadIndicator();
+		ajaxUpdateBookValidity(dataView.getItem(row).bookCode, operation === "VALIDATE", updatedByUser);	
     });	    	
 });

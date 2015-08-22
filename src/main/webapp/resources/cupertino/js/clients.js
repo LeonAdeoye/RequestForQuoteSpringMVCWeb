@@ -328,20 +328,8 @@ $(document).ready(function()
     	var operation = $(e.target).attr("data");
     	var lastUpdatedBy = "ladeoye";
     	
-    	switch (operation) 
-    	{
-        	case "VALIDATE":        		
-        		showLoadIndicator();
-        		ajaxUpdateClient(dataView.getItem(row).clientId, dataView.getItem(row).name, 
-        				dataView.getItem(row).tier, true, lastUpdatedBy);	
-        		break;
-        	case "INVALIDATE":
-        		showLoadIndicator();
-        		ajaxUpdateClient(dataView.getItem(row).clientId, dataView.getItem(row).name, 
-        				dataView.getItem(row).tier, false, lastUpdatedBy);	        		
-        		break;
-        	default: 
-        		alert("Sorry, this operation is yet to be supported!");
-    	}    	
+		showLoadIndicator();
+		ajaxUpdateClient(dataView.getItem(row).clientId, dataView.getItem(row).name, 
+				dataView.getItem(row).tier, operation === "VALIDATE", lastUpdatedBy);	
     });	    	
 });
