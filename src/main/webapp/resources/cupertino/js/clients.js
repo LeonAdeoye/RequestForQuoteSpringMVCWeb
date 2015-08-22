@@ -240,7 +240,7 @@ $(document).ready(function()
 		    {
 		    	loadingIndicator.fadeOut();
 		    	
-				if(newClientId)
+				if(newClientId > 0)
 				{
 					dataView.insertItem(0, {"clientId" : newClientId, "name" : name , "tier" : tier, 
 						"isValid" : true, "lastUpdatedBy" : lastUpdatedBy });

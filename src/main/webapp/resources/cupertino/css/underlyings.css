@@ -1,0 +1,10 @@
+.new-underlying-input-class
+{
+	margin-bottom:4px;	
+}
+
+#underlyingsContextMenu
+{
+	display:none;
+	position:absolute;
+}
