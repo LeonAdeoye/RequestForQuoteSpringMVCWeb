@@ -6,7 +6,7 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 var columns = 
 [
  	{id: "ric", name: "Underlying RIC", field: "ric", sortable: true, toolTip: "Underlying's unique identifier, the RIC"},
-	{id: "description", name: "Name", field: "description", sortable: true, toolTip: "Underlying's description", width: 125},
+	{id: "description", name: "Description", field: "description", sortable: true, toolTip: "Underlying's description", width: 125},
 	{id: "spread", name: "Spread", field: "spread", sortable: true, toolTip: "Underlying's spread"},
 	{id: "referencePrice", name: "Reference price", field: "referencePrice", sortable: true, toolTip: "Underlying's reference price"},
 	{id: "simulationPriceVariance", name: "Simulation price variance", field: "simulationPriceVariance", sortable: true, toolTip: "Underlying's simulation price variance"},
@@ -51,7 +51,7 @@ function toggleAddButtonState()
 function clearNewunderlyingInputFields()
 {
 	$("#new-underlying-description").val($("#new-underlying-description").attr("default_value"));
-	$("#new-underlying-ric").val($("#new-underlying-RIC").attr("default_value"));
+	$("#new-underlying-ric").val($("#new-underlying-ric").attr("default_value"));
 	$("#new-underlying-spread").val($("#new-underlying-spread").attr("default_value"));
 	$("#new-underlying-referencePrice").val($("#new-underlying-referencePrice").attr("default_value"));
 	$("#new-underlying-simulationPriceVariance").val($("#new-underlying-simulationPriceVariance").attr("default_value"));

@@ -36,7 +36,7 @@
 			if (typeof jQuery == 'undefined')				 
 			    alert("WARNING: jQuery library is NOT loaded!");
 		</script>		
-		<title>Underlying Maintenance</title>
+		<title><spring:message code="underlyings.maintenance.label"/></title>
 	</head>
 	<body>
 		
@@ -60,8 +60,8 @@
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
 		</ul>
 		
-		<div style="width:330px;">
-    		<div id="underlyingsGrid" style="width:330px;height:595px;"></div>
+		<div style="width:730px;">
+    		<div id="underlyingsGrid" style="width:730px;height:595px;"></div>
 		</div>
 	</body>
 </html>

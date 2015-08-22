@@ -36,7 +36,7 @@
 			if (typeof jQuery == 'undefined')				 
 			    alert("WARNING: jQuery library is NOT loaded!");
 		</script>		
-		<title>Book Maintenance</title>
+		<title><spring:message code="books.maintenance.label"/></title>
 	</head>
 	<body>
 		
