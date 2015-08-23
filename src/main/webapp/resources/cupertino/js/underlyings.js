@@ -130,7 +130,7 @@ $(document).ready(function()
 		clearNewunderlyingInputFields();		
 	});
 	
-	function flashNewUnderlyingRow(ric)
+	function flashRow(ric)
 	{
 		var columns = underlyingsGrid.getColumns();
 		var size = columns.length;
@@ -179,16 +179,17 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxUpdateUnderlying(ric, description, spread, referencePrice, simulationPriceVariance, dividendYield, lastUpdatedBy) 
+	function ajaxUpdateUnderlying(ric, description, spread, referencePrice, 
+			simulationPriceVariance, dividendYield, isValid, lastUpdatedBy) 
 	{
 		var underlyingDetails = { 
 				"ric" : ric, 
 				"description" : description, 
-				"spread": spread, 
-				"referencePrice": referencePrice, 
-				"simulationPriceVariance": simulationPriceVariance, 
-				"dividendYield": dividendYield,	
-				"isValid" : true, 
+				"spread" : spread, 
+				"referencePrice" : referencePrice, 
+				"simulationPriceVariance" : simulationPriceVariance, 
+				"dividendYield" : dividendYield,	
+				"isValid" : isValid, 
 				"lastUpdatedBy" : lastUpdatedBy 
 		};
 		
@@ -204,10 +205,10 @@ $(document).ready(function()
 		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
-	    		var item = dataView.getItemByRIC(ric);
-	    		item["isValid"] = validity;
+	    		var item = dataView.getItemById(ric);
+	    		item["isValid"] = isValid;
 	    		dataView.updateItem(ric, item);		    				    	
-		    	underlyingsGrid.flashCell(dataView.getRowByRIC(ric), underlyingsGrid.getColumnIndex("isValid"), 100);
+		    	flashRow(ric);
 		    	
 		    	if(!result)
 		    		alert("Failed to update the validity.");		    	
@@ -241,16 +242,16 @@ $(document).ready(function()
 				 	var length = newUnderlyings.length;				 	
 					for(var index = 0; index < length; index++)
 					{
-						dataView.insertItem(0, {"ric": newUnderlyings[index].ric, 
-							"description": newUnderlyings[index].description , 
-							"spread": newUnderlyings[index].spread, 
-							"referencePrice": newUnderlyings[index].referencePrice, 
-							"simulationPriceVariance": newUnderlyings[index].simulationPriceVariance, 
-							"dividendYield": newUnderlyings[index].dividendYield, 
+						dataView.insertItem(0, {"ric" : newUnderlyings[index].ric, 
+							"description" : newUnderlyings[index].description, 
+							"spread" : newUnderlyings[index].spread, 
+							"referencePrice" : newUnderlyings[index].referencePrice, 
+							"simulationPriceVariance" : newUnderlyings[index].simulationPriceVariance, 
+							"dividendYield" : newUnderlyings[index].dividendYield, 
 							"isValid" : newUnderlyings[index].isValid, 
 							"lastUpdatedBy" : newUnderlyings[index].lastUpdatedBy });
 					
-						flashUnderlyingRow(newUnderlyings[index].ric);
+						flashRow(newUnderlyings[index].ric);
 					}
 				}
 		    },
@@ -294,15 +295,15 @@ $(document).ready(function()
 					dataView.insertItem(0, {
 						"ric" : ric, 
 						"description" : description, 
-						"spread": spread, 
-						"referencePrice": referencePrice, 
-						"simulationPriceVariance": simulationPriceVariance, 
-						"dividendYield": dividendYield,	
+						"spread" : spread, 
+						"referencePrice" : referencePrice, 
+						"simulationPriceVariance" : simulationPriceVariance, 
+						"dividendYield" : dividendYield,	
 						"isValid" : true, 
 						"lastUpdatedBy" : lastUpdatedBy 
 					});
 					
-					flashNewUnderlyingRow(ric);
+					flashRow(ric);
 				}
 				else
 					alert("Failed to insert the new underlying because of a server error.");

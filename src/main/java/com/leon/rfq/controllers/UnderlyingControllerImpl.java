@@ -75,9 +75,10 @@ public class UnderlyingControllerImpl
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object ajaxAddNewBook(@RequestBody UnderlyingDetailImpl newUnderlying)
 	{
+		// TODO: add dividendYield
 		return this.underlyingService.insert(newUnderlying.getRic(), newUnderlying.getDescription(),
 				newUnderlying.getReferencePrice(), newUnderlying.getSimulationPriceVariance(),
-				newUnderlying.getSpread(), true, newUnderlying.getLastUpdatedBy());
+				newUnderlying.getSpread(), newUnderlying.getIsValid() , newUnderlying.getLastUpdatedBy());
 	}
 	
 	@RequestMapping(value = "/matchingUnderlyingTags", method = RequestMethod.GET, produces = "application/json")

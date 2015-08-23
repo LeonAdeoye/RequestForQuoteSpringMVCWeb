@@ -60,8 +60,8 @@
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
 		</ul>
 		
-		<div style="width:900px;">
-    		<div id="underlyingsGrid" style="width:900px;height:595px;"></div>
+		<div style="width:905px;">
+    		<div id="underlyingsGrid" style="width:905px;height:595px;"></div>
 		</div>
 	</body>
 </html>
