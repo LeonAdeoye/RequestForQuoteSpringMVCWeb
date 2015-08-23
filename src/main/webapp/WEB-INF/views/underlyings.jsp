@@ -45,7 +45,7 @@
 			<input id="new-underlying-description" class="float-left new-underlying-input-class" path="description" value="Enter description..." type="text" default_value="Enter description..." />
 			<input id="new-underlying-spread" class="float-left new-underlying-input-class" path="spread" value="Enter spread..." type="text" default_value="Enter spread..." />
 			<input id="new-underlying-referencePrice" class="float-left new-underlying-input-class" path="referencePrice" value="Enter reference price..." type="text" default_value="Enter reference price..." />
-			<input id="new-underlying-simulationPriceVariance" class="float-left new-underlying-input-class" path="simulationPriceVariance" value="Enter simulation price variance ..." type="text" default_value="Enter simulation price variance..." />
+			<input id="new-underlying-simulationPriceVariance" class="float-left new-underlying-input-class" path="simulationPriceVariance" value="Enter simulation price variance..." type="text" default_value="Enter simulation price variance..." />
 			<input id="new-underlying-dividendYield" class="float-left new-underlying-input-class" path="dividendYield" value="Enter dividend yield..." type="text" default_value="Enter dividend yield..." />
 			<button id="new-underlying-add" class="new-underlying-btn new-underlying-input-class"><spring:message code="underlyings.add.button.label"/></button>
 			<button id="new-underlying-clear" class="new-underlying-btn new-underlying-input-class float-right"><spring:message code="underlyings.clear.button.label"/></button>
@@ -60,8 +60,8 @@
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
 		</ul>
 		
-		<div style="width:730px;">
-    		<div id="underlyingsGrid" style="width:730px;height:595px;"></div>
+		<div style="width:900px;">
+    		<div id="underlyingsGrid" style="width:900px;height:595px;"></div>
 		</div>
 	</body>
 </html>

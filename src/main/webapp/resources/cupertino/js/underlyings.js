@@ -5,11 +5,11 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 
 var columns = 
 [
- 	{id: "ric", name: "Underlying RIC", field: "ric", sortable: true, toolTip: "Underlying's unique identifier, the RIC"},
-	{id: "description", name: "Description", field: "description", sortable: true, toolTip: "Underlying's description", width: 125},
+ 	{id: "ric", name: "Underlying RIC", field: "ric", sortable: true, toolTip: "Underlying's unique identifier, the RIC", width : 100},
+	{id: "description", name: "Description", field: "description", sortable: true, toolTip: "Underlying's description", width : 200},
 	{id: "spread", name: "Spread", field: "spread", sortable: true, toolTip: "Underlying's spread"},
-	{id: "referencePrice", name: "Reference price", field: "referencePrice", sortable: true, toolTip: "Underlying's reference price"},
-	{id: "simulationPriceVariance", name: "Simulation price variance", field: "simulationPriceVariance", sortable: true, toolTip: "Underlying's simulation price variance"},
+	{id: "referencePrice", name: "Reference price", field: "referencePrice", sortable: true, toolTip: "Underlying's reference price", width: 125},
+	{id: "simulationPriceVariance", name: "Simulation price variance", field: "simulationPriceVariance", sortable: true, toolTip: "Underlying's simulation price variance", width: 150},
 	{id: "dividendYield", name: "Dividend yield", field: "dividendYield", sortable: true, toolTip: "Underlying's dividend yield"},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Underlying's validity status", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the underlying", width: 90}
@@ -153,7 +153,7 @@ $(document).ready(function()
         loadingIndicator.show();
     }	
 	
-	function ajaxGetListOfunderlyings() 
+	function ajaxGetListOfUnderlyings() 
 	{
 		showLoadIndicator();
 		
@@ -316,7 +316,7 @@ $(document).ready(function()
 		});
 	}	
 		
-	ajaxGetListOfunderlyings();
+	ajaxGetListOfUnderlyings();
 	
 	underlyingsGrid.onSort.subscribe(function(e, args)
 	{

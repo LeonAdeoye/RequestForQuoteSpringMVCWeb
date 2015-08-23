@@ -1,10 +1,6 @@
 package com.leon.rfq.controllers;
 
-import java.math.BigDecimal;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,59 +52,34 @@ public class UnderlyingControllerImpl
 		return "underlyings";
 	}
 	
-	@RequestMapping("/underlying")
-	public String get(@RequestParam String ric, Model model)
+	@RequestMapping(value="/ajaxGetListOfAllUnderlyings", method=RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Set<UnderlyingDetailImpl> ajaxGetListOfAllUnderlyings()
 	{
-		model.addAttribute("underlying", this.underlyingService.get(ric));
-		return "underlying";
-	}
-
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getNewUnderlyingForm(Model model)
-	{
-		UnderlyingDetailImpl underlying = new UnderlyingDetailImpl();
-		model.addAttribute("newUnderlying", underlying);
-		
-		return "addUnderlying";
+		return this.underlyingService.getAllFromCacheOnly();
 	}
 	
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String processNewUnderlyingForm(@ModelAttribute("newUnderlying") @Valid UnderlyingDetailImpl newUnderlying,
-			BindingResult result, HttpServletRequest request)
+	@RequestMapping(value = "/ajaxUpdateUnderlying", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object ajaxUpdateUnderlying(@RequestBody UnderlyingDetailImpl underlyingToUpdate)
 	{
-		String[] suppressedFields = result.getSuppressedFields();
-		if(suppressedFields.length > 0)
-		{
-			throw new RuntimeException("Attempting to bind disallowed fields: " +
-					StringUtils.arrayToCommaDelimitedString(suppressedFields));
-		}
+		return this.underlyingService.update(underlyingToUpdate.getRic(), underlyingToUpdate.getDescription(),
+				underlyingToUpdate.getReferencePrice(), underlyingToUpdate.getSimulationPriceVariance(),
+				underlyingToUpdate.getSpread(), underlyingToUpdate.getIsValid(), underlyingToUpdate.getLastUpdatedBy());
+	}
 		
-		if(result.hasErrors())
-			return "addUnderlying";
-		
-		this.underlyingService.insert(newUnderlying.getRic(), newUnderlying.getDescription(), newUnderlying.getReferencePrice(),
-				newUnderlying.getSimulationPriceVariance(), newUnderlying.getSpread(), newUnderlying.getIsValid(), "ladeoye"); //TODO
-		
-		return "redirect:/underlyings";
+	@RequestMapping(value = "/ajaxAddNewUnderlying", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object ajaxAddNewBook(@RequestBody UnderlyingDetailImpl newUnderlying)
+	{
+		return this.underlyingService.insert(newUnderlying.getRic(), newUnderlying.getDescription(),
+				newUnderlying.getReferencePrice(), newUnderlying.getSimulationPriceVariance(),
+				newUnderlying.getSpread(), true, newUnderlying.getLastUpdatedBy());
 	}
 	
-	@RequestMapping("/delete")
-	public String delete(@RequestParam String ric, Model model)
-	{
-		this.underlyingService.delete(ric);
-		
-		return "redirect:/underlyings";
-	}
-
-	@RequestMapping("/update")
-	public String update(@RequestParam String ric, @RequestParam String description, @RequestParam double referencePrice, @RequestParam double simulationPriceVariance, @RequestParam double spread, @RequestParam boolean isValid, @RequestParam String updatedByUser, Model model)
-	{
-		this.underlyingService.update(ric, description, BigDecimal.valueOf(referencePrice),
-				BigDecimal.valueOf(simulationPriceVariance), BigDecimal.valueOf(spread), isValid, updatedByUser);
-		
-		return "redirect:/underlyings";
-	}
-
 	@RequestMapping(value = "/matchingUnderlyingTags", method = RequestMethod.GET, produces = "application/json")
 	public @ResponseBody Object getUnderlyingMatches(@RequestParam String pattern)
 	{
