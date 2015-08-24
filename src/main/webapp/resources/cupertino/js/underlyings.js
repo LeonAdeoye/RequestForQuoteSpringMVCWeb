@@ -136,7 +136,7 @@ $(document).ready(function()
 		var size = columns.length;
 		
 		for(var index = 0; index < size; index++)
-			underlyingsGrid.flashCell(dataView.getRowByRIC(ric), underlyingsGrid.getColumnIndex(columns[index].id), 100);
+			underlyingsGrid.flashCell(dataView.getRowById(ric), underlyingsGrid.getColumnIndex(columns[index].id), 100);
 	}
 	
     function showLoadIndicator() 
@@ -269,10 +269,10 @@ $(document).ready(function()
 		var newUnderlying = { 
 				"ric" : ric, 
 				"description" : description, 
-				"spread": spread, 
-				"referencePrice": referencePrice, 
-				"simulationPriceVariance": simulationPriceVariance, 
-				"dividendYield": dividendYield,	
+				"spread" : spread, 
+				"referencePrice" : referencePrice, 
+				"simulationPriceVariance" : simulationPriceVariance, 
+				"dividendYield" : dividendYield,	
 				"isValid" : true, 
 				"lastUpdatedBy" : lastUpdatedBy 
 		};
@@ -286,11 +286,11 @@ $(document).ready(function()
 		    mimeType: 'application/json',
 		    timeout: underlyingUpdateTimeout,
 		    cache: false,
-		    success: function(ric) 
+		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
 		    	
-				if(ric)
+				if(result)
 				{
 					dataView.insertItem(0, {
 						"ric" : ric, 
