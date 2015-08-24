@@ -24,7 +24,8 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 
 	@Override
 	public UnderlyingDetailImpl insert(String ric, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String savedByUser)
+			BigDecimal simulationPriceVariance, BigDecimal spread, BigDecimal dividendYield,
+			boolean isValid, String savedByUser)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Inserting underlying with ric " + ric);
@@ -32,7 +33,7 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 		try
 		{
 			UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description,
-					referencePrice, simulationPriceVariance, spread, isValid, savedByUser);
+					referencePrice, simulationPriceVariance, spread, dividendYield, isValid, savedByUser);
 			
 			if(this.underlyingMapper.insert(underlying) == 1)
 				return underlying;
@@ -48,7 +49,8 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 
 	@Override
 	public UnderlyingDetailImpl update(String ric, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String updatedByUser)
+			BigDecimal simulationPriceVariance, BigDecimal spread, BigDecimal dividendYield,
+			boolean isValid, String updatedByUser)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Updating underlying with ric " + ric);
@@ -56,7 +58,7 @@ public class UnderlyingDaoImpl implements UnderlyingDao
 		try
 		{
 			UnderlyingDetailImpl underlying = new UnderlyingDetailImpl(ric, description,
-					referencePrice, simulationPriceVariance, spread, isValid, updatedByUser);
+					referencePrice, simulationPriceVariance, spread, dividendYield, isValid, updatedByUser);
 			
 			if(this.underlyingMapper.update(underlying) == 1)
 				return underlying;

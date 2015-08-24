@@ -89,14 +89,17 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	 * @param description					the description of the underlying to be saved.
 	 * @param referencePrice				the reference price of the underlying to be saved.
 	 * @param simulationPriceVariance		the simulation price variance of the underlying to be saved.
-	 * @param isValid						the validity flag
+	 * @param spread						the spread.
+	 * @param dividendYield					the dividend yield.
+	 * @param isValid						the validity flag.
 	 * @param savedByUser					the user who is saving the underlying.
 	 * @returns	true if the save was successful; false otherwise.
 	 * @throws IllegalArgumentException 	if the RIC or description or savedByUser parameter is an empty string.
 	 */
 	@Override
 	public boolean insert(String ric, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String savedByUser)
+			BigDecimal simulationPriceVariance, BigDecimal spread, BigDecimal dividendYield,
+			boolean isValid, String savedByUser)
 	{
 		if((ric == null) || ric.isEmpty())
 		{
@@ -145,15 +148,23 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			
 			throw new IllegalArgumentException("spread argument is invalid");
 		}
+		
+		if(dividendYield.compareTo(BigDecimal.ZERO) <= 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("dividend yield argument is invalid");
+			
+			throw new IllegalArgumentException("dividend yield argument is invalid");
+		}
 
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user: " + savedByUser + " to save underlying with RIC: " + ric);
 		
 		if(null == this.underlyings.putIfAbsent(ric, new UnderlyingDetailImpl(ric, description, referencePrice,
-				simulationPriceVariance, spread, isValid, savedByUser)))
+				simulationPriceVariance, spread, dividendYield, isValid, savedByUser)))
 		{
 			UnderlyingDetailImpl newUnderlying = this.underlyingDao.insert(ric, description, referencePrice,
-					simulationPriceVariance, spread, isValid, savedByUser);
+					simulationPriceVariance, spread, dividendYield, isValid, savedByUser);
 		
 			if(newUnderlying != null)
 				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, newUnderlying));
@@ -171,6 +182,8 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	 * @param description					the description of the underlying to be saved.
 	 * @param referencePrice				the reference price of the underlying to be saved.
 	 * @param simulationPriceVariance		the simulation price variance of the underlying to be saved.
+	 * @param spread						the spread.
+	 * @param dividendYield					the dividend yield.
 	 * @param isValid						the validity flag of the underlying to be saved.
 	 * @param savedByUser					the user who is saving the underlying.
 	 * @returns	true if the save was successful; false otherwise.
@@ -178,7 +191,8 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 	 */
 	@Override
 	public boolean update(String ric, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String updatedByUser)
+			BigDecimal simulationPriceVariance, BigDecimal spread, BigDecimal dividendYield,
+			boolean isValid, String updatedByUser)
 	{
 		if((ric == null) || ric.isEmpty())
 		{
@@ -228,14 +242,22 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("spread argument is invalid");
 		}
 		
+		if(dividendYield.compareTo(BigDecimal.ZERO) <= 0)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("dividend yield argument is invalid");
+			
+			throw new IllegalArgumentException("dividend yield argument is invalid");
+		}
+		
 		if(logger.isDebugEnabled())
 			logger.debug("Received request from user: " + updatedByUser + " to update underlying with RIC: " + ric);
 						
 		if(null != this.underlyings.put(ric, new UnderlyingDetailImpl(ric, description, referencePrice,
-				simulationPriceVariance, spread, isValid, updatedByUser)))
+				simulationPriceVariance, spread, dividendYield, isValid, updatedByUser)))
 		{
 			UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.update(ric, description, referencePrice,
-					simulationPriceVariance, spread, isValid, updatedByUser);
+					simulationPriceVariance, spread, dividendYield, isValid, updatedByUser);
 				
 			if(updatedUnderlying != null)
 				this.applicationEventPublisher.publishEvent(new NewUnderlyingEvent(this, updatedUnderlying));

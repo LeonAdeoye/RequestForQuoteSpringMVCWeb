@@ -27,10 +27,12 @@ public interface UnderlyingService
 	Set<UnderlyingDetailImpl> getAllFromCacheOnly();
 
 	boolean insert(String ric, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String savedByUser);
+			BigDecimal simulationPriceVariance, BigDecimal spread, BigDecimal dividendYield,
+			boolean isValid, String savedByUser);
 	
 	boolean update(String RIC, String description, BigDecimal referencePrice,
-			BigDecimal simulationPriceVariance, BigDecimal spread, boolean isValid, String updatedByUser);
+			BigDecimal simulationPriceVariance, BigDecimal spread, BigDecimal dividendYield,
+			boolean isValid, String updatedByUser);
 
 	List<Tag> getMatchingUnderlyingTags(String upperCase);
 }

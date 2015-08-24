@@ -12,6 +12,7 @@
 		<result property="referencePrice" column="referencePrice"/>
 		<result property="simulationPriceVariance" column="simulationPriceVariance"/>
 		<result property="spread" column="spread"/>
+		<result property="dividendYield" column="dividendYield"/>
 		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
 	</resultMap>
 	
@@ -31,6 +32,7 @@
 		referencePrice = #{referencePrice},
 		simulationPriceVariance = #{simulationPriceVariance},
 		spread = #{spread},
+		dividendYield = #{dividendYield},
 		isValid = #{isValid}, 
 		lastUpdatedBy = #{lastUpdatedBy}, 
 		lastUpdated = now() 
@@ -39,8 +41,8 @@
 	
 	<insert id="insert" parameterType="UnderlyingDetailImpl">
 		INSERT INTO 
-		underlyings (ric, description, referencePrice, simulationPriceVariance, spread, isValid, lastUpdatedBy, lastUpdated)
-		VALUES(#{ric}, #{description}, #{referencePrice}, #{simulationPriceVariance}, #{spread}, #{isValid}, #{lastUpdatedBy}, now() )
+		underlyings (ric, description, referencePrice, simulationPriceVariance, spread, dividendYield, isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{ric}, #{description}, #{referencePrice}, #{simulationPriceVariance}, #{spread}, #{dividendYield}, #{isValid}, #{lastUpdatedBy}, now() )
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.String">

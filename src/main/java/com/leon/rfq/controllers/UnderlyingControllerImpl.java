@@ -67,7 +67,8 @@ public class UnderlyingControllerImpl
 	{
 		return this.underlyingService.update(underlyingToUpdate.getRic(), underlyingToUpdate.getDescription(),
 				underlyingToUpdate.getReferencePrice(), underlyingToUpdate.getSimulationPriceVariance(),
-				underlyingToUpdate.getSpread(), underlyingToUpdate.getIsValid(), underlyingToUpdate.getLastUpdatedBy());
+				underlyingToUpdate.getSpread(), underlyingToUpdate.getDividendYield(), underlyingToUpdate.getIsValid(),
+				underlyingToUpdate.getLastUpdatedBy());
 	}
 		
 	@RequestMapping(value = "/ajaxAddNewUnderlying", method = RequestMethod.POST,
@@ -78,7 +79,8 @@ public class UnderlyingControllerImpl
 		// TODO: add dividendYield
 		return this.underlyingService.insert(newUnderlying.getRic(), newUnderlying.getDescription(),
 				newUnderlying.getReferencePrice(), newUnderlying.getSimulationPriceVariance(),
-				newUnderlying.getSpread(), newUnderlying.getIsValid() , newUnderlying.getLastUpdatedBy());
+				newUnderlying.getSpread(), newUnderlying.getDividendYield(), newUnderlying.getIsValid(),
+				newUnderlying.getLastUpdatedBy());
 	}
 	
 	@RequestMapping(value = "/matchingUnderlyingTags", method = RequestMethod.GET, produces = "application/json")
