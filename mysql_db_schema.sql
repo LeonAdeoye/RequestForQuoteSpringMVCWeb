@@ -77,7 +77,7 @@ CREATE TABLE `clients` (
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `id_UNIQUE` (`identifier`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `course_enrollment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -132,7 +132,7 @@ CREATE TABLE `holidays` (
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `location_date_index` (`location`,`bankHolidayDate`),
   UNIQUE KEY `identifier_UNIQUE` (`identifier`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `optionleg`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -236,9 +236,11 @@ CREATE TABLE `requestforquotemain` (
   `lambda` decimal(13,3) NOT NULL DEFAULT '0.000',
   `underlyingRIC` varchar(10) NOT NULL DEFAULT 'NONE',
   `underlyingPrice` decimal(13,3) NOT NULL DEFAULT '0.000',
+  `lastUpdate` datetime DEFAULT NULL,
+  `lastUpdatedBy` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `identifier_UNIQUE` (`identifier`)
-) ENGINE=InnoDB AUTO_INCREMENT=1014 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2384 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `searches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -246,15 +248,13 @@ DROP TABLE IF EXISTS `searches`;
 CREATE TABLE `searches` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `owner` varchar(45) NOT NULL,
-  `keyValue` varchar(45) NOT NULL,
-  `controlName` varchar(45) NOT NULL,
-  `controlValue` varchar(255) NOT NULL,
+  `searchKey` varchar(45) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `value` varchar(255) NOT NULL,
   `isPrivate` char(1) NOT NULL DEFAULT 'Y',
-  `lastUpdated` datetime NOT NULL,
-  `isFilter` char(1) NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `owner_and_key_and_control_UNIQUE` (`owner`,`keyValue`,`controlName`)
-) ENGINE=InnoDB AUTO_INCREMENT=226 DEFAULT CHARSET=utf8;
+  UNIQUE KEY `owner_and_key_and_control_UNIQUE` (`owner`,`searchKey`,`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=263 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `students`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -299,6 +299,7 @@ CREATE TABLE `underlyings` (
   `referencePrice` decimal(10,0) NOT NULL DEFAULT '100',
   `simulationPriceVariance` decimal(10,0) NOT NULL DEFAULT '1',
   `spread` decimal(10,0) NOT NULL DEFAULT '1',
+  `dividendYield` decimal(10,0) NOT NULL DEFAULT '0',
   `isValid` char(1) NOT NULL DEFAULT 'Y',
   `lastUpdatedBy` varchar(20) NOT NULL,
   `lastUpdated` datetime NOT NULL,

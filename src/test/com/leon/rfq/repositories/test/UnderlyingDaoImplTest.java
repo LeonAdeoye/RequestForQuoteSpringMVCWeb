@@ -108,7 +108,7 @@ public class UnderlyingDaoImplTest extends AbstractJUnit4SpringContextTests
 	{
 		this.underlyingDao.insert("testRic", "description", BigDecimal.TEN,
 			BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, true, "me");
-		assertNotNull("Update should return true", this.underlyingDao.update("testRic", "updated description",
+		assertNotNull("Update should return non null", this.underlyingDao.update("testRic", "updated description",
 			BigDecimal.TEN, BigDecimal.ONE, BigDecimal.ONE, BigDecimal.ONE, true, "me"));
 		UnderlyingDetailImpl updatedUnderlying = this.underlyingDao.get("testRic");
 		assertEquals("Updated underlying's description should be updated to new value", updatedUnderlying.getDescription(), "updated description");
