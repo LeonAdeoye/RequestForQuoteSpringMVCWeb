@@ -6,11 +6,11 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 var columns = 
 [
  	{id: "ric", name: "Underlying RIC", field: "ric", sortable: true, toolTip: "Underlying's unique identifier, the RIC", width : 100},
-	{id: "description", name: "Description", field: "description", sortable: true, toolTip: "Underlying's description", width : 200},
-	{id: "spread", name: "Spread", field: "spread", sortable: true, toolTip: "Underlying's spread"},
-	{id: "referencePrice", name: "Reference price", field: "referencePrice", sortable: true, toolTip: "Underlying's reference price", width: 125},
-	{id: "simulationPriceVariance", name: "Simulation price variance", field: "simulationPriceVariance", sortable: true, toolTip: "Underlying's simulation price variance", width: 150},
-	{id: "dividendYield", name: "Dividend yield", field: "dividendYield", sortable: true, toolTip: "Underlying's dividend yield"},
+	{id: "description", name: "Description", field: "description", sortable: true, toolTip: "Underlying's description", width : 200, editor: Slick.Editors.LongText},
+	{id: "spread", name: "Spread", field: "spread", sortable: true, toolTip: "Underlying's spread", editor: Slick.Editors.Text},
+	{id: "referencePrice", name: "Reference price", field: "referencePrice", sortable: true, toolTip: "Underlying's reference price", width: 125, editor: Slick.Editors.Text},
+	{id: "simulationPriceVariance", name: "Simulation price variance", field: "simulationPriceVariance", sortable: true, toolTip: "Underlying's simulation price variance", width: 150, editor: Slick.Editors.Text},
+	{id: "dividendYield", name: "Dividend yield", field: "dividendYield", sortable: true, toolTip: "Underlying's dividend yield", editor: Slick.Editors.Text},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Underlying's validity status", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the underlying", width: 90}
 ];
@@ -167,7 +167,9 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(underlyings) 
 		    {
+		    	underlyingsGrid.invalidateAllRows();
 		    	dataView.setItems(underlyings, "ric");
+		    	underlyingsGrid.render();
 		    	loadingIndicator.fadeOut();
 		    },
             error: function (xhr, textStatus, errorThrown) 
@@ -182,6 +184,8 @@ $(document).ready(function()
 	function ajaxUpdateUnderlying(ric, description, spread, referencePrice, 
 			simulationPriceVariance, dividendYield, isValid, lastUpdatedBy) 
 	{
+		showLoadIndicator();
+		
 		var underlyingDetails = { 
 				"ric" : ric, 
 				"description" : description, 
@@ -205,19 +209,22 @@ $(document).ready(function()
 		    success: function(result) 
 		    {
 		    	loadingIndicator.fadeOut();
-	    		var item = dataView.getItemById(ric);
-	    		item["isValid"] = isValid;
-	    		dataView.updateItem(ric, item);		    				    	
-		    	flashRow(ric);
 		    	
-		    	if(!result)
-		    		alert("Failed to update the validity.");		    	
+		    	if(result)
+		    	{
+		    		var item = dataView.getItemById(ric);
+		    		item["isValid"] = isValid;
+		    		dataView.updateItem(ric, item);		    				    	
+			    	flashRow(ric);		    		
+		    	}
+		    	else
+		    		alert('Failed to update the underlying details because of a server error.');		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
-            	loadingIndicator.fadeOut();
+            	loadingIndicator.fadeOut();            	
             	console.log(xhr.responseText);
-            	alert('Failed to update the validity details because of a server error.');                
+            	alert('Failed to update the underlying details because of a server error.');                
             }
 		});
 	}
@@ -225,6 +232,8 @@ $(document).ready(function()
 	// TODO
 	function ajaxGetAnyNewUnderlyings()
 	{
+		showLoadIndicator();
+		
 		$.ajax({
 		    url: contextPath + "/underlyings/ajaxGetAnyNewUnderlyings", 
 		    type: 'GET', 
@@ -266,6 +275,8 @@ $(document).ready(function()
 	
 	function ajaxAddNewUnderlying(ric, description, spread, referencePrice, simulationPriceVariance, dividendYield, lastUpdatedBy) 
 	{
+		showLoadIndicator();
+		
 		var newUnderlying = { 
 				"ric" : ric, 
 				"description" : description, 
@@ -385,12 +396,32 @@ $(document).ready(function()
     	var row = $(this).data("row");
     	var operation = $(e.target).attr("data");
     	var lastUpdatedBy = "ladeoye";
-    	
-		showLoadIndicator();
 		
-		ajaxUpdateUnderlying(dataView.getItem(row).ric, dataView.getItem(row).description, 
-				dataView.getItem(row).spread, dataView.getItem(row).referencePrice, 
-				dataView.getItem(row).simulationPriceVariance, dataView.getItem(row).dividendYield,
-				operation === "VALIDATE", lastUpdatedBy);
+    	switch (operation) 
+    	{
+        	case "VALIDATE":
+        		ajaxUpdateUnderlying(dataView.getItem(row).ric, dataView.getItem(row).description, 
+        				dataView.getItem(row).spread, dataView.getItem(row).referencePrice, 
+        				dataView.getItem(row).simulationPriceVariance, dataView.getItem(row).dividendYield,
+        				true, lastUpdatedBy);	
+        		break;
+        	case "INVALIDATE":
+        		ajaxUpdateUnderlying(dataView.getItem(row).ric, dataView.getItem(row).description, 
+        				dataView.getItem(row).spread, dataView.getItem(row).referencePrice, 
+        				dataView.getItem(row).simulationPriceVariance, dataView.getItem(row).dividendYield,
+        				false, lastUpdatedBy);
+        		break;
+        	case "SAVE":
+        		ajaxUpdateUnderlying(dataView.getItem(row).ric, dataView.getItem(row).description, 
+        				dataView.getItem(row).spread, dataView.getItem(row).referencePrice, 
+        				dataView.getItem(row).simulationPriceVariance, dataView.getItem(row).dividendYield,
+        				dataView.getItem(row).isValid, lastUpdatedBy);
+        		break;
+        	case "REFRESH":
+        		ajaxGetListOfUnderlyings();
+        		break;
+        	default: 
+        		alert("Sorry, this operation is yet to be supported!");
+    	}				
     });	    	
 });

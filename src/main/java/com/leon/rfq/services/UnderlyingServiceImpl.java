@@ -149,7 +149,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("spread argument is invalid");
 		}
 		
-		if(dividendYield.compareTo(BigDecimal.ZERO) <= 0)
+		if(dividendYield.compareTo(BigDecimal.ZERO) < 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("dividend yield argument is invalid");
@@ -242,7 +242,7 @@ public final class UnderlyingServiceImpl implements UnderlyingService, Applicati
 			throw new IllegalArgumentException("spread argument is invalid");
 		}
 		
-		if(dividendYield.compareTo(BigDecimal.ZERO) <= 0)
+		if(dividendYield.compareTo(BigDecimal.ZERO) < 0)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("dividend yield argument is invalid");
