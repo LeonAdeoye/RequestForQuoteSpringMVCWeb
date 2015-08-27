@@ -17,15 +17,16 @@
 	<security:http auto-config="true" use-expressions="false" >		
 				
 		<security:intercept-url pattern="/underlyings" access="ROLE_USER, ROLE_ADMIN" />
-		<security:intercept-url pattern="/underlyings/underlying" access="ROLE_ADMIN" />
-		<security:intercept-url pattern="/underlyings/add" access="ROLE_USER" />
+		
+		<security:intercept-url pattern="/books" access="ROLE_USER, ROLE_ADMIN" />
+		
+		<security:intercept-url pattern="/clients" access="ROLE_USER, ROLE_ADMIN" />
 		
 		<security:intercept-url pattern="/users" access="ROLE_USER, ROLE_ADMIN" />
 		<security:intercept-url pattern="/users/user" access="ROLE_USER" />
 		<security:intercept-url pattern="/users/add" access="ROLE_ADMIN" />
 		
 		<security:intercept-url pattern="/requests" access="ROLE_USER, ROLE_ADMIN" />
-		<security:intercept-url pattern="/requests/add" access="ROLE_ADMIN, ROLE_USER" />
 		<security:intercept-url pattern="/requests/request" access="ROLE_USER, ROLE_ADMIN" />
 		
 		<!-- TODO: add more and test -->		

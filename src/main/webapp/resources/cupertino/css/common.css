@@ -1,3 +1,10 @@
+.slick-cell-modified 
+{
+    color: red;
+    font-weight: bold;
+    border: 3px solid red;
+}
+
 .contextMenu 
 {
 	background: rgb(215,215,215);
@@ -25,7 +32,7 @@
 
 .cellFlash 
 {
-	border: 1px solid black;
+	border: 1px solid red;
 	background: olive;
 }
 

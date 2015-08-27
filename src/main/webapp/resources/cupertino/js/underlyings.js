@@ -181,6 +181,18 @@ $(document).ready(function()
 		});
 	}
 	
+	var modifiedCells = {};
+	
+    underlyingsGrid.onCellChange.subscribe(function (e, args) 
+    {
+        if (!modifiedCells[args.row]) 
+        {
+            modifiedCells[args.row] = {};
+        }
+        modifiedCells[args.row][this.getColumns()[args.cell].id] = "slick-cell-modified";
+        this.setCellCssStyles("modified", modifiedCells);
+    });	
+	
 	function ajaxUpdateUnderlying(ric, description, spread, referencePrice, 
 			simulationPriceVariance, dividendYield, isValid, lastUpdatedBy) 
 	{
@@ -195,7 +207,7 @@ $(document).ready(function()
 				"dividendYield" : dividendYield,	
 				"isValid" : isValid, 
 				"lastUpdatedBy" : lastUpdatedBy 
-		};
+		};	    
 		
 		$.ajax({
 		    url: contextPath + "/underlyings/ajaxUpdateUnderlying", 
@@ -215,7 +227,9 @@ $(document).ready(function()
 		    		var item = dataView.getItemById(ric);
 		    		item["isValid"] = isValid;
 		    		dataView.updateItem(ric, item);		    				    	
-			    	flashRow(ric);		    		
+			    	flashRow(ric);
+			    	delete modifiedCells[dataView.getRowById(ric)];
+			    	underlyingsGrid.setCellCssStyles("modified", modifiedCells);
 		    	}
 		    	else
 		    		alert('Failed to update the underlying details because of a server error.');		    	
@@ -273,7 +287,8 @@ $(document).ready(function()
 		});		
 	}
 	
-	function ajaxAddNewUnderlying(ric, description, spread, referencePrice, simulationPriceVariance, dividendYield, lastUpdatedBy) 
+	function ajaxAddNewUnderlying(ric, description, spread, referencePrice, 
+			simulationPriceVariance, dividendYield, lastUpdatedBy) 
 	{
 		showLoadIndicator();
 		
