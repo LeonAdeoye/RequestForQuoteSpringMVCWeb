@@ -79,7 +79,13 @@ $(document).ready(function()
 	underlyingsGrid.setSelectionModel(new Slick.RowSelectionModel());
 	underlyingsGrid.setTopPanelVisibility(false);
 	
+	$('#importFile').inputFileText({
+	    text : "Import",
+	    buttonClass : "new-underlying-btn import-btn-class"
+	});		
+	
 	$(".new-underlying-btn").button();
+	
 	disableAddButton();
 	$("#new-underlying-ric").keyup(toggleAddButtonState);
 	$("#new-underlying-ric").focusout(toggleAddButtonState);	

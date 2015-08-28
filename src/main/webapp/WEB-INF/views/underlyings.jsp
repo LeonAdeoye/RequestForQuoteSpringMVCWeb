@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>				
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.event.drag-2.2.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery.browser.min.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/jquery-input-file-text.js" />"></script>
 								
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.core.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.formatters.js" />"></script>	
@@ -34,7 +35,7 @@
 			var contextPath='<%=request.getContextPath()%>'
 		
 			if (typeof jQuery == 'undefined')				 
-			    alert("WARNING: jQuery library is NOT loaded!");
+			    alert("WARNING: jQuery library is NOT loaded!");		
 		</script>		
 		<title><spring:message code="underlyings.maintenance.label"/></title>
 	</head>
@@ -48,8 +49,8 @@
 			<input id="new-underlying-simulationPriceVariance" class="float-left new-underlying-input-class" path="simulationPriceVariance" value="Enter simulation price variance..." type="text" default_value="Enter simulation price variance..." />
 			<input id="new-underlying-dividendYield" class="float-left new-underlying-input-class" path="dividendYield" value="Enter dividend yield..." type="text" default_value="Enter dividend yield..." />
 			<button id="new-underlying-add" class="new-underlying-btn new-underlying-input-class"><spring:message code="underlyings.add.button.label"/></button>
-			<button id="new-underlying-clear" class="new-underlying-btn new-underlying-input-class float-right"><spring:message code="underlyings.clear.button.label"/></button>
-			<button id="new-underlying-import" class="new-underlying-btn new-underlying-input-class float-right"><spring:message code="underlyings.import.button.label"/></button>
+			<button id="new-underlying-clear" class="new-underlying-btn new-underlying-input-class float-right"><spring:message code="underlyings.clear.button.label"/></button>			
+			<input type="file" class="new-underlying-btn new-underlying-input-class float-right" id="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />			
 		</div>
 			
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
