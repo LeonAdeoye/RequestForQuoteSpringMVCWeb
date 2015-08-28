@@ -186,15 +186,15 @@ $(document).ready(function()
     underlyingsGrid.onCellChange.subscribe(function (e, args) 
     {
         if (!modifiedCells[args.row]) 
-        {
             modifiedCells[args.row] = {};
-        }
+        
         modifiedCells[args.row][this.getColumns()[args.cell].id] = "slick-cell-modified";
+        this.removeCellCssStyles("modified");
         this.setCellCssStyles("modified", modifiedCells);
     });	
 	
 	function ajaxUpdateUnderlying(ric, description, spread, referencePrice, 
-			simulationPriceVariance, dividendYield, isValid, lastUpdatedBy) 
+			simulationPriceVariance, dividendYield, isValid, lastUpdatedBy, flashRow) 
 	{
 		showLoadIndicator();
 		
@@ -226,8 +226,10 @@ $(document).ready(function()
 		    	{
 		    		var item = dataView.getItemById(ric);
 		    		item["isValid"] = isValid;
-		    		dataView.updateItem(ric, item);		    				    	
-			    	flashRow(ric);
+		    		dataView.updateItem(ric, item);
+		    		if(flashRow)
+		    			flashRow(ric);
+			    	underlyingsGrid.removeCellCssStyles("modified");
 			    	delete modifiedCells[dataView.getRowById(ric)];
 			    	underlyingsGrid.setCellCssStyles("modified", modifiedCells);
 		    	}
@@ -418,19 +420,26 @@ $(document).ready(function()
         		ajaxUpdateUnderlying(dataView.getItem(row).ric, dataView.getItem(row).description, 
         				dataView.getItem(row).spread, dataView.getItem(row).referencePrice, 
         				dataView.getItem(row).simulationPriceVariance, dataView.getItem(row).dividendYield,
-        				true, lastUpdatedBy);	
+        				true, lastUpdatedBy, true);	
         		break;
         	case "INVALIDATE":
         		ajaxUpdateUnderlying(dataView.getItem(row).ric, dataView.getItem(row).description, 
         				dataView.getItem(row).spread, dataView.getItem(row).referencePrice, 
         				dataView.getItem(row).simulationPriceVariance, dataView.getItem(row).dividendYield,
-        				false, lastUpdatedBy);
+        				false, lastUpdatedBy, true);
         		break;
         	case "SAVE":
         		ajaxUpdateUnderlying(dataView.getItem(row).ric, dataView.getItem(row).description, 
         				dataView.getItem(row).spread, dataView.getItem(row).referencePrice, 
         				dataView.getItem(row).simulationPriceVariance, dataView.getItem(row).dividendYield,
-        				dataView.getItem(row).isValid, lastUpdatedBy);
+        				dataView.getItem(row).isValid, lastUpdatedBy, true);
+        		break;
+        	case "SAVE_ALL":
+        		for (var key in modifiedCells)
+            		ajaxUpdateUnderlying(dataView.getItem(key).ric, dataView.getItem(key).description, 
+            				dataView.getItem(key).spread, dataView.getItem(key).referencePrice, 
+            				dataView.getItem(key).simulationPriceVariance, dataView.getItem(key).dividendYield,
+            				dataView.getItem(key).isValid, lastUpdatedBy, false);        			
         		break;
         	case "REFRESH":
         		ajaxGetListOfUnderlyings();

@@ -1,8 +1,8 @@
 .slick-cell-modified 
 {
     color: red;
-    font-weight: bold;
-    border: 3px solid red;
+    font-weight: bolder;
+    background: pink;
 }
 
 .contextMenu 
