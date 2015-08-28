@@ -50,7 +50,7 @@
 			<input id="new-underlying-dividendYield" class="float-left new-underlying-input-class" path="dividendYield" value="Enter dividend yield..." type="text" default_value="Enter dividend yield..." />
 			<button id="new-underlying-add" class="new-underlying-btn new-underlying-input-class"><spring:message code="underlyings.add.button.label"/></button>
 			<button id="new-underlying-clear" class="new-underlying-btn new-underlying-input-class float-right"><spring:message code="underlyings.clear.button.label"/></button>			
-			<input type="file" class="new-underlying-btn new-underlying-input-class float-right" id="importFile" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />			
+			<input type="file" class="float-right" id="new-underlying-import-btn" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />			
 		</div>
 			
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
