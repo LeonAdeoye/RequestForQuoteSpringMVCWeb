@@ -77,7 +77,7 @@ CREATE TABLE `clients` (
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `id_UNIQUE` (`identifier`),
   UNIQUE KEY `name_UNIQUE` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `course_enrollment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -132,7 +132,7 @@ CREATE TABLE `holidays` (
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `location_date_index` (`location`,`bankHolidayDate`),
   UNIQUE KEY `identifier_UNIQUE` (`identifier`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `optionleg`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -240,7 +240,7 @@ CREATE TABLE `requestforquotemain` (
   `lastUpdatedBy` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`identifier`),
   UNIQUE KEY `identifier_UNIQUE` (`identifier`)
-) ENGINE=InnoDB AUTO_INCREMENT=2384 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2276 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `searches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -254,7 +254,7 @@ CREATE TABLE `searches` (
   `isPrivate` char(1) NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`id`),
   UNIQUE KEY `owner_and_key_and_control_UNIQUE` (`owner`,`searchKey`,`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=263 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=242 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `students`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -296,10 +296,10 @@ DROP TABLE IF EXISTS `underlyings`;
 CREATE TABLE `underlyings` (
   `ric` varchar(10) NOT NULL,
   `description` varchar(45) NOT NULL,
-  `referencePrice` decimal(10,0) NOT NULL DEFAULT '100',
-  `simulationPriceVariance` decimal(10,0) NOT NULL DEFAULT '1',
-  `spread` decimal(10,0) NOT NULL DEFAULT '1',
-  `dividendYield` decimal(10,0) NOT NULL DEFAULT '0',
+  `referencePrice` decimal(10,3) NOT NULL DEFAULT '100.000',
+  `simulationPriceVariance` decimal(10,3) NOT NULL DEFAULT '1.000',
+  `spread` decimal(10,3) NOT NULL DEFAULT '1.000',
+  `dividendYield` decimal(10,3) NOT NULL DEFAULT '0.000',
   `isValid` char(1) NOT NULL DEFAULT 'Y',
   `lastUpdatedBy` varchar(20) NOT NULL,
   `lastUpdated` datetime NOT NULL,

@@ -199,14 +199,14 @@ $(document).ready(function()
 		showLoadIndicator();
 		
 		var underlyingDetails = { 
-				"ric" : ric, 
-				"description" : description, 
-				"spread" : spread, 
-				"referencePrice" : referencePrice, 
-				"simulationPriceVariance" : simulationPriceVariance, 
-				"dividendYield" : dividendYield,	
-				"isValid" : isValid, 
-				"lastUpdatedBy" : lastUpdatedBy 
+			"ric" : ric, 
+			"description" : description, 
+			"spread" : spread, 
+			"referencePrice" : referencePrice, 
+			"simulationPriceVariance" : simulationPriceVariance, 
+			"dividendYield" : dividendYield,	
+			"isValid" : isValid, 
+			"lastUpdatedBy" : lastUpdatedBy 
 		};	    
 		
 		$.ajax({
@@ -297,14 +297,14 @@ $(document).ready(function()
 		showLoadIndicator();
 		
 		var newUnderlying = { 
-				"ric" : ric, 
-				"description" : description, 
-				"spread" : spread, 
-				"referencePrice" : referencePrice, 
-				"simulationPriceVariance" : simulationPriceVariance, 
-				"dividendYield" : dividendYield,	
-				"isValid" : true, 
-				"lastUpdatedBy" : lastUpdatedBy 
+			"ric" : ric, 
+			"description" : description, 
+			"spread" : spread, 
+			"referencePrice" : referencePrice, 
+			"simulationPriceVariance" : simulationPriceVariance, 
+			"dividendYield" : dividendYield,	
+			"isValid" : true, 
+			"lastUpdatedBy" : lastUpdatedBy 
 		};
 		
 		$.ajax({
