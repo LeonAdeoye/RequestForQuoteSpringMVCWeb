@@ -1,3 +1,12 @@
+input.import-btn-class
+{
+   	padding-top: 0px;
+    padding-bottom: 1px;
+	margin-top: -3px;
+    height: 23px;
+    font-size: inherit;    
+}
+
 .slick-cell-modified 
 {
     color: red;

@@ -14,11 +14,14 @@
 		<result property="spread" column="spread"/>
 		<result property="dividendYield" column="dividendYield"/>
 		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
+		<result property="userId" column="userId"/>
+		<result property="groupId" column="groupId"/>
 	</resultMap>
 	
 	<select id="get" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
 		SELECT * 
-		FROM underlyings WHERE ric=#{ric}
+		FROM underlyings
+		WHERE ric=#{ric}
 	</select>
 	
 	<select id="getAll" resultMap="UnderlyingResultSet">
@@ -46,13 +49,15 @@
 	</insert>
 	
 	<delete id="delete" parameterType="java.lang.String">
-		DELETE FROM underlyings
+		DELETE 
+		FROM underlyings
 		WHERE ric = #{ric}
 	</delete>
 	
 	<select id="underlyingExistsWithRic" parameterType="java.lang.String" resultType="UnderlyingDetailImpl">
 		SELECT * 
-		FROM underlyings WHERE ric=#{ric}
+		FROM underlyings 
+		WHERE ric=#{ric}
 	</select>
 			
 </mapper>
