@@ -68,12 +68,12 @@ public final class BankHolidayDetailImpl
 		this.bankHolidayDate = bankHolidayDate;
 	}
 
-	public boolean isValid()
+	public boolean getIsValid()
 	{
 		return this.isValid;
 	}
 
-	public void setValid(boolean isValid)
+	public void setIsValid(boolean isValid)
 	{
 		this.isValid = isValid;
 	}
