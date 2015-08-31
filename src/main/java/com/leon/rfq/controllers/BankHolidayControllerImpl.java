@@ -1,7 +1,5 @@
 package com.leon.rfq.controllers;
 
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +34,9 @@ public class BankHolidayControllerImpl
 	@RequestMapping(value="/ajaxGetListOfAllBankHolidays", method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Set<BankHolidayDetailImpl> ajaxGetListOfAllBankHolidays()
+	public @ResponseBody Object ajaxGetListOfAllBankHolidays()
 	{
-		return null; //this.bankHolidayService.getAll();
+		return this.bankHolidayService.getAllFromCacheOnly();
 	}
 	
 	@RequestMapping(value = "/ajaxUpdateBankHoliday", method = RequestMethod.POST,

@@ -1,6 +1,7 @@
 package com.leon.rfq.services;
 
 import java.time.LocalDate;
+import java.util.Map;
 import java.util.Set;
 
 import com.leon.rfq.common.EnumTypes.LocationEnum;
@@ -29,4 +30,6 @@ public interface BankHolidayService
 	void initialise();
 	
 	void getAll();
+
+	Map<LocationEnum, Set<LocalDate>> getAllFromCacheOnly();
 }

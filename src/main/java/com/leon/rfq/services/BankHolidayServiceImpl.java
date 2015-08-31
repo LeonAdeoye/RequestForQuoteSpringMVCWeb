@@ -53,6 +53,12 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 		this.bankHolidays.clear();
 		this.bankHolidays.putAll(this.dao.getAll());
 	}
+	
+	@Override
+	public Map<LocationEnum, Set<LocalDate>> getAllFromCacheOnly()
+	{
+		return this.bankHolidays;
+	}
 
 	private boolean isBankHolidayCached(LocationEnum location, LocalDate dateToBeChecked)
 	{
