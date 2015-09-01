@@ -105,26 +105,25 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	}
 
 	@Override
-	public Set<LocalDate> getAll(LocationEnum location)
+	public Set<BankHolidayDetailImpl> getAll(LocationEnum location)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all bank holidays from location: " + location);
 		
 		return this.bankHolidayMapper.getAllInLocation(location).stream()
-				.map(BankHolidayDetailImpl::getBankHolidayDate).collect(Collectors.toSet());
+				.collect(Collectors.toSet());
 	}
 	
 	@Override
-	public Map<LocationEnum, Set<LocalDate>> getAll()
+	public Map<LocationEnum, Set<BankHolidayDetailImpl>> getAll()
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Request to get all bank holidays");
-		
-		
-		Map<LocationEnum, Set<LocalDate>> result = new HashMap<>();
+				
+		Map<LocationEnum, Set<BankHolidayDetailImpl>> result = new HashMap<>();
 		
 		for(Map.Entry<LocationEnum, List<BankHolidayDetailImpl>> entry : this.bankHolidayMapper.getAll().stream().collect(Collectors.groupingBy(BankHolidayDetailImpl::getLocation)).entrySet())
-			result.put(entry.getKey(), entry.getValue().stream().map(BankHolidayDetailImpl::getBankHolidayDate).collect(Collectors.toSet()));
+			result.put(entry.getKey(), entry.getValue().stream().collect(Collectors.toSet()));
 		
 		return result;
 	}

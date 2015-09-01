@@ -15,18 +15,17 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.common.EnumTypes.LocationEnum;
+import com.leon.rfq.domains.BankHolidayDetailImpl;
 import com.leon.rfq.repositories.BankHolidayDao;
 
 @Service
 public final class BankHolidayServiceImpl implements BankHolidayService
 {
 	private static final Logger logger = LoggerFactory.getLogger(BankHolidayServiceImpl.class);
-	private final Map<LocationEnum, Set<LocalDate>> bankHolidays = new ConcurrentSkipListMap<>();
-	private ApplicationEventPublisher applicationEventPublisher;
+	private final Map<LocationEnum, Set<BankHolidayDetailImpl>> bankHolidays = new ConcurrentSkipListMap<>();
 	
 	@Autowired(required=true)
 	private BankHolidayDao dao;
@@ -55,14 +54,15 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	}
 	
 	@Override
-	public Map<LocationEnum, Set<LocalDate>> getAllFromCacheOnly()
+	public Set<BankHolidayDetailImpl> getAllFromCacheOnly()
 	{
-		return this.bankHolidays;
+		return  null;
 	}
 
 	private boolean isBankHolidayCached(LocationEnum location, LocalDate dateToBeChecked)
 	{
-		return this.bankHolidays.get(location).stream().anyMatch(theDate -> theDate.compareTo(dateToBeChecked) == 0);
+		return this.bankHolidays.get(location).stream()
+				.anyMatch(theDate -> theDate.getBankHolidayDate().compareTo(dateToBeChecked) == 0);
 	}
 	
 	private boolean isLocationCached(LocationEnum location)
@@ -139,7 +139,8 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 			return false;
 		
 		if(isLocationCached(location))
-			return this.bankHolidays.get(location).stream().anyMatch(theDate -> theDate.compareTo(dateToValidate) != 0);
+			return this.bankHolidays.get(location).stream()
+					.anyMatch(theDate -> theDate.getBankHolidayDate().compareTo(dateToValidate) != 0);
 		
 		return true;
 	}
@@ -199,14 +200,14 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 			{
 				if(this.bankHolidays.keySet().stream().anyMatch(key -> key.equals(location)))
 				{
-					Set<LocalDate> set = this.bankHolidays.get(location);
-					set.add(dateToBeInserted);
+					Set<BankHolidayDetailImpl> set = this.bankHolidays.get(location);
+					set.add(new BankHolidayDetailImpl(location,	dateToBeInserted, true,	savedByUser));
 					this.bankHolidays.put(location, set);
 				}
 				else
 				{
-					Set<LocalDate> set = new ConcurrentSkipListSet<>();
-					set.add(dateToBeInserted);
+					Set< BankHolidayDetailImpl> set = new ConcurrentSkipListSet<>();
+					set.add(new BankHolidayDetailImpl(location,	dateToBeInserted, true,	savedByUser));
 					this.bankHolidays.putIfAbsent(location, set);
 				}
 				
@@ -222,7 +223,7 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	}
 
 	@Override
-	public Set<LocalDate> getHolidaysInLocation(LocationEnum location)
+	public Set<BankHolidayDetailImpl> getHolidaysInLocation(LocationEnum location)
 	{
 		if(isLocationCached(location))
 			return this.bankHolidays.get(location);

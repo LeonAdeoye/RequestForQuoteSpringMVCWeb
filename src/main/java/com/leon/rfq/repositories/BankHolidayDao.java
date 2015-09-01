@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.leon.rfq.common.EnumTypes.LocationEnum;
+import com.leon.rfq.domains.BankHolidayDetailImpl;
 
 public interface BankHolidayDao
 {
@@ -16,9 +17,9 @@ public interface BankHolidayDao
 	
 	boolean updateValidity(LocationEnum location, LocalDate dateToBeUpdated, boolean isValid, String updatedByUser);
 	 
-	Set<LocalDate> getAll(LocationEnum location);
+	Set<BankHolidayDetailImpl> getAll(LocationEnum location);
 	
-	Map<LocationEnum, Set<LocalDate>> getAll();
+	Map<LocationEnum, Set<BankHolidayDetailImpl>> getAll();
 
 	boolean bankHolidayExists(LocationEnum location, LocalDate dateToCheck);
 }

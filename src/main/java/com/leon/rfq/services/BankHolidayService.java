@@ -1,10 +1,10 @@
 package com.leon.rfq.services;
 
 import java.time.LocalDate;
-import java.util.Map;
 import java.util.Set;
 
 import com.leon.rfq.common.EnumTypes.LocationEnum;
+import com.leon.rfq.domains.BankHolidayDetailImpl;
 import com.leon.rfq.repositories.BankHolidayDao;
 
 public interface BankHolidayService
@@ -23,7 +23,7 @@ public interface BankHolidayService
     
     boolean updateValidity(LocationEnum location, LocalDate dateToBeUpdated, boolean validity, String updatedByUser);
     
-    Set<LocalDate> getHolidaysInLocation(LocationEnum location);
+    Set<BankHolidayDetailImpl> getHolidaysInLocation(LocationEnum location);
     
     void setBankHolidayDao(BankHolidayDao bankHolidayDao);
     
@@ -31,5 +31,5 @@ public interface BankHolidayService
 	
 	void getAll();
 
-	Map<LocationEnum, Set<LocalDate>> getAllFromCacheOnly();
+	Set<BankHolidayDetailImpl> getAllFromCacheOnly();
 }
