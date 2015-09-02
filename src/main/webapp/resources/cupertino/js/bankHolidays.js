@@ -84,20 +84,20 @@ $(document).ready(function()
 	
 	$(".new-bankHoliday-btn").button();
 	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
-	$("#new-bankHoliday-bankHolidayDate").datepicker();	
+	$("#new-bankHoliday-date").datepicker();	
 	
 	disableAddButton();	
 	$("#new-bankHoliday-location").keyup(toggleAddButtonState);
 	$("#new-bankHoliday-location").focusout(toggleAddButtonState);
 	
-	$("#new-bankHoliday-location").click(function()
+	$(".new-bankHoliday-input-class").click(function()
 	{
 		if($(this).val() === $(this).attr("default_value"))
 		{
 			$(this).val("");
 			disableAddButton();
 		}
-	});
+	});	
 
 	$("input.new-bankHoliday-input-class").focusout(function()
 	{
@@ -115,7 +115,7 @@ $(document).ready(function()
 	{
 		var location = $("#new-bankHoliday-location").val();
 		var updatedByUser = "ladeoye";
-		var bankHolidayDate = $("#new-bankHoliday-bankHolidayDate").val();
+		var bankHolidayDate = $("#new-bankHoliday-date").val();
 		ajaxAddNewBankHoliday(location, bankHolidayDate, updatedByUser);				
 		disableAddButton();
 		clearNewbankHolidayInputFields();		
