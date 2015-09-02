@@ -44,7 +44,9 @@
 		<div id="bankHolidays-new-bankHoliday" class="new-bankHoliday-class float-left">				
 			<input id="new-bankHoliday-location" class="float-left new-bankHoliday-input-class" path="location" value="Enter location..." type="text" default_value="Enter location..." />
 			<input id="new-bankHoliday-date" class="float-left new-bankHoliday-input-class" path="bankHolidayDate" value="Enter date..." type="text" default_value="Enter date..." />
-			<input type="file" class="float-right" id="import-btn-class new-bankHoliday-import-btn" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />			
+			<button id="new-bankHoliday-add" class="new-bankHoliday-btn new-bankHoliday-input-class"><spring:message code="bankHoliday.add.button.label"/></button>
+			<button id="new-bankHoliday-clear" class="new-bankHoliday-btn new-bankHoliday-input-class float-right"><spring:message code="bankHoliday.clear.button.label"/></button>			
+			<input type="file" id="new-bankHoliday-import-btn" class="float-right import-btn-class" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>			
 		</div>
 			
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
