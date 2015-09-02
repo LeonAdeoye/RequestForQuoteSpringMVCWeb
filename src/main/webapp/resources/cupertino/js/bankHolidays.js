@@ -68,7 +68,24 @@ $(document).ready(function()
 	bankHolidaysGrid.setSelectionModel(new Slick.RowSelectionModel());
 	bankHolidaysGrid.setTopPanelVisibility(false);
 	
+	function datepickerOnClose(theDate, instance)
+	{
+		try
+		{			
+			if(theDate !== "" && ($(this).val() !== $(this).attr("default_value")))
+				$.datepicker.parseDate("yy-mm-dd", theDate);
+		}
+		catch(err)
+		{
+			alert('Invalid date! "YYYY-DD-MM" date format expected. For example: 2012-12-23.');
+			$(this).val($(this).attr("default_value"));
+		}		
+	}	
+	
 	$(".new-bankHoliday-btn").button();
+	$.datepicker.setDefaults({dateFormat : "yy-mm-dd", onClose : datepickerOnClose });
+	$("#new-bankHoliday-bankHolidayDate").datepicker();	
+	
 	disableAddButton();	
 	$("#new-bankHoliday-location").keyup(toggleAddButtonState);
 	$("#new-bankHoliday-location").focusout(toggleAddButtonState);

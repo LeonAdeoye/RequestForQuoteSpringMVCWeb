@@ -40,7 +40,7 @@
 		AND bankHolidayDate = #{bankHolidayDate}
 	</update>	
 	
-	<insert id="insert" parameterType="BankHolidayDetailImpl" useGeneratedKeys="true" keyProperty="identifier">
+	<insert id="insert" parameterType="BankHolidayDetailImpl" useGeneratedKeys="true" keyProperty="identifier" keyColumn="identifier">
 		INSERT INTO holidays (bankHolidayDate, location,  isValid, lastUpdatedBy, lastUpdated)
 		VALUES(#{bankHolidayDate}, #{location, typeHandler=org.apache.ibatis.type.EnumTypeHandler}, 
 		#{isValid}, #{lastUpdatedBy}, now() )

@@ -51,7 +51,7 @@ public class BankHolidayControllerImpl
 	@RequestMapping(value = "/ajaxAddNewBankHoliday", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxAddNewBook(@RequestBody BankHolidayDetailImpl newBankHoliday)
+	public @ResponseBody Object ajaxAddNewBankHoliday(@RequestBody BankHolidayDetailImpl newBankHoliday)
 	{
 		return this.bankHolidayService.insert(newBankHoliday.getLocation(), newBankHoliday.getBankHolidayDate(), newBankHoliday.getLastUpdatedBy());
 	}

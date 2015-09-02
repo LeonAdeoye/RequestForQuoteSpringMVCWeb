@@ -180,7 +180,7 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	}
 
 	@Override
-	public boolean insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser)
+	public int insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser)
 	{
 		if((savedByUser == null) || savedByUser.isEmpty())
 		{
@@ -217,7 +217,7 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 				return this.dao.insert(location, dateToBeInserted, savedByUser);
 			}
 			
-			return false;
+			return -1;
 		}
 		finally
 		{

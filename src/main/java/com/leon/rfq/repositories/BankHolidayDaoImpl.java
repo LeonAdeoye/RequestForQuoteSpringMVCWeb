@@ -64,22 +64,25 @@ public class BankHolidayDaoImpl implements BankHolidayDao
 	}
 
 	@Override
-	public boolean insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser)
+	public int insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser)
 	{
 		if(logger.isDebugEnabled())
 			logger.debug("Inserting a new bank holiday with date: " + dateToBeInserted);
 		
 		try
 		{
-			BankHolidayDetailImpl bankHoliday = new BankHolidayDetailImpl(location, dateToBeInserted, true, savedByUser);
-			return this.bankHolidayMapper.insert(bankHoliday) == 1;
+			BankHolidayDetailImpl newBankHoliday = new BankHolidayDetailImpl(location, dateToBeInserted, true, savedByUser);
+			if(this.bankHolidayMapper.insert(newBankHoliday) == 1)
+				return newBankHoliday.getIdentifier();
+			else
+				return -1;
 		}
 		catch(Exception e)
 		{
 			if(logger.isErrorEnabled())
 				logger.error("Failed to insert the bank holiday with date " + dateToBeInserted + " because of exception: " + e);
 			
-			return false;
+			return -1;
 		}
 	}
 	

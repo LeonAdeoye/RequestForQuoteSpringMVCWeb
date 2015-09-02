@@ -19,7 +19,7 @@ public interface BankHolidayService
     
     boolean isValidBusinessDay(LocalDate dateToValidate, LocationEnum location);
     
-    boolean insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser);
+    int insert(LocationEnum location, LocalDate dateToBeInserted, String savedByUser);
     
     boolean updateValidity(LocationEnum location, LocalDate dateToBeUpdated, boolean validity, String updatedByUser);
     
