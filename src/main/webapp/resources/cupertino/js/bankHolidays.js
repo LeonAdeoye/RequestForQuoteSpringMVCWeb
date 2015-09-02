@@ -7,9 +7,9 @@ var columns =
 [
  	{id: "identifier", name: "Identifier", field: "identifier", sortable: true, toolTip: "Bank holiday's unique identifier", width: 110},
 	{id: "location", name: "Location", field: "location", sortable: true, toolTip: "Bank holiday's location", width: 110},
-	{id: "bankHolidayDate", name: "Bank holiday date", field: "bankHolidayDate", sortable: true, toolTip: "Bank Holiday's date" , width: 110},
+	{id: "bankHolidayDate", name: "Bank holiday date", field: "bankHolidayDateString", sortable: true, toolTip: "Bank Holiday's date" , width: 110,  formatter: dateFormatter},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "BankHoliday's validity status", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last updated By", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the bank holiday" , width: 90}
+	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the bank holiday" , width: 90}
 ];
 
 var options = 
@@ -141,7 +141,7 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(bankHolidays) 
 		    {
-		    	dataView.setItems(bankHolidays, "bankHolidayId");
+		    	dataView.setItems(bankHolidays, "identifier");
 		    	loadingIndicator.fadeOut();
 		    },
             error: function (xhr, textStatus, errorThrown) 
@@ -212,7 +212,7 @@ $(document).ready(function()
 				 	var length = newBankHolidays.length;				 	
 					for(var index = 0; index < length; index++)
 					{
-						dataView.insertItem(0, {"bankHolidayId": newBankHolidays[index].bankHolidayId, "location": newBankHolidays[index].location , "bankHolidayDate": newBankHolidays[index].bankHolidayDate, 
+						dataView.insertItem(0, {"identifier": newBankHolidays[index].bankHolidayId, "location": newBankHolidays[index].location , "bankHolidayDate": newBankHolidays[index].bankHolidayDate, 
 							"isValid" : newBankHolidays[index].isValid, "lastUpdatedBy" : newBankHolidays[index].lastUpdatedBy });
 					
 						flashBankHolidayRow(newBankHolidays[index].bankHolidayId);
@@ -254,7 +254,7 @@ $(document).ready(function()
 				if(newBankHolidayId > 0)
 				{
 					dataView.insertItem(0, {
-						"bankHolidayId" : newBankHolidayId, 
+						"identifier" : newBankHolidayId, 
 						"location" : location , 
 						"bankHolidayDate" : bankHolidayDate, 
 						"isValid" : true, 

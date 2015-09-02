@@ -3,6 +3,7 @@ package com.leon.rfq.services;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -56,7 +57,9 @@ public final class BankHolidayServiceImpl implements BankHolidayService
 	@Override
 	public Set<BankHolidayDetailImpl> getAllFromCacheOnly()
 	{
-		return  null;
+		Set<BankHolidayDetailImpl> allHolidays = new HashSet<>();
+		this.bankHolidays.forEach((key, holiday) -> allHolidays.addAll(holiday));
+		return  allHolidays;
 	}
 
 	private boolean isBankHolidayCached(LocationEnum location, LocalDate dateToBeChecked)

@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.leon.rfq.common.DateUtilities;
 import com.leon.rfq.common.EnumTypes.LocationEnum;
 
 @XmlRootElement(name="BankHolidayDetailImpl")
@@ -61,6 +62,11 @@ public final class BankHolidayDetailImpl
 	public LocalDate getBankHolidayDate()
 	{
 		return this.bankHolidayDate;
+	}
+	
+	public String getBankHolidayDateString()
+	{
+		return this.bankHolidayDate.format(DateUtilities.dateFormatter_MMddyyyy);
 	}
 
 	public void setBankHolidayDate(LocalDate bankHolidayDate)

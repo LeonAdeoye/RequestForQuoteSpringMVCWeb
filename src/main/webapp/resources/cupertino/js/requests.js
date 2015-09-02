@@ -32,7 +32,7 @@ function toggleAddButtonState()
 
 var statusHashIndexedByStatusEnum = {}, statusHashIndexedByDesc = {}, clientHashIndexedByDesc = {}, clientHashIndexedById = {};
 
-function dateFormatter(row, cell, value, columnDef, dataContext)
+/*function dateFormatter(row, cell, value, columnDef, dataContext)
 {
     if (value !== null)
     {	
@@ -41,7 +41,7 @@ function dateFormatter(row, cell, value, columnDef, dataContext)
     		return $.datepicker.formatDate("yy-mm-dd", theDate);    		
     }
     return "";
-}
+}*/
 
 function clientFormatter(row, cell, value, columnDef, dataContext)
 {

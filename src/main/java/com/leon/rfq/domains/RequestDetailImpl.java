@@ -2,7 +2,6 @@ package com.leon.rfq.domains;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.leon.rfq.common.DateUtilities;
 import com.leon.rfq.common.EnumTypes.HedgeTypeEnum;
 import com.leon.rfq.common.EnumTypes.StatusEnum;
 import com.leon.rfq.common.RegexConstants;
@@ -113,7 +113,7 @@ public final class RequestDetailImpl
 	private List<BigDecimal> profitAndLossPoints;
 	private List<OptionDetailImpl> legs;
 	
-	private final static DateTimeFormatter dateFormatter_MMddyyyy = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+	
 
 	public RequestDetailImpl()
 	{
@@ -295,7 +295,7 @@ public final class RequestDetailImpl
 	
 	public String getTradeDateString()
 	{
-		return this.tradeDate.format(dateFormatter_MMddyyyy);
+		return this.tradeDate.format(DateUtilities.dateFormatter_MMddyyyy);
 	}
 
 	public void setTradeDate(LocalDate tradeDate)
@@ -310,7 +310,7 @@ public final class RequestDetailImpl
 
 	public String getExpiryDateString()
 	{
-		return this.expiryDate.format(dateFormatter_MMddyyyy);
+		return this.expiryDate.format(DateUtilities.dateFormatter_MMddyyyy);
 	}
 	
 	public void setExpiryDate(LocalDate expiryDate)

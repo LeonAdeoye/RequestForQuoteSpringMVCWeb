@@ -7,3 +7,14 @@ function trimSpaces(x)
 {
 	return x.replace(/^\s+|\s+$/gm,'');
 }
+
+function dateFormatter(row, cell, value, columnDef, dataContext)
+{
+    if (value !== null)
+    {	
+    	var theDate = new Date(value);
+    	if(theDate !== NaN)
+    		return $.datepicker.formatDate("yy-mm-dd", theDate);    		
+    }
+    return "";
+}
