@@ -9,7 +9,7 @@ var columns =
 	{id: "location", name: "Location", field: "location", sortable: true, toolTip: "Bank holiday's location", width: 110},
 	{id: "bankHolidayDate", name: "Bank holiday date", field: "bankHolidayDateString", sortable: true, toolTip: "Bank Holiday's date" , width: 110,  formatter: dateFormatter},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "BankHoliday's validity status", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the bank holiday" , width: 90}
+	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the bank holiday" , width: 95}
 ];
 
 var options = 
@@ -44,7 +44,8 @@ function toggleAddButtonState()
 
 function clearNewbankHolidayInputFields()
 {
-	$("#new-bankHoliday-location").val($("#new-bankHoliday-location").attr("default_value"));	
+	$("#new-bankHoliday-location").val($("#new-bankHoliday-location").attr("default_value"));
+	$("#new-bankHoliday-date").val($("#new-bankHoliday-date").attr("default_value"));	
 }
 
 $(document).ready(function()
@@ -90,7 +91,7 @@ $(document).ready(function()
 	$("#new-bankHoliday-location").keyup(toggleAddButtonState);
 	$("#new-bankHoliday-location").focusout(toggleAddButtonState);
 	
-	$(".new-bankHoliday-input-class").click(function()
+	$("input.new-bankHoliday-input-class").click(function()
 	{
 		if($(this).val() === $(this).attr("default_value"))
 		{
@@ -98,6 +99,13 @@ $(document).ready(function()
 			disableAddButton();
 		}
 	});	
+	
+	$('#new-bankHoliday-import-btn').inputFileText({
+	    text : "Import",
+	    buttonClass : "import-btn-class"
+	});
+	
+	$('#new-bankHoliday-import-btn').button();
 
 	$("input.new-bankHoliday-input-class").focusout(function()
 	{

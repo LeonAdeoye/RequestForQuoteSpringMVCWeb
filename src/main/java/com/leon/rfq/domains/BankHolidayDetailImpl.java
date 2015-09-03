@@ -43,6 +43,16 @@ public final class BankHolidayDetailImpl
 		this.identifier = -1;
 	}
 	
+	public BankHolidayDetailImpl(String location, LocalDate bankHolidayDate, boolean isValid,
+			String lastUpdatedBy)
+	{
+		this.location = LocationEnum.valueOf(location);
+		this.bankHolidayDate = bankHolidayDate;
+		this.isValid = isValid;
+		this.lastUpdatedBy = lastUpdatedBy;
+		this.identifier = -1;
+	}
+	
 	public BankHolidayDetailImpl(LocationEnum location,	LocalDate bankHolidayDate)
 	{
 		this.location = location;

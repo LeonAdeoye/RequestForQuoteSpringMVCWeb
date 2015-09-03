@@ -113,8 +113,6 @@ public final class RequestDetailImpl
 	private List<BigDecimal> profitAndLossPoints;
 	private List<OptionDetailImpl> legs;
 	
-	
-
 	public RequestDetailImpl()
 	{
 		this.delta = BigDecimal.ZERO;
