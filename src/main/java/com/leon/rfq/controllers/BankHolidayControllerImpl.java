@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.leon.rfq.domains.BankHolidayDetailImpl;
 import com.leon.rfq.services.BankHolidayService;
 
-
 @Controller
 @RequestMapping("/bankHolidays")
 public class BankHolidayControllerImpl
@@ -27,7 +26,6 @@ public class BankHolidayControllerImpl
 	@RequestMapping()
 	public String getAll(Model model)
 	{
-		model.addAttribute("bankHolidays", null /*this.bankHolidayService.getAll()*/);
 		return "bankHolidays";
 	}
 		

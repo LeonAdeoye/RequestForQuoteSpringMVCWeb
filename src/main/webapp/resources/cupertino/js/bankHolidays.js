@@ -36,7 +36,8 @@ function disableAddButton()
 
 function toggleAddButtonState()
 {
-	if(($("#new-bankHoliday-location").val() != "") && ($("#new-bankHoliday-location").val() != $("#new-bankHoliday-location").attr("default_value")))
+	if($("#new-bankHoliday-location").val() != "" && $("#new-bankHoliday-location").val() != $("#new-bankHoliday-location").attr("default_value")
+			&& ($("#new-bankHoliday-date").val() != "") && $("#new-bankHoliday-date").val() != $("#new-bankHoliday-date").attr("default_value"))
 		enableAddButton();
 	else
 		disableAddButton();
@@ -74,7 +75,10 @@ $(document).ready(function()
 		try
 		{			
 			if(theDate !== "" && ($(this).val() !== $(this).attr("default_value")))
+			{
 				$.datepicker.parseDate("yy-mm-dd", theDate);
+				toggleAddButtonState();
+			}
 		}
 		catch(err)
 		{
@@ -90,6 +94,9 @@ $(document).ready(function()
 	disableAddButton();	
 	$("#new-bankHoliday-location").keyup(toggleAddButtonState);
 	$("#new-bankHoliday-location").focusout(toggleAddButtonState);
+	$("#new-bankHoliday-date").keyup(toggleAddButtonState);
+	$("#new-bankHoliday-date").focusout(toggleAddButtonState);
+	
 	
 	$("input.new-bankHoliday-input-class").click(function()
 	{
@@ -105,7 +112,7 @@ $(document).ready(function()
 	    buttonClass : "import-btn-class"
 	});
 	
-	$('#new-bankHoliday-import-btn').button();
+	$('.import-btn-class').button();
 
 	$("input.new-bankHoliday-input-class").focusout(function()
 	{
@@ -125,8 +132,6 @@ $(document).ready(function()
 		var updatedByUser = "ladeoye";
 		var bankHolidayDate = $("#new-bankHoliday-date").val();
 		ajaxAddNewBankHoliday(location, bankHolidayDate, updatedByUser);				
-		disableAddButton();
-		clearNewbankHolidayInputFields();		
 	});
 	
 	function flashNewBankHolidayRow(newBankHolidayId)
@@ -240,7 +245,7 @@ $(document).ready(function()
 						dataView.insertItem(0, {"identifier": newBankHolidays[index].bankHolidayId, "location": newBankHolidays[index].location , "bankHolidayDate": newBankHolidays[index].bankHolidayDate, 
 							"isValid" : newBankHolidays[index].isValid, "lastUpdatedBy" : newBankHolidays[index].lastUpdatedBy });
 					
-						flashBankHolidayRow(newBankHolidays[index].bankHolidayId);
+						flashBankHolidayRow(newBankHolidays[index].identifier);
 					}
 				}
 		    },
@@ -287,6 +292,8 @@ $(document).ready(function()
 					});
 					
 					flashNewBankHolidayRow(newBankHolidayId);
+					disableAddButton();					
+					clearNewbankHolidayInputFields();
 				}
 				else
 					alert("Failed to insert the new bank holiday because of a server error.");
