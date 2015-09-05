@@ -60,8 +60,8 @@ $(document).ready(function()
 	
 	var dataView = new Slick.Data.DataView(
 	{
-	    groupItemMetadataProvider: groupItemMetadataProvider,
-	    inlineFilters: true
+	    groupItemMetadataProvider : groupItemMetadataProvider,
+	    inlineFilters : true
 	});
 	
 	var bankHolidaysGrid = new Slick.Grid("#bankHolidaysGrid", dataView, columns, options);
@@ -131,6 +131,7 @@ $(document).ready(function()
 		var location = $("#new-bankHoliday-location").val();
 		var updatedByUser = "ladeoye";
 		var bankHolidayDate = $("#new-bankHoliday-date").val();
+		showLoadIndicator();
 		ajaxAddNewBankHoliday(location, bankHolidayDate, updatedByUser);				
 	});
 	
@@ -183,13 +184,14 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxUpdateBankHoliday(bankHolidayId, location, bankHolidayDate, validity, lastUpdatedBy) 
+	function ajaxUpdateBankHoliday(bankHolidayId, location, bankHolidayDate, isValid, lastUpdatedBy) 
 	{
-		var bankHolidayDetails = { 
+		var bankHolidayDetails = 
+		{ 
 			"identifier" : bankHolidayId, 
-			"location": location,
+			"location" : location,
 			"bankHolidayDate" : bankHolidayDate, 
-			"isValid" : validity,
+			"isValid" : isValid,
 			"lastUpdatedBy" : lastUpdatedBy 
 		};
 		
@@ -206,7 +208,7 @@ $(document).ready(function()
 		    {
 		    	loadingIndicator.fadeOut();
 	    		var item = dataView.getItemById(bankHolidayId);
-	    		item["isValid"] = validity;
+	    		item["isValid"] = isValid;
 	    		dataView.updateItem(bankHolidayId, item);		    				    	
 		    	bankHolidaysGrid.flashCell(dataView.getRowById(bankHolidayId), bankHolidaysGrid.getColumnIndex("isValid"), 100);
 		    	
@@ -242,8 +244,14 @@ $(document).ready(function()
 				 	var length = newBankHolidays.length;				 	
 					for(var index = 0; index < length; index++)
 					{
-						dataView.insertItem(0, {"identifier": newBankHolidays[index].bankHolidayId, "location": newBankHolidays[index].location , "bankHolidayDate": newBankHolidays[index].bankHolidayDate, 
-							"isValid" : newBankHolidays[index].isValid, "lastUpdatedBy" : newBankHolidays[index].lastUpdatedBy });
+						dataView.insertItem(0, 
+						{
+							"identifier" : newBankHolidays[index].identifier, 
+							"location" : newBankHolidays[index].location , 
+							"bankHolidayDate" : newBankHolidays[index].bankHolidayDate, 
+							"isValid" : newBankHolidays[index].isValid, 
+							"lastUpdatedBy" : newBankHolidays[index].lastUpdatedBy 
+						});
 					
 						flashBankHolidayRow(newBankHolidays[index].identifier);
 					}
@@ -262,8 +270,9 @@ $(document).ready(function()
 	{
 		var newBankHoliday = 
 		{
+			"identifier" : -1,
 			"location" : location, 
-			"bankHolidayDate": bankHolidayDate, 
+			"bankHolidayDate" : bankHolidayDate, 
 			"isValid" : true, 
 			"lastUpdatedBy" : lastUpdatedBy 
 		};
@@ -283,9 +292,10 @@ $(document).ready(function()
 		    	
 				if(newBankHolidayId > 0)
 				{
-					dataView.insertItem(0, {
+					dataView.insertItem(0, 
+					{
 						"identifier" : newBankHolidayId, 
-						"location" : location , 
+						"location" : location, 
 						"bankHolidayDate" : bankHolidayDate, 
 						"isValid" : true, 
 						"lastUpdatedBy" : lastUpdatedBy 
@@ -346,7 +356,7 @@ $(document).ready(function()
     	$("#bankHolidayContextMenu li").each(function(index)
 		{
     		if((item["Validity"] === "Valid") && ($(this).attr("data") === "VALIDATE") ||
-    				(item["Validity"] === "Invalid") && ($(this).attr("data") === "INVALIDATE"))
+    		(item["Validity"] === "Invalid") && ($(this).attr("data") === "INVALIDATE"))
         		$(this).hide();
     		else
     			$(this).show();
@@ -360,7 +370,7 @@ $(document).ready(function()
     
         $("body").one("click", function() 
         {
-          $("#bankHolidayContextMenu").hide();
+        	$("#bankHolidayContextMenu").hide();
         });
     });
 		
@@ -377,7 +387,7 @@ $(document).ready(function()
     	var lastUpdatedBy = "ladeoye";
     	
 		showLoadIndicator();
-		ajaxUpdateBankHoliday(dataView.getItem(row).bankHolidayId, dataView.getItem(row).location, 
+		ajaxUpdateBankHoliday(dataView.getItem(row).identifier, dataView.getItem(row).location, 
 				dataView.getItem(row).bankHolidayDate, operation === "VALIDATE", lastUpdatedBy);	
     });	    	
 });

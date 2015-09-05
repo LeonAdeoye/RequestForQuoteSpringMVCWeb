@@ -29,7 +29,7 @@ public class BankHolidayControllerImpl
 		return "bankHolidays";
 	}
 		
-	@RequestMapping(value="/ajaxGetListOfAllBankHolidays", method=RequestMethod.GET,
+	@RequestMapping(value="/ajaxGetListOfAllBankHolidays", method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object ajaxGetListOfAllBankHolidays()
@@ -51,6 +51,7 @@ public class BankHolidayControllerImpl
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object ajaxAddNewBankHoliday(@RequestBody BankHolidayDetailImpl bankHolidayToAdd)
 	{
-		return this.bankHolidayService.insert(bankHolidayToAdd.getLocation(), bankHolidayToAdd.getBankHolidayDate(), bankHolidayToAdd.getLastUpdatedBy());
+		return this.bankHolidayService.insert(bankHolidayToAdd.getLocation(),
+				bankHolidayToAdd.getBankHolidayDate(), bankHolidayToAdd.getLastUpdatedBy());
 	}
 }
