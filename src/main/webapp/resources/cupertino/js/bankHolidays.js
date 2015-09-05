@@ -135,6 +135,12 @@ $(document).ready(function()
 		ajaxAddNewBankHoliday(location, bankHolidayDate, updatedByUser);				
 	});
 	
+	$("input#new-bankHoliday-location").autocomplete(
+	{
+		minLength:2,
+        source: ajaxLocationAutocomplete
+    });	
+	
 	function flashNewBankHolidayRow(newBankHolidayId)
 	{
 		var columns = bankHolidaysGrid.getColumns();
@@ -156,7 +162,37 @@ $(document).ready(function()
             	.css("left", $g.position().left + $g.width() / 2 - loadingIndicator.width() / 2);
         }
         loadingIndicator.show();
-    }	
+    }
+    
+	function ajaxLocationAutocomplete(request, response) 
+    {
+        $.ajax(
+        {
+            type: "GET",
+            url: contextPath + "/bankHolidays/matchingLocationTags?pattern=" + request.term,
+            dataType: "json", 
+            data: 
+            {
+                term : request.termCode
+            },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	console.log(xhr.responseText);
+                alert('Failed to retrieve location autocomplete data because of a server error.');
+            },
+            success: function (locations) 
+            {
+                response($.map(locations, function (location) 
+                {
+                    return 
+                    {	
+                    	label : location.label,
+                        value : location.value
+                    }
+                }));
+            }
+        });
+    }    
 	
 	function ajaxGetListOfBankHolidays() 
 	{

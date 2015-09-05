@@ -43,7 +43,6 @@ public class BookControllerImpl
 	@RequestMapping()
 	public String getAll(Model model)
 	{
-		model.addAttribute("books", this.bookService.getAll());
 		return "books";
 	}
 	

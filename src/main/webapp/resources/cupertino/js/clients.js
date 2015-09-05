@@ -100,8 +100,6 @@ $(document).ready(function()
 		var updatedByUser = "ladeoye";
 		var tier = $("#new-client-tier").val();
 		ajaxAddNewClient(name, tier, updatedByUser);				
-		disableAddButton();
-		clearNewclientInputFields();		
 	});
 	
 	function flashNewClientRow(newClientId)
@@ -155,8 +153,14 @@ $(document).ready(function()
 	
 	function ajaxUpdateClient(clientId, name, tier, validity, lastUpdatedBy) 
 	{
-		var clientDetails = { "clientId" : clientId, "name": name, "tier" : tier, 
-			"isValid" : validity, "lastUpdatedBy" : lastUpdatedBy };
+		var clientDetails = 
+		{
+			"clientId" : clientId,
+			"name": name,
+			"tier" : tier, 
+			"isValid" : validity,
+			"lastUpdatedBy" : lastUpdatedBy 
+		};
 		
 		$.ajax({
 		    url: contextPath + "/clients/ajaxUpdateClient", 
@@ -207,8 +211,14 @@ $(document).ready(function()
 				 	var length = newClients.length;				 	
 					for(var index = 0; index < length; index++)
 					{
-						dataView.insertItem(0, {"clientId": newClients[index].clientId, "name": newClients[index].name , "tier": newClients[index].tier, 
-							"isValid" : newClients[index].isValid, "lastUpdatedBy" : newClients[index].lastUpdatedBy });
+						dataView.insertItem(0, 
+						{
+							"clientId": newClients[index].clientId,
+							"name": newClients[index].name,
+							"tier": newClients[index].tier, 
+							"isValid" : newClients[index].isValid,
+							"lastUpdatedBy" : newClients[index].lastUpdatedBy 
+						});
 					
 						flashClientRow(newClients[index].clientId);
 					}
@@ -225,7 +235,13 @@ $(document).ready(function()
 	
 	function ajaxAddNewClient(name, tier, lastUpdatedBy) 
 	{
-		var newClient = { "name" : name, "tier": tier, "isValid" : true, "lastUpdatedBy" : lastUpdatedBy };
+		var newClient = 
+		{
+			"name" : name,
+			"tier": tier,
+			"isValid" : true,
+			"lastUpdatedBy" : lastUpdatedBy
+		};
 		
 		$.ajax({
 		    url: contextPath + "/clients/ajaxAddNewClient", 
@@ -242,10 +258,18 @@ $(document).ready(function()
 		    	
 				if(newClientId > 0)
 				{
-					dataView.insertItem(0, {"clientId" : newClientId, "name" : name , "tier" : tier, 
-						"isValid" : true, "lastUpdatedBy" : lastUpdatedBy });
+					dataView.insertItem(0, 
+					{
+						"clientId" : newClientId, 
+						"name" : name , 
+						"tier" : tier, 
+						"isValid" : true, 
+						"lastUpdatedBy" : lastUpdatedBy 
+					});
 					
 					flashNewClientRow(newClientId);
+					disableAddButton();
+					clearNewclientInputFields();					
 				}
 				else
 					alert("Failed to insert the new client because of a server error.");

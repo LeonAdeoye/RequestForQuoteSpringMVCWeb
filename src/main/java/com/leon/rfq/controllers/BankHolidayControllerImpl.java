@@ -1,5 +1,10 @@
 package com.leon.rfq.controllers;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +14,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.leon.rfq.common.EnumTypes.LocationEnum;
+import com.leon.rfq.common.Tag;
 import com.leon.rfq.domains.BankHolidayDetailImpl;
 import com.leon.rfq.services.BankHolidayService;
 
@@ -53,5 +61,15 @@ public class BankHolidayControllerImpl
 	{
 		return this.bankHolidayService.insert(bankHolidayToAdd.getLocation(),
 				bankHolidayToAdd.getBankHolidayDate(), bankHolidayToAdd.getLastUpdatedBy());
+	}
+	
+	@RequestMapping(value = "/matchingLocationTags", method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object getLocationMatches(@RequestParam String pattern)
+	{
+		List<LocationEnum> listOfLocation = new ArrayList<LocationEnum>(Arrays.asList(LocationEnum.values()));
+		
+		return listOfLocation.stream().filter(location -> location.getLocation().toUpperCase().contains(pattern.toUpperCase()))
+				.map(location -> new Tag(String.valueOf(location), location.getLocation())).collect(Collectors.toList());
 	}
 }

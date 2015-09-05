@@ -42,7 +42,6 @@ public class ClientControllerImpl
 	@RequestMapping()
 	public String getAll(Model model)
 	{
-		model.addAttribute("clients", this.clientService.getAll());
 		return "clients";
 	}
 		
