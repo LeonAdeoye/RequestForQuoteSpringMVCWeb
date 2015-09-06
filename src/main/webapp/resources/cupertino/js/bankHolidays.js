@@ -3,10 +3,20 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 	return value ? "Valid" : "Invalid";
 }
 
+var locationHashIndexedByEnum = {}, locationHashIndexedByDesc = {};
+
+function locationFormatter(row, cell, value, columnDef, dataContext)
+{
+    if (value === null)
+        return "";
+    else
+    	return locationHashIndexedByEnum[value];
+}
+
 var columns = 
 [
  	{id: "identifier", name: "Identifier", field: "identifier", sortable: true, toolTip: "Bank holiday's unique identifier", width: 110},
-	{id: "location", name: "Location", field: "location", sortable: true, toolTip: "Bank holiday's location", width: 110},
+	{id: "location", name: "Location", field: "location", sortable: true, toolTip: "Bank holiday's location", width: 110, formatter: locationFormatter},
 	{id: "bankHolidayDate", name: "Bank holiday date", field: "bankHolidayDateString", sortable: true, toolTip: "Bank Holiday's date" , width: 110,  formatter: dateFormatter},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "BankHoliday's validity status", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the bank holiday" , width: 95}
@@ -128,7 +138,7 @@ $(document).ready(function()
 	
 	$("#new-bankHoliday-add").click(function()
 	{
-		var location = $("#new-bankHoliday-location").val();
+		var location = locationHashIndexedByDesc[$("#new-bankHoliday-location").val()];
 		var updatedByUser = "ladeoye";
 		var bankHolidayDate = $("#new-bankHoliday-date").val();
 		showLoadIndicator();
@@ -137,7 +147,7 @@ $(document).ready(function()
 	
 	$("input#new-bankHoliday-location").autocomplete(
 	{
-		minLength:2,
+		minLength:1,
         source: ajaxLocationAutocomplete
     });	
 	
@@ -164,6 +174,42 @@ $(document).ready(function()
         loadingIndicator.show();
     }
     
+	function getLocationList()
+	{
+		$.ajax({
+		    url: contextPath + "/bankHolidays/ajaxGetLocations", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(locations) 
+		    {
+		    	locationHashIndexedByEnum = locations;
+		    	
+		    	for(var location in locations)
+		    		locationHashIndexedByDesc[locations[location]] = location;
+		    }, 
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	console.log(xhr.responseText);
+                alert('Failed to get list of locations because of a server error.');
+            }
+		});	
+	}
+	
+	getLocationList();
+    
+	function displayLabel(event, ui)
+	{
+        event.preventDefault();
+        $(event.currentTarget).val(ui.item.label);
+	}	
+	
+	$("#new-bankHoliday-location").on("autocompleteselect", displayLabel);
+	$("#new-bankHoliday-location").on("autocompletefocus", displayLabel);	
+	    
 	function ajaxLocationAutocomplete(request, response) 
     {
         $.ajax(
@@ -184,11 +230,10 @@ $(document).ready(function()
             {
                 response($.map(locations, function (location) 
                 {
-                    return 
-                    {	
-                    	label : location.label,
-                        value : location.value
-                    }
+                    return	{
+                    			label : location.label,
+                    			value : location.value
+                    		}
                 }));
             }
         });

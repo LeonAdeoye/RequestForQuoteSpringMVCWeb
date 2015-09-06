@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
@@ -26,10 +24,10 @@ import com.leon.rfq.services.BankHolidayService;
 @RequestMapping("/bankHolidays")
 public class BankHolidayControllerImpl
 {
-	private static final Logger logger = LoggerFactory.getLogger(BankHolidayControllerImpl.class);
-	
 	@Autowired(required=true)
 	BankHolidayService bankHolidayService;
+	
+	private final List<LocationEnum> listOfLocations = new ArrayList<LocationEnum>(Arrays.asList(LocationEnum.values()));
 		
 	@RequestMapping()
 	public String getAll(Model model)
@@ -67,9 +65,14 @@ public class BankHolidayControllerImpl
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object getLocationMatches(@RequestParam String pattern)
 	{
-		List<LocationEnum> listOfLocation = new ArrayList<LocationEnum>(Arrays.asList(LocationEnum.values()));
-		
-		return listOfLocation.stream().filter(location -> location.getLocation().toUpperCase().contains(pattern.toUpperCase()))
+		return this.listOfLocations.stream().filter(location -> location.getLocation().toUpperCase().contains(pattern.toUpperCase()))
 				.map(location -> new Tag(String.valueOf(location), location.getLocation())).collect(Collectors.toList());
+	}
+	
+	@RequestMapping(value = "ajaxGetLocations", method = RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object ajaxGetLocations()
+	{
+		return this.listOfLocations.stream().collect(Collectors.toMap(location -> location, location -> location.getLocation()));
 	}
 }

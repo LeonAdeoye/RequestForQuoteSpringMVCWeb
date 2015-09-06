@@ -58,6 +58,8 @@ public class RequestControllerImpl
 	@Autowired(required=true)
 	private RequestValidatorImpl requestValidator;
 	
+	private final List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
+	
 	@InitBinder
 	public void initialiseBinder(WebDataBinder binder)
 	{
@@ -242,20 +244,15 @@ public class RequestControllerImpl
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object getStatusMatches(@RequestParam String pattern)
 	{
-		List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
-		
-		return listOfStatus.stream().filter(status -> status.getDescription().toUpperCase().contains(pattern.toUpperCase()))
+		return this.listOfStatus.stream().filter(status -> status.getDescription().toUpperCase().contains(pattern.toUpperCase()))
 				.map(status -> new Tag(String.valueOf(status), status.getDescription())).collect(Collectors.toList());
-		
 	}
 	
 	@RequestMapping(value = "requests/statuses", method = RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object getStatuses()
 	{
-		List<StatusEnum> listOfStatus = new ArrayList<StatusEnum>(Arrays.asList(StatusEnum.values()));
-		
-		return listOfStatus.stream().collect(Collectors.toMap(status -> status, status -> status.getDescription()));
+		return this.listOfStatus.stream().collect(Collectors.toMap(status -> status, status -> status.getDescription()));
 	}
 	
 	@RequestMapping(value = "requests/ajaxGetChartData", method = RequestMethod.POST,
