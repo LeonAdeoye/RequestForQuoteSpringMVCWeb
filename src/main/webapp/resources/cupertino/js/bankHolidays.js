@@ -15,11 +15,12 @@ function locationFormatter(row, cell, value, columnDef, dataContext)
 
 var columns = 
 [
- 	{id: "identifier", name: "Identifier", field: "identifier", sortable: true, toolTip: "Bank holiday's unique identifier", width: 110},
+ 	{id: "identifier", name: "Identifier", field: "identifier", sortable: true, toolTip: "Bank holiday's unique identifier", width: 90},
 	{id: "location", name: "Location", field: "location", sortable: true, toolTip: "Bank holiday's location", width: 110, formatter: locationFormatter},
 	{id: "bankHolidayDate", name: "Bank holiday date", field: "bankHolidayDateString", sortable: true, toolTip: "Bank Holiday's date" , width: 110,  formatter: dateFormatter},
+	{id: "bankHolidayYear", name: "Year", field: "bankHolidayDateString", sortable: true, toolTip: "Bank Holiday's year" , width: 50,  formatter: yearFormatter},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "BankHoliday's validity status", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the bank holiday" , width: 95}
+	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the bank holiday" , width: 75}
 ];
 
 var options = 
@@ -506,7 +507,7 @@ $(document).ready(function()
 	
 	function groupByLocationAndYear() 
 	{
-		dataView.setGrouping(
+		dataView.setGrouping([
 		{
 			getter: "location",
 			formatter: function (g)
@@ -515,6 +516,15 @@ $(document).ready(function()
 			},
 			aggregateCollapsed: false,
 			lazyTotalsCalculation: true
-		});
+		},
+		{
+			getter: "bankHolidayDate",
+			formatter: function (g)
+			{
+				return "Year: " + g.value.year + "  <span style='color:green'>(" + g.count + " items)</span>";
+			},
+			aggregateCollapsed: false,
+			lazyTotalsCalculation: true
+		}]);
 	}	
 });

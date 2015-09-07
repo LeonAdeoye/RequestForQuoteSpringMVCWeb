@@ -18,3 +18,14 @@ function dateFormatter(row, cell, value, columnDef, dataContext)
     }
     return "";
 }
+
+function yearFormatter(row, cell, value, columnDef, dataContext)
+{
+    if (value !== null)
+    {	
+    	var theDate = new Date(value);
+    	if(theDate !== NaN)
+    		return $.datepicker.formatDate("yy", theDate);    		
+    }
+    return "";
+}
