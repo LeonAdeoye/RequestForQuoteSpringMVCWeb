@@ -466,9 +466,55 @@ $(document).ready(function()
     	var row = $(this).data("row");
     	var operation = $(e.target).attr("data");
     	var lastUpdatedBy = "ladeoye";
-    	
-		showLoadIndicator();
-		ajaxUpdateBankHoliday(dataView.getItem(row).identifier, dataView.getItem(row).location, 
-				dataView.getItem(row).bankHolidayDate, operation === "VALIDATE", lastUpdatedBy);	
-    });	    	
+		
+    	switch (operation) 
+    	{
+        	case "VALIDATE":
+        	case "INVALIDATE":
+        		showLoadIndicator();
+        		ajaxUpdateBankHoliday(dataView.getItem(row).identifier, dataView.getItem(row).location, 
+        			dataView.getItem(row).bankHolidayDate, operation === "VALIDATE", lastUpdatedBy);
+        		break;
+        	case "GROUP_BY_LOCATION":
+        		groupByLocation();
+        		break;
+        	case "GROUP_BY_LOCATION_AND_YEAR":
+        		groupByLocationAndYear();
+        		break;
+        	case "CLEAR_GROUPING":
+        		dataView.setGrouping([]);
+        		break;        		
+        	default: 
+        		alert("Sorry, this operation is yet to be supported!");
+    	}        		
+		
+    });
+    
+	function groupByLocation() 
+	{
+		dataView.setGrouping(
+		{
+			getter: "location",
+			formatter: function (g)
+			{
+				return "Location: " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+			},
+			aggregateCollapsed: false,
+			lazyTotalsCalculation: true
+		});
+	}
+	
+	function groupByLocationAndYear() 
+	{
+		dataView.setGrouping(
+		{
+			getter: "location",
+			formatter: function (g)
+			{
+				return "Location: " + g.value + "  <span style='color:green'>(" + g.count + " items)</span>";
+			},
+			aggregateCollapsed: false,
+			lazyTotalsCalculation: true
+		});
+	}	
 });

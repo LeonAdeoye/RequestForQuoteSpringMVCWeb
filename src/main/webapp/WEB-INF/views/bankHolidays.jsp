@@ -55,6 +55,9 @@
 		  <b><spring:message code="contextMenu.operation.title.label"/></b>
 		  <li data="VALIDATE"><spring:message code="contextMenu.operation.validate.menuitem"/></li>
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
+		  <li data="GROUP_BY_LOCATION"><spring:message code="contextMenu.operation.groupByLocation.menuitem"/></li>
+		  <li data="GROUP_BY_LOCATION_AND_YEAR"><spring:message code="contextMenu.operation.groupByLocationAndYear.menuitem"/></li>
+		  <li data="CLEAR_GROUPING"><spring:message code="contextMenu.operation.clearGrouping.menuitem"/></li>
 		</ul>
 		
 		<div style="width:505px;">
