@@ -87,13 +87,9 @@ function linkFormatter(row, cell, value, columnDef, dataContext)
 function requiredFieldValidator(value) 
 {
 	if (value === null || value === undefined || !value.length) 
-	{
 		return {valid: false, msg: "This is a required field"};
-	}
 	else 
-	{
 		return {valid: true, msg: null};
-	}
 }
 
 function renderSparkline(cellNode, row, dataContext, colDef)
