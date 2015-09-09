@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>				
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.event.drag-2.2.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery.browser.min.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/jquery-input-file-text.js" />"></script>
 								
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.core.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.formatters.js" />"></script>	

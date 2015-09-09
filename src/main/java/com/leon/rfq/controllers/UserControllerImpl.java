@@ -2,24 +2,17 @@ package com.leon.rfq.controllers;
 
 import java.time.LocalDateTime;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.leon.rfq.domains.UserDetailImpl;
@@ -48,61 +41,25 @@ public class UserControllerImpl
 	@RequestMapping()
 	public String getAll(Model model)
 	{
-		model.addAttribute("users", this.userService.getAll());
 		return "users";
 	}
 	
-	@RequestMapping("/user")
-	public String get(@RequestParam String userId, Model model)
+	@RequestMapping(value = "/ajaxAddNewUser", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object ajaxAddNewUser(@RequestBody UserDetailImpl newUser)
 	{
-		model.addAttribute("user", this.userService.get(userId));
-		return "user";
-	}
-
-	@RequestMapping(value = "/add", method = RequestMethod.GET)
-	public String getNewUserForm(Model model)
-	{
-		model.addAttribute("newUser", new UserDetailImpl());
-		
-		return "addUser";
+		return this.userService.insert(newUser.getUserId(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmailAddress(),
+				newUser.getLocationName(), newUser.getGroupName(), newUser.getIsValid(), newUser.getLastUpdatedBy()); //TODO
 	}
 	
-	@RequestMapping(value = "/add", method = RequestMethod.POST)
-	public String processNewUserForm(@ModelAttribute("newUser") @Valid UserDetailImpl newUser,
-			BindingResult result, HttpServletRequest request)
+	@RequestMapping(value = "/ajaxUpdateUser", method = RequestMethod.POST,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object ajaxUpdateClient(@RequestBody UserDetailImpl userToUpdate)
 	{
-		String[] suppressedFields = result.getSuppressedFields();
-		if(suppressedFields.length > 0)
-		{
-			throw new RuntimeException("Attempting to bind disallowed fields: " +
-					StringUtils.arrayToCommaDelimitedString(suppressedFields));
-		}
-		
-		if(result.hasErrors())
-			return "addUser";
-		
-		this.userService.insert(newUser.getUserId(), newUser.getFirstName(), newUser.getLastName(), newUser.getEmailAddress(),
-				newUser.getLocationName(), newUser.getGroupName(), newUser.getIsValid(), "ladeoye"); //TODO
-		
-		return "redirect:/users";
-	}
-	
-	@RequestMapping("/delete")
-	public String delete(@RequestParam String userId, Model model)
-	{
-		if(!this.userService.delete(userId))
-			model.addAttribute("error", "Failed to delete user with userId: " + userId);
-		
-		return "redirect:/users";
-	}
-
-	@RequestMapping("/updateValidity")
-	public String updateValidity(@RequestParam String userId, @RequestParam boolean isValid, @RequestParam String updatedByUser, Model model)
-	{
-		if(!this.userService.updateValidity(userId, isValid, updatedByUser))
-			model.addAttribute("error", "Failed to update validity user with userId: " + userId);
-			
-		return "redirect:/users";
+		return this.userService.updateValidity(userToUpdate.getUserId(),
+				userToUpdate.getIsValid(), userToUpdate.getLastUpdatedBy());
 	}
 	
 	@RequestMapping(value = "/ajaxGetMessages", method = RequestMethod.POST,
@@ -111,5 +68,13 @@ public class UserControllerImpl
 	public @ResponseBody Object getChatMessages(@RequestBody String userId, @RequestBody int requestId, LocalDateTime fromTimeStamp)
 	{
 		return this.userService.getMessages(userId, requestId, fromTimeStamp);
+	}
+	
+	@RequestMapping(value="/ajaxGetListOfAllUsers", method=RequestMethod.GET,
+			produces = MediaType.APPLICATION_JSON_VALUE,
+			consumes = MediaType.APPLICATION_JSON_VALUE)
+	public @ResponseBody Object ajaxGetListOfAllUsers()
+	{
+		return this.userService.getAll();
 	}
 }

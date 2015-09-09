@@ -6,11 +6,11 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 var columns = 
 [
  	{id: "userId", name: "User ID", field: "userId", sortable: true, toolTip: "User's unique identifier", width : 100},
-	{id: "firstName", name: "First name", field: "firstName", sortable: true, toolTip: "User's first name", width : 200, editor: Slick.Editors.LongText},
-	{id: "lastName", name: "Last name", field: "lastName", sortable: true, toolTip: "User's last name", editor: Slick.Editors.Text},
-	{id: "emailAddress", name: "Email address", field: "emailAddress", sortable: true, toolTip: "User's email address", width: 125, editor: Slick.Editors.Text},
+	{id: "firstName", name: "First name", field: "firstName", sortable: true, toolTip: "User's first name", width : 110, editor: Slick.Editors.LongText},
+	{id: "lastName", name: "Last name", field: "lastName", sortable: true, toolTip: "User's last name", width : 110, editor: Slick.Editors.Text},
+	{id: "emailAddress", name: "Email address", field: "emailAddress", sortable: true, toolTip: "User's email address", width: 165, editor: Slick.Editors.Text},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "User's validity status", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update this user's details", width: 90}
+	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update this user's details"}
 ];
 
 var options = 

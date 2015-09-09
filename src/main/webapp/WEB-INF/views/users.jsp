@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>				
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.event.drag-2.2.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery.browser.min.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/jquery-input-file-text.js" />"></script>
 								
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.core.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/slick.formatters.js" />"></script>	
@@ -47,7 +48,7 @@
 			<input id="new-user-emailAddress" class="float-left new-user-input-class" path="emailAddress" value="Enter email address..." type="text" default_value="Enter email address..." />
 			<button id="new-user-add" class="new-user-btn new-user-input-class"><spring:message code="users.add.button.label"/></button>
 			<button id="new-user-clear" class="new-user-btn new-user-input-class float-right"><spring:message code="users.clear.button.label"/></button>
-			<button id="new-user-import" class="new-user-btn new-user-input-class float-right"><spring:message code="users.import.button.label"/></button>
+			<button id="new-user-import-btn" class="new-user-btn new-user-input-class float-right"><spring:message code="users.import.button.label"/></button>
 		</div>
 			
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
@@ -58,8 +59,8 @@
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
 		</ul>
 		
-		<div style="width:455px;">
-    		<div id="usersGrid" style="width:455px;height:595px;"></div>
+		<div style="width:650px;">
+    		<div id="usersGrid" style="width:650px;height:595px;"></div>
 		</div>
 	</body>
 </html>
