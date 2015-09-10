@@ -46,7 +46,7 @@ function toggleAddButtonState()
 		disableAddButton();
 }
 
-function clearNewuserInputFields()
+function clearNewUserInputFields()
 {
 	$("#new-user-firstName").val($("#new-user-firstName").attr("default_value"));
 	$("#new-user-userId").val($("#new-user-userId").attr("default_value"));
@@ -110,7 +110,7 @@ $(document).ready(function()
 
 	$("#new-user-clear").click(function()
 	{
-		clearNewuserInputFields();		
+		clearNewUserInputFields();		
 		disableAddButton();
 	});
 	
@@ -123,8 +123,6 @@ $(document).ready(function()
 		var lastUpdatedBy = "ladeoye";
 		
 		ajaxAddNewUser(userId, firstName, lastName, emailAddress, lastUpdatedBy);				
-		disableAddButton();
-		clearNewuserInputFields();		
 	});
 	
 	function flashRow(userId)
@@ -293,7 +291,9 @@ $(document).ready(function()
 			"userId" : userId, 
 			"firstName" : firstName, 
 			"lastName" : lastName, 
-			"emailAddress" : emailAddress, 
+			"emailAddress" : emailAddress,
+			"locationName" : "HONG_KONG",
+			"groupName" : "CLSA_SALES",			
 			"isValid" : true, 
 			"lastUpdatedBy" : lastUpdatedBy 
 		};
@@ -318,11 +318,13 @@ $(document).ready(function()
 						"firstName" : firstName, 
 						"lastName" : lastName, 
 						"emailAddress" : emailAddress, 
-						"isValid" : true, 
+						"isValid" : true,
 						"lastUpdatedBy" : lastUpdatedBy 
 					});
 					
 					flashRow(userId);
+					disableAddButton();
+					clearNewUserInputFields();					
 				}
 				else
 					alert("Failed to insert the new user because of a server error.");
