@@ -6,9 +6,9 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 var columns = 
 [
  	{id: "userId", name: "User ID", field: "userId", sortable: true, toolTip: "User's unique identifier", width : 100},
-	{id: "firstName", name: "First name", field: "firstName", sortable: true, toolTip: "User's first name", width : 110, editor: Slick.Editors.LongText},
+	{id: "firstName", name: "First name", field: "firstName", sortable: true, toolTip: "User's first name", width : 110, editor: Slick.Editors.Text},
 	{id: "lastName", name: "Last name", field: "lastName", sortable: true, toolTip: "User's last name", width : 110, editor: Slick.Editors.Text},
-	{id: "emailAddress", name: "Email address", field: "emailAddress", sortable: true, toolTip: "User's email address", width: 165, editor: Slick.Editors.Text},
+	{id: "emailAddress", name: "Email address", field: "emailAddress", sortable: true, toolTip: "User's email address", width: 170, editor: Slick.Editors.Text},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "User's validity status", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update this user's details"}
 ];
@@ -195,10 +195,12 @@ $(document).ready(function()
 		showLoadIndicator();
 		
 		var userDetails = { 
-			"ric" : ric, 
+			"userId" : userId, 
 			"firstName" : firstName, 
 			"lastName" : lastName, 
-			"emailAddress" : emailAddress, 
+			"emailAddress" : emailAddress,
+			"locationName" : "HONG_KONG",
+			"groupName" : "CLSA_SALES",
 			"isValid" : isValid, 
 			"lastUpdatedBy" : lastUpdatedBy 
 		};	    

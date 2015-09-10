@@ -57,6 +57,9 @@
 		  <b><spring:message code="contextMenu.operation.title.label"/></b>
 		  <li data="VALIDATE"><spring:message code="contextMenu.operation.validate.menuitem"/></li>
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
+		  <li data="SAVE"><spring:message code="contextMenu.operation.save.menuitem"/></li>
+		  <li data="SAVE_ALL"><spring:message code="contextMenu.operation.saveAll.menuitem"/></li>
+		  <li data="REFRESH"><spring:message code="contextMenu.operation.refresh.menuitem"/></li>
 		</ul>
 		
 		<div style="width:650px;">

@@ -29,7 +29,7 @@ public interface UserService
 	boolean userExistsWithEmailAddress(String emailAddress);
 	
 	boolean update(String userId, String firstName, String lastName, String emailAddress,
-			String locationName, String groupName, boolean isValid, String savedByUser);
+			String locationName, String groupName, boolean isValid, String updatedByUser);
 
 	void initialise();
 

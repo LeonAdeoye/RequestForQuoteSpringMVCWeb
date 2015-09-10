@@ -56,10 +56,11 @@ public class UserControllerImpl
 	@RequestMapping(value = "/ajaxUpdateUser", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxUpdateClient(@RequestBody UserDetailImpl userToUpdate)
+	public @ResponseBody Object ajaxUpdateUser(@RequestBody UserDetailImpl userToUpdate)
 	{
-		return this.userService.updateValidity(userToUpdate.getUserId(),
-				userToUpdate.getIsValid(), userToUpdate.getLastUpdatedBy());
+		return this.userService.update(userToUpdate.getUserId(), userToUpdate.getFirstName(),
+				userToUpdate.getLastName(), userToUpdate.getEmailAddress(), userToUpdate.getLocationName(),
+				userToUpdate.getGroupName(), userToUpdate.getIsValid(), userToUpdate.getLastUpdatedBy());
 	}
 	
 	@RequestMapping(value = "/ajaxGetMessages", method = RequestMethod.POST,
