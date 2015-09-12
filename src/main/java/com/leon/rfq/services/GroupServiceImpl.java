@@ -13,7 +13,6 @@ import javax.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.common.Tag;
@@ -24,7 +23,6 @@ import com.leon.rfq.repositories.GroupDao;
 public final class GroupServiceImpl implements GroupService
 {
 	private static final Logger logger = LoggerFactory.getLogger(GroupServiceImpl.class);
-	private ApplicationEventPublisher applicationEventPublisher;
 	private final Map<String, GroupDetailImpl> groups = new ConcurrentSkipListMap<>();
 	
 	@Autowired(required=true)
@@ -66,7 +64,7 @@ public final class GroupServiceImpl implements GroupService
 		}
 		
 		if(logger.isDebugEnabled())
-			logger.debug("Getting the group with name" + name);
+			logger.debug("Getting the group with name: " + name);
 		
 		ReentrantLock lock = new ReentrantLock();
 		
@@ -198,7 +196,7 @@ public final class GroupServiceImpl implements GroupService
 	}
 	
 	@Override
-	public boolean update(String name, String description, boolean isValid, String savedByUser)
+	public boolean update(String name, String description, boolean isValid, String updatedByUser)
 	{
 		if((name == null) || name.isEmpty())
 		{
@@ -216,12 +214,12 @@ public final class GroupServiceImpl implements GroupService
 			throw new IllegalArgumentException("description argument is invalid");
 		}
 		
-		if((savedByUser == null) || savedByUser.isEmpty())
+		if((updatedByUser == null) || updatedByUser.isEmpty())
 		{
 			if(logger.isErrorEnabled())
-				logger.error("savedByUser argument is invalid");
+				logger.error("updatedByUser argument is invalid");
 			
-			throw new IllegalArgumentException("savedByUser argument is invalid");
+			throw new IllegalArgumentException("updatedByUser argument is invalid");
 		}
 				
 		if(logger.isDebugEnabled())
@@ -235,9 +233,9 @@ public final class GroupServiceImpl implements GroupService
 		
 			if(!isGroupCached(name))
 			{
-				this.groups.putIfAbsent(name, new GroupDetailImpl(name, description, isValid, savedByUser));
+				this.groups.putIfAbsent(name, new GroupDetailImpl(name, description, isValid, updatedByUser));
 				
-				return this.groupDao.update(name, description, isValid, savedByUser);
+				return this.groupDao.update(name, description, isValid, updatedByUser);
 			}
 			
 			return true;

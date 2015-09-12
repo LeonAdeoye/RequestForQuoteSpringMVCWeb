@@ -5,10 +5,10 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 
 var columns = 
 [
- 	{id: "name", name: "Group Name", field: "name", sortable: true, toolTip: "Unique group name"},
-	{id: "description", name: "Description", field: "description", sortable: true, toolTip: "Group's description"},
+ 	{id: "name", name: "Group Name", field: "name", sortable: true, toolTip: "Unique group name", width: 140},
+	{id: "description", name: "Group Description", field: "description", sortable: true, toolTip: "Group's description", editor: Slick.Editors.Text, width: 240},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "Groups's validity status", formatter: validityFormatter},
-	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the group", width: 90}
+	{id: "lastUpdatedBy", name: "Last Updated By", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update the group" , width: 110}
 ];
 
 var options = 

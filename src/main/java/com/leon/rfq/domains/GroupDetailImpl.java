@@ -50,6 +50,8 @@ public class GroupDetailImpl
 	{
 		this.lastUpdatedBy = lastUpdatedBy;
 	}
+	
+	public GroupDetailImpl() {}
 
 	public GroupDetailImpl(String name, String description, boolean isValid, String lastUpdatedBy)
 	{
