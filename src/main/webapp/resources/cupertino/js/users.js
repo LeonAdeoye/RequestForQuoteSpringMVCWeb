@@ -197,7 +197,7 @@ $(document).ready(function()
 			"firstName" : firstName, 
 			"lastName" : lastName, 
 			"emailAddress" : emailAddress,
-			"locationName" : "HONG_KONG",
+			"locationName" : "HONG_KONG", // TODO
 			"groupName" : "CLSA_SALES",
 			"isValid" : isValid, 
 			"lastUpdatedBy" : lastUpdatedBy 
@@ -292,7 +292,7 @@ $(document).ready(function()
 			"firstName" : firstName, 
 			"lastName" : lastName, 
 			"emailAddress" : emailAddress,
-			"locationName" : "HONG_KONG",
+			"locationName" : "HONG_KONG", //TODO
 			"groupName" : "CLSA_SALES",			
 			"isValid" : true, 
 			"lastUpdatedBy" : lastUpdatedBy 

@@ -20,6 +20,8 @@
 		
 		<security:intercept-url pattern="/books" access="ROLE_USER, ROLE_ADMIN" />
 		
+		<security:intercept-url pattern="/groups" access="ROLE_USER, ROLE_ADMIN" />		
+		
 		<security:intercept-url pattern="/clients" access="ROLE_USER, ROLE_ADMIN" />
 		
 		<security:intercept-url pattern="/bankHolidays" access="ROLE_USER, ROLE_ADMIN" />

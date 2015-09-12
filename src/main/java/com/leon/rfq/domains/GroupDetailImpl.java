@@ -1,85 +1,77 @@
 package com.leon.rfq.domains;
 
-import javax.xml.bind.annotation.XmlRootElement;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@XmlRootElement(name="GroupDetailImpl")
 public class GroupDetailImpl
 {
 	private static final Logger logger = LoggerFactory.getLogger(GroupDetailImpl.class);
-	private int groupId;
-	private String groupName;
+	private String name;
+	private String description;
 	private boolean isValid;
+	private String lastUpdatedBy;
 	
-	public GroupDetailImpl() {}
-		
-	public GroupDetailImpl(int groupId, String groupName, boolean isValid)
+	public String getName()
 	{
-		this.groupId = groupId;
-		this.groupName = groupName;
-		this.isValid = isValid;
+		return this.name;
 	}
-
-	/**
-	 * @return the groupId
-	 */
-	public int getGroupId()
+	
+	public void setName(String name)
 	{
-		return this.groupId;
+		this.name = name;
 	}
-
-	/**
-	 * @param groupId the groupId to set
-	 */
-	public void setGroupId(int groupId)
+	
+	public String getDescription()
 	{
-		this.groupId = groupId;
+		return this.description;
 	}
-
-	/**
-	 * @return the groupName
-	 */
-	public String getGroupName()
+	
+	public void setDescription(String description)
 	{
-		return this.groupName;
+		this.description = description;
 	}
-
-	/**
-	 * @param groupName the groupName to set
-	 */
-	public void setGroupName(String groupName)
-	{
-		this.groupName = groupName;
-	}
-
-	/**
-	 * @return the isValid
-	 */
+	
 	public boolean getIsValid()
 	{
 		return this.isValid;
 	}
-
-	/**
-	 * @param isValid the isValid to set
-	 */
+	
 	public void setIsValid(boolean isValid)
 	{
 		this.isValid = isValid;
+	}
+	
+	public String getLastUpdatedBy()
+	{
+		return this.lastUpdatedBy;
+	}
+	
+	public void setLastUpdatedBy(String lastUpdatedBy)
+	{
+		this.lastUpdatedBy = lastUpdatedBy;
+	}
+
+	public GroupDetailImpl(String name, String description, boolean isValid, String lastUpdatedBy)
+	{
+		super();
+		this.name = name;
+		this.description = description;
+		this.isValid = isValid;
+		this.lastUpdatedBy = lastUpdatedBy;
 	}
 
 	@Override
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("GroupDetailImpl [groupId=");
-		builder.append(this.groupId);
-		builder.append(", groupName=");
-		builder.append(this.groupName);
+		builder.append("GroupDetailImpl [name=");
+		builder.append(this.name);
+		builder.append(", description=");
+		builder.append(this.description);
 		builder.append(", isValid=");
 		builder.append(this.isValid);
+		builder.append(", lastUpdatedBy=");
+		builder.append(this.lastUpdatedBy);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -89,10 +81,10 @@ public class GroupDetailImpl
 	{
 		final int prime = 31;
 		int result = 1;
-		result = (prime * result) + this.groupId;
-		result = (prime * result)
-				+ ((this.groupName == null) ? 0 : this.groupName.hashCode());
+		result = (prime * result)	+ ((this.description == null) ? 0 : this.description.hashCode());
 		result = (prime * result) + (this.isValid ? 1231 : 1237);
+		result = (prime * result)	+ ((this.lastUpdatedBy == null) ? 0 : this.lastUpdatedBy.hashCode());
+		result = (prime * result) + ((this.name == null) ? 0 : this.name.hashCode());
 		return result;
 	}
 
@@ -112,17 +104,13 @@ public class GroupDetailImpl
 			return false;
 		}
 		GroupDetailImpl other = (GroupDetailImpl) obj;
-		if (this.groupId != other.groupId)
+		if (this.description == null)
 		{
-			return false;
-		}
-		if (this.groupName == null)
-		{
-			if (other.groupName != null)
+			if (other.description != null)
 			{
 				return false;
 			}
-		} else if (!this.groupName.equals(other.groupName))
+		} else if (!this.description.equals(other.description))
 		{
 			return false;
 		}
@@ -130,7 +118,26 @@ public class GroupDetailImpl
 		{
 			return false;
 		}
+		if (this.lastUpdatedBy == null)
+		{
+			if (other.lastUpdatedBy != null)
+			{
+				return false;
+			}
+		} else if (!this.lastUpdatedBy.equals(other.lastUpdatedBy))
+		{
+			return false;
+		}
+		if (this.name == null)
+		{
+			if (other.name != null)
+			{
+				return false;
+			}
+		} else if (!this.name.equals(other.name))
+		{
+			return false;
+		}
 		return true;
 	}
-	
 }

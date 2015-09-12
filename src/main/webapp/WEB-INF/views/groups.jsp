@@ -6,7 +6,7 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
 		
 		<link href="<c:url value="/resources/css/common.css" />" rel="stylesheet" type="text/css">
-		<link href="<c:url value="/resources/css/books.css" />" rel="stylesheet" type="text/css">
+		<link href="<c:url value="/resources/css/groups.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/jquery-ui.min.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/examples.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/slick.grid.css" />" rel="stylesheet" type="text/css">
@@ -29,7 +29,7 @@
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/controls/slick.columnpicker.js" />"></script>
 		
 		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/js/books.js" />"></script>		
+		<script type="text/javascript" src="<c:url value="/resources/js/groups.js" />"></script>		
 				
 		<script type="text/javascript">		
 			var contextPath='<%=request.getContextPath()%>'
@@ -37,28 +37,28 @@
 			if (typeof jQuery == 'undefined')				 
 			    alert("WARNING: jQuery library is NOT loaded!");
 		</script>		
-		<title><spring:message code="books.maintenance.label"/></title>
+		<title><spring:message code="groups.maintenance.label"/></title>
 	</head>
 	<body>
 		
-		<div id="books-new-book" class="new-book-class float-left">				
-			<input id="new-book-bookCode" class="float-left new-book-input-class" path="bookCode" value="Enter book code..." type="text" default_value="Enter book code..." />
-			<input id="new-book-entity" class="float-left new-book-input-class" path="entity" value="Enter entity..." type="text" default_value="Enter entity..." />
-			<button id="new-book-add" class="new-book-btn new-book-input-class"><spring:message code="books.add.button.label"/></button>
-			<button id="new-book-clear" class="new-book-btn new-book-input-class float-right"><spring:message code="books.clear.button.label"/></button>
-			<button id="new-book-import" class="new-book-btn new-book-input-class float-right"><spring:message code="books.import.button.label"/></button>
+		<div id="groups-new-group" class="new-group-class float-left">				
+			<input id="new-group-name" class="float-left new-group-input-class" path="name" value="Enter name..." type="text" default_value="Enter name..." />
+			<input id="new-group-description" class="float-left new-group-input-class" path="description" value="Enter description..." type="text" default_value="Enter description..." />
+			<button id="new-group-add" class="new-group-btn new-group-input-class"><spring:message code="groups.add.button.label"/></button>
+			<button id="new-group-clear" class="new-group-btn new-group-input-class float-right"><spring:message code="groups.clear.button.label"/></button>
+			<button id="new-group-import" class="new-group-btn new-group-input-class float-right"><spring:message code="groups.import.button.label"/></button>
 		</div>
 			
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
 
-		<ul id="bookContextMenu" class="contextMenu">
+		<ul id="groupContextMenu" class="contextMenu">
 		  <b><spring:message code="contextMenu.operation.title.label"/></b>
 		  <li data="VALIDATE"><spring:message code="contextMenu.operation.validate.menuitem"/></li>
 		  <li data="INVALIDATE"><spring:message code="contextMenu.operation.invalidate.menuitem"/></li>
 		</ul>
 		
 		<div style="width:330px;">
-    		<div id="booksGrid" style="width:330px;height:595px;"></div>
+    		<div id="groupsGrid" style="width:330px;height:595px;"></div>
 		</div>
 	</body>
 </html>

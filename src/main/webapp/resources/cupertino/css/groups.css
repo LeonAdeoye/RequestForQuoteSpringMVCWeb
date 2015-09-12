@@ -1,0 +1,10 @@
+.new-group-input-class
+{
+	margin-bottom:4px;	
+}
+
+#groupsContextMenu
+{
+	display:none;
+	position:absolute;
+}

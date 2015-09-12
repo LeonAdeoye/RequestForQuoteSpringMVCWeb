@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.leon.rfq.mappers.GroupMapper">
+	
+	<resultMap type="GroupDetailImpl" id="GroupResultSet">
+		<id 	property="name" column="name"/>
+		<result property="description" column="description"/>
+		<result property="isValid" column="isValid"/>
+		<result property="lastUpdatedBy" column="lastUpdatedBy"/>
+	</resultMap>
+	
+	<select id="get" parameterType="java.lang.String" resultType="GroupDetailImpl">
+		SELECT *
+		FROM groups 
+		WHERE name=#{name}
+	</select>
+	
+	<select id="groupExistsWithName" parameterType="java.lang.String" resultType="GroupDetailImpl">
+		SELECT *
+		FROM groups
+		WHERE name=#{name}
+	</select>
+	
+	<select id="getAll" resultMap="GroupResultSet">
+		SELECT *
+		FROM groups
+	</select>
+		
+	<update id="update" parameterType="GroupDetailImpl">
+		UPDATE groups
+		SET description = #{description}, isValid = #{isValid}, lastUpdatedBy = #{lastUpdatedBy}, lastUpdated = now() 
+		WHERE name = #{name}
+	</update>	
+	
+	<insert id="insert" parameterType="GroupDetailImpl">
+		INSERT INTO groups (name, description,  isValid, lastUpdatedBy, lastUpdated)
+		VALUES(#{name}, #{description}, #{isValid}, #{lastUpdatedBy}, now() )
+	</insert>		
+			
+</mapper>
