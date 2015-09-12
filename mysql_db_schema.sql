@@ -110,14 +110,14 @@ DROP TABLE IF EXISTS `groups`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `groups` (
-  `groupId` int(11) NOT NULL AUTO_INCREMENT,
-  `groupName` varchar(45) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` varchar(255) NOT NULL,
   `isValid` char(1) NOT NULL DEFAULT 'Y',
   `lastUpdated` datetime DEFAULT NULL,
   `lastUpdatedBy` varchar(20) DEFAULT NULL,
-  PRIMARY KEY (`groupId`),
-  UNIQUE KEY `groupName_UNIQUE` (`groupName`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`name`),
+  UNIQUE KEY `groupName_UNIQUE` (`description`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `holidays`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -303,6 +303,8 @@ CREATE TABLE `underlyings` (
   `isValid` char(1) NOT NULL DEFAULT 'Y',
   `lastUpdatedBy` varchar(20) NOT NULL,
   `lastUpdated` datetime NOT NULL,
+  `GroupId` int(11) DEFAULT NULL,
+  `UserId` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`ric`),
   UNIQUE KEY `RIC_UNIQUE` (`ric`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
