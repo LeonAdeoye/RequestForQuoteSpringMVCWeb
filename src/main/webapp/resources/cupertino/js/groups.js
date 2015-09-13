@@ -150,12 +150,17 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxUpdateGroupValidity(name, validity, lastUpdatedBy) 
+	function ajaxUpdateGroup(name, description, isValid, lastUpdatedBy) 
 	{
-		var groupToUpdate = { "name" : name, "isValid" : validity, "lastUpdatedBy" : lastUpdatedBy };
+		var groupToUpdate = { 
+			"name" : name,
+			"description" : description,
+			"isValid" : isValid, 
+			"lastUpdatedBy" : lastUpdatedBy 
+		};
 		
 		$.ajax({
-		    url: contextPath + "/groups/ajaxUpdateValidity", 
+		    url: contextPath + "/groups/ajaxUpdateGroup", 
 		    type: 'POST', 
 		    dataType: 'json',
 		    data: JSON.stringify(groupToUpdate),
@@ -170,18 +175,18 @@ $(document).ready(function()
 		    	if(result)
 		    	{
 		    		var item = dataView.getItemById(name);
-		    		item["isValid"] = validity;
+		    		item["isValid"] = isValid;
 		    		dataView.updateItem(name, item);		    		
 					groupsGrid.flashCell(dataView.getRowById(name), groupsGrid.getColumnIndex("isValid"), 100);
 		    	}
 				else
-		    		alert("Failed to update the validity.");		    	
+		    		alert("Failed to update the group details.");		    	
 		    },
             error: function (xhr, textStatus, errorThrown) 
             {
             	loadingIndicator.fadeOut();
             	console.log(xhr.responseText);
-            	alert('Failed to update the validity details because of a server error.');                
+            	alert('Failed to update the group details because of a server error.');                
             }
 		});
 	}
@@ -197,7 +202,12 @@ $(document).ready(function()
 	
 	function ajaxAddNewGroup(name, description, lastUpdatedBy) 
 	{
-		var newGroup = { "name" : name, "description" : description, "isValid" : true, "lastUpdatedBy" : lastUpdatedBy };
+		var newGroup = { 
+			"name" : name, 
+			"description" : description,
+			"isValid" : true,
+			"lastUpdatedBy" : lastUpdatedBy 
+		};
 		
 		$.ajax({
 		    url: contextPath + "/groups/ajaxAddNewGroup", 
@@ -213,9 +223,16 @@ $(document).ready(function()
 		    	loadingIndicator.fadeOut();
 				if(result)
 				{
-					dataView.insertItem(0, { "name" : name, "description" : description, "isValid" : true, "lastUpdatedBy" : lastUpdatedBy });
+					dataView.insertItem(0, { 
+						"name" : name, 
+						"description" : description, 
+						"isValid" : true, 
+						"lastUpdatedBy" : lastUpdatedBy 
+					});
 					
 					flashNewGroupRow(name);
+					disableAddButton();
+					clearNewGroupInputFields();					
 				}
 				else
 		    		alert("Failed to insert the new group because of a server error.");		    	
@@ -298,7 +315,38 @@ $(document).ready(function()
     	var operation = $(e.target).attr("data");
     	var updatedByUser = "ladeoye";
     	
-		showLoadIndicator();
-		ajaxUpdateGroupValidity(dataView.getItem(row).name, operation === "VALIDATE", updatedByUser);	
+    	
+    	switch (operation) 
+    	{
+        	case "VALIDATE":
+        	case "INVALIDATE":
+        		showLoadIndicator();
+        		ajaxUpdateGroup(dataView.getItem(row).name, dataView.getItem(row).description, 
+        				operation === "VALIDATE", updatedByUser);
+        		break;
+        	case "SAVE":
+        		showLoadIndicator();
+        		ajaxUpdateGroup(dataView.getItem(row).name, dataView.getItem(row).description, 
+        				dataView.getItem(row).isValid, updatedByUser);
+        		break;
+        	case "SAVE_ALL":
+        		var answer = confirm("Are you sure you want to save all changes?");
+        		if(answer)
+    			{
+        			showLoadIndicator();
+            		for (var key in modifiedCells)
+            		{
+                		ajaxUpdateGroup(dataView.getItem(row).name, dataView.getItem(row).description, 
+                				dataView.getItem(row).isValid, updatedByUser);
+            		}    			
+    			}        		
+        		break;
+        	case "REFRESH":
+        		showLoadIndicator();
+        		ajaxGetListOfGroups();
+        		break;
+        	default: 
+        		alert("Sorry, this operation is yet to be supported!");
+    	}					
     });	    	
 });
