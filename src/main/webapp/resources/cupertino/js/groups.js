@@ -177,7 +177,10 @@ $(document).ready(function()
 		    		var item = dataView.getItemById(name);
 		    		item["isValid"] = isValid;
 		    		dataView.updateItem(name, item);		    		
-					groupsGrid.flashCell(dataView.getRowById(name), groupsGrid.getColumnIndex("isValid"), 100);
+		    		flashRow(name);
+					
+		    		groupsGrid.removeCellCssStyles("modified");
+			    	delete modifiedCells[dataView.getRowById(name)];				
 		    	}
 				else
 		    		alert("Failed to update the group details.");		    	
@@ -191,7 +194,7 @@ $(document).ready(function()
 		});
 	}
 	
-	function flashNewGroupRow(name)
+	function flashRow(name)
 	{
 		var columns = groupsGrid.getColumns();
 		var size = columns.length;
@@ -230,7 +233,7 @@ $(document).ready(function()
 						"lastUpdatedBy" : lastUpdatedBy 
 					});
 					
-					flashNewGroupRow(name);
+					flashRow(name);
 					disableAddButton();
 					clearNewGroupInputFields();					
 				}
@@ -272,6 +275,18 @@ $(document).ready(function()
 		groupsGrid.invalidateRows(args.rows);
 		groupsGrid.render();
 	});
+	
+	var modifiedCells = {};
+	
+    groupsGrid.onCellChange.subscribe(function (e, args) 
+    {
+        if (!modifiedCells[args.row]) 
+            modifiedCells[args.row] = {};
+        
+        modifiedCells[args.row][this.getColumns()[args.cell].id] = "slick-cell-modified";
+        this.removeCellCssStyles("modified");
+        this.setCellCssStyles("modified", modifiedCells);
+    });	
 				
 	dataView.refresh();
 	groupsGrid.render();

@@ -231,14 +231,13 @@ public final class GroupServiceImpl implements GroupService
 		{
 			lock.lock();
 		
-			if(!isGroupCached(name))
+			if(isGroupCached(name))
 			{
-				this.groups.putIfAbsent(name, new GroupDetailImpl(name, description, isValid, updatedByUser));
-				
+				this.groups.put(name, new GroupDetailImpl(name, description, isValid, updatedByUser));
 				return this.groupDao.update(name, description, isValid, updatedByUser);
 			}
-			
-			return true;
+			else
+				return false;
 		}
 		finally
 		{
