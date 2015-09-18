@@ -255,9 +255,6 @@
 		</ul>
 		
 		<div id="requests_bar">
-			<div id="requests_title">
-				<p id="new_requests"><spring:message code="requests.addNewRequest.label"/></p>
-			</div>
 			<div class="addNew" id="requests_add_new">
 				<input id="requests_snippet" class="new_request" path="request" value="Enter request snippet..." type="text" default_value="Enter request snippet..." />
 				<button id="requests_add_more_button" class="btn">...</Button>
@@ -372,6 +369,5 @@
 				</div>				
 			</div				
 		</div>
-
 	</body>
 </html>

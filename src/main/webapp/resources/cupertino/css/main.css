@@ -1,0 +1,10 @@
+.ui-tabs.ui-widget-content 
+{
+	background : transparent;
+	border : none;
+}
+
+.ui-tabs .ui-tabs-panel
+{
+	background : olive;
+}

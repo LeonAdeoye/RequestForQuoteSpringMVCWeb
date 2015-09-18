@@ -176,11 +176,11 @@ $(document).ready(function()
 		    	{
 		    		var item = dataView.getItemById(name);
 		    		item["isValid"] = isValid;
-		    		dataView.updateItem(name, item);		    		
-		    		flashRow(name);
-					
+		    		dataView.updateItem(name, item);
+
 		    		groupsGrid.removeCellCssStyles("modified");
-			    	delete modifiedCells[dataView.getRowById(name)];				
+			    	delete modifiedCells[dataView.getRowById(name)];						    		
+		    		flashRow(name);					
 		    	}
 				else
 		    		alert("Failed to update the group details.");		    	

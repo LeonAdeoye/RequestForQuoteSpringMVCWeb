@@ -12,7 +12,7 @@
 		    <param-name>contextConfigLocation</param-name>
 		    <param-value>/WEB-INF/applicationContext.xml</param-value>        
         </init-param>
-    </servlet>
+    </servlet>    
 
     <servlet-mapping>
         <servlet-name>requestForQuote</servlet-name>
