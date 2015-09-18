@@ -8,3 +8,10 @@
 {
 	background : olive;
 }
+
+.ui-tabs .ui-tabs-nav li a:hover 
+{
+	background: olive;	
+	color: white;
+	border: 1px solid white;
+}

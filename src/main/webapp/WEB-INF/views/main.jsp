@@ -13,6 +13,7 @@
 		<link href="<c:url value="/resources/slickGrid/slick.grid.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/controls/slick.columnpicker.css" />" rel="stylesheet" type="text/css">
+		<link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>				
@@ -52,9 +53,14 @@
 				<li><a href="/requestForQuote/bankHolidays">Holidays</a></li>
 			</ul>
 		</div>
+		
 		<script type="text/javascript">
-			$("#rfq-main-tabset").tabs({
-				"selected" : 0
+			$(document).ready(function()
+			{
+				$("#rfq-main-tabset").tabs(
+				{
+					"selected" : 0
+				});				
 			});
 		</script>		
 	</body>
