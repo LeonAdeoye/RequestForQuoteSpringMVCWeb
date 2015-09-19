@@ -13,7 +13,6 @@
 		<link href="<c:url value="/resources/slickGrid/slick.grid.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/slickGrid/controls/slick.columnpicker.css" />" rel="stylesheet" type="text/css">
-		<link rel="styleSheet" href=//netda.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>				
@@ -29,39 +28,29 @@
 		
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/lib/jquery.sparkline.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/plugins/slick.rowselectionmodel.js" />"></script>
-		<script type="text/javascript" src="<c:url value="/resources/slickGrid/controls/slick.columnpicker.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/slickGrid/controls/slick.columnpicker.js" />"></script>	
 		
 		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
-		
- 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>		
-		
-		<script type="text/javascript">
-			if (typeof jQuery == 'undefined')				 
-			    alert("WARNING: jQuery library is NOT loaded!");
-		</script>			
+ 		<script type="text/javascript" src="https://www.google.com/jsapi"></script>					
 	</head>
 	<body>
 		<div id="rfq-main-tabset">
 			<ul>
-				<li><a href="/requestForQuote/requests">Requests</a></li>
-				<li><a href="/requestForQuote/clients">Clients</a></li>
-				<li><a href="/requestForQuote/underlyings">Underlyings</a></li>
-				<li><a href="/requestForQuote/books">Books</a></li>
-				<li><a href="/requestForQuote/chat">Chat</a></li>
-				<li><a href="/requestForQuote/users">Users</a></li>
-				<li><a href="/requestForQuote/groups">Groups</a></li>
-				<li><a href="/requestForQuote/bankHolidays">Holidays</a></li>
+				<li><a href="/requestForQuote/requests"><spring:message code="main.tabset.requests.label"/></a></li>
+				<li><a href="/requestForQuote/clients"><spring:message code="main.tabset.clients.label"/></a></li>
+				<li><a href="/requestForQuote/underlyings"><spring:message code="main.tabset.underlyings.label"/></a></li>
+				<li><a href="/requestForQuote/books"><spring:message code="main.tabset.books.label"/></a></li>
+				<li><a href="/requestForQuote/chat"><spring:message code="main.tabset.chat.label"/></a></li>
+				<li><a href="/requestForQuote/users"><spring:message code="main.tabset.users.label"/></a></li>
+				<li><a href="/requestForQuote/groups"><spring:message code="main.tabset.groups.label"/></a></li>
+				<li><a href="/requestForQuote/bankHolidays"><spring:message code="main.tabset.holidays.label"/></a></li>
 			</ul>
 		</div>
-		
-		<script type="text/javascript">
+		<script type="text/javascript">			
 			$(document).ready(function()
 			{
-				$("#rfq-main-tabset").tabs(
-				{
-					"selected" : 0
-				});				
+				$("#rfq-main-tabset").tabs();			
 			});
-		</script>		
+		</script>					
 	</body>
 </html>
