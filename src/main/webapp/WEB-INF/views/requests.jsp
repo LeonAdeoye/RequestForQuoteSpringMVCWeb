@@ -274,7 +274,7 @@
 		</div>
 		
 		<div style="width:1330px;">
-    		<div id="requestsGrid" style="width:1330px;height:595px;"></div>
+    		<div id="requestsGrid" style="width:1330px;height:545px;"></div>
 		</div>
 				
 		<div id="new-request-dialog-parent" title="Request Snippet Construction Helper"  class="dialog-hide new-requests-dialog" >

@@ -35,7 +35,7 @@
 		
 		<!-- TODO: add more and test -->		
 							
- 		<security:form-login login-page="/login" default-target-url="/requests" authentication-failure-url="/loginfailed" />
+ 		<security:form-login login-page="/login" default-target-url="/main" authentication-failure-url="/loginfailed" />
 		<security:logout logout-success-url = "/logout"/>
 		
 		<security:csrf disabled="true"/>				

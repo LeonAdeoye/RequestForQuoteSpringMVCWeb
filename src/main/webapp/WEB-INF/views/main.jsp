@@ -30,7 +30,7 @@
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/plugins/slick.rowselectionmodel.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/slickGrid/controls/slick.columnpicker.js" />"></script>	
 		
-		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
+		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>		
  		<script type="text/javascript" src="https://www.google.com/jsapi"></script>					
 	</head>
 	<body>
@@ -51,6 +51,6 @@
 			{
 				$("#rfq-main-tabset").tabs();			
 			});
-		</script>					
+		</script>
 	</body>
 </html>
