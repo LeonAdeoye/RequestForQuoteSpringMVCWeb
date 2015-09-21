@@ -148,7 +148,7 @@ $(document).ready(function()
 	
 	$("input#new-bankHoliday-location").autocomplete(
 	{
-		minLength:1,
+		minLength:0,
         source: ajaxLocationAutocomplete
     });	
 	

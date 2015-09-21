@@ -148,7 +148,7 @@ $(document).ready(function()
         loadingIndicator.show();
     }	
 	
-	function ajaxGetListOfUsers() 
+	function ajaxGetListOfAllUsers() 
 	{
 		showLoadIndicator();
 		
@@ -175,6 +175,38 @@ $(document).ready(function()
             }
 		});
 	}
+	
+	function ajaxGetListOfAllGroups() 
+	{
+		showLoadIndicator();
+		
+		$.ajax({
+		    url: contextPath + "/groups/ajaxGetListOfAllGroups", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: userUpdateTimeout,
+		    cache: false,
+		    success: function(groups) 
+		    {
+		    	$.each(groups, function(index, group)
+    			{
+		    		$("#new-user-group").append("<option>" + group.description + "</option>");
+    			});
+		    	loadingIndicator.fadeOut();
+		    },
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	loadingIndicator.fadeOut();
+            	console.log(xhr.responseText);
+            	alert('Failed to retrieve list of groups because of a server error.');                
+            }
+		});
+	}
+	
+	ajaxGetListOfAllUsers();
+	ajaxGetListOfAllGroups();	
 	
 	var modifiedCells = {};
 	
@@ -337,8 +369,6 @@ $(document).ready(function()
             }
 		});
 	}	
-		
-	ajaxGetListOfUsers();
 	
 	usersGrid.onSort.subscribe(function(e, args)
 	{
