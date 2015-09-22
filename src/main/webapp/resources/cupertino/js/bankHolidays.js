@@ -144,13 +144,7 @@ $(document).ready(function()
 		var bankHolidayDate = $("#new-bankHoliday-date").val();
 		showLoadIndicator();
 		ajaxAddNewBankHoliday(location, bankHolidayDate, updatedByUser);				
-	});
-	
-	$("input#new-bankHoliday-location").autocomplete(
-	{
-		minLength:0,
-        source: ajaxLocationAutocomplete
-    });	
+	});	
 	
 	function flashNewBankHolidayRow(newBankHolidayId)
 	{
@@ -175,8 +169,10 @@ $(document).ready(function()
         loadingIndicator.show();
     }
     
-	function getLocationList()
+	function ajaxGetLocationList()
 	{
+		showLoadIndicator();
+		
 		$.ajax({
 		    url: contextPath + "/bankHolidays/ajaxGetLocations", 
 		    type: 'GET', 
@@ -190,55 +186,24 @@ $(document).ready(function()
 		    	locationHashIndexedByEnum = locations;
 		    	
 		    	for(var location in locations)
+		    	{
 		    		locationHashIndexedByDesc[locations[location]] = location;
+		    		$("#new-bankHoliday-location").append("<option>" + locations[location] + "</option>");
+		    	}
+		    	
+		    	loadingIndicator.fadeOut();
+		    	
 		    }, 
             error: function (xhr, textStatus, errorThrown) 
             {
+            	loadingIndicator.fadeOut();
             	console.log(xhr.responseText);
                 alert('Failed to get list of locations because of a server error.');
             }
 		});	
 	}
 	
-	getLocationList();
-    
-	function displayLabel(event, ui)
-	{
-        event.preventDefault();
-        $(event.currentTarget).val(ui.item.label);
-	}	
-	
-	$("#new-bankHoliday-location").on("autocompleteselect", displayLabel);
-	$("#new-bankHoliday-location").on("autocompletefocus", displayLabel);	
-	    
-	function ajaxLocationAutocomplete(request, response) 
-    {
-        $.ajax(
-        {
-            type: "GET",
-            url: contextPath + "/bankHolidays/matchingLocationTags?pattern=" + request.term,
-            dataType: "json", 
-            data: 
-            {
-                term : request.termCode
-            },
-            error: function (xhr, textStatus, errorThrown) 
-            {
-            	console.log(xhr.responseText);
-                alert('Failed to retrieve location autocomplete data because of a server error.');
-            },
-            success: function (locations) 
-            {
-                response($.map(locations, function (location) 
-                {
-                    return	{
-                    			label : location.label,
-                    			value : location.value
-                    		}
-                }));
-            }
-        });
-    }    
+	ajaxGetLocationList();    
 	
 	function ajaxGetListOfBankHolidays() 
 	{

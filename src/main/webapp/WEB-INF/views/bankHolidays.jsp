@@ -42,7 +42,7 @@
 	<body>
 		
 		<div id="bankHolidays-new-bankHoliday" class="new-bankHoliday-class float-left">				
-			<input id="new-bankHoliday-location" class="float-left new-bankHoliday-input-class" path="location" value="Enter location..." type="text" default_value="Enter location..." />
+			<select id="new-bankHoliday-location" class="float-left new-bankHoliday-input-class" path="location" value="Enter location..." type="text" default_value="Enter location..."></select>
 			<input id="new-bankHoliday-date" class="float-left new-bankHoliday-input-class" path="bankHolidayDate" value="Enter date..." type="text" default_value="Enter date..." />
 			<button id="new-bankHoliday-add" class="new-bankHoliday-btn new-bankHoliday-input-class"><spring:message code="bankHoliday.add.button.label"/></button>
 			<button id="new-bankHoliday-clear" class="new-bankHoliday-btn new-bankHoliday-input-class float-right"><spring:message code="bankHoliday.clear.button.label"/></button>			
