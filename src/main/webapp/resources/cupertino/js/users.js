@@ -9,6 +9,8 @@ var columns =
 	{id: "firstName", name: "First name", field: "firstName", sortable: true, toolTip: "User's first name", width : 110, editor: Slick.Editors.Text},
 	{id: "lastName", name: "Last name", field: "lastName", sortable: true, toolTip: "User's last name", width : 110, editor: Slick.Editors.Text},
 	{id: "emailAddress", name: "Email address", field: "emailAddress", sortable: true, toolTip: "User's email address", width: 170, editor: Slick.Editors.Text},
+	{id: "locationName", name: "Location Name", field: "locationName", sortable: true, toolTip: "User's location name"},
+	{id: "groupName", name: "Group Name", field: "groupName", sortable: true, toolTip: "User's group name"},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "User's validity status", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update this user's details"}
 ];
@@ -205,8 +207,45 @@ $(document).ready(function()
 		});
 	}
 	
+	var locationHashIndexedByEnum = {}, locationHashIndexedByDesc = {};
+	
+	function ajaxGetLocationList()
+	{
+		showLoadIndicator();
+		
+		$.ajax({
+		    url: contextPath + "/bankHolidays/ajaxGetLocations", 
+		    type: 'GET', 
+		    dataType: 'json',  
+		    contentType: 'application/json',
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(locations) 
+		    {
+		    	locationHashIndexedByEnum = locations;
+		    	
+		    	for(var location in locations)
+		    	{
+		    		locationHashIndexedByDesc[locations[location]] = location;
+		    		$("#new-user-location").append("<option>" + locations[location] + "</option>");
+		    	}
+		    	
+		    	loadingIndicator.fadeOut();
+		    	
+		    }, 
+            error: function (xhr, textStatus, errorThrown) 
+            {
+            	loadingIndicator.fadeOut();
+            	console.log(xhr.responseText);
+                alert('Failed to get list of locations because of a server error.');
+            }
+		});	
+	}
+		
 	ajaxGetListOfAllUsers();
-	ajaxGetListOfAllGroups();	
+	ajaxGetListOfAllGroups();
+	ajaxGetLocationList();
 	
 	var modifiedCells = {};
 	
@@ -220,7 +259,7 @@ $(document).ready(function()
         this.setCellCssStyles("modified", modifiedCells);
     });	
 	
-	function ajaxUpdateUser(userId, firstName, lastName, emailAddress, isValid, lastUpdatedBy, flashRowFlag) 
+	function ajaxUpdateUser(userId, firstName, lastName, emailAddress, location, group, isValid, lastUpdatedBy, flashRowFlag) 
 	{
 		showLoadIndicator();
 		
@@ -229,8 +268,8 @@ $(document).ready(function()
 			"firstName" : firstName, 
 			"lastName" : lastName, 
 			"emailAddress" : emailAddress,
-			"locationName" : "HONG_KONG", // TODO
-			"groupName" : "CLSA_SALES",
+			"locationName" : location,
+			"groupName" : group,
 			"isValid" : isValid, 
 			"lastUpdatedBy" : lastUpdatedBy 
 		};	    
@@ -441,17 +480,20 @@ $(document).ready(function()
     	{
         	case "VALIDATE":
         		ajaxUpdateUser(dataView.getItem(row).userId, dataView.getItem(row).firstName, 
-        			dataView.getItem(row).lastName, dataView.getItem(row).emailAddress, 
+        			dataView.getItem(row).lastName, dataView.getItem(row).emailAddress,
+        			dataView.getItem(key).locationName, dataView.getItem(key).groupName,
         			true, lastUpdatedBy, true);	
         		break;
         	case "INVALIDATE":
         		ajaxUpdateUser(dataView.getItem(row).userId, dataView.getItem(row).firstName, 
         			dataView.getItem(row).lastName, dataView.getItem(row).emailAddress,
+        			dataView.getItem(key).locationName, dataView.getItem(key).groupName,
         			false, lastUpdatedBy, true);
         		break;
         	case "SAVE":
         		ajaxUpdateUser(dataView.getItem(row).userId, dataView.getItem(row).firstName, 
-        			dataView.getItem(row).lastName, dataView.getItem(row).emailAddress, 
+        			dataView.getItem(row).lastName, dataView.getItem(row).emailAddress,
+        			dataView.getItem(key).locationName, dataView.getItem(key).groupName,
         			dataView.getItem(row).isValid, lastUpdatedBy, true);
         		break;
         	case "SAVE_ALL":
@@ -462,6 +504,7 @@ $(document).ready(function()
             		{
                 		ajaxUpdateUser(dataView.getItem(key).userId, dataView.getItem(key).firstName, 
                 			dataView.getItem(key).lastName, dataView.getItem(key).emailAddress,
+                			dataView.getItem(key).locationName, dataView.getItem(key).groupName,
                 			dataView.getItem(key).isValid, lastUpdatedBy, false);
             		}    			
     			}        		
