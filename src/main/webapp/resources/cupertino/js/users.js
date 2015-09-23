@@ -9,6 +9,7 @@ function validityFormatter(row, cell, value, columnDef, dataContext)
 }
 
 var locationHashIndexedByEnum = {}, locationHashIndexedByDesc = {};
+var groupHashIndexedByDesc = {}, groupHashIndexedByName = {};
 
 function locationFormatter(row, cell, value, columnDef, dataContext)
 {
@@ -18,6 +19,14 @@ function locationFormatter(row, cell, value, columnDef, dataContext)
     	return locationHashIndexedByEnum[value];
 }
 
+function groupFormatter(row, cell, value, columnDef, dataContext)
+{
+    if (value === null)
+        return "";
+    else
+    	return groupHashIndexedByName[value];
+}
+
 var columns = 
 [
  	{id: "userId", name: "User ID", field: "userId", sortable: true, toolTip: "User's unique identifier", width : 100},
@@ -25,7 +34,7 @@ var columns =
 	{id: "lastName", name: "Last name", field: "lastName", sortable: true, toolTip: "User's last name", width : 110, editor: Slick.Editors.Text},
 	{id: "emailAddress", name: "Email address", field: "emailAddress", sortable: true, toolTip: "User's email address", width: 170, editor: Slick.Editors.Text},
 	{id: "locationName", name: "Location Name", field: "locationName", sortable: true, toolTip: "User's location name", width : 100, formatter: locationFormatter},
-	{id: "groupName", name: "Group Name", field: "groupName", sortable: true, toolTip: "User's group name", width : 170},
+	{id: "groupName", name: "Group Name", field: "groupName", sortable: true, toolTip: "User's group name", width : 170, formatter: groupFormatter},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "User's validity status", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update this user's details"}
 ];
@@ -111,6 +120,11 @@ $(document).ready(function()
 	$("#new-user-lastName").focusout(toggleAddButtonState);
 	$("#new-user-emailAddress").keyup(toggleAddButtonState);
 	$("#new-user-emailAddress").focusout(toggleAddButtonState);
+	$("#new-user-location").focusout(toggleAddButtonState);
+	$("#new-user-group").focusout(toggleAddButtonState);
+	$("#new-user-location").change(toggleAddButtonState);
+	$("#new-user-group").change(toggleAddButtonState);
+	
 	
 	$("input.new-user-input-class").click(function()
 	{
@@ -139,9 +153,11 @@ $(document).ready(function()
 		var firstName = $("#new-user-firstName").val();
 		var lastName = $("#new-user-lastName").val();
 		var emailAddress = $("#new-user-emailAddress").val();
+		var location = locationHashIndexedByDesc[$("#new-user-location").val()];
+		var group = groupHashIndexedByDesc[$("#new-user-group").val()];
 		var lastUpdatedBy = "ladeoye";
 		
-		ajaxAddNewUser(userId, firstName, lastName, emailAddress, lastUpdatedBy);				
+		ajaxAddNewUser(userId, firstName, lastName, emailAddress, location, group, lastUpdatedBy);				
 	});
 	
 	function flashRow(userId)
@@ -209,9 +225,12 @@ $(document).ready(function()
 		    cache: false,
 		    success: function(groups) 
 		    {
+		    	
 		    	$.each(groups, function(index, group)
     			{
 		    		$("#new-user-group").append("<option>" + group.description + "</option>");
+		    		groupHashIndexedByDesc[group.description] = group.name;
+		    		groupHashIndexedByName[group.name] = group.description;
     			});
 		    	loadingIndicator.fadeOut();
 		    },
@@ -224,7 +243,7 @@ $(document).ready(function()
 		});
 	}
 	
-	function ajaxGetLocationList()
+	function ajaxGetListOfAllLocations()
 	{
 		showLoadIndicator();
 		
@@ -260,7 +279,7 @@ $(document).ready(function()
 		
 	ajaxGetListOfAllUsers();
 	ajaxGetListOfAllGroups();
-	ajaxGetLocationList();
+	ajaxGetListOfAllLocations();
 	
 	var modifiedCells = {};
 	
@@ -274,7 +293,7 @@ $(document).ready(function()
         this.setCellCssStyles("modified", modifiedCells);
     });	
 	
-	function ajaxUpdateUser(userId, firstName, lastName, emailAddress, location, group, isValid, lastUpdatedBy, flashRowFlag) 
+	function ajaxUpdateUser(userId, firstName, lastName, emailAddress, locationName, groupName, isValid, lastUpdatedBy, flashRowFlag) 
 	{
 		showLoadIndicator();
 		
@@ -283,8 +302,8 @@ $(document).ready(function()
 			"firstName" : firstName, 
 			"lastName" : lastName, 
 			"emailAddress" : emailAddress,
-			"locationName" : location,
-			"groupName" : group,
+			"locationName" : locationName,
+			"groupName" : groupName,
 			"isValid" : isValid, 
 			"lastUpdatedBy" : lastUpdatedBy 
 		};	    
@@ -352,7 +371,9 @@ $(document).ready(function()
 						dataView.insertItem(0, {"userId" : newUsers[index].userId, 
 							"firstName" : newUsers[index].firstName, 
 							"lastName" : newUsers[index].lastName, 
-							"emailAddress" : newUsers[index].emailAddress, 
+							"emailAddress" : newUsers[index].emailAddress,
+							"locationName" : newUsers[index].locationName,
+							"groupName" : newUsers[index].groupName,										
 							"isValid" : newUsers[index].isValid, 
 							"lastUpdatedBy" : newUsers[index].lastUpdatedBy });
 					
@@ -369,7 +390,7 @@ $(document).ready(function()
 		});		
 	}
 	
-	function ajaxAddNewUser(userId, firstName, lastName, emailAddress, lastUpdatedBy) 
+	function ajaxAddNewUser(userId, firstName, lastName, emailAddress, location, group, lastUpdatedBy) 
 	{
 		showLoadIndicator();
 		
@@ -378,8 +399,8 @@ $(document).ready(function()
 			"firstName" : firstName, 
 			"lastName" : lastName, 
 			"emailAddress" : emailAddress,
-			"locationName" : "HONG_KONG", //TODO
-			"groupName" : "CLSA_SALES",			
+			"locationName" : location,
+			"groupName" : group,			
 			"isValid" : true, 
 			"lastUpdatedBy" : lastUpdatedBy 
 		};
@@ -403,7 +424,9 @@ $(document).ready(function()
 						"userId" : userId, 
 						"firstName" : firstName, 
 						"lastName" : lastName, 
-						"emailAddress" : emailAddress, 
+						"emailAddress" : emailAddress,
+						"locationName" : location,
+						"groupName" : group,									
 						"isValid" : true,
 						"lastUpdatedBy" : lastUpdatedBy 
 					});
