@@ -11,10 +11,12 @@
 
 #new-user-group
 {
-	width:130px;	
+	width:170px;
+	height: 18px;
 }
 
 #new-user-location
 {
-	width:130px;	
+	width:130px;
+	height: 18px;	
 }

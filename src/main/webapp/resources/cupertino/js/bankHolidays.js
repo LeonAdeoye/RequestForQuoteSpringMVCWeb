@@ -57,7 +57,8 @@ function toggleAddButtonState()
 function clearNewbankHolidayInputFields()
 {
 	$("#new-bankHoliday-location").val($("#new-bankHoliday-location").attr("default_value"));
-	$("#new-bankHoliday-date").val($("#new-bankHoliday-date").attr("default_value"));	
+	$("#new-bankHoliday-date").val($("#new-bankHoliday-date").attr("default_value"));
+	$("#new-bankHoliday-location").val($("#new-bankHoliday-location option:first").val());
 }
 
 $(document).ready(function()

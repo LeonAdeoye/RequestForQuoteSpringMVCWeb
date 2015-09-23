@@ -68,8 +68,8 @@
 		  <li data="REFRESH"><spring:message code="contextMenu.operation.refresh.menuitem"/></li>
 		</ul>
 		
-		<div style="width:850px;">
-    		<div id="usersGrid" style="width:850px;height:595px;"></div>
+		<div style="width:920px;">
+    		<div id="usersGrid" style="width:920px;height:595px;"></div>
 		</div>
 	</body>
 </html>

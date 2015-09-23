@@ -25,7 +25,7 @@ var columns =
 	{id: "lastName", name: "Last name", field: "lastName", sortable: true, toolTip: "User's last name", width : 110, editor: Slick.Editors.Text},
 	{id: "emailAddress", name: "Email address", field: "emailAddress", sortable: true, toolTip: "User's email address", width: 170, editor: Slick.Editors.Text},
 	{id: "locationName", name: "Location Name", field: "locationName", sortable: true, toolTip: "User's location name", width : 100, formatter: locationFormatter},
-	{id: "groupName", name: "Group Name", field: "groupName", sortable: true, toolTip: "User's group name", width : 100},
+	{id: "groupName", name: "Group Name", field: "groupName", sortable: true, toolTip: "User's group name", width : 170},
 	{id: "isValid", name: "Validity", field: "isValid", sortable: true, toolTip: "User's validity status", formatter: validityFormatter},
 	{id: "lastUpdatedBy", name: "Last updated by", field: "lastUpdatedBy", sortable: true, toolTip: "User to last update this user's details"}
 ];
@@ -69,6 +69,8 @@ function clearNewUserInputFields()
 	$("#new-user-userId").val($("#new-user-userId").attr("default_value"));
 	$("#new-user-lastName").val($("#new-user-lastName").attr("default_value"));
 	$("#new-user-emailAddress").val($("#new-user-emailAddress").attr("default_value"));
+	$("#new-user-location").val($("#new-user-location option:first").val());
+	$("#new-user-group").val($("#new-user-group option:first").val());
 }
 
 $(document).ready(function()
