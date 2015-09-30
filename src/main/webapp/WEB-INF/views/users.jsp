@@ -47,10 +47,11 @@
 			<input id="new-user-lastName" class="float-left new-user-input-class" path="lastName" value="Enter last name..." type="text" default_value="Enter last name..." />
 			<input id="new-user-emailAddress" class="float-left new-user-input-class" path="emailAddress" value="Enter email address..." type="text" default_value="Enter email address..." />
 			<select id="new-user-group" class="float-left" path="group" type="text" default_value="Enter group...">
+				<option><spring:message code="user.group.default.label"/></option>
 				<option><spring:message code="user.group.none.label"/></option>
 			</select>
 			<select id="new-user-location" class="float-left" path="location" type="text" default_value="Enter location...">
-				<option><spring:message code="user.location.none.label"/></option>
+				<option><spring:message code="user.location.default.label"/></option>
 			</select>			
 			<button id="new-user-add" class="new-user-btn new-user-input-class"><spring:message code="users.add.button.label"/></button>
 			<button id="new-user-clear" class="new-user-btn new-user-input-class float-right"><spring:message code="users.clear.button.label"/></button>

@@ -49,7 +49,15 @@
 		<script type="text/javascript">			
 			$(document).ready(function()
 			{
-				$("#rfq-main-tabset").tabs();			
+				$("#rfq-main-tabset").tabs();
+				
+				/*$.getScript( "<c:url value="/resources/js/requests.js" />", function( data, textStatus, jqxhr ) {
+					  console.log( data ); // Data returned
+					  console.log( textStatus ); // Success
+					  console.log( jqxhr.status ); // 200
+					  console.log( "Load was performed." );
+				});*/
+				
 			});
 		</script>
 	</body>

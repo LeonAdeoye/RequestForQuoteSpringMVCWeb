@@ -70,7 +70,7 @@ public class UserDetailImpl
 		this.isValid = isValid;
 		this.lastUpdatedBy = lastUpdatedBy;
 	}
-
+	
 	public String getUserId()
 	{
 		return this.userId;

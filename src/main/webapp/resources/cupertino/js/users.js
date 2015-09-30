@@ -153,8 +153,8 @@ $(document).ready(function()
 		var firstName = $("#new-user-firstName").val();
 		var lastName = $("#new-user-lastName").val();
 		var emailAddress = $("#new-user-emailAddress").val();
-		var location = locationHashIndexedByDesc[$("#new-user-location").val()];
-		var group = groupHashIndexedByDesc[$("#new-user-group").val()];
+		var location = locationHashIndexedByDesc[$("#new-user-location").val()];\
+		var group = $("#new-user-group").val() !== "None" ? groupHashIndexedByDesc[$("#new-user-group").val()] : "None";
 		var lastUpdatedBy = "ladeoye";
 		
 		ajaxAddNewUser(userId, firstName, lastName, emailAddress, location, group, lastUpdatedBy);				
@@ -400,11 +400,11 @@ $(document).ready(function()
 			"lastName" : lastName, 
 			"emailAddress" : emailAddress,
 			"locationName" : location,
-			"groupName" : group,			
+			"groupName" : groupName,
 			"isValid" : true, 
 			"lastUpdatedBy" : lastUpdatedBy 
 		};
-		
+				
 		$.ajax({
 		    url: contextPath + "/users/ajaxAddNewUser", 
 		    type: 'POST', 
