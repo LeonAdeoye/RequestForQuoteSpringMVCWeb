@@ -9,6 +9,7 @@
 		<link href="<c:url value="/resources/css/chatroom.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/jquery-ui.min.css" />" rel="stylesheet" type="text/css">
 		<link href="<c:url value="/resources/css/jqx.base.css" />" rel="stylesheet" type="text/css">
+		<link href="<c:url value="/resources/css/jqx.ui-smoothness.css" />" rel="stylesheet" type="text/css">
 
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-2.1.3.min.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>				
@@ -24,9 +25,18 @@
 		<title><spring:message code="chatroom.title.label"/></title>
 	</head>
 	<body>
-		<div id="chatroom-parent-pane">
-			<div id="chatroom-left-pane"></div>
-			<div id="chatroom-right-pane"></div>
+		<div id="chatroom-all-panes">
+			<div>
+				<div id="chatroom-left-pane">
+					<div id="chatroom-rooms-pane">
+	                    See chat rooms here
+	                </div>
+	                <div id="chatroom-send-message-pane">
+	                    Send a message here
+	                </div>
+	            </div>			
+			</div>
+			<div id="chatroom-right-pane">See chat messages for a selected room here</div>
 		</div>			
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
 

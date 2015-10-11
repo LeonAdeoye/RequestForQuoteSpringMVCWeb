@@ -1,21 +1,26 @@
-.new-book-input-class
-{
-	margin-bottom:4px;	
-}
-
-
 #chatroomContextMenu
 {
 	display:none;
 	position:absolute;
 }
 
-#chatroom-left-pane
+#chatroom-send-message-pane
 {
-	background-colour:#97FFAF;
+	background-color:#97FFAF;
 }
 
 #chatroom-right-pane
 {
-	background-colour:#E8C0AF;
+	background-color:#E8C0AF;
+}
+
+#chatroom-rooms-pane
+{
+	background-color:olive;
+}
+
+#chatroom-all-panes
+{
+	width:100%;
+	height:100%;
 }
