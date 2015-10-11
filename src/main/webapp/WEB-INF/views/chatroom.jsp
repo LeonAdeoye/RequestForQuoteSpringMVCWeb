@@ -29,7 +29,7 @@
 			<div>
 				<div id="chatroom-left-pane">
 					<div id="chatroom-rooms-pane">
-	                    <ul id="chatroom-list">
+	                    <ul id="chatroom-rooms-list">
 						</ul>
 	                </div>
 	                <div id="chatroom-send-message-pane">
@@ -37,7 +37,10 @@
 	                </div>
 	            </div>			
 			</div>
-			<div id="chatroom-right-pane">See chat messages for a selected room here</div>
+			<div id="chatroom-right-pane">
+				<ul id="chatroom-message-list">
+				</ul>
+			</div>
 		</div>			
 		<span class='loading-indicator' style="display:none;"><label><spring:message code="loading.indicator.label"/></label></span>
 

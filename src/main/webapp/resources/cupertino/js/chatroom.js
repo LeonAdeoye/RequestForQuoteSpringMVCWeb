@@ -29,13 +29,15 @@ $(document).ready(function()
 	
 	$("#new-chatroom-message").focusout(function()
 	{
-		if(trimSpaces($(this).val()) === "")
+		if(trimSpaces($(this).val()) === "") 
 			$(this).val($(this).attr("default_value"));
 	});
 	
-	function handleNewChatMessage(chatMessage, requestId, user)
+	function handleNewChatMessage(chatMessage, requestId, userId)
 	{
-		alert(chatMessage);
+		$("#chatroom-message-list").append($("<li></li>")
+				.addClass("added-chat-message-class")
+				.text("[" + userId + "] " + chatMessage));
 	}
 	
 	$( "#new-chatroom-message" ).keypress(function( event ) 
@@ -46,11 +48,16 @@ $(document).ready(function()
 			{
 				var chatMessage = $(this).val();
 				$(this).val("");
-				handleNewChatMessage(chatMessage, 200, "ladeoye");				
+				handleNewChatMessage(chatMessage, 200, "ladeoye");	// TODO			
 			}
 		    event.preventDefault();
 		}
-	});	
+	});
+	
+	// TODO	
+	// Style of chat message - google list styling
+	// Flash messages received
+	// Small pop-up with fade-out.
 });
 
 

@@ -4,14 +4,38 @@
 	position:absolute;
 }
 
+.added-chat-message-class
+{
+	background-color:olive;
+	margin:0px 3px 3px 3px;
+	padding:0;
+	list-style-type: none;
+	border-style:grove;
+	word-wrap: break-word;
+	border-width:5px;
+	border-color:olive;
+	color:white;
+	list-style-position:inside;
+	list-style: none; 
+}
+
+.added-chatroom-class
+{
+	background-color:olive;
+	margin:3px;
+	padding:1px;
+	list-style-type: none;
+	border-stype:grove;
+}
+
 #chatroom-right-pane
 {
-	background-color:#E8C0AF;
+	background-color:rgb(215,215,215);
 }
 
 #chatroom-rooms-pane
 {
-	background-color:olive;
+	background-color:rgb(215,215,215);
 }
 
 #chatroom-all-panes
@@ -28,5 +52,5 @@
 	height:100%;
 	margin: 0px;
     padding: 0px;
-    background-color:#97FFAF;
+    background-color:rgb(230,230,230);
 }
