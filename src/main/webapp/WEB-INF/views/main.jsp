@@ -40,7 +40,7 @@
 				<li><a href="/requestForQuote/clients"><spring:message code="main.tabset.clients.label"/></a></li>
 				<li><a href="/requestForQuote/underlyings"><spring:message code="main.tabset.underlyings.label"/></a></li>
 				<li><a href="/requestForQuote/books"><spring:message code="main.tabset.books.label"/></a></li>
-				<li><a href="/requestForQuote/chat"><spring:message code="main.tabset.chat.label"/></a></li>
+				<li><a href="/requestForQuote/chatroom"><spring:message code="main.tabset.chat.label"/></a></li>
 				<li><a href="/requestForQuote/users"><spring:message code="main.tabset.users.label"/></a></li>
 				<li><a href="/requestForQuote/groups"><spring:message code="main.tabset.groups.label"/></a></li>
 				<li><a href="/requestForQuote/bankHolidays"><spring:message code="main.tabset.holidays.label"/></a></li>

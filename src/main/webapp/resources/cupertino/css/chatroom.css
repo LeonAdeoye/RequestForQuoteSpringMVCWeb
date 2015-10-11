@@ -1,0 +1,21 @@
+.new-book-input-class
+{
+	margin-bottom:4px;	
+}
+
+
+#chatroomContextMenu
+{
+	display:none;
+	position:absolute;
+}
+
+#chatroom-left-pane
+{
+	background-colour:#97FFAF;
+}
+
+#chatroom-right-pane
+{
+	background-colour:#E8C0AF;
+}

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.domains.ChatMessageImpl;
+import com.leon.rfq.domains.ChatroomDetailImpl;
 import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.repositories.ChatDao;
 
@@ -26,6 +27,9 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	
 	@Autowired(required=true)
 	private ChatDao chatDao;
+	
+	@Autowired(required=true)
+	private UserService userService;
 	
 	public ChatMediatorServiceImpl() {}
 
@@ -44,14 +48,14 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public boolean sendMessage(int requestId, UserDetailImpl sender, String content)
+	public boolean sendMessage(int requestId, String sender, String content)
 	{
-		if((sender == null))
+		if((sender == null) || sender.isEmpty())
 		{
 			if(logger.isErrorEnabled())
 				logger.error("sender is an invalid argument");
 			
-			throw new NullPointerException("sender is an invalid argument");
+			throw new IllegalArgumentException("sender is an invalid argument");
 		}
 		
 		if((content == null) || content.isEmpty())
@@ -68,12 +72,14 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		{
 			lock.lock();
 			
+			UserDetailImpl senderDetails = this.userService.get(sender);
+			
 			Set<UserDetailImpl> recipients = this.chatRooms.get(requestId);
 			
 			Set<String> recipientIds = this.chatRooms.get(requestId).stream()
 					.map(UserDetailImpl::getUserId).collect(Collectors.toSet());
 			
-			ChatMessageImpl message = new ChatMessageImpl(sender.getUserId(), recipientIds, content, requestId);
+			ChatMessageImpl message = new ChatMessageImpl(senderDetails.getUserId(), recipientIds, content, requestId);
 			
 			recipients.stream().filter(recipient -> !recipient.equals(sender))
 				.forEach(recipient -> recipient.receive(message));
@@ -215,5 +221,12 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 			sb.append(" ]");
 		}
 		return sb.toString();
+	}
+
+	@Override
+	public Set<ChatroomDetailImpl> getAllChatRooms(String userId)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

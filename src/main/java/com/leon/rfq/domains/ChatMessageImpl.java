@@ -8,7 +8,7 @@ import org.springframework.data.annotation.Id;
 
 public final class ChatMessageImpl
 {
-	private final String owner;
+	private final String sender;
 	private final Set<String> recipients;
 	private final String content;
 	private final LocalDateTime timeStamp;
@@ -17,18 +17,27 @@ public final class ChatMessageImpl
 	@Id
 	private String id;
 
-	public ChatMessageImpl(String owner, Set<String> recipients, String content, int requestId)
+	public ChatMessageImpl(String sender, Set<String> recipients, String content, int requestId)
 	{
-		this.owner = owner;
+		this.sender = sender;
 		this.recipients = new HashSet<>(recipients);
 		this.content = content;
 		this.timeStamp = LocalDateTime.now();
 		this.requestId = requestId;
 	}
-
-	public String getOwner()
+	
+	public ChatMessageImpl(int requestId, String sender, String content)
 	{
-		return this.owner;
+		this.sender = sender;
+		this.recipients = new HashSet<>();
+		this.content = content;
+		this.timeStamp = LocalDateTime.now();
+		this.requestId = requestId;
+	}
+
+	public String getSender()
+	{
+		return this.sender;
 	}
 
 
@@ -65,8 +74,8 @@ public final class ChatMessageImpl
 	public String toString()
 	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("ChatMessageImpl [owner=");
-		builder.append(this.owner);
+		builder.append("ChatMessageImpl [sender=");
+		builder.append(this.sender);
 		builder.append(", recipients=");
 		builder.append(this.recipients);
 		builder.append(", content=");
@@ -88,12 +97,10 @@ public final class ChatMessageImpl
 		int result = 1;
 		result = (prime * result) + ((this.content == null) ? 0 : this.content.hashCode());
 		result = (prime * result) + ((this.id == null) ? 0 : this.id.hashCode());
-		result = (prime * result) + ((this.owner == null) ? 0 : this.owner.hashCode());
-		result = (prime * result)
-				+ ((this.recipients == null) ? 0 : this.recipients.hashCode());
+		result = (prime * result) + ((this.sender == null) ? 0 : this.sender.hashCode());
+		result = (prime * result) + ((this.recipients == null) ? 0 : this.recipients.hashCode());
 		result = (prime * result) + this.requestId;
-		result = (prime * result)
-				+ ((this.timeStamp == null) ? 0 : this.timeStamp.hashCode());
+		result = (prime * result) + ((this.timeStamp == null) ? 0 : this.timeStamp.hashCode());
 		return result;
 	}
 
@@ -133,13 +140,13 @@ public final class ChatMessageImpl
 		{
 			return false;
 		}
-		if (this.owner == null)
+		if (this.sender == null)
 		{
-			if (other.owner != null)
+			if (other.sender != null)
 			{
 				return false;
 			}
-		} else if (!this.owner.equals(other.owner))
+		} else if (!this.sender.equals(other.sender))
 		{
 			return false;
 		}
