@@ -29,10 +29,11 @@
 			<div>
 				<div id="chatroom-left-pane">
 					<div id="chatroom-rooms-pane">
-	                    See chat rooms here
+	                    <ul id="chatroom-list">
+						</ul>
 	                </div>
 	                <div id="chatroom-send-message-pane">
-	                    Send a message here
+	                    <textarea id="new-chatroom-message" class="new-chatroom-message-textarea-class" cols="20" wrap="hard" autofocus path="chatMessage" default_value="Enter message here..." ><spring:message code="chatroom.message.default-value"/></textarea>
 	                </div>
 	            </div>			
 			</div>

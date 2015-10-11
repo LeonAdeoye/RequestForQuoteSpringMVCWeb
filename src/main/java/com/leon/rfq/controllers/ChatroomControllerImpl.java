@@ -41,10 +41,10 @@ public class ChatroomControllerImpl
 		return this.chatMediatorService.getAllChatRooms(userId);
 	}
 		
-	@RequestMapping(value = "/ajaxAddNewChatMessage", method = RequestMethod.POST,
+	@RequestMapping(value = "/ajaxSendChatMessage", method = RequestMethod.POST,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Object ajaxAddNewChatMessage(@RequestBody ChatMessageImpl chatMessage)
+	public @ResponseBody Object ajaxSendChatMessage(@RequestBody ChatMessageImpl chatMessage)
 	{
 		return this.chatMediatorService.sendMessage(chatMessage.getRequestId(), chatMessage.getSender(), chatMessage.getContent());
 	}
