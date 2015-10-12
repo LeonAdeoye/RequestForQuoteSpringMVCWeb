@@ -4,19 +4,24 @@
 	position:absolute;
 }
 
-.added-chat-message-class
+li.added-chat-message-class
 {
-	background-color:olive;
-	margin:0px 3px 3px 3px;
+	background-color:white;
+	margin:0px 2px 2px 0px;
 	padding:0;
 	list-style-type: none;
-	border-style:grove;
+	border-style:solid;
 	word-wrap: break-word;
-	border-width:5px;
-	border-color:olive;
-	color:white;
+	border-width:1px;
+	border-color:grey;
 	list-style-position:inside;
-	list-style: none; 
+	list-style: none;
+	color:grey;
+}
+
+li.added-chat-message-class:nth-child(odd)
+{
+	background-color:#fafafa;
 }
 
 .added-chatroom-class

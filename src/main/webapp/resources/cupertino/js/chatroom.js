@@ -58,6 +58,8 @@ $(document).ready(function()
 	// Style of chat message - google list styling
 	// Flash messages received
 	// Small pop-up with fade-out.
+	// Scroll up so bottom <li> is always visible.
+	// Color the name and time in chat message
 });
 
 
