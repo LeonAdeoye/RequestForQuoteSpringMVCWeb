@@ -33,11 +33,18 @@ $(document).ready(function()
 			$(this).val($(this).attr("default_value"));
 	});
 	
+	var chatMessageCount = 0;
+	
 	function handleNewChatMessage(chatMessage, requestId, userId)
 	{
-		$("#chatroom-message-list").append($("<li></li>")
-				.addClass("added-chat-message-class")
-				.text("[" + userId + "] " + chatMessage));
+		var chatMessageId = userId + "-msg-" + chatMessageCount++;
+		$("li.message-to-clone").clone().attr("id", chatMessageId).removeClass("message-to-clone");
+		
+		$("#chatroom-message-list").append($("#" + chatMessageId));
+				
+		$("#" + chatMessageId).addClass("added-chat-message-class");
+		$("#" + chatMessageId).children(".chat-message-sender-class:first").html("[" + userId + "]");
+		$("#" + chatMessageId).children(".chat-message-content-class:first").text(chatMessage);
 	}
 	
 	$( "#new-chatroom-message" ).keypress(function( event ) 

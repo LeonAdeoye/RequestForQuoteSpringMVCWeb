@@ -4,6 +4,22 @@
 	position:absolute;
 }
 
+.message-to-clone
+{
+	display:none;
+	position:absolute;	
+}
+
+.chat-message-sender-class
+{
+	color:olive;	
+}
+
+.chat-message-content-class
+{
+	color:grey;	
+}
+
 li.added-chat-message-class
 {
 	background-color:white;
@@ -16,7 +32,6 @@ li.added-chat-message-class
 	border-color:grey;
 	list-style-position:inside;
 	list-style: none;
-	color:grey;
 }
 
 li.added-chat-message-class:nth-child(odd)
