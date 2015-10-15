@@ -21,7 +21,9 @@
 												
 		<script type="text/javascript" src="<c:url value="/resources/js/utilities.js" />"></script>
 		<script type="text/javascript" src="<c:url value="/resources/js/chatroom.js" />"></script>		
-				
+		<script type="text/javascript">		
+			var contextPath='<%=request.getContextPath()%>'
+		</script>
 		<title><spring:message code="chatroom.title.label"/></title>
 	</head>
 	<body>

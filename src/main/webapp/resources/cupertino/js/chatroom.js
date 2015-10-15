@@ -33,18 +33,47 @@ $(document).ready(function()
 			$(this).val($(this).attr("default_value"));
 	});
 	
-	var chatMessageCount = 0;
+	function save(chatMessage, requestId, userId)
+	{
+	    var newChatMessage = { "content" : chatMessage, "requestId" : requestId, "sender" : userId};
+	    
+		$.ajax({
+		    url: contextPath + "/chatroom/ajaxSendChatMessage", 
+		    type: 'POST',
+		    data: JSON.stringify(newChatMessage),
+		    dataType: 'json',  
+		    contentType: 'application/json', 
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(newlySavedChatMessage) 
+		    {
+		    	if(newlySavedChatMessage)
+					handleNewChatMessage(chatMessage, 200, "ladeoye");	// TODO	
+		    		
+		    },
+	        error: function (xhr, textStatus, errorThrown) 
+	        {
+	        	console.log(xhr.responseText);
+	        	if(textStatus !== "timeout")
+        		{
+	        		if(xhr.status === 404)
+	        			alert('Failed to save the chat message because the server is no longer available. Please try to reload the page.');
+	        		else
+	        			alert('Failed to save the chat message because of a server error.');   
+        		}
+	        	else
+	        		alert('Failed to save a chat message because of a timeout after five seconds');
+	        }
+		});		
+	}
 	
 	function handleNewChatMessage(chatMessage, requestId, userId)
-	{
-		var chatMessageId = userId + "-msg-" + chatMessageCount++;
-		$("li.message-to-clone").clone().attr("id", chatMessageId).removeClass("message-to-clone");
-		
-		$("#chatroom-message-list").append($("#" + chatMessageId));
-				
-		$("#" + chatMessageId).addClass("added-chat-message-class");
-		$("#" + chatMessageId).children(".chat-message-sender-class:first").html("[" + userId + "]");
-		$("#" + chatMessageId).children(".chat-message-content-class:first").text(chatMessage);
+	{	
+		$("#chatroom-message-list")
+			.append("<li></li>")
+			.addClass("added-chat-message-class")
+			.text("[" + userId + "] " + chatMessage);
 	}
 	
 	$( "#new-chatroom-message" ).keypress(function( event ) 
@@ -55,7 +84,8 @@ $(document).ready(function()
 			{
 				var chatMessage = $(this).val();
 				$(this).val("");
-				handleNewChatMessage(chatMessage, 200, "ladeoye");	// TODO			
+				
+				save(chatMessage, 200, "ladeoye");		
 			}
 		    event.preventDefault();
 		}
