@@ -71,7 +71,7 @@ $(document).ready(function()
 	
 	function handleNewChatMessage(newlySavedChatMessage)
 	{
-		var newChatMessageId = "REQ" + newlySavedChatMessage.requestId + "MSG" +  chatMessageCount++;
+		var newChatMessageId = "REQ" + newlySavedChatMessage.requestId + "-" +  chatMessageCount++;
 		
 		var newChatMessageElem = $("div.message-to-clone")
 			.clone(true)
@@ -79,19 +79,12 @@ $(document).ready(function()
 			.removeClass("message-to-clone")
 			.attr("id", newChatMessageId);
 					
-		$("<li/>").add(newChatMessageElem).appendTo("ul#chatroom-message-list");
+		$("<li/>").addClass("added-chat-message-class").append(newChatMessageElem).appendTo("ul#chatroom-message-list");
 		
 		$("div#" + newChatMessageId + " div.chat-message-sender-class")
-		.html(newlySavedChatMessage.sender + "[" + convertToTime(newlySavedChatMessage.timeStamp) + "]");
+		.html(newlySavedChatMessage.sender + "[" + convertToTime(newlySavedChatMessage.timeStamp) + "]:");
 	
 		$("div#" + newChatMessageId + " div.chat-message-content-class").html(newlySavedChatMessage.content);
-		
-		//$("<li/>").appendTo("ul#chatroom-rooms-list").html("[" + userId + "] " + chatMessage);
-		
-		/*$("#chatroom-message-list")
-			.append("<li></li>")
-			.addClass("added-chat-message-class")
-			.text("[" + userId + "] " + chatMessage);*/
 	}
 	
 	$( "#new-chatroom-message" ).keypress(function( event ) 

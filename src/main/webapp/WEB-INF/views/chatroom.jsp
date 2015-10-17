@@ -39,7 +39,7 @@
 			<div>
 				<div id="chatroom-left-pane">
 					<div id="chatroom-rooms-pane">
-	                    <ul id="chatroom-rooms-list">
+	                    <ul id="chatroom-rooms-list" class="chatroom-list-class">
 						</ul>
 	                </div>
 	                <div id="chatroom-send-message-pane">
@@ -48,7 +48,7 @@
 	            </div>			
 			</div>
 			<div id="chatroom-right-pane">
-				<ul id="chatroom-message-list">
+				<ul id="chatroom-message-list" class="chatroom-list-class">
 				</ul>
 			</div>
 		</div>			

@@ -12,12 +12,18 @@
 
 .chat-message-sender-class
 {
-	color:olive;	
+	color:black;
+	font-weight: bold;
 }
 
 .chat-message-content-class
 {
 	color:grey;	
+}
+
+ul.chatroom-list-class
+{
+	-webkit-padding-start:2px;
 }
 
 li.added-chat-message-class
