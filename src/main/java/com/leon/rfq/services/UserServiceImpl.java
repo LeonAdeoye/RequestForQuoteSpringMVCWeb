@@ -66,7 +66,7 @@ public final class UserServiceImpl implements UserService
 		}
 		
 		if(logger.isDebugEnabled())
-			logger.debug("Getting the user with user ID" + userId);
+			logger.debug("Getting the user with user ID: " + userId);
 		
 		ReentrantLock lock = new ReentrantLock();
 		

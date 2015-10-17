@@ -1,11 +1,7 @@
 package com.leon.rfq.domains;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class GroupDetailImpl
 {
-	private static final Logger logger = LoggerFactory.getLogger(GroupDetailImpl.class);
 	private String name;
 	private String description;
 	private boolean isValid;

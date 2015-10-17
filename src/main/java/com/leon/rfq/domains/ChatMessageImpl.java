@@ -8,14 +8,16 @@ import org.springframework.data.annotation.Id;
 
 public final class ChatMessageImpl
 {
-	private final String sender;
-	private final Set<String> recipients;
-	private final String content;
-	private final LocalDateTime timeStamp;
-	private final int requestId;
+	private String sender;
+	private Set<String> recipients;
+	private String content;
+	private LocalDateTime timeStamp;
+	private int requestId;
 	
 	@Id
 	private String id;
+	
+	public ChatMessageImpl() {}
 
 	public ChatMessageImpl(String sender, Set<String> recipients, String content, int requestId)
 	{
@@ -34,40 +36,65 @@ public final class ChatMessageImpl
 		this.timeStamp = LocalDateTime.now();
 		this.requestId = requestId;
 	}
-
+	
 	public String getSender()
 	{
 		return this.sender;
 	}
 
+	public void setSender(String sender)
+	{
+		this.sender = sender;
+	}
 
 	public Set<String> getRecipients()
 	{
 		return this.recipients;
 	}
 
+	public void setRecipients(Set<String> recipients)
+	{
+		this.recipients = recipients;
+	}
 
 	public String getContent()
 	{
 		return this.content;
 	}
 
+	public void setContent(String content)
+	{
+		this.content = content;
+	}
 
 	public LocalDateTime getTimeStamp()
 	{
 		return this.timeStamp;
 	}
 
+	public void setTimeStamp(LocalDateTime timeStamp)
+	{
+		this.timeStamp = timeStamp;
+	}
 
 	public int getRequestId()
 	{
 		return this.requestId;
 	}
 
+	public void setRequestId(int requestId)
+	{
+		this.requestId = requestId;
+	}
 
 	public String getId()
 	{
 		return this.id;
+	}
+
+	public void setId(String id)
+	{
+		this.id = id;
 	}
 
 	@Override

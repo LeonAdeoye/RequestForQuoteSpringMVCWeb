@@ -35,7 +35,7 @@ $(document).ready(function()
 	
 	function save(chatMessage, requestId, userId)
 	{
-	    var newChatMessage = { "content" : chatMessage, "requestId" : requestId, "sender" : userId};
+	    var newChatMessage = {"sender" : userId, "content" : chatMessage, "requestId" : requestId};
 	    
 		$.ajax({
 		    url: contextPath + "/chatroom/ajaxSendChatMessage", 
@@ -49,7 +49,7 @@ $(document).ready(function()
 		    success: function(newlySavedChatMessage) 
 		    {
 		    	if(newlySavedChatMessage)
-					handleNewChatMessage(chatMessage, 200, "ladeoye");	// TODO	
+					handleNewChatMessage(chatMessage, 200, "ladeoye");	// TODO
 		    		
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
@@ -85,7 +85,7 @@ $(document).ready(function()
 				var chatMessage = $(this).val();
 				$(this).val("");
 				
-				save(chatMessage, 200, "ladeoye");		
+				save(chatMessage, 991, "leon.adeoye"); // TODO		
 			}
 		    event.preventDefault();
 		}

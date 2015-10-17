@@ -74,10 +74,25 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 			
 			UserDetailImpl senderDetails = this.userService.get(sender);
 			
+			if(senderDetails == null)
+			{
+				if(logger.isErrorEnabled())
+					logger.error("User {} does not exist", sender);
+				
+				return false;
+			}
+			
 			Set<UserDetailImpl> recipients = this.chatRooms.get(requestId);
 			
-			Set<String> recipientIds = this.chatRooms.get(requestId).stream()
-					.map(UserDetailImpl::getUserId).collect(Collectors.toSet());
+			if(recipients == null)
+			{
+				if(logger.isErrorEnabled())
+					logger.error("Request ID {} does not exist", requestId);
+				
+				return false;
+			}
+			
+			Set<String> recipientIds = recipients.stream().map(UserDetailImpl::getUserId).collect(Collectors.toSet());
 			
 			ChatMessageImpl message = new ChatMessageImpl(senderDetails.getUserId(), recipientIds, content, requestId);
 			
