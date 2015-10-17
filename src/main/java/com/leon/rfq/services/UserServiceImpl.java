@@ -65,9 +65,6 @@ public final class UserServiceImpl implements UserService
 			throw new IllegalArgumentException("userId argument is invalid");
 		}
 		
-		if(logger.isDebugEnabled())
-			logger.debug("Getting the user with user ID: " + userId);
-		
 		ReentrantLock lock = new ReentrantLock();
 		
 		try

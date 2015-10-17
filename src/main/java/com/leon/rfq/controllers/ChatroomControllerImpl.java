@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.leon.rfq.domains.ChatMessageImpl;
-import com.leon.rfq.domains.ChatroomDetailImpl;
 import com.leon.rfq.services.ChatMediatorService;
 
 @Controller
@@ -36,7 +35,7 @@ public class ChatroomControllerImpl
 	@RequestMapping(value="/ajaxGetListOfChatrooms", method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE,
 			consumes = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody Set<ChatroomDetailImpl> ajaxGetListOfAllChatrooms(@RequestParam String userId)
+	public @ResponseBody Set<Integer> ajaxGetListOfAllChatrooms(@RequestParam String userId)
 	{
 		return this.chatMediatorService.getAllChatRooms(userId);
 	}

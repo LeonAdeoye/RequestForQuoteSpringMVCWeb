@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.leon.rfq.domains.ChatMessageImpl;
-import com.leon.rfq.domains.ChatroomDetailImpl;
 import com.leon.rfq.domains.UserDetailImpl;
 import com.leon.rfq.repositories.ChatDao;
 
@@ -204,7 +203,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 				return this.chatRooms.get(requestId).size();
 	
 			return 0;
-		}
+		
 		finally
 		{
 			lock.unlock();
@@ -230,9 +229,9 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	}
 
 	@Override
-	public Set<ChatroomDetailImpl> getAllChatRooms(String userId)
+	public Set<Integer> getAllChatRooms(String userId)
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return this.chatRooms.keySet().stream().distinct().collect(Collectors.toSet());
 	}
 }

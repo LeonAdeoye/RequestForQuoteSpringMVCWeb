@@ -245,6 +245,7 @@
 		  <b><spring:message code="contextMenu.operation.title.label"/></b>
 		  <li data="VIEW_DETAILS"><spring:message code="contextMenu.operation.view.menuitem"/></li>
 		  <li data="PICKED_UP"><spring:message code="contextMenu.operation.pick_up.menuitem"/></li>
+		  <li data="CHAT"><spring:message code="contextMenu.operation.chat.menuitem"/></li>
 		  <li data="SAVE"><spring:message code="contextMenu.operation.save.menuitem"/></li>
 		  <li data="RECALCULATE"><spring:message code="contextMenu.operation.recalculate.menuitem"/></li>
 		  <li data="FREEZE"><spring:message code="contextMenu.operation.freeze.menuitem"/></li>

@@ -1,5 +1,5 @@
 $(document).ready(function()
-{
+{	
 	$("#chatroom-all-panes").jqxSplitter(
 	{
 		orientation: 'vertical',
@@ -95,19 +95,48 @@ $(document).ready(function()
 			{
 				var chatMessage = $(this).val();
 				$(this).val("");
-				
 				save(chatMessage, 991, "leon.adeoye"); //TODO		
 			}
 		    event.preventDefault();
 		}
 	});
 	
+	(function()
+	{
+		$.ajax({
+		    url: contextPath + "/chatroom/ajaxGetListOfChatrooms", 
+		    type: 'POST',
+		    dataType: 'json',  
+		    contentType: 'application/json', 
+		    mimeType: 'application/json',
+		    timeout: 5000,
+		    cache: false,
+		    success: function(chatrooms) 
+		    {
+		    	if(chatroom)
+					handleChatrooms(chatrooms);	    		
+		    },
+	        error: function (xhr, textStatus, errorThrown) 
+	        {
+	        	console.log(xhr.responseText);
+	        	if(textStatus !== "timeout")
+        		{
+	        		if(xhr.status === 404)
+	        			alert('Failed to retrieve the list of chat rooms because the server is no longer available. Please try to reload the page.');
+	        		else
+	        			alert('Failed to retrieve the list of chat rooms because of a server error.');   
+        		}
+	        	else
+	        		alert('Failed to retrieve the list of chat rooms because of a timeout after five seconds');
+	        }
+		});		
+		
+	})();	
+	
 	// TODO	
-	// Style of chat message - google list styling
-	// Flash messages received
+	// Flash messages received.
 	// Small pop-up with fade-out.
-	// Scroll up so bottom <li> is always visible.
-	// Color the name and time in chat message
+	// Scroll to bottom for chat messages.
 });
 
 

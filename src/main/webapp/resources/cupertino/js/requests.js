@@ -1927,7 +1927,10 @@ $(document).ready(function()
         		$("#requests_snippet").val(dataView.getItem(row).request);
         		$("#requests_bookCode").val(dataView.getItem(row).bookCode);
         		$("#requests_client").val(clientHashIndexedById[dataView.getItem(row).clientId]);
-        		break;          		
+        		break;
+        	case "CHAT":
+        		window.location.href = contextPath + "/chatroom";
+        		break;         		
         	default: 
         		alert("Sorry, this operation is yet to be supported!");
     	}    	
