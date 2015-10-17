@@ -49,8 +49,7 @@ $(document).ready(function()
 		    success: function(newlySavedChatMessage) 
 		    {
 		    	if(newlySavedChatMessage)
-					handleNewChatMessage(chatMessage, 200, "ladeoye");	// TODO
-		    		
+					handleNewChatMessage(newlySavedChatMessage);	    		
 		    },
 	        error: function (xhr, textStatus, errorThrown) 
 	        {
@@ -68,12 +67,31 @@ $(document).ready(function()
 		});		
 	}
 	
-	function handleNewChatMessage(chatMessage, requestId, userId)
-	{	
-		$("#chatroom-message-list")
+	var chatMessageCount = 0;
+	
+	function handleNewChatMessage(newlySavedChatMessage)
+	{
+		var newChatMessageId = "REQ" + newlySavedChatMessage.requestId + "MSG" +  chatMessageCount++;
+		
+		var newChatMessageElem = $("div.message-to-clone")
+			.clone(true)
+			.addClass("message-cloned")
+			.removeClass("message-to-clone")
+			.attr("id", newChatMessageId);
+					
+		$("<li/>").add(newChatMessageElem).appendTo("ul#chatroom-message-list");
+		
+		$("div#" + newChatMessageId + " div.chat-message-sender-class")
+		.html(newlySavedChatMessage.sender + "[" + convertToTime(newlySavedChatMessage.timeStamp) + "]");
+	
+		$("div#" + newChatMessageId + " div.chat-message-content-class").html(newlySavedChatMessage.content);
+		
+		//$("<li/>").appendTo("ul#chatroom-rooms-list").html("[" + userId + "] " + chatMessage);
+		
+		/*$("#chatroom-message-list")
 			.append("<li></li>")
 			.addClass("added-chat-message-class")
-			.text("[" + userId + "] " + chatMessage);
+			.text("[" + userId + "] " + chatMessage);*/
 	}
 	
 	$( "#new-chatroom-message" ).keypress(function( event ) 
@@ -85,7 +103,7 @@ $(document).ready(function()
 				var chatMessage = $(this).val();
 				$(this).val("");
 				
-				save(chatMessage, 991, "leon.adeoye"); // TODO		
+				save(chatMessage, 991, "leon.adeoye"); //TODO		
 			}
 		    event.preventDefault();
 		}

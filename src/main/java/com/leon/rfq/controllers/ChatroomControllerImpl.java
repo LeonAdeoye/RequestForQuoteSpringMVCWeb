@@ -46,6 +46,6 @@ public class ChatroomControllerImpl
 			consumes = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody Object ajaxSendChatMessage(@RequestBody ChatMessageImpl chatMessage)
 	{
-		return this.chatMediatorService.sendMessage(chatMessage.getRequestId(), chatMessage.getSender(), chatMessage.getContent());
+		return this.chatMediatorService.sendMessage(chatMessage);
 	}
 }

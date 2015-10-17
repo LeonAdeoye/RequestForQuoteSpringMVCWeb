@@ -16,8 +16,6 @@ public interface ChatMediatorService
 	
 	boolean unregisterParticipant(int requestForQuote, UserDetailImpl participant);
 
-	boolean sendMessage(int requestForQuoteId, String sender, String content);
-
 	void registerParticipant(int requestForQuoteId, UserDetailImpl participant);
 
 	boolean isParticipantRegistered(int requestForQuoteId, UserDetailImpl participant);
@@ -25,4 +23,6 @@ public interface ChatMediatorService
 	List<ChatMessageImpl> getChatMessages(int requestId, LocalDateTime fromTimeStamp);
 
 	Set<ChatroomDetailImpl> getAllChatRooms(String userId);
+
+	ChatMessageImpl sendMessage(ChatMessageImpl chatMessage);
 }

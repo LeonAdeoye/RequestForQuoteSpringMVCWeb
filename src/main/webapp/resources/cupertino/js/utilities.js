@@ -29,3 +29,14 @@ function yearFormatter(row, cell, value, columnDef, dataContext)
     }
     return "";
 }
+
+function convertToDateTime(dateObject)
+{
+	return dateObject.dayOfMonth + " " + dateObject.month + " " + dateObject.year + ", " + 
+		dateObject.hour + ":" + dateObject.minute + ":" + dateObject.second;
+}
+
+function convertToTime(dateObject)
+{
+	return dateObject.hour + ":" + dateObject.minute + ":" + dateObject.second;
+}

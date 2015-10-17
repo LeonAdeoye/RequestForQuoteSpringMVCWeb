@@ -53,39 +53,12 @@ public class ChatMediatorServiceImplTest extends AbstractJUnit4SpringContextTest
 	@Test
     public void sendMessage_emptySender_ThrowsNullPointerException()
 	{
-		catchException(this.chatMediatorService).sendMessage(Integer.MAX_VALUE, "", "test content");
+		catchException(this.chatMediatorService).sendMessage(null);
 		
-		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "sender is an invalid argument");
+		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof NullPointerException);
+		assertEquals("Exception message should match", caughtException().getMessage(), "chatMesasage is an invalid argument");
 	}
-	
-	@Test
-    public void sendMessage_NullSender_ThrowsNullPointerException()
-	{
-		catchException(this.chatMediatorService).sendMessage(Integer.MAX_VALUE, null, "test content");
-		
-		assertTrue("Exception should be an instance of IllegalArgumentException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "sender is an invalid argument");
-	}
-	
-	@Test
-    public void sendMessage_NullContent_ThrowsIllegalArgumentException()
-	{
-		catchException(this.chatMediatorService).sendMessage(Integer.MAX_VALUE, "TESTER", null);
-
-		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "content is an invalid argument");
-	}
-	
-	@Test
-    public void sendMessage_EmptyStringContent_ThrowsIllegalArgumentException()
-	{
-		catchException(this.chatMediatorService).sendMessage(Integer.MAX_VALUE, "TESTER", "");
-		
-		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof IllegalArgumentException);
-		assertEquals("Exception message should match", caughtException().getMessage(), "content is an invalid argument");
-	}
-		
+				
 	@Test
     public void getChatMessages_ValidParameter_CallsDaoGetMethod()
 	{

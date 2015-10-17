@@ -28,12 +28,12 @@
 	</head>
 	<body>
 
-		<li class="message-to-clone">
+		<div class="message-to-clone">
 			<div class="chat-message-sender-class">
 			</div>
 			<div class="chat-message-content-class">
 			</div>
-		</li>
+		</div>
 	
 		<div id="chatroom-all-panes">
 			<div>

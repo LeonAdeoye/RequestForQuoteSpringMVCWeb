@@ -46,24 +46,16 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 
 		this.chatDao = chatDao;
 	}
-
+	
 	@Override
-	public boolean sendMessage(int requestId, String sender, String content)
+	public ChatMessageImpl sendMessage(ChatMessageImpl chatMessage)
 	{
-		if((sender == null) || sender.isEmpty())
+		if(chatMessage == null)
 		{
 			if(logger.isErrorEnabled())
-				logger.error("sender is an invalid argument");
+				logger.error("chatMessage is an invalid argument");
 			
-			throw new IllegalArgumentException("sender is an invalid argument");
-		}
-		
-		if((content == null) || content.isEmpty())
-		{
-			if(logger.isErrorEnabled())
-				logger.error("content is an invalid argument");
-			
-			throw new IllegalArgumentException("content is an invalid argument");
+			throw new NullPointerException("chatMessage is an invalid argument");
 		}
 		
 		ReentrantLock lock = new ReentrantLock();
@@ -71,40 +63,39 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		try
 		{
 			lock.lock();
+			String senderId = chatMessage.getSender();
+			int requestId = chatMessage.getRequestId();
+			UserDetailImpl sender = this.userService.get(senderId);
 			
-			UserDetailImpl senderDetails = this.userService.get(sender);
-			
-			if(senderDetails == null)
+			if(sender == null)
 			{
 				if(logger.isErrorEnabled())
 					logger.error("User {} does not exist", sender);
 				
-				return false;
+				throw new NullPointerException("User " + senderId + " does not exist");
 			}
+			
+			if(!isParticipantRegistered(requestId, sender))
+				registerParticipant(requestId, sender);
 			
 			Set<UserDetailImpl> recipients = this.chatRooms.get(requestId);
-			
-			if(recipients == null)
-			{
-				if(logger.isErrorEnabled())
-					logger.error("Request ID {} does not exist", requestId);
-				
-				return false;
-			}
-			
 			Set<String> recipientIds = recipients.stream().map(UserDetailImpl::getUserId).collect(Collectors.toSet());
+						
+			chatMessage.setRecipients(recipientIds);
+			chatMessage.setTimeStamp(LocalDateTime.now());
 			
-			ChatMessageImpl message = new ChatMessageImpl(senderDetails.getUserId(), recipientIds, content, requestId);
+			recipients.stream().filter(recipient -> !recipient.equals(senderId))
+				.forEach(recipient -> recipient.receive(chatMessage));
 			
-			recipients.stream().filter(recipient -> !recipient.equals(sender))
-				.forEach(recipient -> recipient.receive(message));
-			
-			return this.chatDao.insert(message);
+			if(this.chatDao.insert(chatMessage))
+				return chatMessage;
 		}
 		finally
 		{
 			lock.unlock();
 		}
+		
+		return null;
 	}
 
 	@Override
