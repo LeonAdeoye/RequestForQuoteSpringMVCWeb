@@ -3,40 +3,36 @@ package com.leon.rfq.services.test;
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import java.time.LocalDateTime;
 
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
 
 import com.leon.rfq.repositories.ChatDao;
 import com.leon.rfq.repositories.ChatDaoImpl;
 import com.leon.rfq.services.ChatMediatorService;
+import com.leon.rfq.services.ChatMediatorServiceImpl;
+import com.leon.rfq.services.UserService;
+import com.leon.rfq.services.UserServiceImpl;
 
 @ContextConfiguration(locations = { "classpath: **/applicationContext.xml" })
 public class ChatMediatorServiceImplTest extends AbstractJUnit4SpringContextTests
 {
-	@Autowired(required=true)
-	private ChatMediatorService chatMediatorService;
-	
-	@Before
-	public void setUp()
-	{
-		assertNotNull("autowired chatDaoImpl should not be null", this.chatMediatorService);
-	}
-	
 	@Test
     public void isParticipantRegistered_NullParticipant_ThrowsNullPointerException()
 	{
-		catchException(this.chatMediatorService).isParticipantRegistered(Integer.MAX_VALUE, null);
-		
+		// Arrange
+		ChatDao chatDaoMock = mock(ChatDaoImpl.class);
+		UserService userServiceMock = mock(UserServiceImpl.class);
+		ChatMediatorService chatMediatorService = new ChatMediatorServiceImpl(chatDaoMock, userServiceMock);
+		// Act
+		catchException(chatMediatorService).isParticipantRegistered(Integer.MAX_VALUE, null);
+		// Assert
 		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof NullPointerException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "participant is an invalid argument");
 	}
@@ -44,8 +40,13 @@ public class ChatMediatorServiceImplTest extends AbstractJUnit4SpringContextTest
 	@Test
     public void unregisterParticipant_NullParticipant_ThrowsNullPointerException()
 	{
-		catchException(this.chatMediatorService).unregisterParticipant(Integer.MAX_VALUE, null);
-		
+		// Arrange
+		ChatDao chatDaoMock = mock(ChatDaoImpl.class);
+		UserService userServiceMock = mock(UserServiceImpl.class);
+		ChatMediatorService chatMediatorService = new ChatMediatorServiceImpl(chatDaoMock, userServiceMock);
+		// Act
+		catchException(chatMediatorService).unregisterParticipant(Integer.MAX_VALUE, null);
+		// Assert
 		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof NullPointerException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "participant is an invalid argument");
 	}
@@ -53,8 +54,13 @@ public class ChatMediatorServiceImplTest extends AbstractJUnit4SpringContextTest
 	@Test
     public void sendMessage_emptySender_ThrowsNullPointerException()
 	{
-		catchException(this.chatMediatorService).sendMessage(null);
-		
+		// Arrange
+		ChatDao chatDaoMock = mock(ChatDaoImpl.class);
+		UserService userServiceMock = mock(UserServiceImpl.class);
+		ChatMediatorService chatMediatorService = new ChatMediatorServiceImpl(chatDaoMock, userServiceMock);
+		// Act
+		catchException(chatMediatorService).sendMessage(null);
+		// Assert
 		assertTrue("Exception should be an instance of NullPointerException", caughtException() instanceof NullPointerException);
 		assertEquals("Exception message should match", caughtException().getMessage(), "chatMesasage is an invalid argument");
 	}
@@ -64,10 +70,11 @@ public class ChatMediatorServiceImplTest extends AbstractJUnit4SpringContextTest
 	{
 		// Arrange
 		ChatDao chatDaoMock = mock(ChatDaoImpl.class);
-		this.chatMediatorService.setDao(chatDaoMock);
+		UserService userServiceMock = mock(UserServiceImpl.class);
+		ChatMediatorService chatMediatorService = new ChatMediatorServiceImpl(chatDaoMock, userServiceMock);
 		LocalDateTime timeStamp = LocalDateTime.now();
 		// Act
-		this.chatMediatorService.getChatMessages(Integer.MAX_VALUE, timeStamp);
+		chatMediatorService.getChatMessages(Integer.MAX_VALUE, timeStamp);
 		// Assert
 		verify(chatDaoMock).get(Integer.MAX_VALUE, timeStamp);
 	}

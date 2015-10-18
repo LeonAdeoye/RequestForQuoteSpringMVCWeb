@@ -24,16 +24,11 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	private static final Logger logger = LoggerFactory.getLogger(ChatMediatorServiceImpl.class);
 	private final Map<Integer, Set<UserDetailImpl>> chatRooms = new ConcurrentSkipListMap<>();
 	
+	private final ChatDao chatDao;
+	private final UserService userService;
+		
 	@Autowired(required=true)
-	private ChatDao chatDao;
-	
-	@Autowired(required=true)
-	private UserService userService;
-	
-	public ChatMediatorServiceImpl() {}
-
-	@Override
-	public void setDao(ChatDao chatDao)
+	public ChatMediatorServiceImpl(ChatDao chatDao, UserService userService)
 	{
 		if(chatDao == null)
 		{
@@ -42,8 +37,17 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 			
 			throw new NullPointerException("chatDao is an invalid argument");
 		}
-
+		
+		if(userService == null)
+		{
+			if(logger.isErrorEnabled())
+				logger.error("userService is an invalid argument");
+			
+			throw new NullPointerException("userService is an invalid argument");
+		}
+		
 		this.chatDao = chatDao;
+		this.userService = userService;
 	}
 	
 	@Override
@@ -203,6 +207,7 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 				return this.chatRooms.get(requestId).size();
 	
 			return 0;
+		}
 		
 		finally
 		{
