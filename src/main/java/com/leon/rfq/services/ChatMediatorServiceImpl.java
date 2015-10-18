@@ -236,7 +236,19 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 	@Override
 	public Set<Integer> getAllChatRooms(String userId)
 	{
-		// TODO Auto-generated method stub
-		return this.chatRooms.keySet().stream().distinct().collect(Collectors.toSet());
+		if((userId == null) || userId.isEmpty())
+		{
+			if(logger.isErrorEnabled())
+				logger.error("userId is an invalid argument");
+			
+			throw new IllegalArgumentException("userId is an invalid argument");
+		}
+		
+		// TODO - handle userId
+		
+		if(this.chatRooms.size() > 0)
+			return this.chatRooms.keySet().stream().distinct().collect(Collectors.toSet());
+		else
+			return new HashSet<>();
 	}
 }

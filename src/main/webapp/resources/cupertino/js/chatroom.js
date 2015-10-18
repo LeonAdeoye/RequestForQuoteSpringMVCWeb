@@ -1,5 +1,7 @@
 $(document).ready(function()
-{	
+{
+	var userId = "leon.adeoye";
+	
 	$("#chatroom-all-panes").jqxSplitter(
 	{
 		orientation: 'vertical',
@@ -74,7 +76,7 @@ $(document).ready(function()
 		var newChatMessageId = "REQ" + newlySavedChatMessage.requestId + "-" +  chatMessageCount++;
 		
 		var newChatMessageElem = $("div.message-to-clone")
-			.clone(true)
+			.clone()
 			.addClass("message-cloned")
 			.removeClass("message-to-clone")
 			.attr("id", newChatMessageId);
@@ -95,25 +97,42 @@ $(document).ready(function()
 			{
 				var chatMessage = $(this).val();
 				$(this).val("");
-				save(chatMessage, 991, "leon.adeoye"); //TODO		
+				save(chatMessage, 991, userId); //TODO		
 			}
 		    event.preventDefault();
 		}
 	});
 	
+	function handleChatrooms(chatRooms)
+	{
+		for (var i=0; i < chatRooms.length; i++) 
+		{
+			var newChatMessageId = "CHATROOM" + chatRooms[i];
+			
+			var newChatMessageElem = $("div.chatroom-to-clone")
+				.clone()
+				.addClass("chatroom-cloned")
+				.removeClass("chatroom-to-clone")
+				.attr("id", newChatMessageId);
+						
+			$("<li/>").addClass("added-chatroom-class").append(newChatMessageElem).appendTo("ul#chatroom-room-list");
+				
+			$("div#" + newChatMessageId).html("Request ID:" + newlySavedChatMessage.content);					
+		}		
+	}
+	
 	(function()
 	{
 		$.ajax({
-		    url: contextPath + "/chatroom/ajaxGetListOfChatrooms", 
-		    type: 'POST',
-		    dataType: 'json',  
+		    url: contextPath + "/chatroom/ajaxGetListOfChatrooms?userId=" + userId, 
+		    type: 'GET',  
 		    contentType: 'application/json', 
 		    mimeType: 'application/json',
 		    timeout: 5000,
 		    cache: false,
 		    success: function(chatrooms) 
 		    {
-		    	if(chatroom)
+		    	if(chatrooms)
 					handleChatrooms(chatrooms);	    		
 		    },
 	        error: function (xhr, textStatus, errorThrown) 

@@ -27,6 +27,9 @@
 		<title><spring:message code="chatroom.title.label"/></title>
 	</head>
 	<body>
+	
+		<div class="chatroom-to-clone">
+		</div>	
 
 		<div class="message-to-clone">
 			<div class="chat-message-sender-class">
@@ -39,7 +42,7 @@
 			<div>
 				<div id="chatroom-left-pane">
 					<div id="chatroom-rooms-pane">
-	                    <ul id="chatroom-rooms-list" class="chatroom-list-class">
+	                    <ul id="chatroom-room-list" class="chatroom-list-class">
 						</ul>
 	                </div>
 	                <div id="chatroom-send-message-pane">

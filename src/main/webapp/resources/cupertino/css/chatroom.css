@@ -10,6 +10,12 @@
 	position:absolute;	
 }
 
+.chatroom-to-clone
+{
+	display:none;
+	position:absolute;	
+}
+
 .chat-message-sender-class
 {
 	color:black;
@@ -24,6 +30,23 @@
 ul.chatroom-list-class
 {
 	-webkit-padding-start:2px;
+}
+
+li.added-chatroom-class
+{
+	border-radius: 10px;
+	background-color:olive;
+	margin:0px 2px 2px 0px;
+	padding:5px;
+	list-style-type: none;
+	border-style:solid;
+	word-wrap: break-word;
+	border-width:1px;
+	border-color:grey;
+	list-style-position:inside;
+	list-style: none;
+	colour:white;
+	font-weight: bold;
 }
 
 li.added-chat-message-class
