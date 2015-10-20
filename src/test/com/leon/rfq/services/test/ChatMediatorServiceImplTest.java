@@ -52,7 +52,7 @@ public class ChatMediatorServiceImplTest extends AbstractJUnit4SpringContextTest
 	}
 
 	@Test
-    public void sendMessage_emptySender_ThrowsNullPointerException()
+    public void sendMessage_nullChatMessage_ThrowsNullPointerException()
 	{
 		// Arrange
 		ChatDao chatDaoMock = mock(ChatDaoImpl.class);
