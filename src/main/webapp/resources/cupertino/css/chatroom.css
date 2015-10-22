@@ -49,6 +49,12 @@ li.added-chatroom-class
 	font-weight: bold;
 }
 
+li.chatroom-mouseover-class
+{
+	background-color:white;
+	colour:olive;	
+}
+
 li.added-chat-message-class
 {
 	border-radius: 10px;
@@ -76,6 +82,8 @@ li.added-chat-message-class:nth-child(odd)
 	padding:1px;
 	list-style-type: none;
 	border-stype:grove;
+	colour:white;
+	font-weight: bold	
 }
 
 #chatroom-right-pane

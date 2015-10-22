@@ -1,6 +1,7 @@
 package com.leon.rfq.services;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +51,11 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		
 		this.chatDao = chatDao;
 		this.userService = userService;
+	}
+	
+	@PostConstruct
+	public void initialise()
+	{
 	}
 	
 	@Override
@@ -249,6 +257,6 @@ public final class ChatMediatorServiceImpl implements ChatMediatorService
 		if(this.chatRooms.size() > 0)
 			return this.chatRooms.keySet().stream().distinct().collect(Collectors.toSet());
 		else
-			return new HashSet<>();
+			return new HashSet<>(Arrays.asList(200, 201, 202));
 	}
 }

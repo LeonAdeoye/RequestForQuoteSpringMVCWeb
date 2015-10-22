@@ -117,9 +117,19 @@ $(document).ready(function()
 						
 			$("<li/>").addClass("added-chatroom-class").append(newChatMessageElem).appendTo("ul#chatroom-room-list");
 				
-			$("div#" + newChatMessageId).html("Request ID:" + newlySavedChatMessage.content);					
+			$("div#" + newChatMessageId).html("Request ID:" + chatRooms[i]);					
 		}		
 	}
+	
+	$("li.added-chatroom-class").mouseover(function()
+	{
+		$(this).addClass("chatroom-mouseover-class");
+	});
+	
+	$("li.added-chatroom-class").mouseout(function()
+	{
+		$(this).removeClass("chatroom-mouseover-class");
+	});	
 	
 	(function()
 	{
